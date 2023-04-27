@@ -1,0 +1,8 @@
+{
+  "extends": "../../tsconfig.json",
+  "include": [
+    "./src/**/*",
+    // Why typeRoots in ../../tsconfig.json doesn't work?
+    "../../types/*"
+  ]
+}

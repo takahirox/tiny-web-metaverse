@@ -1,0 +1,53 @@
+services:
+  database:
+    environment:
+      POSTGRES_PASSWORD: postgres
+      PGDATA: /var/lib/postgresql/data/
+    healthcheck:
+      test: ["CMD", "pg_isready"]
+    hostname: database
+    image: postgres:15-alpine
+    restart: always
+    user: postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data/
+  examples:
+    build:
+      context: .
+      dockerfile: Dockerfiles/examples.Dockerfile
+    depends_on:
+      - state_server
+      - stream_server
+    ports:
+      - "8080:8080"
+  state_server:
+    build:
+      context: .
+      dockerfile: Dockerfiles/state_server.Dockerfile
+    depends_on:
+      - database
+    environment:
+      DATABASE_HOSTNAME: database
+      DATABASE_NAME: server_dev
+      DATABASE_PASSWORD: postgres
+      DATABASE_URL: postgres://postgres:postgres@database:5432/server_dev
+      DATABASE_USERNAME: postgres
+      PHOENIX_LISTEN_IP: 0.0.0.0
+      PHOENIX_LISTEN_PORT: 4000
+    ports:
+      - "4000:4000"
+  stream_server:
+    build:
+      context: .
+      dockerfile: Dockerfiles/stream_server.Dockerfile
+    environment:
+      MEDIASOUP_ANNOUNCED_IP: ${MEDIASOUP_ANNOUNCED_IP}
+      MEDIASOUP_LISTEN_IP: 0.0.0.0
+      MEDIASOUP_LISTEN_PORT: 3000
+      MEDIASOUP_RTC_MAX_PORT: 2100
+      MEDIASOUP_RTC_MIN_PORT: 2000
+    ports:
+      - "3000:3000"
+      - "2000-2100:2000-2100"
+volumes:
+  pgdata:

@@ -1,0 +1,35 @@
+{
+  "author": "Takahiro <hogehoge@gachapin.jp>",
+  "bugs": {
+    "url": "https://github.com/takahirox/tiny-web-metaverse/issues"
+  },
+  "dependencies": {
+    "mediasoup-client": "^3.6.91",
+    "socket.io-client": "^4.7.1"
+  },
+  "description": "Tiny Web metaverse stream server",
+  "exports": {
+    ".": {
+      "import": "./dist/stream_client.bundle.js"
+    },
+    "./src": "./src/index.ts",
+    "./src/*": "./src/*"
+  },
+  "homepage": "https://github.com/takahirox/tiny-web-metaverse#readme",
+  "license": "MIT",
+  "module": "./dist/stream_client.bundle.js",
+  "name": "@tiny-web-metaverse/stream_client",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/takahirox/tiny-web-metaverse.git"
+  },
+  "scripts": {
+    "build": "webpack && npm run type",
+    "server": "webpack serve --config-name @tiny-web-metaverse/stream_client_examples",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "type": "dts-bundle-generator -o ./dist/stream_client.bundle.d.ts ./src/index.ts",
+    "watch": "webpack --watch"
+  },
+  "types": "./dist/stream_client.bundle.d.ts",
+  "version": "0.0.1"
+}

@@ -1,0 +1,27 @@
+{
+  "author": "Takahiro <hogehoge@gachapin.jp>",
+  "bugs": {
+    "url": "https://github.com/takahirox/tiny-web-metaverse/issues"
+  },
+  "dependencies": {
+    "@gradio/client": "0.7.1",
+    "@tiny-web-metaverse/addons": "^0.0.1",
+    "@tiny-web-metaverse/client": "^0.0.1"
+  },
+  "description": "Tiny Web metaverse examples",
+  "homepage": "https://github.com/takahirox/tiny-web-metaverse#readme",
+  "license": "MIT",
+  "main": "./dist/example.bundle.js",
+  "name": "@tiny-web-metaverse/examples",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/takahirox/tiny-web-metaverse.git"
+  },
+  "scripts": {
+    "build": "webpack",
+    "server": "webpack serve",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "webpack --watch"
+  },
+  "version": "0.0.1"
+}

@@ -1,0 +1,37 @@
+{
+  "author": "Takahiro <hogehoge@gachapin.jp>",
+  "bugs": {
+    "url": "https://github.com/takahirox/tiny-web-metaverse/issues"
+  },
+  "dependencies": {
+    "@tiny-web-metaverse/state_client": "^0.0.1",
+    "@tiny-web-metaverse/stream_client": "^0.0.1",
+    "three-mesh-bvh": "^0.6.8"
+  },
+  "description": "Tiny Web metaverse client",
+  "exports": {
+    ".": {
+      "import": "./dist/client.bundle.js"
+    },
+    "./src": "./src/index.ts",
+    "./src/*": "./src/*"
+  },
+  "homepage": "https://github.com/takahirox/tiny-web-metaverse#readme",
+  "license": "MIT",
+  "module": "./dist/client.bundle.js",
+  "name": "@tiny-web-metaverse/client",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/takahirox/tiny-web-metaverse.git"
+  },
+  "scripts": {
+    "build": "webpack && npm run type",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "type": "dts-bundle-generator -o ./dist/client.bundle.d.ts ./src/index.ts",
+    "watch": "webpack --watch"
+  },
+  "sideEffects": false,
+  "type": "module",
+  "types": "./dist/client.bundle.d.ts",
+  "version": "0.0.1"
+}
