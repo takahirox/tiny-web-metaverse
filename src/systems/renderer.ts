@@ -7,37 +7,38 @@ import {
 import { WebGLRenderer } from "three";
 import {
   RendererInitialize,
-  rendererInitializeProxy,
-  rendererProxy,
-  RendererTag
+  RendererInitializeProxy,
+  RendererProxy,
+  Renderer
 } from "../components/renderer";
 
 const initializeQuery = defineQuery([RendererInitialize]);
 const initializeEnterQuery = enterQuery(initializeQuery);
 
-const rendererQuery = defineQuery([RendererTag]);
+const rendererQuery = defineQuery([Renderer]);
 const rendererExitQuery = exitQuery(rendererQuery);
 
 export const rendererSystem = (world: IWorld): void => {
   initializeEnterQuery(world).forEach(eid => {
-    rendererInitializeProxy.eid = eid;
-    const parentElement = rendererInitializeProxy.parentDomElement;
-    const width = rendererInitializeProxy.width;
-    const height = rendererInitializeProxy.height;
-    const pixelRatio = rendererInitializeProxy.pixelRatio;
-    rendererInitializeProxy.remove(world);
+    const initProxy = RendererInitializeProxy.get(eid);
+    const parentElement = initProxy.parentDomElement;
+    const width = initProxy.width;
+    const height = initProxy.height;
+    const pixelRatio = initProxy.pixelRatio;
+    initProxy.free(world);
 
     const renderer = new WebGLRenderer();
     renderer.setSize(width, height);
     renderer.setPixelRatio(pixelRatio);
     parentElement.appendChild(renderer.domElement);
 
-    rendererProxy.eid = eid;
-    rendererProxy.add(world, renderer);
+    const proxy = RendererProxy.get(eid);
+    proxy.allocate(world, renderer);
   });
 
   rendererExitQuery(world).forEach(eid => {
-    rendererProxy.eid = eid;
-    rendererProxy.remove(world);
+    const proxy = RendererProxy.get(eid);
+    proxy.renderer.dispose();
+    proxy.free(world);
   });
 };

@@ -11,19 +11,25 @@ export const SceneCameraInitialize = defineComponent();
 export const SceneCamera = defineComponent();
 const CameraMap = new Map<number, PerspectiveCamera>();
 
-class SceneCameraProxy {
-  eid: number;
+export class SceneCameraProxy {
+  private static instance: SceneCameraProxy = new SceneCameraProxy();
+  private eid: number;
 
-  constructor(eid: number) {
-    this.eid = eid;
+  constructor() {
+    this.eid = NULL_EID;
   }
 
-  add(world: IWorld, camera: PerspectiveCamera): void {
+  static get(eid: number): SceneCameraProxy {
+    SceneCameraProxy.instance.eid = eid;
+    return SceneCameraProxy.instance;
+  }
+
+  allocate(world: IWorld, camera: PerspectiveCamera): void {
     addComponent(world, SceneCamera, this.eid);
     CameraMap.set(this.eid, camera);
   }
 
-  remove(world: IWorld): void {
+  free(world: IWorld): void {
     removeComponent(world, SceneCamera, this.eid);
     CameraMap.delete(this.eid);
   }
@@ -32,5 +38,3 @@ class SceneCameraProxy {
     return CameraMap.get(this.eid)!;
   }
 }
-
-export const sceneCameraProxy = new SceneCameraProxy(NULL_EID);

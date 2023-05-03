@@ -19,21 +19,27 @@ const SceneMap = new Map<number, Scene>();
 
 export const InScene = defineComponent();
 
-class SceneInitializeProxy {
-  eid: number;
+export class SceneInitializeProxy {
+  private static instance: SceneInitializeProxy = new SceneInitializeProxy();
+  private eid: number;
 
-  constructor(eid: number) {
-    this.eid = eid;
+  constructor() {
+    this.eid = NULL_EID;
   }
 
-  add(world: IWorld, params: SceneParams = {}): void {
+  static get(eid: number): SceneInitializeProxy {
+    SceneInitializeProxy.instance.eid = eid;
+    return SceneInitializeProxy.instance;
+  }
+
+  allocate(world: IWorld, params: SceneParams = {}): void {
     addComponent(world, SceneInitialize, this.eid);
     SceneInitializeMap.set(this.eid, {
       backgroundColor: params.backgroundColor || 0xffffff	
     });
   }
 
-  remove(world: IWorld): void {
+  free(world: IWorld): void {
     removeComponent(world, SceneInitialize, this.eid);
     SceneInitializeMap.delete(this.eid);
   }
@@ -43,19 +49,25 @@ class SceneInitializeProxy {
   }
 }
 
-class SceneProxy {
-  eid: number;
+export class SceneProxy {
+  private static instance: SceneProxy = new SceneProxy();
+  private eid: number;
 
-  constructor(eid: number) {
-    this.eid = eid;
+  private constructor() {
+    this.eid = NULL_EID;
   }
 
-  add(world: IWorld, scene: Scene): void {
+  static get(eid: number): SceneProxy {
+    SceneProxy.instance.eid = eid;
+    return SceneProxy.instance;
+  }
+
+  allocate(world: IWorld, scene: Scene): void {
     addComponent(world, SceneTag, this.eid);
     SceneMap.set(this.eid, scene);
   }
 
-  remove(world: IWorld): void {
+  free(world: IWorld): void {
     removeComponent(world, SceneTag, this.eid);
     SceneMap.delete(this.eid);
   }
@@ -64,6 +76,3 @@ class SceneProxy {
     return SceneMap.get(this.eid)!;
   }
 }
-
-export const sceneInitializeProxy = new SceneInitializeProxy(NULL_EID);
-export const sceneProxy = new SceneProxy(NULL_EID);

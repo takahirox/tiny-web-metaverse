@@ -3,19 +3,19 @@ import {
   IWorld,
 } from "bitecs";
 import {
-  rendererProxy,
-  RendererTag
+  RendererProxy,
+  Renderer
 } from "../components/renderer";
 import {
-  sceneProxy,
+  SceneProxy,
   SceneTag
 } from "../components/scene";
 import {
   SceneCamera,
-  sceneCameraProxy
+  SceneCameraProxy
 } from "../components/scene_camera";
 
-const rendererQuery = defineQuery([RendererTag]);
+const rendererQuery = defineQuery([Renderer]);
 const sceneQuery = defineQuery([SceneTag]);
 const cameraQuery = defineQuery([SceneCamera]);
 
@@ -25,17 +25,11 @@ export const renderSystem = (world: IWorld): void => {
   const cameraEids = cameraQuery(world);
 
   rendererEids.forEach(rendererEid => {
+    const renderer = RendererProxy.get(rendererEid).renderer;
     sceneEids.forEach(sceneEid => {
+      const scene = SceneProxy.get(sceneEid).scene;
       cameraEids.forEach(cameraEid => {
-        rendererProxy.eid = rendererEid;	
-        const renderer = rendererProxy.renderer; 
-
-        sceneProxy.eid = sceneEid;
-        const scene = sceneProxy.scene;
-
-        sceneCameraProxy.eid = cameraEid;
-        const camera = sceneCameraProxy.camera;
-
+        const camera = SceneCameraProxy.get(cameraEid).camera;
         renderer.render(scene, camera);
       });
     });

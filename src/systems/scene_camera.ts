@@ -9,7 +9,7 @@ import { PerspectiveCamera } from "three";
 import { EntityRootObject3DProxy } from "../components/entity_root_object3d";
 import {
   SceneCameraInitialize,
-  sceneCameraProxy,
+  SceneCameraProxy,
   SceneCamera
 } from "../components/scene_camera";
 
@@ -22,24 +22,15 @@ const sceneCameraExitQuery = exitQuery(sceneCameraQuery);
 export const sceneCameraSystem = (world: IWorld): void => {
   initializeEnterQuery(world).forEach(eid => {
     const camera = new PerspectiveCamera();
-
-    const proxy = EntityRootObject3DProxy.get(eid);
-    proxy.addObject3D(world, camera);
-
-    sceneCameraProxy.eid = eid;
-    sceneCameraProxy.add(world, camera);
-
+    EntityRootObject3DProxy.get(eid).addObject3D(world, camera);
+    SceneCameraProxy.get(eid).allocate(world, camera);
     removeComponent(world, SceneCameraInitialize, eid);
   });
 
   sceneCameraExitQuery(world).forEach(eid => {
-    sceneCameraProxy.eid = eid;
-
-    const camera = sceneCameraProxy.camera;
-
-    const proxy = EntityRootObject3DProxy.get(eid);
-    proxy.removeObject3D(world, camera);
-
-    sceneCameraProxy.remove(world);
+    const proxy = SceneCameraProxy.get(eid);
+    const camera = proxy.camera;
+    EntityRootObject3DProxy.get(eid).removeObject3D(world, camera);
+    proxy.free(world);
   });
 };

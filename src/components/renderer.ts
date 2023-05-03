@@ -17,17 +17,23 @@ type RendererParams = {
 export const RendererInitialize = defineComponent();
 const RendererInitializeMap = new Map<number, Required<RendererParams>>();
 
-export const RendererTag = defineComponent();
+export const Renderer = defineComponent();
 const RendererMap = new Map<number, WebGLRenderer>();
 
-class RendererInitializeProxy {
-  eid: number;
+export class RendererInitializeProxy {
+  private static instance: RendererInitializeProxy = new RendererInitializeProxy();
+  private eid: number;
 
-  constructor(eid: number) {
-    this.eid = eid;
+  private constructor() {
+    this.eid = NULL_EID;
   }
 
-  add(world: IWorld, params: RendererParams = {}): void {
+  static get(eid: number): RendererInitializeProxy {
+    RendererInitializeProxy.instance.eid = eid;
+    return RendererInitializeProxy.instance;
+  }
+
+  allocate(world: IWorld, params: RendererParams = {}): void {
     addComponent(world, RendererInitialize, this.eid);
     RendererInitializeMap.set(this.eid, {
       height: params.height || window.innerHeight,
@@ -37,7 +43,7 @@ class RendererInitializeProxy {
     });
   }
 
-  remove(world: IWorld): void {
+  free(world: IWorld): void {
     removeComponent(world, RendererInitialize, this.eid);
     RendererInitializeMap.delete(this.eid);
   }
@@ -59,20 +65,26 @@ class RendererInitializeProxy {
   }
 }
 
-class RendererProxy {
-  eid: number;
+export class RendererProxy {
+  private static instance: RendererProxy = new RendererProxy();
+  private eid: number;
 
-  constructor(eid: number) {
-    this.eid = eid;
+  private constructor() {
+    this.eid = NULL_EID;
   }
 
-  add(world: IWorld, renderer: WebGLRenderer): void {
-    addComponent(world, RendererTag, this.eid);
+  static get(eid: number): RendererProxy {
+    RendererProxy.instance.eid = eid;
+    return RendererProxy.instance;
+  }
+
+  allocate(world: IWorld, renderer: WebGLRenderer): void {
+    addComponent(world, Renderer, this.eid);
     RendererMap.set(this.eid, renderer);
   }
 
-  remove(world: IWorld): void {
-    removeComponent(world, RendererTag, this.eid);
+  free(world: IWorld): void {
+    removeComponent(world, Renderer, this.eid);
     RendererMap.delete(this.eid);
   }
 
@@ -80,6 +92,3 @@ class RendererProxy {
     return RendererMap.get(this.eid)!;
   }
 }
-
-export const rendererInitializeProxy = new RendererInitializeProxy(NULL_EID);
-export const rendererProxy = new RendererProxy(NULL_EID);

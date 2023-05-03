@@ -6,9 +6,9 @@ import {
 } from "bitecs";
 import { TimeInitialize } from "./components/time";
 import { timeSystem } from "./systems/time";
-import { rendererInitializeProxy } from "./components/renderer";
+import { RendererInitializeProxy } from "./components/renderer";
 import { rendererSystem } from "./systems/renderer";
-import { InScene, sceneInitializeProxy } from "./components/scene";
+import { InScene, SceneInitializeProxy } from "./components/scene";
 import { sceneSystem } from "./systems/scene";
 import { SceneCameraInitialize } from "./components/scene_camera";
 import { sceneCameraSystem } from "./systems/scene_camera";
@@ -49,12 +49,10 @@ export class App {
     addComponent(this.world, TimeInitialize, timeEid);
 
     const rendererEid = addEntity(this.world);
-    rendererInitializeProxy.eid = rendererEid;
-    rendererInitializeProxy.add(this.world);
+    RendererInitializeProxy.get(rendererEid).allocate(this.world);
 
     const sceneEid = addEntity(this.world);
-    sceneInitializeProxy.eid = sceneEid;
-    sceneInitializeProxy.add(this.world);
+    SceneInitializeProxy.get(sceneEid).allocate(this.world);
 
     const cameraEid = addEntity(this.world);
     addComponent(this.world, SceneCameraInitialize, cameraEid);

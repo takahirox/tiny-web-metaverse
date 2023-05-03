@@ -33,7 +33,7 @@ export class EntityRootGroup extends Group {
 //                              - ...
 
 export class EntityRootObject3DProxy {
-  private static instance: EntityRootObject3DProxy | null = null;
+  private static instance: EntityRootObject3DProxy = new EntityRootObject3DProxy();
   private eid: number;
 
   private constructor() {
@@ -41,9 +41,6 @@ export class EntityRootObject3DProxy {
   }
 
   static get(eid: number): EntityRootObject3DProxy {
-    if (EntityRootObject3DProxy.instance === null) {
-      EntityRootObject3DProxy.instance = new EntityRootObject3DProxy();
-    }
     EntityRootObject3DProxy.instance.eid = eid;
     return EntityRootObject3DProxy.instance;
   }

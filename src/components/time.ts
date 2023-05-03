@@ -15,21 +15,32 @@ export const Time = defineComponent({
 });
 const ClockMap = new Map<number, Clock>();
 
-class TimeProxy {
-  eid: number;
+export class TimeProxy {
+  private static instance: TimeProxy = new TimeProxy();
+  private eid: number;
 
-  constructor(eid: number) {
-    this.eid = eid;
+  constructor() {
+    this.eid = NULL_EID;
   }
 
-  add(world: IWorld, clock: Clock, delta: number, elapsed: number): void {
+  static get(eid: number): TimeProxy {
+    TimeProxy.instance.eid = eid;
+    return TimeProxy.instance;
+  }
+
+  allocate(
+    world: IWorld,
+    clock: Clock,
+    delta: number,
+    elapsed: number
+  ): void {
     addComponent(world, Time, this.eid);
     Time.delta[this.eid] = delta;
     Time.elapsed[this.eid] = elapsed;
     ClockMap.set(this.eid, clock);
   }
 
-  remove(world: IWorld): void {
+  free(world: IWorld): void {
     removeComponent(world, Time, this.eid);
     ClockMap.delete(this.eid);
   }
@@ -54,5 +65,3 @@ class TimeProxy {
     Time.elapsed[this.eid] = elapsed;
   }
 }
-
-export const timeProxy = new TimeProxy(NULL_EID);

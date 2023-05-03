@@ -57,11 +57,9 @@ class App {
         const timeEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_time__WEBPACK_IMPORTED_MODULE_1__.TimeInitialize, timeEid);
         const rendererEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
-        _components_renderer__WEBPACK_IMPORTED_MODULE_3__.rendererInitializeProxy.eid = rendererEid;
-        _components_renderer__WEBPACK_IMPORTED_MODULE_3__.rendererInitializeProxy.add(this.world);
+        _components_renderer__WEBPACK_IMPORTED_MODULE_3__.RendererInitializeProxy.get(rendererEid).allocate(this.world);
         const sceneEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
-        _components_scene__WEBPACK_IMPORTED_MODULE_5__.sceneInitializeProxy.eid = sceneEid;
-        _components_scene__WEBPACK_IMPORTED_MODULE_5__.sceneInitializeProxy.add(this.world);
+        _components_scene__WEBPACK_IMPORTED_MODULE_5__.SceneInitializeProxy.get(sceneEid).allocate(this.world);
         const cameraEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_scene_camera__WEBPACK_IMPORTED_MODULE_7__.SceneCameraInitialize, cameraEid);
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_scene__WEBPACK_IMPORTED_MODULE_5__.InScene, cameraEid);
@@ -167,9 +165,6 @@ class EntityRootObject3DProxy {
         this.eid = _common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
     }
     static get(eid) {
-        if (EntityRootObject3DProxy.instance === null) {
-            EntityRootObject3DProxy.instance = new EntityRootObject3DProxy();
-        }
         EntityRootObject3DProxy.instance.eid = eid;
         return EntityRootObject3DProxy.instance;
     }
@@ -253,7 +248,7 @@ class EntityRootObject3DProxy {
         return GroupMap.get(this.eid);
     }
 }
-EntityRootObject3DProxy.instance = null;
+EntityRootObject3DProxy.instance = new EntityRootObject3DProxy();
 
 
 /***/ }),
@@ -266,10 +261,10 @@ EntityRootObject3DProxy.instance = null;
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "Renderer": () => (/* binding */ Renderer),
 /* harmony export */   "RendererInitialize": () => (/* binding */ RendererInitialize),
-/* harmony export */   "RendererTag": () => (/* binding */ RendererTag),
-/* harmony export */   "rendererInitializeProxy": () => (/* binding */ rendererInitializeProxy),
-/* harmony export */   "rendererProxy": () => (/* binding */ rendererProxy)
+/* harmony export */   "RendererInitializeProxy": () => (/* binding */ RendererInitializeProxy),
+/* harmony export */   "RendererProxy": () => (/* binding */ RendererProxy)
 /* harmony export */ });
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../common */ "./src/common.ts");
@@ -277,13 +272,17 @@ __webpack_require__.r(__webpack_exports__);
 
 const RendererInitialize = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 const RendererInitializeMap = new Map();
-const RendererTag = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const Renderer = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 const RendererMap = new Map();
 class RendererInitializeProxy {
-    constructor(eid) {
-        this.eid = eid;
+    constructor() {
+        this.eid = _common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
     }
-    add(world, params = {}) {
+    static get(eid) {
+        RendererInitializeProxy.instance.eid = eid;
+        return RendererInitializeProxy.instance;
+    }
+    allocate(world, params = {}) {
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, RendererInitialize, this.eid);
         RendererInitializeMap.set(this.eid, {
             height: params.height || window.innerHeight,
@@ -292,7 +291,7 @@ class RendererInitializeProxy {
             width: params.width || window.innerWidth
         });
     }
-    remove(world) {
+    free(world) {
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, RendererInitialize, this.eid);
         RendererInitializeMap.delete(this.eid);
     }
@@ -309,24 +308,28 @@ class RendererInitializeProxy {
         return RendererInitializeMap.get(this.eid).width;
     }
 }
+RendererInitializeProxy.instance = new RendererInitializeProxy();
 class RendererProxy {
-    constructor(eid) {
-        this.eid = eid;
+    constructor() {
+        this.eid = _common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
     }
-    add(world, renderer) {
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, RendererTag, this.eid);
+    static get(eid) {
+        RendererProxy.instance.eid = eid;
+        return RendererProxy.instance;
+    }
+    allocate(world, renderer) {
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, Renderer, this.eid);
         RendererMap.set(this.eid, renderer);
     }
-    remove(world) {
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, RendererTag, this.eid);
+    free(world) {
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, Renderer, this.eid);
         RendererMap.delete(this.eid);
     }
     get renderer() {
         return RendererMap.get(this.eid);
     }
 }
-const rendererInitializeProxy = new RendererInitializeProxy(_common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID);
-const rendererProxy = new RendererProxy(_common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID);
+RendererProxy.instance = new RendererProxy();
 
 
 /***/ }),
@@ -341,9 +344,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "InScene": () => (/* binding */ InScene),
 /* harmony export */   "SceneInitialize": () => (/* binding */ SceneInitialize),
-/* harmony export */   "SceneTag": () => (/* binding */ SceneTag),
-/* harmony export */   "sceneInitializeProxy": () => (/* binding */ sceneInitializeProxy),
-/* harmony export */   "sceneProxy": () => (/* binding */ sceneProxy)
+/* harmony export */   "SceneInitializeProxy": () => (/* binding */ SceneInitializeProxy),
+/* harmony export */   "SceneProxy": () => (/* binding */ SceneProxy),
+/* harmony export */   "SceneTag": () => (/* binding */ SceneTag)
 /* harmony export */ });
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../common */ "./src/common.ts");
@@ -355,16 +358,20 @@ const SceneTag = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 const SceneMap = new Map();
 const InScene = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 class SceneInitializeProxy {
-    constructor(eid) {
-        this.eid = eid;
+    constructor() {
+        this.eid = _common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
     }
-    add(world, params = {}) {
+    static get(eid) {
+        SceneInitializeProxy.instance.eid = eid;
+        return SceneInitializeProxy.instance;
+    }
+    allocate(world, params = {}) {
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, SceneInitialize, this.eid);
         SceneInitializeMap.set(this.eid, {
             backgroundColor: params.backgroundColor || 0xffffff
         });
     }
-    remove(world) {
+    free(world) {
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, SceneInitialize, this.eid);
         SceneInitializeMap.delete(this.eid);
     }
@@ -372,15 +379,20 @@ class SceneInitializeProxy {
         return SceneInitializeMap.get(this.eid).backgroundColor;
     }
 }
+SceneInitializeProxy.instance = new SceneInitializeProxy();
 class SceneProxy {
-    constructor(eid) {
-        this.eid = eid;
+    constructor() {
+        this.eid = _common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
     }
-    add(world, scene) {
+    static get(eid) {
+        SceneProxy.instance.eid = eid;
+        return SceneProxy.instance;
+    }
+    allocate(world, scene) {
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, SceneTag, this.eid);
         SceneMap.set(this.eid, scene);
     }
-    remove(world) {
+    free(world) {
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, SceneTag, this.eid);
         SceneMap.delete(this.eid);
     }
@@ -388,8 +400,7 @@ class SceneProxy {
         return SceneMap.get(this.eid);
     }
 }
-const sceneInitializeProxy = new SceneInitializeProxy(_common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID);
-const sceneProxy = new SceneProxy(_common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID);
+SceneProxy.instance = new SceneProxy();
 
 
 /***/ }),
@@ -404,7 +415,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "SceneCamera": () => (/* binding */ SceneCamera),
 /* harmony export */   "SceneCameraInitialize": () => (/* binding */ SceneCameraInitialize),
-/* harmony export */   "sceneCameraProxy": () => (/* binding */ sceneCameraProxy)
+/* harmony export */   "SceneCameraProxy": () => (/* binding */ SceneCameraProxy)
 /* harmony export */ });
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../common */ "./src/common.ts");
@@ -414,14 +425,18 @@ const SceneCameraInitialize = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineCompo
 const SceneCamera = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 const CameraMap = new Map();
 class SceneCameraProxy {
-    constructor(eid) {
-        this.eid = eid;
+    constructor() {
+        this.eid = _common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
     }
-    add(world, camera) {
+    static get(eid) {
+        SceneCameraProxy.instance.eid = eid;
+        return SceneCameraProxy.instance;
+    }
+    allocate(world, camera) {
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, SceneCamera, this.eid);
         CameraMap.set(this.eid, camera);
     }
-    remove(world) {
+    free(world) {
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, SceneCamera, this.eid);
         CameraMap.delete(this.eid);
     }
@@ -429,7 +444,7 @@ class SceneCameraProxy {
         return CameraMap.get(this.eid);
     }
 }
-const sceneCameraProxy = new SceneCameraProxy(_common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID);
+SceneCameraProxy.instance = new SceneCameraProxy();
 
 
 /***/ }),
@@ -444,7 +459,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Time": () => (/* binding */ Time),
 /* harmony export */   "TimeInitialize": () => (/* binding */ TimeInitialize),
-/* harmony export */   "timeProxy": () => (/* binding */ timeProxy)
+/* harmony export */   "TimeProxy": () => (/* binding */ TimeProxy)
 /* harmony export */ });
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../common */ "./src/common.ts");
@@ -457,16 +472,20 @@ const Time = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({
 });
 const ClockMap = new Map();
 class TimeProxy {
-    constructor(eid) {
-        this.eid = eid;
+    constructor() {
+        this.eid = _common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
     }
-    add(world, clock, delta, elapsed) {
+    static get(eid) {
+        TimeProxy.instance.eid = eid;
+        return TimeProxy.instance;
+    }
+    allocate(world, clock, delta, elapsed) {
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, Time, this.eid);
         Time.delta[this.eid] = delta;
         Time.elapsed[this.eid] = elapsed;
         ClockMap.set(this.eid, clock);
     }
-    remove(world) {
+    free(world) {
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, Time, this.eid);
         ClockMap.delete(this.eid);
     }
@@ -486,7 +505,7 @@ class TimeProxy {
         Time.elapsed[this.eid] = elapsed;
     }
 }
-const timeProxy = new TimeProxy(_common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID);
+TimeProxy.instance = new TimeProxy();
 
 
 /***/ }),
@@ -509,7 +528,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const rendererQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_renderer__WEBPACK_IMPORTED_MODULE_1__.RendererTag]);
+const rendererQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_renderer__WEBPACK_IMPORTED_MODULE_1__.Renderer]);
 const sceneQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_scene__WEBPACK_IMPORTED_MODULE_2__.SceneTag]);
 const cameraQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_scene_camera__WEBPACK_IMPORTED_MODULE_3__.SceneCamera]);
 const renderSystem = (world) => {
@@ -517,14 +536,11 @@ const renderSystem = (world) => {
     const sceneEids = sceneQuery(world);
     const cameraEids = cameraQuery(world);
     rendererEids.forEach(rendererEid => {
+        const renderer = _components_renderer__WEBPACK_IMPORTED_MODULE_1__.RendererProxy.get(rendererEid).renderer;
         sceneEids.forEach(sceneEid => {
+            const scene = _components_scene__WEBPACK_IMPORTED_MODULE_2__.SceneProxy.get(sceneEid).scene;
             cameraEids.forEach(cameraEid => {
-                _components_renderer__WEBPACK_IMPORTED_MODULE_1__.rendererProxy.eid = rendererEid;
-                const renderer = _components_renderer__WEBPACK_IMPORTED_MODULE_1__.rendererProxy.renderer;
-                _components_scene__WEBPACK_IMPORTED_MODULE_2__.sceneProxy.eid = sceneEid;
-                const scene = _components_scene__WEBPACK_IMPORTED_MODULE_2__.sceneProxy.scene;
-                _components_scene_camera__WEBPACK_IMPORTED_MODULE_3__.sceneCameraProxy.eid = cameraEid;
-                const camera = _components_scene_camera__WEBPACK_IMPORTED_MODULE_3__.sceneCameraProxy.camera;
+                const camera = _components_scene_camera__WEBPACK_IMPORTED_MODULE_3__.SceneCameraProxy.get(cameraEid).camera;
                 renderer.render(scene, camera);
             });
         });
@@ -552,26 +568,27 @@ __webpack_require__.r(__webpack_exports__);
 
 const initializeQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_renderer__WEBPACK_IMPORTED_MODULE_1__.RendererInitialize]);
 const initializeEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)(initializeQuery);
-const rendererQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_renderer__WEBPACK_IMPORTED_MODULE_1__.RendererTag]);
+const rendererQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_renderer__WEBPACK_IMPORTED_MODULE_1__.Renderer]);
 const rendererExitQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)(rendererQuery);
 const rendererSystem = (world) => {
     initializeEnterQuery(world).forEach(eid => {
-        _components_renderer__WEBPACK_IMPORTED_MODULE_1__.rendererInitializeProxy.eid = eid;
-        const parentElement = _components_renderer__WEBPACK_IMPORTED_MODULE_1__.rendererInitializeProxy.parentDomElement;
-        const width = _components_renderer__WEBPACK_IMPORTED_MODULE_1__.rendererInitializeProxy.width;
-        const height = _components_renderer__WEBPACK_IMPORTED_MODULE_1__.rendererInitializeProxy.height;
-        const pixelRatio = _components_renderer__WEBPACK_IMPORTED_MODULE_1__.rendererInitializeProxy.pixelRatio;
-        _components_renderer__WEBPACK_IMPORTED_MODULE_1__.rendererInitializeProxy.remove(world);
+        const initProxy = _components_renderer__WEBPACK_IMPORTED_MODULE_1__.RendererInitializeProxy.get(eid);
+        const parentElement = initProxy.parentDomElement;
+        const width = initProxy.width;
+        const height = initProxy.height;
+        const pixelRatio = initProxy.pixelRatio;
+        initProxy.free(world);
         const renderer = new three__WEBPACK_IMPORTED_MODULE_2__.WebGLRenderer();
         renderer.setSize(width, height);
         renderer.setPixelRatio(pixelRatio);
         parentElement.appendChild(renderer.domElement);
-        _components_renderer__WEBPACK_IMPORTED_MODULE_1__.rendererProxy.eid = eid;
-        _components_renderer__WEBPACK_IMPORTED_MODULE_1__.rendererProxy.add(world, renderer);
+        const proxy = _components_renderer__WEBPACK_IMPORTED_MODULE_1__.RendererProxy.get(eid);
+        proxy.allocate(world, renderer);
     });
     rendererExitQuery(world).forEach(eid => {
-        _components_renderer__WEBPACK_IMPORTED_MODULE_1__.rendererProxy.eid = eid;
-        _components_renderer__WEBPACK_IMPORTED_MODULE_1__.rendererProxy.remove(world);
+        const proxy = _components_renderer__WEBPACK_IMPORTED_MODULE_1__.RendererProxy.get(eid);
+        proxy.renderer.dispose();
+        proxy.free(world);
     });
 };
 
@@ -605,30 +622,25 @@ const inSceneEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)(inS
 const inSceneExitQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)(inSceneQuery);
 const sceneSystem = (world) => {
     initializeEnterQuery(world).forEach(eid => {
-        _components_scene__WEBPACK_IMPORTED_MODULE_2__.sceneInitializeProxy.eid = eid;
-        const backgroundColor = _components_scene__WEBPACK_IMPORTED_MODULE_2__.sceneInitializeProxy.backgroundColor;
-        _components_scene__WEBPACK_IMPORTED_MODULE_2__.sceneInitializeProxy.remove(world);
+        const proxy = _components_scene__WEBPACK_IMPORTED_MODULE_2__.SceneInitializeProxy.get(eid);
+        const backgroundColor = proxy.backgroundColor;
+        proxy.free(world);
         const scene = new three__WEBPACK_IMPORTED_MODULE_3__.Scene();
         // Matrices are updated in updateMatricesSystem.
         scene.matrixWorldAutoUpdate = false;
         scene.background = new three__WEBPACK_IMPORTED_MODULE_3__.Color(backgroundColor);
-        _components_scene__WEBPACK_IMPORTED_MODULE_2__.sceneProxy.eid = eid;
-        _components_scene__WEBPACK_IMPORTED_MODULE_2__.sceneProxy.add(world, scene);
+        _components_scene__WEBPACK_IMPORTED_MODULE_2__.SceneProxy.get(eid).allocate(world, scene);
     });
     sceneExitQuery(world).forEach(eid => {
-        _components_scene__WEBPACK_IMPORTED_MODULE_2__.sceneProxy.eid = eid;
-        _components_scene__WEBPACK_IMPORTED_MODULE_2__.sceneProxy.remove(world);
+        _components_scene__WEBPACK_IMPORTED_MODULE_2__.SceneProxy.get(eid).free(world);
     });
     sceneQuery(world).forEach(eid => {
-        _components_scene__WEBPACK_IMPORTED_MODULE_2__.sceneProxy.eid = eid;
-        const scene = _components_scene__WEBPACK_IMPORTED_MODULE_2__.sceneProxy.scene;
+        const scene = _components_scene__WEBPACK_IMPORTED_MODULE_2__.SceneProxy.get(eid).scene;
         inSceneExitQuery(world).forEach(objEid => {
-            const proxy = _components_entity_root_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityRootObject3DProxy.get(objEid);
-            scene.remove(proxy.root);
+            scene.remove(_components_entity_root_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityRootObject3DProxy.get(objEid).root);
         });
         inSceneEnterQuery(world).forEach(objEid => {
-            const proxy = _components_entity_root_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityRootObject3DProxy.get(objEid);
-            scene.add(proxy.root);
+            scene.add(_components_entity_root_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityRootObject3DProxy.get(objEid).root);
         });
     });
 };
@@ -661,18 +673,15 @@ const sceneCameraExitQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)(s
 const sceneCameraSystem = (world) => {
     initializeEnterQuery(world).forEach(eid => {
         const camera = new three__WEBPACK_IMPORTED_MODULE_3__.PerspectiveCamera();
-        const proxy = _components_entity_root_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityRootObject3DProxy.get(eid);
-        proxy.addObject3D(world, camera);
-        _components_scene_camera__WEBPACK_IMPORTED_MODULE_2__.sceneCameraProxy.eid = eid;
-        _components_scene_camera__WEBPACK_IMPORTED_MODULE_2__.sceneCameraProxy.add(world, camera);
+        _components_entity_root_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityRootObject3DProxy.get(eid).addObject3D(world, camera);
+        _components_scene_camera__WEBPACK_IMPORTED_MODULE_2__.SceneCameraProxy.get(eid).allocate(world, camera);
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_scene_camera__WEBPACK_IMPORTED_MODULE_2__.SceneCameraInitialize, eid);
     });
     sceneCameraExitQuery(world).forEach(eid => {
-        _components_scene_camera__WEBPACK_IMPORTED_MODULE_2__.sceneCameraProxy.eid = eid;
-        const camera = _components_scene_camera__WEBPACK_IMPORTED_MODULE_2__.sceneCameraProxy.camera;
-        const proxy = _components_entity_root_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityRootObject3DProxy.get(eid);
-        proxy.removeObject3D(world, camera);
-        _components_scene_camera__WEBPACK_IMPORTED_MODULE_2__.sceneCameraProxy.remove(world);
+        const proxy = _components_scene_camera__WEBPACK_IMPORTED_MODULE_2__.SceneCameraProxy.get(eid);
+        const camera = proxy.camera;
+        _components_entity_root_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityRootObject3DProxy.get(eid).removeObject3D(world, camera);
+        proxy.free(world);
     });
 };
 
@@ -701,20 +710,18 @@ const timeQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_componen
 const timeExitQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)(timeQuery);
 const timeSystem = (world) => {
     initializeEnterQuery(world).forEach(eid => {
-        _components_time__WEBPACK_IMPORTED_MODULE_1__.timeProxy.eid = eid;
-        _components_time__WEBPACK_IMPORTED_MODULE_1__.timeProxy.add(world, new three__WEBPACK_IMPORTED_MODULE_2__.Clock(), 0, 0);
+        _components_time__WEBPACK_IMPORTED_MODULE_1__.TimeProxy.get(eid).allocate(world, new three__WEBPACK_IMPORTED_MODULE_2__.Clock(), 0, 0);
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_time__WEBPACK_IMPORTED_MODULE_1__.TimeInitialize, eid);
     });
     timeExitQuery(world).forEach(eid => {
-        _components_time__WEBPACK_IMPORTED_MODULE_1__.timeProxy.eid = eid;
-        _components_time__WEBPACK_IMPORTED_MODULE_1__.timeProxy.remove(world);
+        _components_time__WEBPACK_IMPORTED_MODULE_1__.TimeProxy.get(eid).free(world);
     });
     timeQuery(world).forEach(eid => {
-        _components_time__WEBPACK_IMPORTED_MODULE_1__.timeProxy.eid = eid;
-        const clock = _components_time__WEBPACK_IMPORTED_MODULE_1__.timeProxy.clock;
+        const proxy = _components_time__WEBPACK_IMPORTED_MODULE_1__.TimeProxy.get(eid);
+        const clock = proxy.clock;
         const delta = clock.getDelta();
-        _components_time__WEBPACK_IMPORTED_MODULE_1__.timeProxy.delta = delta;
-        _components_time__WEBPACK_IMPORTED_MODULE_1__.timeProxy.elapsed += delta;
+        proxy.delta = delta;
+        proxy.elapsed += delta;
     });
 };
 
@@ -738,8 +745,7 @@ __webpack_require__.r(__webpack_exports__);
 const sceneQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_scene__WEBPACK_IMPORTED_MODULE_1__.SceneTag]);
 const updateMatricesSystem = (world) => {
     sceneQuery(world).forEach(eid => {
-        _components_scene__WEBPACK_IMPORTED_MODULE_1__.sceneProxy.eid = eid;
-        const scene = _components_scene__WEBPACK_IMPORTED_MODULE_1__.sceneProxy.scene;
+        const scene = _components_scene__WEBPACK_IMPORTED_MODULE_1__.SceneProxy.get(eid).scene;
         scene.updateMatrixWorld(true);
     });
 };
