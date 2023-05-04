@@ -61,7 +61,7 @@ class App {
         const sceneEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
         _components_scene__WEBPACK_IMPORTED_MODULE_5__.SceneInitializeProxy.get(sceneEid).allocate(this.world);
         const cameraEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_scene_camera__WEBPACK_IMPORTED_MODULE_7__.SceneCameraInitialize, cameraEid);
+        _components_scene_camera__WEBPACK_IMPORTED_MODULE_7__.SceneCameraInitializeProxy.get(cameraEid).allocate(this.world);
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_scene__WEBPACK_IMPORTED_MODULE_5__.InScene, cameraEid);
         const proxy = _components_entity_root_object3d__WEBPACK_IMPORTED_MODULE_12__.EntityRootObject3DProxy.get(cameraEid);
         proxy.allocate(this.world);
@@ -415,6 +415,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "SceneCamera": () => (/* binding */ SceneCamera),
 /* harmony export */   "SceneCameraInitialize": () => (/* binding */ SceneCameraInitialize),
+/* harmony export */   "SceneCameraInitializeProxy": () => (/* binding */ SceneCameraInitializeProxy),
 /* harmony export */   "SceneCameraProxy": () => (/* binding */ SceneCameraProxy)
 /* harmony export */ });
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
@@ -422,8 +423,44 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const SceneCameraInitialize = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const CameraInitializeMap = new Map();
 const SceneCamera = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 const CameraMap = new Map();
+class SceneCameraInitializeProxy {
+    constructor() {
+        this.eid = _common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
+    }
+    static get(eid) {
+        SceneCameraInitializeProxy.instance.eid = eid;
+        return SceneCameraInitializeProxy.instance;
+    }
+    allocate(world, params = {}) {
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, SceneCameraInitialize, this.eid);
+        CameraInitializeMap.set(this.eid, {
+            fov: params.fov || 60,
+            aspect: params.aspect || (window.innerWidth / window.innerHeight),
+            near: params.near || 0.001,
+            far: params.far || 2000.0
+        });
+    }
+    free(world) {
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, SceneCameraInitialize, this.eid);
+        CameraInitializeMap.delete(this.eid);
+    }
+    get fov() {
+        return CameraInitializeMap.get(this.eid).fov;
+    }
+    get aspect() {
+        return CameraInitializeMap.get(this.eid).aspect;
+    }
+    get near() {
+        return CameraInitializeMap.get(this.eid).near;
+    }
+    get far() {
+        return CameraInitializeMap.get(this.eid).far;
+    }
+}
+SceneCameraInitializeProxy.instance = new SceneCameraInitializeProxy();
 class SceneCameraProxy {
     constructor() {
         this.eid = _common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
@@ -466,6 +503,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const TimeInitialize = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+// f32 types might cause precision problem??
 const Time = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({
     delta: bitecs__WEBPACK_IMPORTED_MODULE_0__.Types.f32,
     elapsed: bitecs__WEBPACK_IMPORTED_MODULE_0__.Types.f32
@@ -672,10 +710,15 @@ const sceneCameraQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_c
 const sceneCameraExitQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)(sceneCameraQuery);
 const sceneCameraSystem = (world) => {
     initializeEnterQuery(world).forEach(eid => {
-        const camera = new three__WEBPACK_IMPORTED_MODULE_3__.PerspectiveCamera();
+        const proxy = _components_scene_camera__WEBPACK_IMPORTED_MODULE_2__.SceneCameraInitializeProxy.get(eid);
+        const fov = proxy.fov;
+        const aspect = proxy.aspect;
+        const near = proxy.near;
+        const far = proxy.far;
+        proxy.free(world);
+        const camera = new three__WEBPACK_IMPORTED_MODULE_3__.PerspectiveCamera(fov, aspect, near, far);
         _components_entity_root_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityRootObject3DProxy.get(eid).addObject3D(world, camera);
         _components_scene_camera__WEBPACK_IMPORTED_MODULE_2__.SceneCameraProxy.get(eid).allocate(world, camera);
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_scene_camera__WEBPACK_IMPORTED_MODULE_2__.SceneCameraInitialize, eid);
     });
     sceneCameraExitQuery(world).forEach(eid => {
         const proxy = _components_scene_camera__WEBPACK_IMPORTED_MODULE_2__.SceneCameraProxy.get(eid);

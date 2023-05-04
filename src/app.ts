@@ -10,7 +10,7 @@ import { RendererInitializeProxy } from "./components/renderer";
 import { rendererSystem } from "./systems/renderer";
 import { InScene, SceneInitializeProxy } from "./components/scene";
 import { sceneSystem } from "./systems/scene";
-import { SceneCameraInitialize } from "./components/scene_camera";
+import { SceneCameraInitializeProxy } from "./components/scene_camera";
 import { sceneCameraSystem } from "./systems/scene_camera";
 import { updateMatricesSystem } from "./systems/update_matrices";
 import { renderSystem } from "./systems/render";
@@ -55,7 +55,7 @@ export class App {
     SceneInitializeProxy.get(sceneEid).allocate(this.world);
 
     const cameraEid = addEntity(this.world);
-    addComponent(this.world, SceneCameraInitialize, cameraEid);
+    SceneCameraInitializeProxy.get(cameraEid).allocate(this.world);
     addComponent(this.world, InScene, cameraEid);
 
     const proxy = EntityRootObject3DProxy.get(cameraEid);

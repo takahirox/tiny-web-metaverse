@@ -20,8 +20,7 @@ Velocity.x[eid] = 0.0;
 Velocity.y[eid] = 0.01;
 Velocity.z[eid] = 0.0;
 
-const proxy = EntityRootObject3DProxy.get(eid);
-proxy.addObject3D(world, new Mesh(
+EntityRootObject3DProxy.get(eid).addObject3D(world, new Mesh(
   new BoxGeometry(1.0, 1.0, 1.0),
   new MeshBasicMaterial({color: 0x888888})
 ));
