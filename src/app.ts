@@ -15,7 +15,15 @@ import { sceneCameraSystem } from "./systems/scene_camera";
 import { updateMatricesSystem } from "./systems/update_matrices";
 import { renderSystem } from "./systems/render";
 import { SystemOrder } from "./common";
-import { EntityRootObject3DProxy } from "./components/entity_root_object3d";
+import { EntityObject3DProxy } from "./components/entity_object3d";
+import {
+  WindowResizeEventListener,
+  WindowSize
+} from "./components/window_resize";
+import {
+  listenWindowResizeEvent,
+  windowResizeEventClearSystem
+} from "./events/window_resize";
 
 type System = (world: IWorld) => void;
 
@@ -30,6 +38,10 @@ export class App {
   }
 
   private init(): void {
+    // Event Listeners
+
+    listenWindowResizeEvent(this.world);
+
     // Built-in systems and entities
 
     this.registerSystem(timeSystem, SystemOrder.Time);
@@ -42,6 +54,8 @@ export class App {
 
     this.registerSystem(renderSystem, SystemOrder.Render);
 
+    this.registerSystem(windowResizeEventClearSystem, SystemOrder.TearDown);
+
     // Entity 0 for null entity
     addEntity(this.world);
 
@@ -50,15 +64,19 @@ export class App {
 
     const rendererEid = addEntity(this.world);
     RendererInitializeProxy.get(rendererEid).allocate(this.world);
+    addComponent(this.world, WindowSize, rendererEid);
+    addComponent(this.world, WindowResizeEventListener, rendererEid);
 
     const sceneEid = addEntity(this.world);
     SceneInitializeProxy.get(sceneEid).allocate(this.world);
 
     const cameraEid = addEntity(this.world);
     SceneCameraInitializeProxy.get(cameraEid).allocate(this.world);
+    addComponent(this.world, WindowSize, cameraEid);
+    addComponent(this.world, WindowResizeEventListener, cameraEid);
     addComponent(this.world, InScene, cameraEid);
 
-    const proxy = EntityRootObject3DProxy.get(cameraEid);
+    const proxy = EntityObject3DProxy.get(cameraEid);
     proxy.allocate(this.world);
     // TODO: Fix me
     proxy.root.position.set(0.0, 0.0, 5.0);

@@ -6,9 +6,9 @@ import {
 } from "bitecs";
 import { Color, Scene } from "three";
 import {
-  EntityRootObject3DProxy,
-  EntityRootObject3D
-} from "../components/entity_root_object3d";
+  EntityObject3DProxy,
+  EntityObject3D
+} from "../components/entity_object3d";
 import {
   InScene,
   SceneInitialize,
@@ -17,13 +17,10 @@ import {
   SceneTag
 } from "../components/scene";
 
-const initializeQuery = defineQuery([SceneInitialize]);
-const initializeEnterQuery = enterQuery(initializeQuery);
-
+const initializeEnterQuery = enterQuery(defineQuery([SceneInitialize]));
 const sceneQuery = defineQuery([SceneTag]);
 const sceneExitQuery = exitQuery(sceneQuery);
-
-const inSceneQuery = defineQuery([InScene, EntityRootObject3D]);
+const inSceneQuery = defineQuery([InScene, EntityObject3D]);
 const inSceneEnterQuery = enterQuery(inSceneQuery);
 const inSceneExitQuery = exitQuery(inSceneQuery);
 
@@ -49,11 +46,11 @@ export const sceneSystem = (world: IWorld): void => {
     const scene = SceneProxy.get(eid).scene;
 
     inSceneExitQuery(world).forEach(objEid => {
-      scene.remove(EntityRootObject3DProxy.get(objEid).root);
+      scene.remove(EntityObject3DProxy.get(objEid).root);
     });
 
     inSceneEnterQuery(world).forEach(objEid => {
-      scene.add(EntityRootObject3DProxy.get(objEid).root);
+      scene.add(EntityObject3DProxy.get(objEid).root);
     });
   });
 };

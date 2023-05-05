@@ -2,22 +2,23 @@ import {
   defineQuery,
   enterQuery,
   exitQuery,
-  IWorld
+  IWorld,
+  removeComponent
 } from "bitecs";
 import { PerspectiveCamera } from "three";
-import { EntityRootObject3DProxy } from "../components/entity_root_object3d";
+import { EntityObject3DProxy } from "../components/entity_object3d";
 import {
   SceneCameraInitialize,
   SceneCameraInitializeProxy,
   SceneCameraProxy,
   SceneCamera
 } from "../components/scene_camera";
+import { WindowResizeEvent, WindowSize } from "../components/window_resize";
 
-const initializeQuery = defineQuery([SceneCameraInitialize]);
-const initializeEnterQuery = enterQuery(initializeQuery);
-
-const sceneCameraQuery = defineQuery([SceneCamera]);
-const sceneCameraExitQuery = exitQuery(sceneCameraQuery);
+const initializeEnterQuery = enterQuery(defineQuery([SceneCameraInitialize]));
+const sceneCameraExitQuery = exitQuery(defineQuery([SceneCamera]));
+const sceneCameraWindowResizeEnterQuery =
+  enterQuery(defineQuery([SceneCamera, WindowResizeEvent, WindowSize]));
 
 export const sceneCameraSystem = (world: IWorld): void => {
   initializeEnterQuery(world).forEach(eid => {
@@ -29,14 +30,21 @@ export const sceneCameraSystem = (world: IWorld): void => {
     proxy.free(world);
 
     const camera = new PerspectiveCamera(fov, aspect, near, far);
-    EntityRootObject3DProxy.get(eid).addObject3D(world, camera);
+    EntityObject3DProxy.get(eid).addObject3D(world, camera);
     SceneCameraProxy.get(eid).allocate(world, camera);
   });
 
   sceneCameraExitQuery(world).forEach(eid => {
     const proxy = SceneCameraProxy.get(eid);
     const camera = proxy.camera;
-    EntityRootObject3DProxy.get(eid).removeObject3D(world, camera);
+    EntityObject3DProxy.get(eid).removeObject3D(world, camera);
     proxy.free(world);
+  });
+
+  sceneCameraWindowResizeEnterQuery(world).forEach(eid => {
+    const camera = SceneCameraProxy.get(eid).camera;
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    removeComponent(world, WindowResizeEvent, eid);
   });
 };

@@ -11,12 +11,15 @@ import {
   RendererProxy,
   Renderer
 } from "../components/renderer";
+import {
+  WindowResizeEvent,
+  WindowSize
+} from "../components/window_resize";
 
-const initializeQuery = defineQuery([RendererInitialize]);
-const initializeEnterQuery = enterQuery(initializeQuery);
-
-const rendererQuery = defineQuery([Renderer]);
-const rendererExitQuery = exitQuery(rendererQuery);
+const initializeEnterQuery = enterQuery(defineQuery([RendererInitialize]));
+const rendererExitQuery = exitQuery(defineQuery([Renderer]));
+const rendererWindowResizeEnterQuery =
+  enterQuery(defineQuery([Renderer, WindowResizeEvent, WindowSize]));
 
 export const rendererSystem = (world: IWorld): void => {
   initializeEnterQuery(world).forEach(eid => {
@@ -40,5 +43,10 @@ export const rendererSystem = (world: IWorld): void => {
     const proxy = RendererProxy.get(eid);
     proxy.renderer.dispose();
     proxy.free(world);
+  });
+
+  rendererWindowResizeEnterQuery(world).forEach(eid => {
+    const renderer = RendererProxy.get(eid).renderer;
+    renderer.setSize(window.innerWidth, window.innerHeight);
   });
 };

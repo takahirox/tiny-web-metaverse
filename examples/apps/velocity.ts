@@ -4,7 +4,7 @@ import {
 } from "bitecs";
 import { BoxGeometry, Mesh, MeshBasicMaterial } from "three";
 import { App } from "../../src/app";
-import { EntityRootObject3DProxy } from "../../src/components/entity_root_object3d";
+import { EntityObject3DProxy } from "../../src/components/entity_object3d";
 import { InScene } from "../../src/components/scene";
 import { Velocity } from "../components/velocity";
 import { velocitySystem } from "../systems/velocity";
@@ -20,7 +20,7 @@ Velocity.x[eid] = 0.0;
 Velocity.y[eid] = 0.01;
 Velocity.z[eid] = 0.0;
 
-EntityRootObject3DProxy.get(eid).addObject3D(world, new Mesh(
+EntityObject3DProxy.get(eid).addObject3D(world, new Mesh(
   new BoxGeometry(1.0, 1.0, 1.0),
   new MeshBasicMaterial({color: 0x888888})
 ));

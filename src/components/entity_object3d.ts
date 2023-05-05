@@ -8,7 +8,7 @@ import {
 import { Group, Object3D } from "three";
 import { NULL_EID } from "../common";
 
-export const EntityRootObject3D = defineComponent();
+export const EntityObject3D = defineComponent();
 const RootObject3DMap = new Map<number, Object3D>();
 const Object3DsMap = new Map<number, Object3D[]>();
 const GroupMap = new Map<number, EntityRootGroup>();
@@ -32,21 +32,21 @@ export class EntityRootGroup extends Group {
 //                              - Object3DB
 //                              - ...
 
-export class EntityRootObject3DProxy {
-  private static instance: EntityRootObject3DProxy = new EntityRootObject3DProxy();
+export class EntityObject3DProxy {
+  private static instance: EntityObject3DProxy = new EntityObject3DProxy();
   private eid: number;
 
   private constructor() {
     this.eid = NULL_EID;
   }
 
-  static get(eid: number): EntityRootObject3DProxy {
-    EntityRootObject3DProxy.instance.eid = eid;
-    return EntityRootObject3DProxy.instance;
+  static get(eid: number): EntityObject3DProxy {
+    EntityObject3DProxy.instance.eid = eid;
+    return EntityObject3DProxy.instance;
   }
 
   allocate(world: IWorld): void {
-    addComponent(world, EntityRootObject3D, this.eid);
+    addComponent(world, EntityObject3D, this.eid);
     const group = new EntityRootGroup();
     RootObject3DMap.set(this.eid, group);
     Object3DsMap.set(this.eid, []);
@@ -54,14 +54,14 @@ export class EntityRootObject3DProxy {
   }
 
   free(world: IWorld): void {
-    removeComponent(world, EntityRootObject3D, this.eid);
+    removeComponent(world, EntityObject3D, this.eid);
     RootObject3DMap.delete(this.eid);
     Object3DsMap.delete(this.eid);
     GroupMap.delete(this.eid);
   }
 
   addObject3D(world: IWorld, obj: Object3D): void {
-    if (!hasComponent(world, EntityRootObject3D, this.eid)) {
+    if (!hasComponent(world, EntityObject3D, this.eid)) {
       this.allocate(world);
     }
 
@@ -81,7 +81,7 @@ export class EntityRootObject3DProxy {
   }
 
   removeObject3D(world: IWorld, obj: Object3D): void {
-    if (!hasComponent(world, EntityRootObject3D, this.eid)) {
+    if (!hasComponent(world, EntityObject3D, this.eid)) {
       // Throw an error?
       return;
     }

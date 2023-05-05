@@ -12,9 +12,7 @@ import {
   TimeProxy
 } from "../components/time";
 
-const initializeQuery = defineQuery([TimeInitialize]);
-const initializeEnterQuery = enterQuery(initializeQuery);
-
+const initializeEnterQuery = enterQuery(defineQuery([TimeInitialize]));
 const timeQuery = defineQuery([Time]);
 const timeExitQuery = exitQuery(timeQuery);
 
