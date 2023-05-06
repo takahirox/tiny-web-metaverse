@@ -14,28 +14,28 @@ export type SceneCameraParams = {
   far?: number
 };
 
-export const SceneCameraInitialize = defineComponent();
-const CameraInitializeMap = new Map<number, SceneCameraParams>();
+export const SceneCameraInit = defineComponent();
+const CameraInitMap = new Map<number, SceneCameraParams>();
 
 export const SceneCamera = defineComponent();
 const CameraMap = new Map<number, PerspectiveCamera>();
 
-export class SceneCameraInitializeProxy {
-  private static instance: SceneCameraInitializeProxy = new SceneCameraInitializeProxy();
+export class SceneCameraInitProxy {
+  private static instance: SceneCameraInitProxy = new SceneCameraInitProxy();
   private eid: number;
 
   private constructor() {
     this.eid = NULL_EID;
   }
 
-  static get(eid: number): SceneCameraInitializeProxy {
-    SceneCameraInitializeProxy.instance.eid = eid;
-    return SceneCameraInitializeProxy.instance;
+  static get(eid: number): SceneCameraInitProxy {
+    SceneCameraInitProxy.instance.eid = eid;
+    return SceneCameraInitProxy.instance;
   }
 
   allocate(world: IWorld, params: SceneCameraParams = {}): void {
-    addComponent(world, SceneCameraInitialize, this.eid);
-    CameraInitializeMap.set(this.eid, {
+    addComponent(world, SceneCameraInit, this.eid);
+    CameraInitMap.set(this.eid, {
       fov: params.fov || 60,
       aspect: params.aspect || (window.innerWidth / window.innerHeight),
       near: params.near || 0.001,
@@ -44,24 +44,24 @@ export class SceneCameraInitializeProxy {
   }
 
   free(world: IWorld): void {
-    removeComponent(world, SceneCameraInitialize, this.eid);
-    CameraInitializeMap.delete(this.eid);
+    removeComponent(world, SceneCameraInit, this.eid);
+    CameraInitMap.delete(this.eid);
   }
 
   get fov(): number {
-    return CameraInitializeMap.get(this.eid)!.fov;
+    return CameraInitMap.get(this.eid)!.fov;
   }
 
   get aspect(): number {
-    return CameraInitializeMap.get(this.eid)!.aspect;
+    return CameraInitMap.get(this.eid)!.aspect;
   }
 
   get near(): number {
-    return CameraInitializeMap.get(this.eid)!.near;
+    return CameraInitMap.get(this.eid)!.near;
   }
 
   get far(): number {
-    return CameraInitializeMap.get(this.eid)!.far;
+    return CameraInitMap.get(this.eid)!.far;
   }
 }
 

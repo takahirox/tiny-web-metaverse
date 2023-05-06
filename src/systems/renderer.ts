@@ -6,8 +6,8 @@ import {
 } from "bitecs";
 import { WebGLRenderer } from "three";
 import {
-  RendererInitialize,
-  RendererInitializeProxy,
+  RendererInit,
+  RendererInitProxy,
   RendererProxy,
   Renderer
 } from "../components/renderer";
@@ -16,14 +16,14 @@ import {
   WindowSize
 } from "../components/window_resize";
 
-const initializeEnterQuery = enterQuery(defineQuery([RendererInitialize]));
+const initializeEnterQuery = enterQuery(defineQuery([RendererInit]));
 const rendererExitQuery = exitQuery(defineQuery([Renderer]));
 const rendererWindowResizeEnterQuery =
   enterQuery(defineQuery([Renderer, WindowResizeEvent, WindowSize]));
 
 export const rendererSystem = (world: IWorld): void => {
   initializeEnterQuery(world).forEach(eid => {
-    const initProxy = RendererInitializeProxy.get(eid);
+    const initProxy = RendererInitProxy.get(eid);
     const parentElement = initProxy.parentDomElement;
     const width = initProxy.width;
     const height = initProxy.height;

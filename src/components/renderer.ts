@@ -14,28 +14,28 @@ type RendererParams = {
   width?: number;
 };
 
-export const RendererInitialize = defineComponent();
-const RendererInitializeMap = new Map<number, Required<RendererParams>>();
+export const RendererInit = defineComponent();
+const RendererInitMap = new Map<number, Required<RendererParams>>();
 
 export const Renderer = defineComponent();
 const RendererMap = new Map<number, WebGLRenderer>();
 
-export class RendererInitializeProxy {
-  private static instance: RendererInitializeProxy = new RendererInitializeProxy();
+export class RendererInitProxy {
+  private static instance: RendererInitProxy = new RendererInitProxy();
   private eid: number;
 
   private constructor() {
     this.eid = NULL_EID;
   }
 
-  static get(eid: number): RendererInitializeProxy {
-    RendererInitializeProxy.instance.eid = eid;
-    return RendererInitializeProxy.instance;
+  static get(eid: number): RendererInitProxy {
+    RendererInitProxy.instance.eid = eid;
+    return RendererInitProxy.instance;
   }
 
   allocate(world: IWorld, params: RendererParams = {}): void {
-    addComponent(world, RendererInitialize, this.eid);
-    RendererInitializeMap.set(this.eid, {
+    addComponent(world, RendererInit, this.eid);
+    RendererInitMap.set(this.eid, {
       height: params.height || window.innerHeight,
       parentDomElement: params.parentDomElement || document.body,
       pixelRatio: params.pixelRatio || window.devicePixelRatio,
@@ -44,24 +44,24 @@ export class RendererInitializeProxy {
   }
 
   free(world: IWorld): void {
-    removeComponent(world, RendererInitialize, this.eid);
-    RendererInitializeMap.delete(this.eid);
+    removeComponent(world, RendererInit, this.eid);
+    RendererInitMap.delete(this.eid);
   }
 
   get height(): number {
-    return RendererInitializeMap.get(this.eid)!.height;
+    return RendererInitMap.get(this.eid)!.height;
   }
 
   get parentDomElement(): HTMLElement {
-    return RendererInitializeMap.get(this.eid)!.parentDomElement;
+    return RendererInitMap.get(this.eid)!.parentDomElement;
   }
 
   get pixelRatio(): number {
-    return RendererInitializeMap.get(this.eid)!.pixelRatio;
+    return RendererInitMap.get(this.eid)!.pixelRatio;
   }
 
   get width(): number {
-    return RendererInitializeMap.get(this.eid)!.width;
+    return RendererInitMap.get(this.eid)!.width;
   }
 }
 

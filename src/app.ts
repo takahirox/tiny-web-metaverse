@@ -4,13 +4,13 @@ import {
   createWorld,
   IWorld
 } from "bitecs";
-import { TimeInitialize } from "./components/time";
+import { TimeInit } from "./components/time";
 import { timeSystem } from "./systems/time";
-import { RendererInitializeProxy } from "./components/renderer";
+import { RendererInitProxy } from "./components/renderer";
 import { rendererSystem } from "./systems/renderer";
-import { InScene, SceneInitializeProxy } from "./components/scene";
+import { InScene, SceneInitProxy } from "./components/scene";
 import { sceneSystem } from "./systems/scene";
-import { SceneCameraInitializeProxy } from "./components/scene_camera";
+import { SceneCameraInitProxy } from "./components/scene_camera";
 import { sceneCameraSystem } from "./systems/scene_camera";
 import { updateMatricesSystem } from "./systems/update_matrices";
 import { renderSystem } from "./systems/render";
@@ -24,11 +24,20 @@ import {
   listenWindowResizeEvent,
   windowResizeEventClearSystem
 } from "./events/window_resize";
+import {
+  listenKeyEvents,
+  keyEventClearSystem
+} from "./events/keyboard";
 
 type System = (world: IWorld) => void;
 
+type RegisteredSystem = {
+  system: System;
+  orderPriority: number;
+};
+
 export class App {
-  private systems: System[];
+  private systems: RegisteredSystem[];
   private world: IWorld;
 
   constructor() {
@@ -40,6 +49,7 @@ export class App {
   private init(): void {
     // Event Listeners
 
+    listenKeyEvents(this.world);
     listenWindowResizeEvent(this.world);
 
     // Built-in systems and entities
@@ -54,24 +64,25 @@ export class App {
 
     this.registerSystem(renderSystem, SystemOrder.Render);
 
+    this.registerSystem(keyEventClearSystem, SystemOrder.TearDown);
     this.registerSystem(windowResizeEventClearSystem, SystemOrder.TearDown);
 
     // Entity 0 for null entity
     addEntity(this.world);
 
     const timeEid = addEntity(this.world);
-    addComponent(this.world, TimeInitialize, timeEid);
+    addComponent(this.world, TimeInit, timeEid);
 
     const rendererEid = addEntity(this.world);
-    RendererInitializeProxy.get(rendererEid).allocate(this.world);
+    RendererInitProxy.get(rendererEid).allocate(this.world);
     addComponent(this.world, WindowSize, rendererEid);
     addComponent(this.world, WindowResizeEventListener, rendererEid);
 
     const sceneEid = addEntity(this.world);
-    SceneInitializeProxy.get(sceneEid).allocate(this.world);
+    SceneInitProxy.get(sceneEid).allocate(this.world);
 
     const cameraEid = addEntity(this.world);
-    SceneCameraInitializeProxy.get(cameraEid).allocate(this.world);
+    SceneCameraInitProxy.get(cameraEid).allocate(this.world);
     addComponent(this.world, WindowSize, cameraEid);
     addComponent(this.world, WindowResizeEventListener, cameraEid);
     addComponent(this.world, InScene, cameraEid);
@@ -84,19 +95,50 @@ export class App {
 
   registerSystem(
     system: System,
-    _priorityOrder: number = SystemOrder.BeforeMatricesUpdate
+    orderPriority: number = SystemOrder.BeforeMatricesUpdate
   ): void {
-    // TODO: Take into priority order account
-    this.systems.push(system);
+    // TODO: Optimize
+    for (const s of this.systems) {
+      if (s.system === system) {
+        throw new Error(`${system.name} system is already registered.`);
+      }
+    }
+    this.systems.push({system, orderPriority});
+    this.systems.sort((a, b) => {
+      return a.orderPriority - b.orderPriority;
+    });
   }
 
-  deregisterSystem(_system: System): void {
-    // TODO: Implement
+  deregisterSystem(system: System): void {
+    // TODO: Optimize
+    let index = -1;
+    for (let i = 0; i < this.systems.length; i++) {
+      if (this.systems[i].system === system) {
+        index = i;
+        break;
+      }
+    }
+
+    if (index === -1) {
+      throw new Error(`${system.name} system is not registered.`);
+    } else {
+      this.systems.splice(index, 1);
+    }
+  }
+
+  getSystemOrderPriority(system: System): number {
+    // TODO: Optimize
+    for (let i = 0; i < this.systems.length; i++) {
+      if (this.systems[i].system === system) {
+        return this.systems[i].orderPriority;
+      }
+    }
+    throw new Error(`${system.name} system is not registered.`);
   }
 
   tick() {
     for (const system of this.systems) {
-      system(this.world);
+      system.system(this.world);
     }
   }
 

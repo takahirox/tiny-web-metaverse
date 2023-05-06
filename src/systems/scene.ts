@@ -11,13 +11,13 @@ import {
 } from "../components/entity_object3d";
 import {
   InScene,
-  SceneInitialize,
-  SceneInitializeProxy,
+  SceneInit,
+  SceneInitProxy,
   SceneProxy,
   SceneTag
 } from "../components/scene";
 
-const initializeEnterQuery = enterQuery(defineQuery([SceneInitialize]));
+const initializeEnterQuery = enterQuery(defineQuery([SceneInit]));
 const sceneQuery = defineQuery([SceneTag]);
 const sceneExitQuery = exitQuery(sceneQuery);
 const inSceneQuery = defineQuery([InScene, EntityObject3D]);
@@ -26,7 +26,7 @@ const inSceneExitQuery = exitQuery(inSceneQuery);
 
 export const sceneSystem = (world: IWorld): void => {
   initializeEnterQuery(world).forEach(eid => {
-    const proxy = SceneInitializeProxy.get(eid);
+    const proxy = SceneInitProxy.get(eid);
     const backgroundColor = proxy.backgroundColor;
     proxy.free(world);
 

@@ -8,21 +8,21 @@ import {
 import { PerspectiveCamera } from "three";
 import { EntityObject3DProxy } from "../components/entity_object3d";
 import {
-  SceneCameraInitialize,
-  SceneCameraInitializeProxy,
+  SceneCameraInit,
+  SceneCameraInitProxy,
   SceneCameraProxy,
   SceneCamera
 } from "../components/scene_camera";
 import { WindowResizeEvent, WindowSize } from "../components/window_resize";
 
-const initializeEnterQuery = enterQuery(defineQuery([SceneCameraInitialize]));
+const initializeEnterQuery = enterQuery(defineQuery([SceneCameraInit]));
 const sceneCameraExitQuery = exitQuery(defineQuery([SceneCamera]));
 const sceneCameraWindowResizeEnterQuery =
   enterQuery(defineQuery([SceneCamera, WindowResizeEvent, WindowSize]));
 
 export const sceneCameraSystem = (world: IWorld): void => {
   initializeEnterQuery(world).forEach(eid => {
-    const proxy = SceneCameraInitializeProxy.get(eid);
+    const proxy = SceneCameraInitProxy.get(eid);
     const fov = proxy.fov;
     const aspect = proxy.aspect;
     const near = proxy.near;

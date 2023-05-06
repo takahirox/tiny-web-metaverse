@@ -11,41 +11,41 @@ type SceneParams = {
   backgroundColor?: number;
 };
 
-export const SceneInitialize = defineComponent();
-const SceneInitializeMap = new Map<number, SceneParams>();
+export const SceneInit = defineComponent();
+const SceneInitMap = new Map<number, SceneParams>();
 
 export const SceneTag = defineComponent();
 const SceneMap = new Map<number, Scene>();
 
 export const InScene = defineComponent();
 
-export class SceneInitializeProxy {
-  private static instance: SceneInitializeProxy = new SceneInitializeProxy();
+export class SceneInitProxy {
+  private static instance: SceneInitProxy = new SceneInitProxy();
   private eid: number;
 
   constructor() {
     this.eid = NULL_EID;
   }
 
-  static get(eid: number): SceneInitializeProxy {
-    SceneInitializeProxy.instance.eid = eid;
-    return SceneInitializeProxy.instance;
+  static get(eid: number): SceneInitProxy {
+    SceneInitProxy.instance.eid = eid;
+    return SceneInitProxy.instance;
   }
 
   allocate(world: IWorld, params: SceneParams = {}): void {
-    addComponent(world, SceneInitialize, this.eid);
-    SceneInitializeMap.set(this.eid, {
+    addComponent(world, SceneInit, this.eid);
+    SceneInitMap.set(this.eid, {
       backgroundColor: params.backgroundColor || 0xffffff	
     });
   }
 
   free(world: IWorld): void {
-    removeComponent(world, SceneInitialize, this.eid);
-    SceneInitializeMap.delete(this.eid);
+    removeComponent(world, SceneInit, this.eid);
+    SceneInitMap.delete(this.eid);
   }
 
   get backgroundColor(): number {
-    return SceneInitializeMap.get(this.eid)!.backgroundColor;
+    return SceneInitMap.get(this.eid)!.backgroundColor;
   }
 }
 

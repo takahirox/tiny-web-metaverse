@@ -8,7 +8,7 @@ import {
 import { Clock } from "three";
 import { NULL_EID } from "../common";
 
-export const TimeInitialize = defineComponent();
+export const TimeInit = defineComponent();
 // f32 types might cause precision problem??
 export const Time = defineComponent({
   delta: Types.f32,
