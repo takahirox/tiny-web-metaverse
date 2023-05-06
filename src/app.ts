@@ -4,34 +4,37 @@ import {
   createWorld,
   IWorld
 } from "bitecs";
-import { TimeInit } from "./components/time";
-import { timeSystem } from "./systems/time";
-import { RendererInitProxy } from "./components/renderer";
-import { rendererSystem } from "./systems/renderer";
-import { InScene, SceneInitProxy } from "./components/scene";
-import { sceneSystem } from "./systems/scene";
-import { SceneCameraInitProxy } from "./components/scene_camera";
-import { sceneCameraSystem } from "./systems/scene_camera";
-import { updateMatricesSystem } from "./systems/update_matrices";
-import { renderSystem } from "./systems/render";
 import { SystemOrder } from "./common";
 import { EntityObject3DProxy } from "./components/entity_object3d";
+import { MouseButtonEventHandlerInit } from "./components/mouse";
+import { KeyEventHandlerInit } from "./components/keyboard";
+import { RendererInitProxy } from "./components/renderer";
+import { InScene, SceneInitProxy } from "./components/scene";
+import { SceneCameraInitProxy } from "./components/scene_camera";
+import { TimeInit } from "./components/time";
 import {
+  WindowResizeEventHandlerInit,
   WindowResizeEventListener,
   WindowSize
 } from "./components/window_resize";
 import {
-  listenWindowResizeEvent,
-  windowResizeEventClearSystem
-} from "./events/window_resize";
-import {
-  listenMouseButtonEvents,
-  mouseButtonEventClearSystem
-} from "./events/mouse";
-import {
-  listenKeyEvents,
+  keyEventHandleSystem,
   keyEventClearSystem
-} from "./events/keyboard";
+} from "./systems/keyboard_event";
+import {
+  mouseButtonEventHandleSystem,
+  mouseButtonEventClearSystem
+} from "./systems/mouse_event";
+import { renderSystem } from "./systems/render";
+import { rendererSystem } from "./systems/renderer";
+import { sceneSystem } from "./systems/scene";
+import { sceneCameraSystem } from "./systems/scene_camera";
+import { timeSystem } from "./systems/time";
+import { updateMatricesSystem } from "./systems/update_matrices";
+import {
+  windowResizeEventHandleSystem,
+  windowResizeEventClearSystem
+} from "./systems/window_resize_event";
 
 type System = (world: IWorld) => void;
 
@@ -51,15 +54,13 @@ export class App {
   }
 
   private init(): void {
-    // Event Listeners
-
-    listenKeyEvents(this.world);
-    listenMouseButtonEvents(this.world);
-    listenWindowResizeEvent(this.world);
-
     // Built-in systems and entities
 
     this.registerSystem(timeSystem, SystemOrder.Time);
+
+    this.registerSystem(keyEventHandleSystem, SystemOrder.EventHandling);
+    this.registerSystem(mouseButtonEventHandleSystem, SystemOrder.EventHandling);
+    this.registerSystem(windowResizeEventHandleSystem, SystemOrder.EventHandling);
 
     this.registerSystem(rendererSystem, SystemOrder.Setup);
     this.registerSystem(sceneSystem, SystemOrder.Setup);
@@ -75,6 +76,15 @@ export class App {
 
     // Entity 0 for null entity
     addEntity(this.world);
+
+    const keyEventHandlerEid = addEntity(this.world);
+    addComponent(this.world, KeyEventHandlerInit, keyEventHandlerEid);
+
+    const mouseEventHandlerEid = addEntity(this.world);
+    addComponent(this.world, MouseButtonEventHandlerInit, mouseEventHandlerEid);
+
+    const resizeEventHandlerEid = addEntity(this.world);
+    addComponent(this.world, WindowResizeEventHandlerInit, resizeEventHandlerEid);
 
     const timeEid = addEntity(this.world);
     addComponent(this.world, TimeInit, timeEid);
