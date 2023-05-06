@@ -14,8 +14,8 @@ export enum KeyEventType {
 
 // TODO: Rename
 export type KeyEventValue = {
-  type: KeyEventType;
   code: number;
+  type: KeyEventType;
 };
 
 export const KeyEvent = defineComponent();

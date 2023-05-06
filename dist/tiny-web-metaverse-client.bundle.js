@@ -27,7 +27,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_entity_object3d__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./components/entity_object3d */ "./src/components/entity_object3d.ts");
 /* harmony import */ var _components_window_resize__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./components/window_resize */ "./src/components/window_resize.ts");
 /* harmony import */ var _events_window_resize__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./events/window_resize */ "./src/events/window_resize.ts");
-/* harmony import */ var _events_keyboard__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./events/keyboard */ "./src/events/keyboard.ts");
+/* harmony import */ var _events_mouse__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./events/mouse */ "./src/events/mouse.ts");
+/* harmony import */ var _events_keyboard__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./events/keyboard */ "./src/events/keyboard.ts");
+
 
 
 
@@ -52,7 +54,8 @@ class App {
     }
     init() {
         // Event Listeners
-        (0,_events_keyboard__WEBPACK_IMPORTED_MODULE_15__.listenKeyEvents)(this.world);
+        (0,_events_keyboard__WEBPACK_IMPORTED_MODULE_16__.listenKeyEvents)(this.world);
+        (0,_events_mouse__WEBPACK_IMPORTED_MODULE_15__.listenMouseButtonEvents)(this.world);
         (0,_events_window_resize__WEBPACK_IMPORTED_MODULE_14__.listenWindowResizeEvent)(this.world);
         // Built-in systems and entities
         this.registerSystem(_systems_time__WEBPACK_IMPORTED_MODULE_2__.timeSystem, _common__WEBPACK_IMPORTED_MODULE_11__.SystemOrder.Time);
@@ -61,7 +64,8 @@ class App {
         this.registerSystem(_systems_scene_camera__WEBPACK_IMPORTED_MODULE_8__.sceneCameraSystem, _common__WEBPACK_IMPORTED_MODULE_11__.SystemOrder.Setup);
         this.registerSystem(_systems_update_matrices__WEBPACK_IMPORTED_MODULE_9__.updateMatricesSystem, _common__WEBPACK_IMPORTED_MODULE_11__.SystemOrder.MatricesUpdate);
         this.registerSystem(_systems_render__WEBPACK_IMPORTED_MODULE_10__.renderSystem, _common__WEBPACK_IMPORTED_MODULE_11__.SystemOrder.Render);
-        this.registerSystem(_events_keyboard__WEBPACK_IMPORTED_MODULE_15__.keyEventClearSystem, _common__WEBPACK_IMPORTED_MODULE_11__.SystemOrder.TearDown);
+        this.registerSystem(_events_keyboard__WEBPACK_IMPORTED_MODULE_16__.keyEventClearSystem, _common__WEBPACK_IMPORTED_MODULE_11__.SystemOrder.TearDown);
+        this.registerSystem(_events_mouse__WEBPACK_IMPORTED_MODULE_15__.mouseButtonEventClearSystem, _common__WEBPACK_IMPORTED_MODULE_11__.SystemOrder.TearDown);
         this.registerSystem(_events_window_resize__WEBPACK_IMPORTED_MODULE_14__.windowResizeEventClearSystem, _common__WEBPACK_IMPORTED_MODULE_11__.SystemOrder.TearDown);
         // Entity 0 for null entity
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
@@ -350,6 +354,70 @@ class KeyEventProxy {
     }
 }
 KeyEventProxy.instance = new KeyEventProxy();
+
+
+/***/ }),
+
+/***/ "./src/components/mouse.ts":
+/*!*********************************!*\
+  !*** ./src/components/mouse.ts ***!
+  \*********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "MouseButtonEvent": () => (/* binding */ MouseButtonEvent),
+/* harmony export */   "MouseButtonEventListener": () => (/* binding */ MouseButtonEventListener),
+/* harmony export */   "MouseButtonEventProxy": () => (/* binding */ MouseButtonEventProxy),
+/* harmony export */   "MouseButtonEventType": () => (/* binding */ MouseButtonEventType),
+/* harmony export */   "MouseButtonHold": () => (/* binding */ MouseButtonHold),
+/* harmony export */   "MouseButtonType": () => (/* binding */ MouseButtonType)
+/* harmony export */ });
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var _src_common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../src/common */ "./src/common.ts");
+
+
+var MouseButtonEventType;
+(function (MouseButtonEventType) {
+    MouseButtonEventType[MouseButtonEventType["Down"] = 0] = "Down";
+    MouseButtonEventType[MouseButtonEventType["Up"] = 1] = "Up";
+})(MouseButtonEventType || (MouseButtonEventType = {}));
+;
+var MouseButtonType;
+(function (MouseButtonType) {
+    MouseButtonType[MouseButtonType["Left"] = 0] = "Left";
+    MouseButtonType[MouseButtonType["Middle"] = 1] = "Middle";
+    MouseButtonType[MouseButtonType["Right"] = 2] = "Right";
+})(MouseButtonType || (MouseButtonType = {}));
+;
+const MouseButtonEvent = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const MouseButtonEventMap = new Map();
+const MouseButtonEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const MouseButtonHold = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+class MouseButtonEventProxy {
+    constructor() {
+        this.eid = _src_common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
+    }
+    static get(eid) {
+        MouseButtonEventProxy.instance.eid = eid;
+        return MouseButtonEventProxy.instance;
+    }
+    add(world, type, button, clientX, clientY) {
+        if (!(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, MouseButtonEvent, this.eid)) {
+            (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, MouseButtonEvent, this.eid);
+            MouseButtonEventMap.set(this.eid, []);
+        }
+        MouseButtonEventMap.get(this.eid).push({ button, clientX, clientY, type });
+    }
+    free(world) {
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, MouseButtonEvent, this.eid);
+        MouseButtonEventMap.delete(this.eid);
+    }
+    get events() {
+        return MouseButtonEventMap.get(this.eid);
+    }
+}
+MouseButtonEventProxy.instance = new MouseButtonEventProxy();
 
 
 /***/ }),
@@ -703,6 +771,49 @@ const eventQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_compone
 const keyEventClearSystem = (world) => {
     eventQuery(world).forEach(eid => {
         _components_keyboard__WEBPACK_IMPORTED_MODULE_1__.KeyEventProxy.get(eid).free(world);
+    });
+};
+
+
+/***/ }),
+
+/***/ "./src/events/mouse.ts":
+/*!*****************************!*\
+  !*** ./src/events/mouse.ts ***!
+  \*****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "listenMouseButtonEvents": () => (/* binding */ listenMouseButtonEvents),
+/* harmony export */   "mouseButtonEventClearSystem": () => (/* binding */ mouseButtonEventClearSystem)
+/* harmony export */ });
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var _components_mouse__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/mouse */ "./src/components/mouse.ts");
+
+
+const MouseButtonTypeTable = {
+    0: _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseButtonType.Left,
+    1: _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseButtonType.Middle,
+    2: _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseButtonType.Right
+};
+const listenerQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseButtonEventListener]);
+const listenMouseButtonEvents = (world) => {
+    document.addEventListener('mousedown', (event) => {
+        listenerQuery(world).forEach(eid => {
+            _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseButtonEventProxy.get(eid).add(world, _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseButtonEventType.Down, MouseButtonTypeTable[event.button], event.clientX, event.clientY);
+        });
+    });
+    document.addEventListener('mouseup', (event) => {
+        listenerQuery(world).forEach(eid => {
+            _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseButtonEventProxy.get(eid).add(world, _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseButtonEventType.Up, MouseButtonTypeTable[event.button], event.clientX, event.clientY);
+        });
+    });
+};
+const eventQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseButtonEvent]);
+const mouseButtonEventClearSystem = (world) => {
+    eventQuery(world).forEach(eid => {
+        _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseButtonEventProxy.get(eid).free(world);
     });
 };
 

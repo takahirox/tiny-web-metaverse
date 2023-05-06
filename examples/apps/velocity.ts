@@ -15,6 +15,12 @@ import {
   KeyEventProxy,
   KeyEventType
 } from "../../src/components/keyboard";
+import {
+  MouseButtonEvent,
+  MouseButtonEventListener,
+  MouseButtonEventProxy,
+  MouseButtonEventType
+} from "../../src/components/mouse";
 import { SystemOrder } from "../../src/common";
 import { Velocity } from "../components/velocity";
 import { velocitySystem } from "../systems/velocity";
@@ -35,9 +41,9 @@ const createEntity = (world: IWorld) => {
   addComponent(world, InScene, eid);
 };
 
-const EntityCreator = defineComponent();
-const keyEventQuery = defineQuery([KeyEvent, EntityCreator]);
-const createEntitySystem = (world: IWorld): void => {
+const KeyEventEntityCreator = defineComponent();
+const keyEventQuery = defineQuery([KeyEvent, KeyEventEntityCreator]);
+const keyEventCreateEntitySystem = (world: IWorld): void => {
   keyEventQuery(world).forEach(eid => {
     for (const e of KeyEventProxy.get(eid).events) {
       if (e.type === KeyEventType.Down) {
@@ -47,15 +53,32 @@ const createEntitySystem = (world: IWorld): void => {
   });
 };
 
+const MouseButtonEventEntityCreator = defineComponent();
+const mouseButtonEventQuery = defineQuery([MouseButtonEvent, MouseButtonEventEntityCreator]);
+const mouseButtonEventCreateEntitySystem = (world: IWorld): void => {
+  mouseButtonEventQuery(world).forEach(eid => {
+    for (const e of MouseButtonEventProxy.get(eid).events) {
+      if (e.type === MouseButtonEventType.Down) {
+        createEntity(world);
+      }
+    }
+  });
+};
+
 const app = new App();
 app.registerSystem(velocitySystem);
-app.registerSystem(createEntitySystem, SystemOrder.EventHandling);
+app.registerSystem(keyEventCreateEntitySystem, SystemOrder.EventHandling);
+app.registerSystem(mouseButtonEventCreateEntitySystem, SystemOrder.EventHandling);
 
 const world = app.getWorld();
 
-const eid = addEntity(world);
-addComponent(world, EntityCreator, eid);
-addComponent(world, KeyEventListener, eid);
+const keyEventEid = addEntity(world);
+addComponent(world, KeyEventEntityCreator, keyEventEid);
+addComponent(world, KeyEventListener, keyEventEid);
+
+const mouseButtonEventEid = addEntity(world);
+addComponent(world, MouseButtonEventEntityCreator, mouseButtonEventEid);
+addComponent(world, MouseButtonEventListener, mouseButtonEventEid);
 
 createEntity(world);
 

@@ -25,6 +25,10 @@ import {
   windowResizeEventClearSystem
 } from "./events/window_resize";
 import {
+  listenMouseButtonEvents,
+  mouseButtonEventClearSystem
+} from "./events/mouse";
+import {
   listenKeyEvents,
   keyEventClearSystem
 } from "./events/keyboard";
@@ -50,6 +54,7 @@ export class App {
     // Event Listeners
 
     listenKeyEvents(this.world);
+    listenMouseButtonEvents(this.world);
     listenWindowResizeEvent(this.world);
 
     // Built-in systems and entities
@@ -65,6 +70,7 @@ export class App {
     this.registerSystem(renderSystem, SystemOrder.Render);
 
     this.registerSystem(keyEventClearSystem, SystemOrder.TearDown);
+    this.registerSystem(mouseButtonEventClearSystem, SystemOrder.TearDown);
     this.registerSystem(windowResizeEventClearSystem, SystemOrder.TearDown);
 
     // Entity 0 for null entity
