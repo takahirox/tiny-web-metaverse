@@ -17,6 +17,7 @@ import {
   WindowResizeEventListener,
   WindowSize
 } from "./components/window_resize";
+import { avatarKeyControlsSystem } from "./systems/avatar_key_controls";
 import {
   keyEventHandleSystem,
   keyEventClearSystem
@@ -61,6 +62,7 @@ export class App {
     this.registerSystem(keyEventHandleSystem, SystemOrder.EventHandling);
     this.registerSystem(mouseButtonEventHandleSystem, SystemOrder.EventHandling);
     this.registerSystem(windowResizeEventHandleSystem, SystemOrder.EventHandling);
+    this.registerSystem(avatarKeyControlsSystem, SystemOrder.EventHandling);
 
     this.registerSystem(rendererSystem, SystemOrder.Setup);
     this.registerSystem(sceneSystem, SystemOrder.Setup);
