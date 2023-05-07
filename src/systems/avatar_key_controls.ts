@@ -14,6 +14,7 @@ const eventQuery = defineQuery([
   KeyEvent,
   Owned
 ]);
+
 export const avatarKeyControlsSystem = (world: IWorld) => {
   eventQuery(world).forEach(eid => {
     const events = KeyEventProxy.get(eid).events;

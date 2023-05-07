@@ -217,6 +217,7 @@ const Avatar = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "FpsCamera": () => (/* binding */ FpsCamera),
+/* harmony export */   "PerspectiveCameraDestroy": () => (/* binding */ PerspectiveCameraDestroy),
 /* harmony export */   "PerspectiveCameraInit": () => (/* binding */ PerspectiveCameraInit),
 /* harmony export */   "PerspectiveCameraInitProxy": () => (/* binding */ PerspectiveCameraInitProxy),
 /* harmony export */   "PerspectiveCameraProxy": () => (/* binding */ PerspectiveCameraProxy),
@@ -229,6 +230,7 @@ __webpack_require__.r(__webpack_exports__);
 
 const PerspectiveCameraInit = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 const PerspectiveCameraInitMap = new Map();
+const PerspectiveCameraDestroy = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 const PerspectiveCameraTag = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 const PerspectiveCameraMap = new Map();
 const SceneCamera = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
@@ -659,6 +661,7 @@ const Remote = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Renderer": () => (/* binding */ Renderer),
+/* harmony export */   "RendererDestroy": () => (/* binding */ RendererDestroy),
 /* harmony export */   "RendererInit": () => (/* binding */ RendererInit),
 /* harmony export */   "RendererInitProxy": () => (/* binding */ RendererInitProxy),
 /* harmony export */   "RendererProxy": () => (/* binding */ RendererProxy)
@@ -669,6 +672,7 @@ __webpack_require__.r(__webpack_exports__);
 
 const RendererInit = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 const RendererInitMap = new Map();
+const RendererDestroy = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 const Renderer = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 const RendererMap = new Map();
 class RendererInitProxy {
@@ -1227,9 +1231,16 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const initEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_camera__WEBPACK_IMPORTED_MODULE_2__.PerspectiveCameraInit]));
-const cameraExitQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_camera__WEBPACK_IMPORTED_MODULE_2__.PerspectiveCameraTag]));
+const destroyEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3DProxy, _components_camera__WEBPACK_IMPORTED_MODULE_2__.PerspectiveCameraDestroy, _components_camera__WEBPACK_IMPORTED_MODULE_2__.PerspectiveCameraTag]));
 const cameraWindowResizeEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_camera__WEBPACK_IMPORTED_MODULE_2__.PerspectiveCameraTag, _components_window_resize__WEBPACK_IMPORTED_MODULE_3__.WindowResizeEvent, _components_window_resize__WEBPACK_IMPORTED_MODULE_3__.WindowSize]));
 const perspectiveCameraSystem = (world) => {
+    destroyEnterQuery(world).forEach(eid => {
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_camera__WEBPACK_IMPORTED_MODULE_2__.PerspectiveCameraDestroy, eid);
+        const proxy = _components_camera__WEBPACK_IMPORTED_MODULE_2__.PerspectiveCameraProxy.get(eid);
+        const camera = proxy.camera;
+        _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3DProxy.get(eid).removeObject3D(world, camera);
+        proxy.free(world);
+    });
     initEnterQuery(world).forEach(eid => {
         const proxy = _components_camera__WEBPACK_IMPORTED_MODULE_2__.PerspectiveCameraInitProxy.get(eid);
         const fov = proxy.fov;
@@ -1240,12 +1251,6 @@ const perspectiveCameraSystem = (world) => {
         const camera = new three__WEBPACK_IMPORTED_MODULE_4__.PerspectiveCamera(fov, aspect, near, far);
         _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3DProxy.get(eid).addObject3D(world, camera);
         _components_camera__WEBPACK_IMPORTED_MODULE_2__.PerspectiveCameraProxy.get(eid).allocate(world, camera);
-    });
-    cameraExitQuery(world).forEach(eid => {
-        const proxy = _components_camera__WEBPACK_IMPORTED_MODULE_2__.PerspectiveCameraProxy.get(eid);
-        const camera = proxy.camera;
-        _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3DProxy.get(eid).removeObject3D(world, camera);
-        proxy.free(world);
     });
     cameraWindowResizeEnterQuery(world).forEach(eid => {
         const camera = _components_camera__WEBPACK_IMPORTED_MODULE_2__.PerspectiveCameraProxy.get(eid).camera;
@@ -1315,11 +1320,17 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const initializeEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_renderer__WEBPACK_IMPORTED_MODULE_1__.RendererInit]));
-const rendererExitQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_renderer__WEBPACK_IMPORTED_MODULE_1__.Renderer]));
+const initEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_renderer__WEBPACK_IMPORTED_MODULE_1__.RendererInit]));
+const destroyEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_renderer__WEBPACK_IMPORTED_MODULE_1__.Renderer, _components_renderer__WEBPACK_IMPORTED_MODULE_1__.RendererDestroy]));
 const rendererWindowResizeEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_renderer__WEBPACK_IMPORTED_MODULE_1__.Renderer, _components_window_resize__WEBPACK_IMPORTED_MODULE_2__.WindowResizeEvent, _components_window_resize__WEBPACK_IMPORTED_MODULE_2__.WindowSize]));
 const rendererSystem = (world) => {
-    initializeEnterQuery(world).forEach(eid => {
+    destroyEnterQuery(world).forEach(eid => {
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_renderer__WEBPACK_IMPORTED_MODULE_1__.RendererDestroy, eid);
+        const proxy = _components_renderer__WEBPACK_IMPORTED_MODULE_1__.RendererProxy.get(eid);
+        proxy.renderer.dispose();
+        proxy.free(world);
+    });
+    initEnterQuery(world).forEach(eid => {
         const initProxy = _components_renderer__WEBPACK_IMPORTED_MODULE_1__.RendererInitProxy.get(eid);
         const parentElement = initProxy.parentDomElement;
         const width = initProxy.width;
@@ -1332,11 +1343,6 @@ const rendererSystem = (world) => {
         parentElement.appendChild(renderer.domElement);
         const proxy = _components_renderer__WEBPACK_IMPORTED_MODULE_1__.RendererProxy.get(eid);
         proxy.allocate(world, renderer);
-    });
-    rendererExitQuery(world).forEach(eid => {
-        const proxy = _components_renderer__WEBPACK_IMPORTED_MODULE_1__.RendererProxy.get(eid);
-        proxy.renderer.dispose();
-        proxy.free(world);
     });
     rendererWindowResizeEnterQuery(world).forEach(eid => {
         const renderer = _components_renderer__WEBPACK_IMPORTED_MODULE_1__.RendererProxy.get(eid).renderer;
@@ -1365,14 +1371,13 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const initializeEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_scene__WEBPACK_IMPORTED_MODULE_2__.SceneInit]));
+const sceneInitEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_scene__WEBPACK_IMPORTED_MODULE_2__.SceneInit]));
 const sceneQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_scene__WEBPACK_IMPORTED_MODULE_2__.SceneTag]);
-const sceneExitQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)(sceneQuery);
 const inSceneQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_scene__WEBPACK_IMPORTED_MODULE_2__.InScene, _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3D]);
 const inSceneEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)(inSceneQuery);
 const inSceneExitQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)(inSceneQuery);
 const sceneSystem = (world) => {
-    initializeEnterQuery(world).forEach(eid => {
+    sceneInitEnterQuery(world).forEach(eid => {
         const proxy = _components_scene__WEBPACK_IMPORTED_MODULE_2__.SceneInitProxy.get(eid);
         const backgroundColor = proxy.backgroundColor;
         proxy.free(world);
@@ -1381,9 +1386,6 @@ const sceneSystem = (world) => {
         scene.matrixWorldAutoUpdate = false;
         scene.background = new three__WEBPACK_IMPORTED_MODULE_3__.Color(backgroundColor);
         _components_scene__WEBPACK_IMPORTED_MODULE_2__.SceneProxy.get(eid).allocate(world, scene);
-    });
-    sceneExitQuery(world).forEach(eid => {
-        _components_scene__WEBPACK_IMPORTED_MODULE_2__.SceneProxy.get(eid).free(world);
     });
     sceneQuery(world).forEach(eid => {
         const scene = _components_scene__WEBPACK_IMPORTED_MODULE_2__.SceneProxy.get(eid).scene;
@@ -1415,16 +1417,12 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const initializeEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_time__WEBPACK_IMPORTED_MODULE_1__.TimeInit]));
+const initEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_time__WEBPACK_IMPORTED_MODULE_1__.TimeInit]));
 const timeQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_time__WEBPACK_IMPORTED_MODULE_1__.Time]);
-const timeExitQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)(timeQuery);
 const timeSystem = (world) => {
-    initializeEnterQuery(world).forEach(eid => {
-        _components_time__WEBPACK_IMPORTED_MODULE_1__.TimeProxy.get(eid).allocate(world, new three__WEBPACK_IMPORTED_MODULE_2__.Clock(), 0, 0);
+    initEnterQuery(world).forEach(eid => {
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_time__WEBPACK_IMPORTED_MODULE_1__.TimeInit, eid);
-    });
-    timeExitQuery(world).forEach(eid => {
-        _components_time__WEBPACK_IMPORTED_MODULE_1__.TimeProxy.get(eid).free(world);
+        _components_time__WEBPACK_IMPORTED_MODULE_1__.TimeProxy.get(eid).allocate(world, new three__WEBPACK_IMPORTED_MODULE_2__.Clock(), 0, 0);
     });
     timeQuery(world).forEach(eid => {
         const proxy = _components_time__WEBPACK_IMPORTED_MODULE_1__.TimeProxy.get(eid);

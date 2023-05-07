@@ -1,11 +1,12 @@
 import {
   defineQuery,
   enterQuery,
-  exitQuery,
-  IWorld
+  IWorld,
+  removeComponent
 } from "bitecs";
 import { WebGLRenderer } from "three";
 import {
+  RendererDestroy,
   RendererInit,
   RendererInitProxy,
   RendererProxy,
@@ -16,13 +17,21 @@ import {
   WindowSize
 } from "../components/window_resize";
 
-const initializeEnterQuery = enterQuery(defineQuery([RendererInit]));
-const rendererExitQuery = exitQuery(defineQuery([Renderer]));
+const initEnterQuery = enterQuery(defineQuery([RendererInit]));
+const destroyEnterQuery = enterQuery(defineQuery([Renderer, RendererDestroy]));
 const rendererWindowResizeEnterQuery =
   enterQuery(defineQuery([Renderer, WindowResizeEvent, WindowSize]));
 
 export const rendererSystem = (world: IWorld): void => {
-  initializeEnterQuery(world).forEach(eid => {
+  destroyEnterQuery(world).forEach(eid => {
+    removeComponent(world, RendererDestroy, eid);
+
+    const proxy = RendererProxy.get(eid);
+    proxy.renderer.dispose();
+    proxy.free(world);
+  });
+
+  initEnterQuery(world).forEach(eid => {
     const initProxy = RendererInitProxy.get(eid);
     const parentElement = initProxy.parentDomElement;
     const width = initProxy.width;
@@ -37,12 +46,6 @@ export const rendererSystem = (world: IWorld): void => {
 
     const proxy = RendererProxy.get(eid);
     proxy.allocate(world, renderer);
-  });
-
-  rendererExitQuery(world).forEach(eid => {
-    const proxy = RendererProxy.get(eid);
-    proxy.renderer.dispose();
-    proxy.free(world);
   });
 
   rendererWindowResizeEnterQuery(world).forEach(eid => {

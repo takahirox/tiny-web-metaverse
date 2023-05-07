@@ -16,6 +16,7 @@ type RendererParams = {
 
 export const RendererInit = defineComponent();
 const RendererInitMap = new Map<number, Required<RendererParams>>();
+export const RendererDestroy = defineComponent();
 
 export const Renderer = defineComponent();
 const RendererMap = new Map<number, WebGLRenderer>();

@@ -16,6 +16,7 @@ export type PerspectiveCameraParams = {
 
 export const PerspectiveCameraInit = defineComponent();
 const PerspectiveCameraInitMap = new Map<number, PerspectiveCameraParams>();
+export const PerspectiveCameraDestroy = defineComponent();
 
 export const PerspectiveCameraTag = defineComponent();
 const PerspectiveCameraMap = new Map<number, PerspectiveCamera>();

@@ -17,15 +17,14 @@ import {
   SceneTag
 } from "../components/scene";
 
-const initializeEnterQuery = enterQuery(defineQuery([SceneInit]));
+const sceneInitEnterQuery = enterQuery(defineQuery([SceneInit]));
 const sceneQuery = defineQuery([SceneTag]);
-const sceneExitQuery = exitQuery(sceneQuery);
 const inSceneQuery = defineQuery([InScene, EntityObject3D]);
 const inSceneEnterQuery = enterQuery(inSceneQuery);
 const inSceneExitQuery = exitQuery(inSceneQuery);
 
 export const sceneSystem = (world: IWorld): void => {
-  initializeEnterQuery(world).forEach(eid => {
+  sceneInitEnterQuery(world).forEach(eid => {
     const proxy = SceneInitProxy.get(eid);
     const backgroundColor = proxy.backgroundColor;
     proxy.free(world);
@@ -36,10 +35,6 @@ export const sceneSystem = (world: IWorld): void => {
     scene.background = new Color(backgroundColor);
 
     SceneProxy.get(eid).allocate(world, scene);
-  });
-
-  sceneExitQuery(world).forEach(eid => {
-    SceneProxy.get(eid).free(world);
   });
 
   sceneQuery(world).forEach(eid => {
