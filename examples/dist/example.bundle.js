@@ -2,6 +2,40 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./examples/components/key_event_entity_creator.ts":
+/*!*********************************************************!*\
+  !*** ./examples/components/key_event_entity_creator.ts ***!
+  \*********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "KeyEventEntityCreator": () => (/* binding */ KeyEventEntityCreator)
+/* harmony export */ });
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+
+const KeyEventEntityCreator = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+
+
+/***/ }),
+
+/***/ "./examples/components/mouse_button_event_entity_creator.ts":
+/*!******************************************************************!*\
+  !*** ./examples/components/mouse_button_event_entity_creator.ts ***!
+  \******************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "MouseButtonEventEntityCreator": () => (/* binding */ MouseButtonEventEntityCreator)
+/* harmony export */ });
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+
+const MouseButtonEventEntityCreator = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+
+
+/***/ }),
+
 /***/ "./examples/components/velocity.ts":
 /*!*****************************************!*\
   !*** ./examples/components/velocity.ts ***!
@@ -19,6 +53,100 @@ const Velocity = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({
     y: bitecs__WEBPACK_IMPORTED_MODULE_0__.Types.f32,
     z: bitecs__WEBPACK_IMPORTED_MODULE_0__.Types.f32
 });
+
+
+/***/ }),
+
+/***/ "./examples/systems/key_event_entity_create.ts":
+/*!*****************************************************!*\
+  !*** ./examples/systems/key_event_entity_create.ts ***!
+  \*****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "keyEventCreateEntitySystem": () => (/* binding */ keyEventCreateEntitySystem)
+/* harmony export */ });
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+/* harmony import */ var _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../src/components/entity_object3d */ "./src/components/entity_object3d.ts");
+/* harmony import */ var _src_components_scene__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../src/components/scene */ "./src/components/scene.ts");
+/* harmony import */ var _src_components_keyboard__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../src/components/keyboard */ "./src/components/keyboard.ts");
+/* harmony import */ var _components_key_event_entity_creator__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/key_event_entity_creator */ "./examples/components/key_event_entity_creator.ts");
+/* harmony import */ var _components_velocity__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/velocity */ "./examples/components/velocity.ts");
+
+
+
+
+
+
+
+const createEntity = (world) => {
+    const eid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_velocity__WEBPACK_IMPORTED_MODULE_5__.Velocity, eid);
+    _components_velocity__WEBPACK_IMPORTED_MODULE_5__.Velocity.x[eid] = -0.01;
+    _components_velocity__WEBPACK_IMPORTED_MODULE_5__.Velocity.y[eid] = 0.0;
+    _components_velocity__WEBPACK_IMPORTED_MODULE_5__.Velocity.z[eid] = 0.0;
+    _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3DProxy.get(eid).addObject3D(world, new three__WEBPACK_IMPORTED_MODULE_6__.Mesh(new three__WEBPACK_IMPORTED_MODULE_6__.BoxGeometry(1.0, 1.0, 1.0), new three__WEBPACK_IMPORTED_MODULE_6__.MeshBasicMaterial({ color: 0x888888 })));
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_scene__WEBPACK_IMPORTED_MODULE_2__.InScene, eid);
+};
+const keyEventQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_src_components_keyboard__WEBPACK_IMPORTED_MODULE_3__.KeyEvent, _components_key_event_entity_creator__WEBPACK_IMPORTED_MODULE_4__.KeyEventEntityCreator]);
+const keyEventCreateEntitySystem = (world) => {
+    keyEventQuery(world).forEach(eid => {
+        for (const e of _src_components_keyboard__WEBPACK_IMPORTED_MODULE_3__.KeyEventProxy.get(eid).events) {
+            if (e.type === _src_components_keyboard__WEBPACK_IMPORTED_MODULE_3__.KeyEventType.Down) {
+                createEntity(world);
+            }
+        }
+    });
+};
+
+
+/***/ }),
+
+/***/ "./examples/systems/mouse_button_event_entity_create.ts":
+/*!**************************************************************!*\
+  !*** ./examples/systems/mouse_button_event_entity_create.ts ***!
+  \**************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "mouseButtonEventCreateEntitySystem": () => (/* binding */ mouseButtonEventCreateEntitySystem)
+/* harmony export */ });
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+/* harmony import */ var _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../src/components/entity_object3d */ "./src/components/entity_object3d.ts");
+/* harmony import */ var _src_components_scene__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../src/components/scene */ "./src/components/scene.ts");
+/* harmony import */ var _src_components_mouse__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../src/components/mouse */ "./src/components/mouse.ts");
+/* harmony import */ var _components_mouse_button_event_entity_creator__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/mouse_button_event_entity_creator */ "./examples/components/mouse_button_event_entity_creator.ts");
+/* harmony import */ var _components_velocity__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/velocity */ "./examples/components/velocity.ts");
+
+
+
+
+
+
+
+const createEntity = (world) => {
+    const eid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_velocity__WEBPACK_IMPORTED_MODULE_5__.Velocity, eid);
+    _components_velocity__WEBPACK_IMPORTED_MODULE_5__.Velocity.x[eid] = 0.01;
+    _components_velocity__WEBPACK_IMPORTED_MODULE_5__.Velocity.y[eid] = 0.0;
+    _components_velocity__WEBPACK_IMPORTED_MODULE_5__.Velocity.z[eid] = 0.0;
+    _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3DProxy.get(eid).addObject3D(world, new three__WEBPACK_IMPORTED_MODULE_6__.Mesh(new three__WEBPACK_IMPORTED_MODULE_6__.BoxGeometry(1.0, 1.0, 1.0), new three__WEBPACK_IMPORTED_MODULE_6__.MeshBasicMaterial({ color: 0x888888 })));
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_scene__WEBPACK_IMPORTED_MODULE_2__.InScene, eid);
+};
+const mouseButtonEventQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_src_components_mouse__WEBPACK_IMPORTED_MODULE_3__.MouseButtonEvent, _components_mouse_button_event_entity_creator__WEBPACK_IMPORTED_MODULE_4__.MouseButtonEventEntityCreator]);
+const mouseButtonEventCreateEntitySystem = (world) => {
+    mouseButtonEventQuery(world).forEach(eid => {
+        for (const e of _src_components_mouse__WEBPACK_IMPORTED_MODULE_3__.MouseButtonEventProxy.get(eid).events) {
+            if (e.type === _src_components_mouse__WEBPACK_IMPORTED_MODULE_3__.MouseButtonEventType.Down) {
+                createEntity(world);
+            }
+        }
+    });
+};
 
 
 /***/ }),
@@ -53923,15 +54051,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "app": () => (/* binding */ app)
 /* harmony export */ });
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
 /* harmony import */ var _src_app__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../src/app */ "./src/app.ts");
-/* harmony import */ var _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../src/components/entity_object3d */ "./src/components/entity_object3d.ts");
-/* harmony import */ var _src_components_scene__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../src/components/scene */ "./src/components/scene.ts");
-/* harmony import */ var _src_components_keyboard__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../src/components/keyboard */ "./src/components/keyboard.ts");
-/* harmony import */ var _src_components_mouse__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../src/components/mouse */ "./src/components/mouse.ts");
-/* harmony import */ var _src_common__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../src/common */ "./src/common.ts");
-/* harmony import */ var _components_velocity__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../components/velocity */ "./examples/components/velocity.ts");
-/* harmony import */ var _systems_velocity__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../systems/velocity */ "./examples/systems/velocity.ts");
+/* harmony import */ var _src_components_keyboard__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../src/components/keyboard */ "./src/components/keyboard.ts");
+/* harmony import */ var _src_components_mouse__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../src/components/mouse */ "./src/components/mouse.ts");
+/* harmony import */ var _src_common__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../src/common */ "./src/common.ts");
+/* harmony import */ var _components_key_event_entity_creator__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/key_event_entity_creator */ "./examples/components/key_event_entity_creator.ts");
+/* harmony import */ var _components_mouse_button_event_entity_creator__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../components/mouse_button_event_entity_creator */ "./examples/components/mouse_button_event_entity_creator.ts");
+/* harmony import */ var _systems_key_event_entity_create__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../systems/key_event_entity_create */ "./examples/systems/key_event_entity_create.ts");
+/* harmony import */ var _systems_mouse_button_event_entity_create__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../systems/mouse_button_event_entity_create */ "./examples/systems/mouse_button_event_entity_create.ts");
+/* harmony import */ var _systems_velocity__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../systems/velocity */ "./examples/systems/velocity.ts");
 
 
 
@@ -53942,49 +54070,17 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const createEntity = (world) => {
-    const eid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
-    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_velocity__WEBPACK_IMPORTED_MODULE_7__.Velocity, eid);
-    _components_velocity__WEBPACK_IMPORTED_MODULE_7__.Velocity.x[eid] = 0.0;
-    _components_velocity__WEBPACK_IMPORTED_MODULE_7__.Velocity.y[eid] = 0.01;
-    _components_velocity__WEBPACK_IMPORTED_MODULE_7__.Velocity.z[eid] = 0.0;
-    _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__.EntityObject3DProxy.get(eid).addObject3D(world, new three__WEBPACK_IMPORTED_MODULE_9__.Mesh(new three__WEBPACK_IMPORTED_MODULE_9__.BoxGeometry(1.0, 1.0, 1.0), new three__WEBPACK_IMPORTED_MODULE_9__.MeshBasicMaterial({ color: 0x888888 })));
-    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_scene__WEBPACK_IMPORTED_MODULE_3__.InScene, eid);
-};
-const KeyEventEntityCreator = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const keyEventQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_src_components_keyboard__WEBPACK_IMPORTED_MODULE_4__.KeyEvent, KeyEventEntityCreator]);
-const keyEventCreateEntitySystem = (world) => {
-    keyEventQuery(world).forEach(eid => {
-        for (const e of _src_components_keyboard__WEBPACK_IMPORTED_MODULE_4__.KeyEventProxy.get(eid).events) {
-            if (e.type === _src_components_keyboard__WEBPACK_IMPORTED_MODULE_4__.KeyEventType.Down) {
-                createEntity(world);
-            }
-        }
-    });
-};
-const MouseButtonEventEntityCreator = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const mouseButtonEventQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_src_components_mouse__WEBPACK_IMPORTED_MODULE_5__.MouseButtonEvent, MouseButtonEventEntityCreator]);
-const mouseButtonEventCreateEntitySystem = (world) => {
-    mouseButtonEventQuery(world).forEach(eid => {
-        for (const e of _src_components_mouse__WEBPACK_IMPORTED_MODULE_5__.MouseButtonEventProxy.get(eid).events) {
-            if (e.type === _src_components_mouse__WEBPACK_IMPORTED_MODULE_5__.MouseButtonEventType.Down) {
-                createEntity(world);
-            }
-        }
-    });
-};
 const app = new _src_app__WEBPACK_IMPORTED_MODULE_1__.App();
-app.registerSystem(_systems_velocity__WEBPACK_IMPORTED_MODULE_8__.velocitySystem);
-app.registerSystem(keyEventCreateEntitySystem, _src_common__WEBPACK_IMPORTED_MODULE_6__.SystemOrder.EventHandling);
-app.registerSystem(mouseButtonEventCreateEntitySystem, _src_common__WEBPACK_IMPORTED_MODULE_6__.SystemOrder.EventHandling);
+app.registerSystem(_systems_velocity__WEBPACK_IMPORTED_MODULE_9__.velocitySystem);
+app.registerSystem(_systems_key_event_entity_create__WEBPACK_IMPORTED_MODULE_7__.keyEventCreateEntitySystem, _src_common__WEBPACK_IMPORTED_MODULE_4__.SystemOrder.EventHandling);
+app.registerSystem(_systems_mouse_button_event_entity_create__WEBPACK_IMPORTED_MODULE_8__.mouseButtonEventCreateEntitySystem, _src_common__WEBPACK_IMPORTED_MODULE_4__.SystemOrder.EventHandling);
 const world = app.getWorld();
 const keyEventEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
-(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, KeyEventEntityCreator, keyEventEid);
-(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_keyboard__WEBPACK_IMPORTED_MODULE_4__.KeyEventListener, keyEventEid);
+(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_key_event_entity_creator__WEBPACK_IMPORTED_MODULE_5__.KeyEventEntityCreator, keyEventEid);
+(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_keyboard__WEBPACK_IMPORTED_MODULE_2__.KeyEventListener, keyEventEid);
 const mouseButtonEventEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
-(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, MouseButtonEventEntityCreator, mouseButtonEventEid);
-(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_mouse__WEBPACK_IMPORTED_MODULE_5__.MouseButtonEventListener, mouseButtonEventEid);
-createEntity(world);
+(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_mouse_button_event_entity_creator__WEBPACK_IMPORTED_MODULE_6__.MouseButtonEventEntityCreator, mouseButtonEventEid);
+(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_mouse__WEBPACK_IMPORTED_MODULE_3__.MouseButtonEventListener, mouseButtonEventEid);
 app.start();
 
 
