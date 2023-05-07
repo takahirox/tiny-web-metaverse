@@ -67,10 +67,11 @@ __webpack_require__.r(__webpack_exports__);
 const createEntity = (world) => {
     const eid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
     (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_velocity__WEBPACK_IMPORTED_MODULE_5__.Velocity, eid);
-    _components_velocity__WEBPACK_IMPORTED_MODULE_5__.Velocity.x[eid] = Math.random() * 0.1 - 0.05;
-    _components_velocity__WEBPACK_IMPORTED_MODULE_5__.Velocity.y[eid] = Math.random() * 0.1 - 0.05;
-    _components_velocity__WEBPACK_IMPORTED_MODULE_5__.Velocity.z[eid] = Math.random() * -0.01;
-    _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3DProxy.get(eid).addObject3D(world, new three__WEBPACK_IMPORTED_MODULE_6__.Mesh(new three__WEBPACK_IMPORTED_MODULE_6__.BoxGeometry(1.0, 1.0, 1.0), new three__WEBPACK_IMPORTED_MODULE_6__.MeshBasicMaterial({ color: 0x888888 })));
+    _components_velocity__WEBPACK_IMPORTED_MODULE_5__.Velocity.x[eid] = Math.random() * 0.04 - 0.02;
+    _components_velocity__WEBPACK_IMPORTED_MODULE_5__.Velocity.y[eid] = 0.0;
+    _components_velocity__WEBPACK_IMPORTED_MODULE_5__.Velocity.z[eid] = Math.random() * -0.1;
+    _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3DProxy.get(eid).addObject3D(world, new three__WEBPACK_IMPORTED_MODULE_6__.Mesh(new three__WEBPACK_IMPORTED_MODULE_6__.BoxGeometry(0.5, 0.5, 0.5), new three__WEBPACK_IMPORTED_MODULE_6__.MeshBasicMaterial({ color: 0x888888 })));
+    _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3DProxy.get(eid).root.position.y = 0.25;
     (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_scene__WEBPACK_IMPORTED_MODULE_2__.InScene, eid);
 };
 const mouseButtonEventQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_src_components_mouse__WEBPACK_IMPORTED_MODULE_3__.MouseButtonEvent, _components_mouse_button_event_entity_creator__WEBPACK_IMPORTED_MODULE_4__.MouseButtonEventEntityCreator]);
@@ -134,20 +135,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_keyboard__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/keyboard */ "./src/components/keyboard.ts");
 /* harmony import */ var _components_renderer__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/renderer */ "./src/components/renderer.ts");
 /* harmony import */ var _components_scene__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/scene */ "./src/components/scene.ts");
-/* harmony import */ var _components_scene_camera__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/scene_camera */ "./src/components/scene_camera.ts");
+/* harmony import */ var _components_camera__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/camera */ "./src/components/camera.ts");
 /* harmony import */ var _components_time__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/time */ "./src/components/time.ts");
 /* harmony import */ var _components_window_resize__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./components/window_resize */ "./src/components/window_resize.ts");
 /* harmony import */ var _systems_avatar_key_controls__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./systems/avatar_key_controls */ "./src/systems/avatar_key_controls.ts");
-/* harmony import */ var _systems_keyboard_event__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./systems/keyboard_event */ "./src/systems/keyboard_event.ts");
-/* harmony import */ var _systems_linear_move__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./systems/linear_move */ "./src/systems/linear_move.ts");
-/* harmony import */ var _systems_mouse_event__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./systems/mouse_event */ "./src/systems/mouse_event.ts");
-/* harmony import */ var _systems_render__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./systems/render */ "./src/systems/render.ts");
-/* harmony import */ var _systems_renderer__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./systems/renderer */ "./src/systems/renderer.ts");
-/* harmony import */ var _systems_scene__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./systems/scene */ "./src/systems/scene.ts");
-/* harmony import */ var _systems_scene_camera__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./systems/scene_camera */ "./src/systems/scene_camera.ts");
-/* harmony import */ var _systems_time__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./systems/time */ "./src/systems/time.ts");
-/* harmony import */ var _systems_update_matrices__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./systems/update_matrices */ "./src/systems/update_matrices.ts");
-/* harmony import */ var _systems_window_resize_event__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./systems/window_resize_event */ "./src/systems/window_resize_event.ts");
+/* harmony import */ var _systems_fps_camera__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./systems/fps_camera */ "./src/systems/fps_camera.ts");
+/* harmony import */ var _systems_keyboard_event__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./systems/keyboard_event */ "./src/systems/keyboard_event.ts");
+/* harmony import */ var _systems_linear_move__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./systems/linear_move */ "./src/systems/linear_move.ts");
+/* harmony import */ var _systems_mouse_event__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./systems/mouse_event */ "./src/systems/mouse_event.ts");
+/* harmony import */ var _systems_render__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./systems/render */ "./src/systems/render.ts");
+/* harmony import */ var _systems_renderer__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./systems/renderer */ "./src/systems/renderer.ts");
+/* harmony import */ var _systems_scene__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./systems/scene */ "./src/systems/scene.ts");
+/* harmony import */ var _systems_perspective_camera__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./systems/perspective_camera */ "./src/systems/perspective_camera.ts");
+/* harmony import */ var _systems_time__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./systems/time */ "./src/systems/time.ts");
+/* harmony import */ var _systems_update_matrices__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./systems/update_matrices */ "./src/systems/update_matrices.ts");
+/* harmony import */ var _systems_window_resize_event__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./systems/window_resize_event */ "./src/systems/window_resize_event.ts");
+
 
 
 
@@ -177,20 +180,21 @@ class App {
     }
     init() {
         // Built-in systems and entities
-        this.registerSystem(_systems_time__WEBPACK_IMPORTED_MODULE_18__.timeSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.Time);
-        this.registerSystem(_systems_keyboard_event__WEBPACK_IMPORTED_MODULE_11__.keyEventHandleSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.EventHandling);
-        this.registerSystem(_systems_mouse_event__WEBPACK_IMPORTED_MODULE_13__.mouseButtonEventHandleSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.EventHandling);
-        this.registerSystem(_systems_window_resize_event__WEBPACK_IMPORTED_MODULE_20__.windowResizeEventHandleSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.EventHandling);
+        this.registerSystem(_systems_time__WEBPACK_IMPORTED_MODULE_19__.timeSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.Time);
+        this.registerSystem(_systems_keyboard_event__WEBPACK_IMPORTED_MODULE_12__.keyEventHandleSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.EventHandling);
+        this.registerSystem(_systems_mouse_event__WEBPACK_IMPORTED_MODULE_14__.mouseButtonEventHandleSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.EventHandling);
+        this.registerSystem(_systems_window_resize_event__WEBPACK_IMPORTED_MODULE_21__.windowResizeEventHandleSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.EventHandling);
         this.registerSystem(_systems_avatar_key_controls__WEBPACK_IMPORTED_MODULE_10__.avatarKeyControlsSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.EventHandling);
-        this.registerSystem(_systems_renderer__WEBPACK_IMPORTED_MODULE_15__.rendererSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.Setup);
-        this.registerSystem(_systems_scene__WEBPACK_IMPORTED_MODULE_16__.sceneSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.Setup);
-        this.registerSystem(_systems_scene_camera__WEBPACK_IMPORTED_MODULE_17__.sceneCameraSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.Setup);
-        this.registerSystem(_systems_linear_move__WEBPACK_IMPORTED_MODULE_12__.linearMoveSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.BeforeMatricesUpdate);
-        this.registerSystem(_systems_update_matrices__WEBPACK_IMPORTED_MODULE_19__.updateMatricesSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.MatricesUpdate);
-        this.registerSystem(_systems_render__WEBPACK_IMPORTED_MODULE_14__.renderSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.Render);
-        this.registerSystem(_systems_keyboard_event__WEBPACK_IMPORTED_MODULE_11__.keyEventClearSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.TearDown);
-        this.registerSystem(_systems_mouse_event__WEBPACK_IMPORTED_MODULE_13__.mouseButtonEventClearSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.TearDown);
-        this.registerSystem(_systems_window_resize_event__WEBPACK_IMPORTED_MODULE_20__.windowResizeEventClearSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.TearDown);
+        this.registerSystem(_systems_renderer__WEBPACK_IMPORTED_MODULE_16__.rendererSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.Setup);
+        this.registerSystem(_systems_scene__WEBPACK_IMPORTED_MODULE_17__.sceneSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.Setup);
+        this.registerSystem(_systems_perspective_camera__WEBPACK_IMPORTED_MODULE_18__.perspectiveCameraSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.Setup);
+        this.registerSystem(_systems_linear_move__WEBPACK_IMPORTED_MODULE_13__.linearMoveSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.BeforeMatricesUpdate);
+        this.registerSystem(_systems_fps_camera__WEBPACK_IMPORTED_MODULE_11__.fpsCameraSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.MatricesUpdate - 1);
+        this.registerSystem(_systems_update_matrices__WEBPACK_IMPORTED_MODULE_20__.updateMatricesSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.MatricesUpdate);
+        this.registerSystem(_systems_render__WEBPACK_IMPORTED_MODULE_15__.renderSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.Render);
+        this.registerSystem(_systems_keyboard_event__WEBPACK_IMPORTED_MODULE_12__.keyEventClearSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.TearDown);
+        this.registerSystem(_systems_mouse_event__WEBPACK_IMPORTED_MODULE_14__.mouseButtonEventClearSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.TearDown);
+        this.registerSystem(_systems_window_resize_event__WEBPACK_IMPORTED_MODULE_21__.windowResizeEventClearSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.TearDown);
         // Entity 0 for null entity
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
         const keyEventHandlerEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
@@ -208,14 +212,14 @@ class App {
         const sceneEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
         _components_scene__WEBPACK_IMPORTED_MODULE_6__.SceneInitProxy.get(sceneEid).allocate(this.world);
         const cameraEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
-        _components_scene_camera__WEBPACK_IMPORTED_MODULE_7__.SceneCameraInitProxy.get(cameraEid).allocate(this.world);
+        _components_camera__WEBPACK_IMPORTED_MODULE_7__.PerspectiveCameraInitProxy.get(cameraEid).allocate(this.world);
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_camera__WEBPACK_IMPORTED_MODULE_7__.FpsCamera, cameraEid);
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_scene__WEBPACK_IMPORTED_MODULE_6__.InScene, cameraEid);
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_camera__WEBPACK_IMPORTED_MODULE_7__.SceneCamera, cameraEid);
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_window_resize__WEBPACK_IMPORTED_MODULE_9__.WindowSize, cameraEid);
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_window_resize__WEBPACK_IMPORTED_MODULE_9__.WindowResizeEventListener, cameraEid);
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_scene__WEBPACK_IMPORTED_MODULE_6__.InScene, cameraEid);
         const proxy = _components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__.EntityObject3DProxy.get(cameraEid);
         proxy.allocate(this.world);
-        // TODO: Fix me
-        proxy.root.position.set(0.0, 1.0, 5.0);
     }
     registerSystem(system, orderPriority = _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.BeforeMatricesUpdate) {
         // TODO: Optimize
@@ -316,6 +320,91 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
 
 const Avatar = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+
+
+/***/ }),
+
+/***/ "./src/components/camera.ts":
+/*!**********************************!*\
+  !*** ./src/components/camera.ts ***!
+  \**********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "FpsCamera": () => (/* binding */ FpsCamera),
+/* harmony export */   "PerspectiveCameraInit": () => (/* binding */ PerspectiveCameraInit),
+/* harmony export */   "PerspectiveCameraInitProxy": () => (/* binding */ PerspectiveCameraInitProxy),
+/* harmony export */   "PerspectiveCameraProxy": () => (/* binding */ PerspectiveCameraProxy),
+/* harmony export */   "PerspectiveCameraTag": () => (/* binding */ PerspectiveCameraTag),
+/* harmony export */   "SceneCamera": () => (/* binding */ SceneCamera)
+/* harmony export */ });
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../common */ "./src/common.ts");
+
+
+const PerspectiveCameraInit = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const PerspectiveCameraInitMap = new Map();
+const PerspectiveCameraTag = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const PerspectiveCameraMap = new Map();
+const SceneCamera = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const FpsCamera = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+class PerspectiveCameraInitProxy {
+    constructor() {
+        this.eid = _common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
+    }
+    static get(eid) {
+        PerspectiveCameraInitProxy.instance.eid = eid;
+        return PerspectiveCameraInitProxy.instance;
+    }
+    allocate(world, params = {}) {
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, PerspectiveCameraInit, this.eid);
+        PerspectiveCameraInitMap.set(this.eid, {
+            fov: params.fov || 60,
+            aspect: params.aspect || (window.innerWidth / window.innerHeight),
+            near: params.near || 0.001,
+            far: params.far || 2000.0
+        });
+    }
+    free(world) {
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, PerspectiveCameraInit, this.eid);
+        PerspectiveCameraInitMap.delete(this.eid);
+    }
+    get fov() {
+        return PerspectiveCameraInitMap.get(this.eid).fov;
+    }
+    get aspect() {
+        return PerspectiveCameraInitMap.get(this.eid).aspect;
+    }
+    get near() {
+        return PerspectiveCameraInitMap.get(this.eid).near;
+    }
+    get far() {
+        return PerspectiveCameraInitMap.get(this.eid).far;
+    }
+}
+PerspectiveCameraInitProxy.instance = new PerspectiveCameraInitProxy();
+class PerspectiveCameraProxy {
+    constructor() {
+        this.eid = _common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
+    }
+    static get(eid) {
+        PerspectiveCameraProxy.instance.eid = eid;
+        return PerspectiveCameraProxy.instance;
+    }
+    allocate(world, camera) {
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, PerspectiveCameraTag, this.eid);
+        PerspectiveCameraMap.set(this.eid, camera);
+    }
+    free(world) {
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, PerspectiveCameraTag, this.eid);
+        PerspectiveCameraMap.delete(this.eid);
+    }
+    get camera() {
+        return PerspectiveCameraMap.get(this.eid);
+    }
+}
+PerspectiveCameraProxy.instance = new PerspectiveCameraProxy();
 
 
 /***/ }),
@@ -829,87 +918,6 @@ SceneProxy.instance = new SceneProxy();
 
 /***/ }),
 
-/***/ "./src/components/scene_camera.ts":
-/*!****************************************!*\
-  !*** ./src/components/scene_camera.ts ***!
-  \****************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "SceneCamera": () => (/* binding */ SceneCamera),
-/* harmony export */   "SceneCameraInit": () => (/* binding */ SceneCameraInit),
-/* harmony export */   "SceneCameraInitProxy": () => (/* binding */ SceneCameraInitProxy),
-/* harmony export */   "SceneCameraProxy": () => (/* binding */ SceneCameraProxy)
-/* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
-/* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../common */ "./src/common.ts");
-
-
-const SceneCameraInit = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const CameraInitMap = new Map();
-const SceneCamera = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const CameraMap = new Map();
-class SceneCameraInitProxy {
-    constructor() {
-        this.eid = _common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
-    }
-    static get(eid) {
-        SceneCameraInitProxy.instance.eid = eid;
-        return SceneCameraInitProxy.instance;
-    }
-    allocate(world, params = {}) {
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, SceneCameraInit, this.eid);
-        CameraInitMap.set(this.eid, {
-            fov: params.fov || 60,
-            aspect: params.aspect || (window.innerWidth / window.innerHeight),
-            near: params.near || 0.001,
-            far: params.far || 2000.0
-        });
-    }
-    free(world) {
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, SceneCameraInit, this.eid);
-        CameraInitMap.delete(this.eid);
-    }
-    get fov() {
-        return CameraInitMap.get(this.eid).fov;
-    }
-    get aspect() {
-        return CameraInitMap.get(this.eid).aspect;
-    }
-    get near() {
-        return CameraInitMap.get(this.eid).near;
-    }
-    get far() {
-        return CameraInitMap.get(this.eid).far;
-    }
-}
-SceneCameraInitProxy.instance = new SceneCameraInitProxy();
-class SceneCameraProxy {
-    constructor() {
-        this.eid = _common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
-    }
-    static get(eid) {
-        SceneCameraProxy.instance.eid = eid;
-        return SceneCameraProxy.instance;
-    }
-    allocate(world, camera) {
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, SceneCamera, this.eid);
-        CameraMap.set(this.eid, camera);
-    }
-    free(world) {
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, SceneCamera, this.eid);
-        CameraMap.delete(this.eid);
-    }
-    get camera() {
-        return CameraMap.get(this.eid);
-    }
-}
-SceneCameraProxy.instance = new SceneCameraProxy();
-
-
-/***/ }),
-
 /***/ "./src/components/time.ts":
 /*!********************************!*\
   !*** ./src/components/time.ts ***!
@@ -1096,6 +1104,50 @@ const avatarKeyControlsSystem = (world) => {
 
 /***/ }),
 
+/***/ "./src/systems/fps_camera.ts":
+/*!***********************************!*\
+  !*** ./src/systems/fps_camera.ts ***!
+  \***********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "fpsCameraSystem": () => (/* binding */ fpsCameraSystem)
+/* harmony export */ });
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var _components_avatar__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/avatar */ "./src/components/avatar.ts");
+/* harmony import */ var _components_camera__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/camera */ "./src/components/camera.ts");
+/* harmony import */ var _components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/entity_object3d */ "./src/components/entity_object3d.ts");
+/* harmony import */ var _components_network__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/network */ "./src/components/network.ts");
+
+
+
+
+
+const avatarQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_avatar__WEBPACK_IMPORTED_MODULE_1__.Avatar, _components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__.EntityObject3D, _components_network__WEBPACK_IMPORTED_MODULE_4__.Owned]);
+const cameraQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_camera__WEBPACK_IMPORTED_MODULE_2__.FpsCamera, _components_camera__WEBPACK_IMPORTED_MODULE_2__.PerspectiveCameraTag]);
+const fpsCameraSystem = (world) => {
+    const avatarEids = avatarQuery(world);
+    const cameraEids = cameraQuery(world);
+    avatarEids.forEach(avatarEid => {
+        const avatar = _components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__.EntityObject3DProxy.get(avatarEid).root;
+        avatar.updateWorldMatrix(true, true);
+        cameraEids.forEach(cameraEid => {
+            const camera = _components_camera__WEBPACK_IMPORTED_MODULE_2__.PerspectiveCameraProxy.get(cameraEid).camera;
+            // TODO: Optimize
+            camera.matrixWorld.identity();
+            // TODO: Remove magic number
+            camera.matrixWorld.elements[14] = -0.1;
+            camera.matrixWorld.multiply(avatar.matrixWorld);
+            camera.matrix.copy(camera.matrixWorld);
+            camera.matrix.decompose(camera.position, camera.quaternion, camera.scale);
+        });
+    });
+};
+
+
+/***/ }),
+
 /***/ "./src/systems/keyboard_event.ts":
 /*!***************************************!*\
   !*** ./src/systems/keyboard_event.ts ***!
@@ -1270,6 +1322,57 @@ const mouseButtonEventClearSystem = (world) => {
 
 /***/ }),
 
+/***/ "./src/systems/perspective_camera.ts":
+/*!*******************************************!*\
+  !*** ./src/systems/perspective_camera.ts ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "perspectiveCameraSystem": () => (/* binding */ perspectiveCameraSystem)
+/* harmony export */ });
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+/* harmony import */ var _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/entity_object3d */ "./src/components/entity_object3d.ts");
+/* harmony import */ var _components_camera__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/camera */ "./src/components/camera.ts");
+/* harmony import */ var _components_window_resize__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/window_resize */ "./src/components/window_resize.ts");
+
+
+
+
+
+const initEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_camera__WEBPACK_IMPORTED_MODULE_2__.PerspectiveCameraInit]));
+const cameraExitQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_camera__WEBPACK_IMPORTED_MODULE_2__.PerspectiveCameraTag]));
+const cameraWindowResizeEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_camera__WEBPACK_IMPORTED_MODULE_2__.PerspectiveCameraTag, _components_window_resize__WEBPACK_IMPORTED_MODULE_3__.WindowResizeEvent, _components_window_resize__WEBPACK_IMPORTED_MODULE_3__.WindowSize]));
+const perspectiveCameraSystem = (world) => {
+    initEnterQuery(world).forEach(eid => {
+        const proxy = _components_camera__WEBPACK_IMPORTED_MODULE_2__.PerspectiveCameraInitProxy.get(eid);
+        const fov = proxy.fov;
+        const aspect = proxy.aspect;
+        const near = proxy.near;
+        const far = proxy.far;
+        proxy.free(world);
+        const camera = new three__WEBPACK_IMPORTED_MODULE_4__.PerspectiveCamera(fov, aspect, near, far);
+        _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3DProxy.get(eid).addObject3D(world, camera);
+        _components_camera__WEBPACK_IMPORTED_MODULE_2__.PerspectiveCameraProxy.get(eid).allocate(world, camera);
+    });
+    cameraExitQuery(world).forEach(eid => {
+        const proxy = _components_camera__WEBPACK_IMPORTED_MODULE_2__.PerspectiveCameraProxy.get(eid);
+        const camera = proxy.camera;
+        _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3DProxy.get(eid).removeObject3D(world, camera);
+        proxy.free(world);
+    });
+    cameraWindowResizeEnterQuery(world).forEach(eid => {
+        const camera = _components_camera__WEBPACK_IMPORTED_MODULE_2__.PerspectiveCameraProxy.get(eid).camera;
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+    });
+};
+
+
+/***/ }),
+
 /***/ "./src/systems/render.ts":
 /*!*******************************!*\
   !*** ./src/systems/render.ts ***!
@@ -1283,14 +1386,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var _components_renderer__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/renderer */ "./src/components/renderer.ts");
 /* harmony import */ var _components_scene__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/scene */ "./src/components/scene.ts");
-/* harmony import */ var _components_scene_camera__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/scene_camera */ "./src/components/scene_camera.ts");
+/* harmony import */ var _components_camera__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/camera */ "./src/components/camera.ts");
 
 
 
 
 const rendererQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_renderer__WEBPACK_IMPORTED_MODULE_1__.Renderer]);
 const sceneQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_scene__WEBPACK_IMPORTED_MODULE_2__.SceneTag]);
-const cameraQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_scene_camera__WEBPACK_IMPORTED_MODULE_3__.SceneCamera]);
+const cameraQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_camera__WEBPACK_IMPORTED_MODULE_3__.PerspectiveCameraTag, _components_camera__WEBPACK_IMPORTED_MODULE_3__.SceneCamera]);
 const renderSystem = (world) => {
     const rendererEids = rendererQuery(world);
     const sceneEids = sceneQuery(world);
@@ -1300,7 +1403,7 @@ const renderSystem = (world) => {
         sceneEids.forEach(sceneEid => {
             const scene = _components_scene__WEBPACK_IMPORTED_MODULE_2__.SceneProxy.get(sceneEid).scene;
             cameraEids.forEach(cameraEid => {
-                const camera = _components_scene_camera__WEBPACK_IMPORTED_MODULE_3__.SceneCameraProxy.get(cameraEid).camera;
+                const camera = _components_camera__WEBPACK_IMPORTED_MODULE_3__.PerspectiveCameraProxy.get(cameraEid).camera;
                 renderer.render(scene, camera);
             });
         });
@@ -1406,58 +1509,6 @@ const sceneSystem = (world) => {
         inSceneEnterQuery(world).forEach(objEid => {
             scene.add(_components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3DProxy.get(objEid).root);
         });
-    });
-};
-
-
-/***/ }),
-
-/***/ "./src/systems/scene_camera.ts":
-/*!*************************************!*\
-  !*** ./src/systems/scene_camera.ts ***!
-  \*************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "sceneCameraSystem": () => (/* binding */ sceneCameraSystem)
-/* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
-/* harmony import */ var _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/entity_object3d */ "./src/components/entity_object3d.ts");
-/* harmony import */ var _components_scene_camera__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/scene_camera */ "./src/components/scene_camera.ts");
-/* harmony import */ var _components_window_resize__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/window_resize */ "./src/components/window_resize.ts");
-
-
-
-
-
-const initializeEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_scene_camera__WEBPACK_IMPORTED_MODULE_2__.SceneCameraInit]));
-const sceneCameraExitQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_scene_camera__WEBPACK_IMPORTED_MODULE_2__.SceneCamera]));
-const sceneCameraWindowResizeEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_scene_camera__WEBPACK_IMPORTED_MODULE_2__.SceneCamera, _components_window_resize__WEBPACK_IMPORTED_MODULE_3__.WindowResizeEvent, _components_window_resize__WEBPACK_IMPORTED_MODULE_3__.WindowSize]));
-const sceneCameraSystem = (world) => {
-    initializeEnterQuery(world).forEach(eid => {
-        const proxy = _components_scene_camera__WEBPACK_IMPORTED_MODULE_2__.SceneCameraInitProxy.get(eid);
-        const fov = proxy.fov;
-        const aspect = proxy.aspect;
-        const near = proxy.near;
-        const far = proxy.far;
-        proxy.free(world);
-        const camera = new three__WEBPACK_IMPORTED_MODULE_4__.PerspectiveCamera(fov, aspect, near, far);
-        _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3DProxy.get(eid).addObject3D(world, camera);
-        _components_scene_camera__WEBPACK_IMPORTED_MODULE_2__.SceneCameraProxy.get(eid).allocate(world, camera);
-    });
-    sceneCameraExitQuery(world).forEach(eid => {
-        const proxy = _components_scene_camera__WEBPACK_IMPORTED_MODULE_2__.SceneCameraProxy.get(eid);
-        const camera = proxy.camera;
-        _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3DProxy.get(eid).removeObject3D(world, camera);
-        proxy.free(world);
-    });
-    sceneCameraWindowResizeEnterQuery(world).forEach(eid => {
-        const camera = _components_scene_camera__WEBPACK_IMPORTED_MODULE_2__.SceneCameraProxy.get(eid).camera;
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_window_resize__WEBPACK_IMPORTED_MODULE_3__.WindowResizeEvent, eid);
     });
 };
 
@@ -54215,7 +54266,7 @@ const avatarEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
 (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_keyboard__WEBPACK_IMPORTED_MODULE_4__.KeyEventListener, avatarEid);
 (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_scene__WEBPACK_IMPORTED_MODULE_7__.InScene, avatarEid);
 _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__.EntityObject3DProxy.get(avatarEid).addObject3D(world, new three__WEBPACK_IMPORTED_MODULE_12__.Mesh(new three__WEBPACK_IMPORTED_MODULE_12__.BoxGeometry(0.5, 0.5, 0.5), new three__WEBPACK_IMPORTED_MODULE_12__.MeshBasicMaterial({ color: 0x0000ff })));
-_src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__.EntityObject3DProxy.get(avatarEid).root.position.y = 0.25;
+_src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__.EntityObject3DProxy.get(avatarEid).root.position.set(0.0, 0.25, 2.0);
 const mouseButtonEventEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
 (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_mouse_button_event_entity_creator__WEBPACK_IMPORTED_MODULE_9__.MouseButtonEventEntityCreator, mouseButtonEventEid);
 (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_mouse__WEBPACK_IMPORTED_MODULE_5__.MouseButtonEventListener, mouseButtonEventEid);

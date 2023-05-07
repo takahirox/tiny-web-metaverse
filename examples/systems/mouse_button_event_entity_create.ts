@@ -19,14 +19,15 @@ const createEntity = (world: IWorld) => {
   const eid = addEntity(world);
 
   addComponent(world, Velocity, eid);
-  Velocity.x[eid] = Math.random() * 0.1 - 0.05;
-  Velocity.y[eid] = Math.random() * 0.1 - 0.05;
-  Velocity.z[eid] = Math.random() * - 0.01;
+  Velocity.x[eid] = Math.random() * 0.04 - 0.02;
+  Velocity.y[eid] = 0.0;
+  Velocity.z[eid] = Math.random() * -0.1;
 
   EntityObject3DProxy.get(eid).addObject3D(world, new Mesh(
-    new BoxGeometry(1.0, 1.0, 1.0),
+    new BoxGeometry(0.5, 0.5, 0.5),
     new MeshBasicMaterial({color: 0x888888})
   ));
+  EntityObject3DProxy.get(eid).root.position.y = 0.25;
 
   addComponent(world, InScene, eid);
 };

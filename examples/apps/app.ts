@@ -39,7 +39,7 @@ EntityObject3DProxy.get(avatarEid).addObject3D(world, new Mesh(
   new BoxGeometry(0.5, 0.5, 0.5),
   new MeshBasicMaterial({ color: 0x0000ff })
 ));
-EntityObject3DProxy.get(avatarEid).root.position.y = 0.25;
+EntityObject3DProxy.get(avatarEid).root.position.set(0.0, 0.25, 2.0);
 
 const mouseButtonEventEid = addEntity(world);
 addComponent(world, MouseButtonEventEntityCreator, mouseButtonEventEid);

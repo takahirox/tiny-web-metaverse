@@ -10,7 +10,11 @@ import { MouseButtonEventHandlerInit } from "./components/mouse";
 import { KeyEventHandlerInit } from "./components/keyboard";
 import { RendererInitProxy } from "./components/renderer";
 import { InScene, SceneInitProxy } from "./components/scene";
-import { SceneCameraInitProxy } from "./components/scene_camera";
+import {
+  FpsCamera,
+  PerspectiveCameraInitProxy,
+  SceneCamera
+} from "./components/camera";
 import { TimeInit } from "./components/time";
 import {
   WindowResizeEventHandlerInit,
@@ -18,6 +22,7 @@ import {
   WindowSize
 } from "./components/window_resize";
 import { avatarKeyControlsSystem } from "./systems/avatar_key_controls";
+import { fpsCameraSystem } from "./systems/fps_camera";
 import {
   keyEventHandleSystem,
   keyEventClearSystem
@@ -30,7 +35,7 @@ import {
 import { renderSystem } from "./systems/render";
 import { rendererSystem } from "./systems/renderer";
 import { sceneSystem } from "./systems/scene";
-import { sceneCameraSystem } from "./systems/scene_camera";
+import { perspectiveCameraSystem } from "./systems/perspective_camera";
 import { timeSystem } from "./systems/time";
 import { updateMatricesSystem } from "./systems/update_matrices";
 import {
@@ -67,9 +72,11 @@ export class App {
 
     this.registerSystem(rendererSystem, SystemOrder.Setup);
     this.registerSystem(sceneSystem, SystemOrder.Setup);
-    this.registerSystem(sceneCameraSystem, SystemOrder.Setup);
+    this.registerSystem(perspectiveCameraSystem, SystemOrder.Setup);
 
     this.registerSystem(linearMoveSystem, SystemOrder.BeforeMatricesUpdate);
+
+    this.registerSystem(fpsCameraSystem, SystemOrder.MatricesUpdate - 1);
 
     this.registerSystem(updateMatricesSystem, SystemOrder.MatricesUpdate);
 
@@ -103,15 +110,15 @@ export class App {
     SceneInitProxy.get(sceneEid).allocate(this.world);
 
     const cameraEid = addEntity(this.world);
-    SceneCameraInitProxy.get(cameraEid).allocate(this.world);
+    PerspectiveCameraInitProxy.get(cameraEid).allocate(this.world);
+    addComponent(this.world, FpsCamera, cameraEid);
+    addComponent(this.world, InScene, cameraEid);
+    addComponent(this.world, SceneCamera, cameraEid);
     addComponent(this.world, WindowSize, cameraEid);
     addComponent(this.world, WindowResizeEventListener, cameraEid);
-    addComponent(this.world, InScene, cameraEid);
 
     const proxy = EntityObject3DProxy.get(cameraEid);
     proxy.allocate(this.world);
-    // TODO: Fix me
-    proxy.root.position.set(0.0, 1.0, 5.0);
   }
 
   registerSystem(
