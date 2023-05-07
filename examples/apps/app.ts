@@ -2,7 +2,12 @@ import {
   addComponent,
   addEntity
 } from "bitecs";
-import { BoxGeometry, Mesh, MeshBasicMaterial } from "three";
+import {
+  BoxGeometry,
+  GridHelper,
+  Mesh,
+  MeshBasicMaterial
+} from "three";
 import { App } from "../../src/app";
 import { Avatar } from "../../src/components/avatar";
 import { EntityObject3DProxy } from "../../src/components/entity_object3d";
@@ -21,6 +26,10 @@ app.registerSystem(mouseButtonEventCreateEntitySystem, SystemOrder.EventHandling
 
 const world = app.getWorld();
 
+const gridEid = addEntity(world);
+addComponent(world, InScene, gridEid);
+EntityObject3DProxy.get(gridEid).addObject3D(world, new GridHelper());
+
 const avatarEid = addEntity(world);
 addComponent(world, Avatar, avatarEid);
 addComponent(world, Owned, avatarEid);
@@ -30,6 +39,7 @@ EntityObject3DProxy.get(avatarEid).addObject3D(world, new Mesh(
   new BoxGeometry(0.5, 0.5, 0.5),
   new MeshBasicMaterial({ color: 0x0000ff })
 ));
+EntityObject3DProxy.get(avatarEid).root.position.y = 0.25;
 
 const mouseButtonEventEid = addEntity(world);
 addComponent(world, MouseButtonEventEntityCreator, mouseButtonEventEid);

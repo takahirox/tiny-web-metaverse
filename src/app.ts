@@ -22,6 +22,7 @@ import {
   keyEventHandleSystem,
   keyEventClearSystem
 } from "./systems/keyboard_event";
+import { linearMoveSystem } from "./systems/linear_move";
 import {
   mouseButtonEventHandleSystem,
   mouseButtonEventClearSystem
@@ -68,6 +69,8 @@ export class App {
     this.registerSystem(sceneSystem, SystemOrder.Setup);
     this.registerSystem(sceneCameraSystem, SystemOrder.Setup);
 
+    this.registerSystem(linearMoveSystem, SystemOrder.BeforeMatricesUpdate);
+
     this.registerSystem(updateMatricesSystem, SystemOrder.MatricesUpdate);
 
     this.registerSystem(renderSystem, SystemOrder.Render);
@@ -108,7 +111,7 @@ export class App {
     const proxy = EntityObject3DProxy.get(cameraEid);
     proxy.allocate(this.world);
     // TODO: Fix me
-    proxy.root.position.set(0.0, 0.0, 5.0);
+    proxy.root.position.set(0.0, 1.0, 5.0);
   }
 
   registerSystem(

@@ -1,25 +1,52 @@
-import { defineQuery, IWorld } from "bitecs";
+import { addComponent, defineQuery, IWorld, removeComponent } from "bitecs";
 import { Avatar } from "../components/avatar";
-import {
-  EntityObject3D,
-  EntityObject3DProxy
-} from "../components/entity_object3d";
 import { KeyEvent, KeyEventProxy, KeyEventType } from "../components/keyboard";
+import {
+  LinearMoveBackward,
+  LinearMoveForward,
+  LinearMoveLeft,
+  LinearMoveRight
+} from "../components/linear_move";
 import { Owned } from "../components/network";
 
 const eventQuery = defineQuery([
   Avatar,
-  EntityObject3D,
   KeyEvent,
   Owned
 ]);
 export const avatarKeyControlsSystem = (world: IWorld) => {
   eventQuery(world).forEach(eid => {
-    const obj = EntityObject3DProxy.get(eid).root;
     const events = KeyEventProxy.get(eid).events;
+    const speed = 1.0;
     for (const e of events) {
-      if (e.type === KeyEventType.Down) {
-        obj.position.z += 0.01;
+      if (e.code === 37) { // Left
+        if (e.type === KeyEventType.Down) {
+          addComponent(world, LinearMoveLeft, eid);
+          LinearMoveLeft.speed[eid] = speed;
+        } else if (e.type === KeyEventType.Up) {
+          removeComponent(world, LinearMoveLeft, eid);
+        }
+      } else if (e.code === 38) { // Up
+        if (e.type === KeyEventType.Down) {
+          addComponent(world, LinearMoveForward, eid);
+          LinearMoveForward.speed[eid] = speed;
+        } else if (e.type === KeyEventType.Up) {
+          removeComponent(world, LinearMoveForward, eid);
+        }
+      } else if (e.code === 39) { // Right
+        if (e.type === KeyEventType.Down) {
+          addComponent(world, LinearMoveRight, eid);
+          LinearMoveRight.speed[eid] = speed;
+        } else if (e.type === KeyEventType.Up) {
+          removeComponent(world, LinearMoveRight, eid);
+        }
+      } else if (e.code === 40) { // Down
+        if (e.type === KeyEventType.Down) {
+          addComponent(world, LinearMoveBackward, eid);
+          LinearMoveBackward.speed[eid] = speed;
+        } else if (e.type === KeyEventType.Up) {
+          removeComponent(world, LinearMoveBackward, eid);
+        }
       }
     }
   });
