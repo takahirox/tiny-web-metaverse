@@ -39,7 +39,7 @@ module.exports = [
       }
     },
     devtool: false,
-    entry: './examples/apps/velocity.ts',
+    entry: './examples/apps/app.ts',
     mode: mode,
     module: {
       rules: [
@@ -51,7 +51,7 @@ module.exports = [
       ]
     },
     output: {
-      filename: 'velocity.bundle.js',
+      filename: 'example.bundle.js',
       path: path.resolve(__dirname, 'examples', 'dist')
     },
     resolve: {
