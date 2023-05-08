@@ -18,6 +18,7 @@ type KeyEventHandlerValue = {
 };
 
 export const KeyEventHandlerInit = defineComponent();
+export const KeyEventHandlerDestroy = defineComponent();
 export const KeyEventHandler = defineComponent();
 const KeyEventHandlerMap = new Map<number, KeyEventHandlerValue>();
 

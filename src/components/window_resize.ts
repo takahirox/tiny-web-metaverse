@@ -9,6 +9,7 @@ import { NULL_EID } from "../common";
 type WindowResizeEventHandlerValue = () => void;
 
 export const WindowResizeEventHandlerInit = defineComponent();
+export const WindowResizeEventHandlerDestroy = defineComponent();
 export const WindowResizeEventHandler = defineComponent();
 const WindowResizeEventHandlerMap = new Map<number, WindowResizeEventHandlerValue>();
 

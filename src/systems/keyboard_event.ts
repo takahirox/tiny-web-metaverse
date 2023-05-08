@@ -1,13 +1,13 @@
 import {
   defineQuery,
   enterQuery,
-  exitQuery,
   IWorld,
   removeComponent
 } from "bitecs";
 import {
   KeyEvent,
   KeyEventHandler,
+  KeyEventHandlerDestroy,
   KeyEventHandlerInit,
   KeyEventHandlerProxy,
   KeyEventListener,
@@ -15,13 +15,15 @@ import {
   KeyEventType
 } from "../components/keyboard";
 
-const handlerInitEnterQuery = enterQuery(defineQuery([KeyEventHandlerInit]));
-const handlerExitQuery = exitQuery(defineQuery([KeyEventHandler]));
+const initEnterQuery = enterQuery(defineQuery([KeyEventHandlerInit]));
+const destroyEnterQuery = enterQuery(defineQuery([KeyEventHandler, KeyEventHandlerDestroy]));
 const listenerQuery = defineQuery([KeyEventListener]);
 const eventQuery = defineQuery([KeyEvent]);
 
 export const keyEventHandleSystem = (world: IWorld) => {
-  handlerExitQuery(world).forEach(eid => {
+  destroyEnterQuery(world).forEach(eid => {
+    removeComponent(world, KeyEventHandlerDestroy, eid);
+
     const proxy = KeyEventHandlerProxy.get(eid);
 
     document.removeEventListener('keydown', proxy.keydownListener);
@@ -30,7 +32,7 @@ export const keyEventHandleSystem = (world: IWorld) => {
     proxy.free(world);
   });
 
-  handlerInitEnterQuery(world).forEach(eid => {
+  initEnterQuery(world).forEach(eid => {
     removeComponent(world, KeyEventHandlerInit, eid);
 
     const keydownListener = (event: KeyboardEvent): void => {

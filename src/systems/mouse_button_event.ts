@@ -1,13 +1,13 @@
 import {
   defineQuery,
   enterQuery,
-  exitQuery,
   IWorld,
   removeComponent
 } from "bitecs";
 import {
   MouseButtonEvent,
   MouseButtonEventHandler,
+  MouseButtonEventHandlerDestroy,
   MouseButtonEventHandlerInit,
   MouseButtonEventHandlerProxy,
   MouseButtonEventListener,
@@ -22,45 +22,55 @@ const MouseButtonTypeTable: Record<number, MouseButtonType> = {
   2: MouseButtonType.Right
 };
 
-const handlerInitEnterQuery = enterQuery(defineQuery([MouseButtonEventHandlerInit]));
-const handlerExitQuery = exitQuery(defineQuery([MouseButtonEventHandler]));
+const initEnterQuery = enterQuery(defineQuery([MouseButtonEventHandlerInit]));
+const destroyEnterQuery = enterQuery(defineQuery(
+  [MouseButtonEventHandler, MouseButtonEventHandlerDestroy]));
 const listenerQuery = defineQuery([MouseButtonEventListener]);
 const eventQuery = defineQuery([MouseButtonEvent]);
 
+const addMouseButtonEvent = (
+  world: IWorld,
+  eid: number,
+  type: MouseButtonEventType,
+  event: MouseEvent
+): void => {
+  // TODO: Use canvas, not document.body?
+  MouseButtonEventProxy.get(eid).add(
+    world,
+    type,
+    MouseButtonTypeTable[event.button],
+    (event.offsetX / document.body.clientWidth) * 2.0 - 1.0,
+    (event.offsetY / document.body.clientHeight) * 2.0 - 1.0
+  );
+}
+
 export const mouseButtonEventHandleSystem = (world: IWorld) => {
-  handlerExitQuery(world).forEach(eid => {
+  destroyEnterQuery(world).forEach(eid => {
+    removeComponent(world, MouseButtonEventHandlerDestroy, eid);
+
     const proxy = MouseButtonEventHandlerProxy.get(eid);
 
+    // TODO: Not document but canvas?
     document.removeEventListener('mousedown', proxy.mousedownListener);
     document.removeEventListener('mouseup', proxy.mouseupListener);
 
     proxy.free(world);
   });
 
-  handlerInitEnterQuery(world).forEach(eid => {
+  initEnterQuery(world).forEach(eid => {
     removeComponent(world, MouseButtonEventHandlerInit, eid);
+
+    // TODO: Use canvas, not document.body?
 
     const mousedownListener = (event: MouseEvent): void => {
       listenerQuery(world).forEach(eid => {
-        MouseButtonEventProxy.get(eid).add(
-          world,
-          MouseButtonEventType.Down,
-          MouseButtonTypeTable[event.button],
-          event.clientX,
-          event.clientY
-        );
+        addMouseButtonEvent(world, eid, MouseButtonEventType.Down, event);
       });
     };
 
     const mouseupListener = (event: MouseEvent): void => {
       listenerQuery(world).forEach(eid => {
-        MouseButtonEventProxy.get(eid).add(
-          world,
-          MouseButtonEventType.Up,
-          MouseButtonTypeTable[event.button],
-          event.clientX,
-          event.clientY
-        );
+        addMouseButtonEvent(world, eid, MouseButtonEventType.Up, event);
       });
     };
 
@@ -72,32 +82,6 @@ export const mouseButtonEventHandleSystem = (world: IWorld) => {
       mousedownListener,
       mouseupListener
     );
-  });
-};
-
-export const listenMouseButtonEvents = (world: IWorld) => {
-  document.addEventListener('mousedown', (event) => {
-    listenerQuery(world).forEach(eid => {
-      MouseButtonEventProxy.get(eid).add(
-        world,
-        MouseButtonEventType.Down,
-        MouseButtonTypeTable[event.button],
-        event.clientX,
-        event.clientY
-      );
-    });
-  });
-
-  document.addEventListener('mouseup', (event) => {
-    listenerQuery(world).forEach(eid => {
-      MouseButtonEventProxy.get(eid).add(
-        world,
-        MouseButtonEventType.Up,
-        MouseButtonTypeTable[event.button],
-        event.clientX,
-        event.clientY
-      );
-    });
   });
 };
 

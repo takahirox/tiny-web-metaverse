@@ -19,10 +19,12 @@ import { SystemOrder } from "../../src/common";
 import { MouseButtonEventEntityCreator } from "../components/mouse_button_event_entity_creator";
 import { mouseButtonEventCreateEntitySystem } from "../systems/mouse_button_event_entity_create";
 import { velocitySystem } from "../systems/velocity";
+import { raycastedColorSystem } from "../systems/raycasted_color";
 
 const app = new App();
 app.registerSystem(velocitySystem);
 app.registerSystem(mouseButtonEventCreateEntitySystem, SystemOrder.EventHandling);
+app.registerSystem(raycastedColorSystem, SystemOrder.BeforeRender + 1);
 
 const world = app.getWorld();
 

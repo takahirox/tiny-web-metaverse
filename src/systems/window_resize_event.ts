@@ -2,31 +2,34 @@ import {
   addComponent,
   defineQuery,
   enterQuery,
-  exitQuery,
   IWorld,
   removeComponent
 } from "bitecs";
 import {
   WindowResizeEvent,
   WindowResizeEventHandler,
+  WindowResizeEventHandlerDestroy,
   WindowResizeEventHandlerInit,
   WindowResizeEventHandlerProxy,
   WindowResizeEventListener
 } from "../components/window_resize";
 
-const handlerInitEnterQuery = enterQuery(defineQuery([WindowResizeEventHandlerInit]));
-const handlerExitQuery = exitQuery(defineQuery([WindowResizeEventHandler]));
+const initEnterQuery = enterQuery(defineQuery([WindowResizeEventHandlerInit]));
+const destroyEnterQuery = enterQuery(defineQuery(
+  [WindowResizeEventHandler, WindowResizeEventHandlerDestroy]));
 const listenerQuery = defineQuery([WindowResizeEventListener]);
 const eventQuery = defineQuery([WindowResizeEvent]);
 
 export const windowResizeEventHandleSystem = (world: IWorld) => {
-  handlerExitQuery(world).forEach(eid => {
+  destroyEnterQuery(world).forEach(eid => {
+    removeComponent(world, WindowResizeEventHandlerDestroy, eid);
+
     const proxy = WindowResizeEventHandlerProxy.get(eid);
     window.removeEventListener('resize', proxy.listener);
     proxy.free(world);
   });
 
-  handlerInitEnterQuery(world).forEach(eid => {
+  initEnterQuery(world).forEach(eid => {
     removeComponent(world, WindowResizeEventHandlerInit, eid);
 
     const listener = () => {

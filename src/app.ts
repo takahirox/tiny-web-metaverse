@@ -4,9 +4,15 @@ import {
   createWorld,
   IWorld
 } from "bitecs";
+import { Raycaster } from "three";
 import { SystemOrder } from "./common";
 import { EntityObject3DProxy } from "./components/entity_object3d";
-import { MouseButtonEventHandlerInit } from "./components/mouse";
+import {
+  MouseButtonEventHandlerInit,
+  MouseMoveEventHandlerInit,
+  MouseMoveEventListener,
+  MousePositionProxy
+} from "./components/mouse";
 import { KeyEventHandlerInit } from "./components/keyboard";
 import { RendererInitProxy } from "./components/renderer";
 import { InScene, SceneInitProxy } from "./components/scene";
@@ -15,6 +21,7 @@ import {
   PerspectiveCameraInitProxy,
   SceneCamera
 } from "./components/camera";
+import { RaycasterProxy } from "./components/raycast";
 import { TimeInit } from "./components/time";
 import {
   WindowResizeEventHandlerInit,
@@ -29,9 +36,16 @@ import {
 } from "./systems/keyboard_event";
 import { linearMoveSystem } from "./systems/linear_move";
 import {
-  mouseButtonEventHandleSystem,
-  mouseButtonEventClearSystem
-} from "./systems/mouse_event";
+  mouseButtonEventClearSystem,
+  mouseButtonEventHandleSystem
+} from "./systems/mouse_button_event";
+import {
+  mouseMoveEventClearSystem,
+  mouseMoveEventHandleSystem
+} from "./systems/mouse_move_event";
+import { mousePositionTrackSystem } from "./systems/mouse_position_track";
+import { mouseRaycastSystem } from "./systems/mouse_raycast";
+import { clearRaycastedSystem } from "./systems/raycast";
 import { renderSystem } from "./systems/render";
 import { rendererSystem } from "./systems/renderer";
 import { sceneSystem } from "./systems/scene";
@@ -66,9 +80,12 @@ export class App {
     this.registerSystem(timeSystem, SystemOrder.Time);
 
     this.registerSystem(keyEventHandleSystem, SystemOrder.EventHandling);
+    this.registerSystem(mouseMoveEventHandleSystem, SystemOrder.EventHandling);
     this.registerSystem(mouseButtonEventHandleSystem, SystemOrder.EventHandling);
     this.registerSystem(windowResizeEventHandleSystem, SystemOrder.EventHandling);
-    this.registerSystem(avatarKeyControlsSystem, SystemOrder.EventHandling);
+
+    this.registerSystem(avatarKeyControlsSystem, SystemOrder.EventHandling + 1);
+    this.registerSystem(mousePositionTrackSystem, SystemOrder.EventHandling + 1);
 
     this.registerSystem(rendererSystem, SystemOrder.Setup);
     this.registerSystem(sceneSystem, SystemOrder.Setup);
@@ -80,26 +97,40 @@ export class App {
 
     this.registerSystem(updateMatricesSystem, SystemOrder.MatricesUpdate);
 
+    this.registerSystem(mouseRaycastSystem, SystemOrder.BeforeRender);
+
     this.registerSystem(renderSystem, SystemOrder.Render);
 
     this.registerSystem(keyEventClearSystem, SystemOrder.TearDown);
+    this.registerSystem(mouseMoveEventClearSystem, SystemOrder.TearDown);
     this.registerSystem(mouseButtonEventClearSystem, SystemOrder.TearDown);
     this.registerSystem(windowResizeEventClearSystem, SystemOrder.TearDown);
+    this.registerSystem(clearRaycastedSystem, SystemOrder.TearDown);
 
     // Entity 0 for null entity
     addEntity(this.world);
 
+    const timeEid = addEntity(this.world);
+    addComponent(this.world, TimeInit, timeEid);
+
     const keyEventHandlerEid = addEntity(this.world);
     addComponent(this.world, KeyEventHandlerInit, keyEventHandlerEid);
 
-    const mouseEventHandlerEid = addEntity(this.world);
-    addComponent(this.world, MouseButtonEventHandlerInit, mouseEventHandlerEid);
+    const mouseMoveEventHandlerEid = addEntity(this.world);
+    addComponent(this.world, MouseMoveEventHandlerInit, mouseMoveEventHandlerEid);
+
+    const mouseButtonEventHandlerEid = addEntity(this.world);
+    addComponent(this.world, MouseButtonEventHandlerInit, mouseButtonEventHandlerEid);
 
     const resizeEventHandlerEid = addEntity(this.world);
     addComponent(this.world, WindowResizeEventHandlerInit, resizeEventHandlerEid);
 
-    const timeEid = addEntity(this.world);
-    addComponent(this.world, TimeInit, timeEid);
+    const mousePositionEid = addEntity(this.world);
+    MousePositionProxy.get(mousePositionEid).allocate(this.world);
+    addComponent(this.world, MouseMoveEventListener, mousePositionEid);
+
+    const raycasterEid = addEntity(this.world);
+    RaycasterProxy.get(raycasterEid).allocate(this.world, new Raycaster());
 
     const rendererEid = addEntity(this.world);
     RendererInitProxy.get(rendererEid).allocate(this.world);

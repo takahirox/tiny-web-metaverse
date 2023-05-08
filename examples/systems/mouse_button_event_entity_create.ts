@@ -12,6 +12,7 @@ import {
   MouseButtonEventProxy,
   MouseButtonEventType
 } from "../../src/components/mouse";
+import { Raycastable } from "../../src/components/raycast";
 import { MouseButtonEventEntityCreator } from "../components/mouse_button_event_entity_creator";
 import { Velocity } from "../components/velocity";
 
@@ -30,6 +31,7 @@ const createEntity = (world: IWorld) => {
   EntityObject3DProxy.get(eid).root.position.y = 0.25;
 
   addComponent(world, InScene, eid);
+  addComponent(world, Raycastable, eid);
 };
 
 const mouseButtonEventQuery =

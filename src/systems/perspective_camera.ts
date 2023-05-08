@@ -5,7 +5,10 @@ import {
   removeComponent
 } from "bitecs";
 import { PerspectiveCamera } from "three";
-import { EntityObject3DProxy } from "../components/entity_object3d";
+import {
+  EntityObject3D,
+  EntityObject3DProxy
+} from "../components/entity_object3d";
 import {
   PerspectiveCameraDestroy,
   PerspectiveCameraInit,
@@ -17,7 +20,7 @@ import { WindowResizeEvent, WindowSize } from "../components/window_resize";
 
 const initEnterQuery = enterQuery(defineQuery([PerspectiveCameraInit]));
 const destroyEnterQuery = enterQuery(defineQuery(
-  [EntityObject3DProxy, PerspectiveCameraDestroy, PerspectiveCameraTag]));
+  [EntityObject3D, PerspectiveCameraDestroy, PerspectiveCameraTag]));
 const cameraWindowResizeEnterQuery =
   enterQuery(defineQuery([PerspectiveCameraTag, WindowResizeEvent, WindowSize]));
 
