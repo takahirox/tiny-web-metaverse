@@ -8,6 +8,8 @@ import {
 import { Group, Object3D } from "three";
 import { NULL_EID } from "../common";
 
+// TODO: Add MeshTag or RenderableObject3D component?
+
 export const EntityObject3D = defineComponent();
 const RootObject3DMap = new Map<number, Object3D>();
 const Object3DsMap = new Map<number, Object3D[]>();

@@ -30,6 +30,7 @@ import {
 } from "./components/window_resize";
 import { avatarKeyControlsSystem } from "./systems/avatar_key_controls";
 import { fpsCameraSystem } from "./systems/fps_camera";
+import { grabSystem } from "./systems/grab";
 import {
   keyEventHandleSystem,
   keyEventClearSystem
@@ -98,6 +99,7 @@ export class App {
     this.registerSystem(updateMatricesSystem, SystemOrder.MatricesUpdate);
 
     this.registerSystem(mouseRaycastSystem, SystemOrder.BeforeRender);
+    this.registerSystem(grabSystem, SystemOrder.BeforeRender);
 
     this.registerSystem(renderSystem, SystemOrder.Render);
 

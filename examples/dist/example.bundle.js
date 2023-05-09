@@ -2,157 +2,41 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./examples/components/mouse_button_event_entity_creator.ts":
-/*!******************************************************************!*\
-  !*** ./examples/components/mouse_button_event_entity_creator.ts ***!
-  \******************************************************************/
+/***/ "./examples/systems/color.ts":
+/*!***********************************!*\
+  !*** ./examples/systems/color.ts ***!
+  \***********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "MouseButtonEventEntityCreator": () => (/* binding */ MouseButtonEventEntityCreator)
+/* harmony export */   "colorSystem": () => (/* binding */ colorSystem)
 /* harmony export */ });
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
-
-const MouseButtonEventEntityCreator = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-
-
-/***/ }),
-
-/***/ "./examples/components/velocity.ts":
-/*!*****************************************!*\
-  !*** ./examples/components/velocity.ts ***!
-  \*****************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "Velocity": () => (/* binding */ Velocity)
-/* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
-
-const Velocity = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({
-    x: bitecs__WEBPACK_IMPORTED_MODULE_0__.Types.f32,
-    y: bitecs__WEBPACK_IMPORTED_MODULE_0__.Types.f32,
-    z: bitecs__WEBPACK_IMPORTED_MODULE_0__.Types.f32
-});
-
-
-/***/ }),
-
-/***/ "./examples/systems/mouse_button_event_entity_create.ts":
-/*!**************************************************************!*\
-  !*** ./examples/systems/mouse_button_event_entity_create.ts ***!
-  \**************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "mouseButtonEventCreateEntitySystem": () => (/* binding */ mouseButtonEventCreateEntitySystem)
-/* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
 /* harmony import */ var _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../src/components/entity_object3d */ "./src/components/entity_object3d.ts");
-/* harmony import */ var _src_components_scene__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../src/components/scene */ "./src/components/scene.ts");
-/* harmony import */ var _src_components_mouse__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../src/components/mouse */ "./src/components/mouse.ts");
-/* harmony import */ var _src_components_raycast__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../src/components/raycast */ "./src/components/raycast.ts");
-/* harmony import */ var _components_mouse_button_event_entity_creator__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/mouse_button_event_entity_creator */ "./examples/components/mouse_button_event_entity_creator.ts");
-/* harmony import */ var _components_velocity__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../components/velocity */ "./examples/components/velocity.ts");
+/* harmony import */ var _src_components_grab__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../src/components/grab */ "./src/components/grab.ts");
+/* harmony import */ var _src_components_raycast__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../src/components/raycast */ "./src/components/raycast.ts");
 
 
 
 
-
-
-
-
-const createEntity = (world) => {
-    const eid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
-    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_velocity__WEBPACK_IMPORTED_MODULE_6__.Velocity, eid);
-    _components_velocity__WEBPACK_IMPORTED_MODULE_6__.Velocity.x[eid] = Math.random() * 0.04 - 0.02;
-    _components_velocity__WEBPACK_IMPORTED_MODULE_6__.Velocity.y[eid] = 0.0;
-    _components_velocity__WEBPACK_IMPORTED_MODULE_6__.Velocity.z[eid] = Math.random() * -0.1;
-    _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3DProxy.get(eid).addObject3D(world, new three__WEBPACK_IMPORTED_MODULE_7__.Mesh(new three__WEBPACK_IMPORTED_MODULE_7__.BoxGeometry(0.5, 0.5, 0.5), new three__WEBPACK_IMPORTED_MODULE_7__.MeshBasicMaterial({ color: 0x888888 })));
-    _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3DProxy.get(eid).root.position.y = 0.25;
-    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_scene__WEBPACK_IMPORTED_MODULE_2__.InScene, eid);
-    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_raycast__WEBPACK_IMPORTED_MODULE_4__.Raycastable, eid);
-};
-const mouseButtonEventQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_src_components_mouse__WEBPACK_IMPORTED_MODULE_3__.MouseButtonEvent, _components_mouse_button_event_entity_creator__WEBPACK_IMPORTED_MODULE_5__.MouseButtonEventEntityCreator]);
-const mouseButtonEventCreateEntitySystem = (world) => {
-    mouseButtonEventQuery(world).forEach(eid => {
-        for (const e of _src_components_mouse__WEBPACK_IMPORTED_MODULE_3__.MouseButtonEventProxy.get(eid).events) {
-            if (e.type === _src_components_mouse__WEBPACK_IMPORTED_MODULE_3__.MouseButtonEventType.Down) {
-                createEntity(world);
-            }
+const query = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3D, _src_components_raycast__WEBPACK_IMPORTED_MODULE_3__.Raycastable]);
+const colorSystem = (world) => {
+    query(world).forEach(eid => {
+        const obj = _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3DProxy.get(eid).root;
+        if (obj.material === undefined) {
+            return;
         }
-    });
-};
-
-
-/***/ }),
-
-/***/ "./examples/systems/raycasted_color.ts":
-/*!*********************************************!*\
-  !*** ./examples/systems/raycasted_color.ts ***!
-  \*********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "raycastedColorSystem": () => (/* binding */ raycastedColorSystem)
-/* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
-/* harmony import */ var _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../src/components/entity_object3d */ "./src/components/entity_object3d.ts");
-/* harmony import */ var _src_components_raycast__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../src/components/raycast */ "./src/components/raycast.ts");
-
-
-
-const raycastableQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3D, _src_components_raycast__WEBPACK_IMPORTED_MODULE_2__.Raycastable]);
-const raycastedColorSystem = (world) => {
-    raycastableQuery(world).forEach(eid => {
-        const root = _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3DProxy.get(eid).root;
-        root.traverse((obj) => {
-            if (obj.material === undefined) {
-                return;
-            }
-            const material = obj.material;
-            if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _src_components_raycast__WEBPACK_IMPORTED_MODULE_2__.Raycasted, eid)) {
-                material.color.setHex(0x882222);
-            }
-            else {
-                material.color.setHex(0x888888);
-            }
-        });
-    });
-};
-
-
-/***/ }),
-
-/***/ "./examples/systems/velocity.ts":
-/*!**************************************!*\
-  !*** ./examples/systems/velocity.ts ***!
-  \**************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "velocitySystem": () => (/* binding */ velocitySystem)
-/* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
-/* harmony import */ var _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../src/components/entity_object3d */ "./src/components/entity_object3d.ts");
-/* harmony import */ var _components_velocity__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/velocity */ "./examples/components/velocity.ts");
-
-
-
-const velocityQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_velocity__WEBPACK_IMPORTED_MODULE_2__.Velocity, _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3D]);
-const velocitySystem = (world) => {
-    velocityQuery(world).forEach(eid => {
-        const proxy = _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3DProxy.get(eid);
-        const obj = proxy.root;
-        obj.position.x += _components_velocity__WEBPACK_IMPORTED_MODULE_2__.Velocity.x[eid];
-        obj.position.y += _components_velocity__WEBPACK_IMPORTED_MODULE_2__.Velocity.y[eid];
-        obj.position.z += _components_velocity__WEBPACK_IMPORTED_MODULE_2__.Velocity.z[eid];
+        const material = obj.material;
+        if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _src_components_grab__WEBPACK_IMPORTED_MODULE_2__.Grabbed, eid)) {
+            material.color.setHex(0x2222aa);
+        }
+        else if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _src_components_raycast__WEBPACK_IMPORTED_MODULE_3__.Raycasted, eid)) {
+            material.color.setHex(0xaa2222);
+        }
+        else {
+            material.color.setHex(0x888888);
+        }
     });
 };
 
@@ -170,7 +54,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "App": () => (/* binding */ App)
 /* harmony export */ });
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
 /* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./common */ "./src/common.ts");
 /* harmony import */ var _components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/entity_object3d */ "./src/components/entity_object3d.ts");
 /* harmony import */ var _components_mouse__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/mouse */ "./src/components/mouse.ts");
@@ -183,20 +67,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_window_resize__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./components/window_resize */ "./src/components/window_resize.ts");
 /* harmony import */ var _systems_avatar_key_controls__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./systems/avatar_key_controls */ "./src/systems/avatar_key_controls.ts");
 /* harmony import */ var _systems_fps_camera__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./systems/fps_camera */ "./src/systems/fps_camera.ts");
-/* harmony import */ var _systems_keyboard_event__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./systems/keyboard_event */ "./src/systems/keyboard_event.ts");
-/* harmony import */ var _systems_linear_move__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./systems/linear_move */ "./src/systems/linear_move.ts");
-/* harmony import */ var _systems_mouse_button_event__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./systems/mouse_button_event */ "./src/systems/mouse_button_event.ts");
-/* harmony import */ var _systems_mouse_move_event__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./systems/mouse_move_event */ "./src/systems/mouse_move_event.ts");
-/* harmony import */ var _systems_mouse_position_track__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./systems/mouse_position_track */ "./src/systems/mouse_position_track.ts");
-/* harmony import */ var _systems_mouse_raycast__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./systems/mouse_raycast */ "./src/systems/mouse_raycast.ts");
-/* harmony import */ var _systems_raycast__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./systems/raycast */ "./src/systems/raycast.ts");
-/* harmony import */ var _systems_render__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./systems/render */ "./src/systems/render.ts");
-/* harmony import */ var _systems_renderer__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./systems/renderer */ "./src/systems/renderer.ts");
-/* harmony import */ var _systems_scene__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./systems/scene */ "./src/systems/scene.ts");
-/* harmony import */ var _systems_perspective_camera__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./systems/perspective_camera */ "./src/systems/perspective_camera.ts");
-/* harmony import */ var _systems_time__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./systems/time */ "./src/systems/time.ts");
-/* harmony import */ var _systems_update_matrices__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./systems/update_matrices */ "./src/systems/update_matrices.ts");
-/* harmony import */ var _systems_window_resize_event__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./systems/window_resize_event */ "./src/systems/window_resize_event.ts");
+/* harmony import */ var _systems_grab__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./systems/grab */ "./src/systems/grab.ts");
+/* harmony import */ var _systems_keyboard_event__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./systems/keyboard_event */ "./src/systems/keyboard_event.ts");
+/* harmony import */ var _systems_linear_move__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./systems/linear_move */ "./src/systems/linear_move.ts");
+/* harmony import */ var _systems_mouse_button_event__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./systems/mouse_button_event */ "./src/systems/mouse_button_event.ts");
+/* harmony import */ var _systems_mouse_move_event__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./systems/mouse_move_event */ "./src/systems/mouse_move_event.ts");
+/* harmony import */ var _systems_mouse_position_track__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./systems/mouse_position_track */ "./src/systems/mouse_position_track.ts");
+/* harmony import */ var _systems_mouse_raycast__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./systems/mouse_raycast */ "./src/systems/mouse_raycast.ts");
+/* harmony import */ var _systems_raycast__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./systems/raycast */ "./src/systems/raycast.ts");
+/* harmony import */ var _systems_render__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./systems/render */ "./src/systems/render.ts");
+/* harmony import */ var _systems_renderer__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./systems/renderer */ "./src/systems/renderer.ts");
+/* harmony import */ var _systems_scene__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./systems/scene */ "./src/systems/scene.ts");
+/* harmony import */ var _systems_perspective_camera__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./systems/perspective_camera */ "./src/systems/perspective_camera.ts");
+/* harmony import */ var _systems_time__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./systems/time */ "./src/systems/time.ts");
+/* harmony import */ var _systems_update_matrices__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./systems/update_matrices */ "./src/systems/update_matrices.ts");
+/* harmony import */ var _systems_window_resize_event__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./systems/window_resize_event */ "./src/systems/window_resize_event.ts");
+
 
 
 
@@ -233,26 +119,27 @@ class App {
     }
     init() {
         // Built-in systems and entities
-        this.registerSystem(_systems_time__WEBPACK_IMPORTED_MODULE_24__.timeSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.Time);
-        this.registerSystem(_systems_keyboard_event__WEBPACK_IMPORTED_MODULE_13__.keyEventHandleSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.EventHandling);
-        this.registerSystem(_systems_mouse_move_event__WEBPACK_IMPORTED_MODULE_16__.mouseMoveEventHandleSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.EventHandling);
-        this.registerSystem(_systems_mouse_button_event__WEBPACK_IMPORTED_MODULE_15__.mouseButtonEventHandleSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.EventHandling);
-        this.registerSystem(_systems_window_resize_event__WEBPACK_IMPORTED_MODULE_26__.windowResizeEventHandleSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.EventHandling);
+        this.registerSystem(_systems_time__WEBPACK_IMPORTED_MODULE_25__.timeSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.Time);
+        this.registerSystem(_systems_keyboard_event__WEBPACK_IMPORTED_MODULE_14__.keyEventHandleSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.EventHandling);
+        this.registerSystem(_systems_mouse_move_event__WEBPACK_IMPORTED_MODULE_17__.mouseMoveEventHandleSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.EventHandling);
+        this.registerSystem(_systems_mouse_button_event__WEBPACK_IMPORTED_MODULE_16__.mouseButtonEventHandleSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.EventHandling);
+        this.registerSystem(_systems_window_resize_event__WEBPACK_IMPORTED_MODULE_27__.windowResizeEventHandleSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.EventHandling);
         this.registerSystem(_systems_avatar_key_controls__WEBPACK_IMPORTED_MODULE_11__.avatarKeyControlsSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.EventHandling + 1);
-        this.registerSystem(_systems_mouse_position_track__WEBPACK_IMPORTED_MODULE_17__.mousePositionTrackSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.EventHandling + 1);
-        this.registerSystem(_systems_renderer__WEBPACK_IMPORTED_MODULE_21__.rendererSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.Setup);
-        this.registerSystem(_systems_scene__WEBPACK_IMPORTED_MODULE_22__.sceneSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.Setup);
-        this.registerSystem(_systems_perspective_camera__WEBPACK_IMPORTED_MODULE_23__.perspectiveCameraSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.Setup);
-        this.registerSystem(_systems_linear_move__WEBPACK_IMPORTED_MODULE_14__.linearMoveSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.BeforeMatricesUpdate);
+        this.registerSystem(_systems_mouse_position_track__WEBPACK_IMPORTED_MODULE_18__.mousePositionTrackSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.EventHandling + 1);
+        this.registerSystem(_systems_renderer__WEBPACK_IMPORTED_MODULE_22__.rendererSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.Setup);
+        this.registerSystem(_systems_scene__WEBPACK_IMPORTED_MODULE_23__.sceneSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.Setup);
+        this.registerSystem(_systems_perspective_camera__WEBPACK_IMPORTED_MODULE_24__.perspectiveCameraSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.Setup);
+        this.registerSystem(_systems_linear_move__WEBPACK_IMPORTED_MODULE_15__.linearMoveSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.BeforeMatricesUpdate);
         this.registerSystem(_systems_fps_camera__WEBPACK_IMPORTED_MODULE_12__.fpsCameraSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.MatricesUpdate - 1);
-        this.registerSystem(_systems_update_matrices__WEBPACK_IMPORTED_MODULE_25__.updateMatricesSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.MatricesUpdate);
-        this.registerSystem(_systems_mouse_raycast__WEBPACK_IMPORTED_MODULE_18__.mouseRaycastSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.BeforeRender);
-        this.registerSystem(_systems_render__WEBPACK_IMPORTED_MODULE_20__.renderSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.Render);
-        this.registerSystem(_systems_keyboard_event__WEBPACK_IMPORTED_MODULE_13__.keyEventClearSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.TearDown);
-        this.registerSystem(_systems_mouse_move_event__WEBPACK_IMPORTED_MODULE_16__.mouseMoveEventClearSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.TearDown);
-        this.registerSystem(_systems_mouse_button_event__WEBPACK_IMPORTED_MODULE_15__.mouseButtonEventClearSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.TearDown);
-        this.registerSystem(_systems_window_resize_event__WEBPACK_IMPORTED_MODULE_26__.windowResizeEventClearSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.TearDown);
-        this.registerSystem(_systems_raycast__WEBPACK_IMPORTED_MODULE_19__.clearRaycastedSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.TearDown);
+        this.registerSystem(_systems_update_matrices__WEBPACK_IMPORTED_MODULE_26__.updateMatricesSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.MatricesUpdate);
+        this.registerSystem(_systems_mouse_raycast__WEBPACK_IMPORTED_MODULE_19__.mouseRaycastSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.BeforeRender);
+        this.registerSystem(_systems_grab__WEBPACK_IMPORTED_MODULE_13__.grabSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.BeforeRender);
+        this.registerSystem(_systems_render__WEBPACK_IMPORTED_MODULE_21__.renderSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.Render);
+        this.registerSystem(_systems_keyboard_event__WEBPACK_IMPORTED_MODULE_14__.keyEventClearSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.TearDown);
+        this.registerSystem(_systems_mouse_move_event__WEBPACK_IMPORTED_MODULE_17__.mouseMoveEventClearSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.TearDown);
+        this.registerSystem(_systems_mouse_button_event__WEBPACK_IMPORTED_MODULE_16__.mouseButtonEventClearSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.TearDown);
+        this.registerSystem(_systems_window_resize_event__WEBPACK_IMPORTED_MODULE_27__.windowResizeEventClearSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.TearDown);
+        this.registerSystem(_systems_raycast__WEBPACK_IMPORTED_MODULE_20__.clearRaycastedSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.TearDown);
         // Entity 0 for null entity
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
         const timeEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
@@ -269,7 +156,7 @@ class App {
         _components_mouse__WEBPACK_IMPORTED_MODULE_3__.MousePositionProxy.get(mousePositionEid).allocate(this.world);
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_mouse__WEBPACK_IMPORTED_MODULE_3__.MouseMoveEventListener, mousePositionEid);
         const raycasterEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
-        _components_raycast__WEBPACK_IMPORTED_MODULE_8__.RaycasterProxy.get(raycasterEid).allocate(this.world, new three__WEBPACK_IMPORTED_MODULE_27__.Raycaster());
+        _components_raycast__WEBPACK_IMPORTED_MODULE_8__.RaycasterProxy.get(raycasterEid).allocate(this.world, new three__WEBPACK_IMPORTED_MODULE_28__.Raycaster());
         const rendererEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
         _components_renderer__WEBPACK_IMPORTED_MODULE_5__.RendererInitProxy.get(rendererEid).allocate(this.world);
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_window_resize__WEBPACK_IMPORTED_MODULE_10__.WindowSize, rendererEid);
@@ -494,6 +381,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+// TODO: Add MeshTag or RenderableObject3D component?
 const EntityObject3D = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 const RootObject3DMap = new Map();
 const Object3DsMap = new Map();
@@ -601,6 +489,25 @@ class EntityObject3DProxy {
     }
 }
 EntityObject3DProxy.instance = new EntityObject3DProxy();
+
+
+/***/ }),
+
+/***/ "./src/components/grab.ts":
+/*!********************************!*\
+  !*** ./src/components/grab.ts ***!
+  \********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "Grabbable": () => (/* binding */ Grabbable),
+/* harmony export */   "Grabbed": () => (/* binding */ Grabbed)
+/* harmony export */ });
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+
+const Grabbable = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const Grabbed = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 
 
 /***/ }),
@@ -1355,6 +1262,47 @@ const fpsCameraSystem = (world) => {
             camera.matrix.copy(camera.matrixWorld);
             camera.matrix.decompose(camera.position, camera.quaternion, camera.scale);
         });
+    });
+};
+
+
+/***/ }),
+
+/***/ "./src/systems/grab.ts":
+/*!*****************************!*\
+  !*** ./src/systems/grab.ts ***!
+  \*****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "grabSystem": () => (/* binding */ grabSystem)
+/* harmony export */ });
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var _components_grab__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/grab */ "./src/components/grab.ts");
+/* harmony import */ var _components_raycast__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/raycast */ "./src/components/raycast.ts");
+/* harmony import */ var _components_mouse__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/mouse */ "./src/components/mouse.ts");
+
+
+
+
+const query = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_grab__WEBPACK_IMPORTED_MODULE_1__.Grabbable, _components_mouse__WEBPACK_IMPORTED_MODULE_3__.MouseButtonEvent]);
+// TODO: Rename to mouseGrabSystem?
+const grabSystem = (world) => {
+    // TODO: Optimize
+    query(world).forEach(eid => {
+        for (const e of _components_mouse__WEBPACK_IMPORTED_MODULE_3__.MouseButtonEventProxy.get(eid).events) {
+            if (e.button !== _components_mouse__WEBPACK_IMPORTED_MODULE_3__.MouseButtonType.Left) {
+                return;
+            }
+            if (e.type === _components_mouse__WEBPACK_IMPORTED_MODULE_3__.MouseButtonEventType.Down &&
+                (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_raycast__WEBPACK_IMPORTED_MODULE_2__.Raycasted, eid)) {
+                (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_grab__WEBPACK_IMPORTED_MODULE_1__.Grabbed, eid);
+            }
+            else if (e.type === _components_mouse__WEBPACK_IMPORTED_MODULE_3__.MouseButtonEventType.Up) {
+                (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_grab__WEBPACK_IMPORTED_MODULE_1__.Grabbed, eid);
+            }
+        }
     });
 };
 
@@ -54587,20 +54535,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "app": () => (/* binding */ app)
 /* harmony export */ });
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
 /* harmony import */ var _src_app__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../src/app */ "./src/app.ts");
 /* harmony import */ var _src_components_avatar__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../src/components/avatar */ "./src/components/avatar.ts");
 /* harmony import */ var _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../src/components/entity_object3d */ "./src/components/entity_object3d.ts");
-/* harmony import */ var _src_components_keyboard__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../src/components/keyboard */ "./src/components/keyboard.ts");
-/* harmony import */ var _src_components_mouse__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../src/components/mouse */ "./src/components/mouse.ts");
-/* harmony import */ var _src_components_network__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../src/components/network */ "./src/components/network.ts");
-/* harmony import */ var _src_components_scene__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../src/components/scene */ "./src/components/scene.ts");
-/* harmony import */ var _src_common__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../src/common */ "./src/common.ts");
-/* harmony import */ var _components_mouse_button_event_entity_creator__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../components/mouse_button_event_entity_creator */ "./examples/components/mouse_button_event_entity_creator.ts");
-/* harmony import */ var _systems_mouse_button_event_entity_create__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../systems/mouse_button_event_entity_create */ "./examples/systems/mouse_button_event_entity_create.ts");
-/* harmony import */ var _systems_velocity__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../systems/velocity */ "./examples/systems/velocity.ts");
-/* harmony import */ var _systems_raycasted_color__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../systems/raycasted_color */ "./examples/systems/raycasted_color.ts");
-
+/* harmony import */ var _src_components_grab__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../src/components/grab */ "./src/components/grab.ts");
+/* harmony import */ var _src_components_keyboard__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../src/components/keyboard */ "./src/components/keyboard.ts");
+/* harmony import */ var _src_components_mouse__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../src/components/mouse */ "./src/components/mouse.ts");
+/* harmony import */ var _src_components_network__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../src/components/network */ "./src/components/network.ts");
+/* harmony import */ var _src_components_raycast__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../src/components/raycast */ "./src/components/raycast.ts");
+/* harmony import */ var _src_components_scene__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../src/components/scene */ "./src/components/scene.ts");
+/* harmony import */ var _src_common__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../src/common */ "./src/common.ts");
+/* harmony import */ var _systems_color__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../systems/color */ "./examples/systems/color.ts");
 
 
 
@@ -54615,23 +54561,29 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const app = new _src_app__WEBPACK_IMPORTED_MODULE_1__.App();
-app.registerSystem(_systems_velocity__WEBPACK_IMPORTED_MODULE_11__.velocitySystem);
-app.registerSystem(_systems_mouse_button_event_entity_create__WEBPACK_IMPORTED_MODULE_10__.mouseButtonEventCreateEntitySystem, _src_common__WEBPACK_IMPORTED_MODULE_8__.SystemOrder.EventHandling);
-app.registerSystem(_systems_raycasted_color__WEBPACK_IMPORTED_MODULE_12__.raycastedColorSystem, _src_common__WEBPACK_IMPORTED_MODULE_8__.SystemOrder.BeforeRender + 1);
+app.registerSystem(_systems_color__WEBPACK_IMPORTED_MODULE_11__.colorSystem, _src_common__WEBPACK_IMPORTED_MODULE_10__.SystemOrder.Render - 1);
 const world = app.getWorld();
 const gridEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
-(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_scene__WEBPACK_IMPORTED_MODULE_7__.InScene, gridEid);
-_src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__.EntityObject3DProxy.get(gridEid).addObject3D(world, new three__WEBPACK_IMPORTED_MODULE_13__.GridHelper());
+(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_scene__WEBPACK_IMPORTED_MODULE_9__.InScene, gridEid);
+_src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__.EntityObject3DProxy.get(gridEid).addObject3D(world, new three__WEBPACK_IMPORTED_MODULE_12__.GridHelper());
 const avatarEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
 (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_avatar__WEBPACK_IMPORTED_MODULE_2__.Avatar, avatarEid);
-(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_network__WEBPACK_IMPORTED_MODULE_6__.Owned, avatarEid);
-(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_keyboard__WEBPACK_IMPORTED_MODULE_4__.KeyEventListener, avatarEid);
-(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_scene__WEBPACK_IMPORTED_MODULE_7__.InScene, avatarEid);
-_src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__.EntityObject3DProxy.get(avatarEid).addObject3D(world, new three__WEBPACK_IMPORTED_MODULE_13__.Mesh(new three__WEBPACK_IMPORTED_MODULE_13__.BoxGeometry(0.5, 0.5, 0.5), new three__WEBPACK_IMPORTED_MODULE_13__.MeshBasicMaterial({ color: 0x0000ff })));
+(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_network__WEBPACK_IMPORTED_MODULE_7__.Owned, avatarEid);
+(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_keyboard__WEBPACK_IMPORTED_MODULE_5__.KeyEventListener, avatarEid);
+(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_scene__WEBPACK_IMPORTED_MODULE_9__.InScene, avatarEid);
+_src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__.EntityObject3DProxy.get(avatarEid).addObject3D(world, new three__WEBPACK_IMPORTED_MODULE_12__.Mesh(new three__WEBPACK_IMPORTED_MODULE_12__.BoxGeometry(0.5, 0.5, 0.5), new three__WEBPACK_IMPORTED_MODULE_12__.MeshBasicMaterial({ color: 0x0000ff })));
 _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__.EntityObject3DProxy.get(avatarEid).root.position.set(0.0, 0.25, 2.0);
 const mouseButtonEventEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
-(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_mouse_button_event_entity_creator__WEBPACK_IMPORTED_MODULE_9__.MouseButtonEventEntityCreator, mouseButtonEventEid);
-(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_mouse__WEBPACK_IMPORTED_MODULE_5__.MouseButtonEventListener, mouseButtonEventEid);
+(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_mouse__WEBPACK_IMPORTED_MODULE_6__.MouseButtonEventListener, mouseButtonEventEid);
+for (let i = 0; i < 25; i++) {
+    const eid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_raycast__WEBPACK_IMPORTED_MODULE_8__.Raycastable, eid);
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_mouse__WEBPACK_IMPORTED_MODULE_6__.MouseButtonEventListener, eid);
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_grab__WEBPACK_IMPORTED_MODULE_4__.Grabbable, eid);
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_scene__WEBPACK_IMPORTED_MODULE_9__.InScene, eid);
+    _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__.EntityObject3DProxy.get(eid).addObject3D(world, new three__WEBPACK_IMPORTED_MODULE_12__.Mesh(new three__WEBPACK_IMPORTED_MODULE_12__.BoxGeometry(0.5, 0.5, 0.5), new three__WEBPACK_IMPORTED_MODULE_12__.MeshBasicMaterial()));
+    _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__.EntityObject3DProxy.get(eid).root.position.set((Math.random() - 0.5) * 10.0, 0.25, (Math.random() - 0.5) * 10.0);
+}
 app.start();
 
 
