@@ -14,21 +14,22 @@ import {
   MouseButtonType
 } from "../components/mouse";
 
-const query = defineQuery([Grabbable, MouseButtonEvent]);
+const grabbableQuery = defineQuery([Grabbable, MouseButtonEvent]);
 
 // TODO: Rename to mouseGrabSystem?
 export const grabSystem = (world: IWorld) => {
   // TODO: Optimize
-  query(world).forEach(eid => {
-    for (const e of MouseButtonEventProxy.get(eid).events) {
+  grabbableQuery(world).forEach(grabbableEid => {
+    for (const e of MouseButtonEventProxy.get(grabbableEid).events) {
       if (e.button !== MouseButtonType.Left) {
         return;
       }
       if (e.type === MouseButtonEventType.Down &&
-        hasComponent(world, Raycasted, eid)) {
-        addComponent(world, Grabbed, eid);
+        hasComponent(world, Raycasted, grabbableEid)) {
+        addComponent(world, Grabbed, grabbableEid);
+        Grabbed.distance[grabbableEid] = Raycasted.distance[grabbableEid];
       } else if (e.type === MouseButtonEventType.Up) {
-        removeComponent(world, Grabbed, eid);
+        removeComponent(world, Grabbed, grabbableEid);
       }
     }
   });

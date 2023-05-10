@@ -2,7 +2,8 @@ import {
   addComponent,
   defineComponent,
   IWorld,
-  removeComponent
+  removeComponent,
+  Types
 } from "bitecs";
 import { Raycaster } from "three";
 import { NULL_EID } from "../common";
@@ -11,7 +12,9 @@ export const RaycasterTag = defineComponent();
 const RaycasterMap = new Map<number, Raycaster>();
 
 export const Raycastable = defineComponent();
-export const Raycasted = defineComponent();
+export const Raycasted = defineComponent({
+  distance: Types.f32
+});
 
 export class RaycasterProxy {
   private static instance: RaycasterProxy = new RaycasterProxy();

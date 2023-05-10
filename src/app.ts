@@ -31,6 +31,7 @@ import {
 import { avatarKeyControlsSystem } from "./systems/avatar_key_controls";
 import { fpsCameraSystem } from "./systems/fps_camera";
 import { grabSystem } from "./systems/grab";
+import { grabbedObjectsMouseTrackSystem } from "./systems/grab_mouse_track";
 import {
   keyEventHandleSystem,
   keyEventClearSystem
@@ -100,6 +101,7 @@ export class App {
 
     this.registerSystem(mouseRaycastSystem, SystemOrder.BeforeRender);
     this.registerSystem(grabSystem, SystemOrder.BeforeRender);
+    this.registerSystem(grabbedObjectsMouseTrackSystem, SystemOrder.BeforeRender);
 
     this.registerSystem(renderSystem, SystemOrder.Render);
 

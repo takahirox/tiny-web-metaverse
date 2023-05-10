@@ -40,7 +40,7 @@ const addMouseButtonEvent = (
     type,
     MouseButtonTypeTable[event.button],
     (event.offsetX / document.body.clientWidth) * 2.0 - 1.0,
-    (event.offsetY / document.body.clientHeight) * 2.0 - 1.0
+    -((event.offsetY / document.body.clientHeight) * 2.0 - 1.0)
   );
 }
 

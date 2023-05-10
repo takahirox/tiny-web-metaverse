@@ -54,6 +54,7 @@ export const mouseRaycastSystem = (world: IWorld) => {
           raycaster.intersectObject(obj, true, intersected);
           if (intersected.length > 0) {
             addComponent(world, Raycasted, raycastableEid);
+            Raycasted.distance[raycastableEid] = intersected[0].distance;
           }
         });
       });
