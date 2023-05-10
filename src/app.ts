@@ -29,6 +29,7 @@ import {
   WindowSize
 } from "./components/window_resize";
 import { avatarKeyControlsSystem } from "./systems/avatar_key_controls";
+import { avatarMouseControlsSystem } from "./systems/avatar_mouse_controls";
 import { fpsCameraSystem } from "./systems/fps_camera";
 import { grabSystem } from "./systems/grab";
 import { grabbedObjectsMouseTrackSystem } from "./systems/grab_mouse_track";
@@ -87,6 +88,7 @@ export class App {
     this.registerSystem(windowResizeEventHandleSystem, SystemOrder.EventHandling);
 
     this.registerSystem(avatarKeyControlsSystem, SystemOrder.EventHandling + 1);
+    this.registerSystem(avatarMouseControlsSystem, SystemOrder.EventHandling + 1);
     this.registerSystem(mousePositionTrackSystem, SystemOrder.EventHandling + 1);
 
     this.registerSystem(rendererSystem, SystemOrder.Setup);

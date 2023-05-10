@@ -18,7 +18,9 @@ const eventQuery = defineQuery([
 export const avatarKeyControlsSystem = (world: IWorld) => {
   eventQuery(world).forEach(eid => {
     const events = KeyEventProxy.get(eid).events;
+    // TODO: Configurable speed
     const speed = 1.0;
+    // TODO: Configurable key map
     for (const e of events) {
       if (e.code === 37) { // Left
         if (e.type === KeyEventType.Down) {
