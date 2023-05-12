@@ -1570,6 +1570,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "linearMoveSystem": () => (/* binding */ linearMoveSystem)
 /* harmony export */ });
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
 /* harmony import */ var _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/entity_object3d */ "./src/components/entity_object3d.ts");
 /* harmony import */ var _components_linear_move__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/linear_move */ "./src/components/linear_move.ts");
 /* harmony import */ var _components_time__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/time */ "./src/components/time.ts");
@@ -1577,6 +1578,16 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+const vec3 = new three__WEBPACK_IMPORTED_MODULE_4__.Vector3();
+const move = (eid, direction, speed, delta) => {
+    const obj = _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3DProxy.get(eid).root;
+    obj.position.add(direction
+        .applyQuaternion(obj.quaternion)
+        .setY(0)
+        .normalize()
+        .multiplyScalar(speed * delta));
+};
 const timeQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_time__WEBPACK_IMPORTED_MODULE_3__.Time]);
 const backwardQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3D, _components_linear_move__WEBPACK_IMPORTED_MODULE_2__.LinearMoveBackward]);
 const forwardQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3D, _components_linear_move__WEBPACK_IMPORTED_MODULE_2__.LinearMoveForward]);
@@ -1586,24 +1597,16 @@ const linearMoveSystem = (world) => {
     timeQuery(world).forEach(timeEid => {
         const delta = _components_time__WEBPACK_IMPORTED_MODULE_3__.TimeProxy.get(timeEid).delta;
         backwardQuery(world).forEach(eid => {
-            const obj = _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3DProxy.get(eid).root;
-            // TODO: Implement properly
-            obj.position.z += _components_linear_move__WEBPACK_IMPORTED_MODULE_2__.LinearMoveBackward.speed[eid] * delta;
+            move(eid, vec3.set(0, 0, 1), _components_linear_move__WEBPACK_IMPORTED_MODULE_2__.LinearMoveBackward.speed[eid], delta);
         });
         forwardQuery(world).forEach(eid => {
-            const obj = _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3DProxy.get(eid).root;
-            // TODO: Implement properly
-            obj.position.z -= _components_linear_move__WEBPACK_IMPORTED_MODULE_2__.LinearMoveForward.speed[eid] * delta;
+            move(eid, vec3.set(0, 0, -1), _components_linear_move__WEBPACK_IMPORTED_MODULE_2__.LinearMoveForward.speed[eid], delta);
         });
         leftQuery(world).forEach(eid => {
-            const obj = _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3DProxy.get(eid).root;
-            // TODO: Implement properly
-            obj.position.x -= _components_linear_move__WEBPACK_IMPORTED_MODULE_2__.LinearMoveLeft.speed[eid] * delta;
+            move(eid, vec3.set(-1, 0, 0), _components_linear_move__WEBPACK_IMPORTED_MODULE_2__.LinearMoveLeft.speed[eid], delta);
         });
         rightQuery(world).forEach(eid => {
-            const obj = _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3DProxy.get(eid).root;
-            // TODO: Implement properly
-            obj.position.x += _components_linear_move__WEBPACK_IMPORTED_MODULE_2__.LinearMoveRight.speed[eid] * delta;
+            move(eid, vec3.set(1, 0, 0), _components_linear_move__WEBPACK_IMPORTED_MODULE_2__.LinearMoveRight.speed[eid], delta);
         });
     });
 };
