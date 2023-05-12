@@ -6,12 +6,15 @@ import {
 } from "bitecs";
 import { Raycaster } from "three";
 import { SystemOrder } from "./common";
+import { AvatarMouseControlsProxy } from "./components/avatar_mouse_controls";
 import { EntityObject3DProxy } from "./components/entity_object3d";
 import {
   MouseButtonEventHandlerInit,
+  MouseButtonEventListener,
   MouseMoveEventHandlerInit,
   MouseMoveEventListener,
-  MousePositionProxy
+  MousePositionProxy,
+  PreviousMousePositionProxy
 } from "./components/mouse";
 import { KeyEventHandlerInit } from "./components/keyboard";
 import { RendererInitProxy } from "./components/renderer";
@@ -87,8 +90,6 @@ export class App {
     this.registerSystem(mouseButtonEventHandleSystem, SystemOrder.EventHandling);
     this.registerSystem(windowResizeEventHandleSystem, SystemOrder.EventHandling);
 
-    this.registerSystem(avatarKeyControlsSystem, SystemOrder.EventHandling + 1);
-    this.registerSystem(avatarMouseControlsSystem, SystemOrder.EventHandling + 1);
     this.registerSystem(mousePositionTrackSystem, SystemOrder.EventHandling + 1);
 
     this.registerSystem(rendererSystem, SystemOrder.Setup);
@@ -104,6 +105,9 @@ export class App {
     this.registerSystem(mouseRaycastSystem, SystemOrder.BeforeRender);
     this.registerSystem(grabSystem, SystemOrder.BeforeRender);
     this.registerSystem(grabbedObjectsMouseTrackSystem, SystemOrder.BeforeRender);
+
+    this.registerSystem(avatarKeyControlsSystem, SystemOrder.BeforeRender);
+    this.registerSystem(avatarMouseControlsSystem, SystemOrder.BeforeRender);
 
     this.registerSystem(renderSystem, SystemOrder.Render);
 
@@ -133,10 +137,15 @@ export class App {
 
     const mousePositionEid = addEntity(this.world);
     MousePositionProxy.get(mousePositionEid).allocate(this.world);
+    PreviousMousePositionProxy.get(mousePositionEid).allocate(this.world);
     addComponent(this.world, MouseMoveEventListener, mousePositionEid);
 
     const raycasterEid = addEntity(this.world);
     RaycasterProxy.get(raycasterEid).allocate(this.world, new Raycaster());
+
+    const avatarMouseControlsEid = addEntity(this.world);
+    AvatarMouseControlsProxy.get(avatarMouseControlsEid).allocate(this.world);
+    addComponent(this.world, MouseButtonEventListener, avatarMouseControlsEid);
 
     const rendererEid = addEntity(this.world);
     RendererInitProxy.get(rendererEid).allocate(this.world);

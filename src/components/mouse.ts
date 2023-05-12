@@ -67,6 +67,9 @@ export type MousePositionValue = {
 export const MousePosition = defineComponent();
 const MousePositionMap = new Map<number, MousePositionValue>();
 
+export const PreviousMousePosition = defineComponent();
+const PreviousMousePositionMap = new Map<number, MousePositionValue>();
+
 export class MouseButtonEventHandlerProxy {
   private static instance: MouseButtonEventHandlerProxy = new MouseButtonEventHandlerProxy();
   private eid: number;
@@ -205,7 +208,6 @@ export class MouseMoveEventProxy {
   }
 }
 
-
 export class MousePositionProxy {
   private static instance: MousePositionProxy = new MousePositionProxy();
   private eid: number;
@@ -241,5 +243,44 @@ export class MousePositionProxy {
 
   get y(): number {
     return MousePositionMap.get(this.eid)!.y;
+  }
+}
+
+
+export class PreviousMousePositionProxy {
+  private static instance: PreviousMousePositionProxy = new PreviousMousePositionProxy();
+  private eid: number;
+
+  private constructor() {
+    this.eid = NULL_EID;
+  }
+
+  static get(eid: number): PreviousMousePositionProxy {
+    PreviousMousePositionProxy.instance.eid = eid;
+    return PreviousMousePositionProxy.instance;
+  }
+
+  allocate(world: IWorld): void {
+    addComponent(world, PreviousMousePosition, this.eid);
+    PreviousMousePositionMap.set(this.eid, {x: 0, y: 0});
+  }
+
+  free(world: IWorld): void {
+    removeComponent(world, PreviousMousePosition, this.eid);
+    PreviousMousePositionMap.delete(this.eid);
+  }
+
+  update(x: number, y: number): void {
+    const values = PreviousMousePositionMap.get(this.eid)!;
+    values.x = x;
+    values.y = y;
+  }
+
+  get x(): number {
+    return PreviousMousePositionMap.get(this.eid)!.x;
+  }
+
+  get y(): number {
+    return PreviousMousePositionMap.get(this.eid)!.y;
   }
 }
