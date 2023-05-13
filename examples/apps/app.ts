@@ -17,6 +17,7 @@ import { MouseButtonEventListener } from "../../src/components/mouse";
 import { Owned } from "../../src/components/network";
 import { Raycastable } from "../../src/components/raycast";
 import { InScene } from "../../src/components/scene";
+import { Selectable } from "../../src/components/select";
 import { SystemOrder } from "../../src/common";
 import { colorSystem } from "../systems/color";
 
@@ -48,6 +49,7 @@ for (let i = 0; i < 25; i++) {
   addComponent(world, Raycastable, eid);
   addComponent(world, MouseButtonEventListener, eid);
   addComponent(world, Grabbable, eid);
+  addComponent(world, Selectable, eid);
   addComponent(world, InScene, eid);
   EntityObject3DProxy.get(eid).addObject3D(world, new Mesh(
     new BoxGeometry(0.5, 0.5, 0.5),

@@ -53,14 +53,13 @@ export const mouseButtonEventHandleSystem = (world: IWorld) => {
     // TODO: Not document but canvas?
     document.removeEventListener('mousedown', proxy.mousedownListener);
     document.removeEventListener('mouseup', proxy.mouseupListener);
+    document.removeEventListener('contextmenu', proxy.contextmenuListener);
 
     proxy.free(world);
   });
 
   initEnterQuery(world).forEach(eid => {
     removeComponent(world, MouseButtonEventHandlerInit, eid);
-
-    // TODO: Use canvas, not document.body?
 
     const mousedownListener = (event: MouseEvent): void => {
       listenerQuery(world).forEach(eid => {
@@ -74,13 +73,21 @@ export const mouseButtonEventHandleSystem = (world: IWorld) => {
       });
     };
 
+    const contextmenuListener = (event: MouseEvent): void => {
+      event.preventDefault();
+    };
+
+    // TODO: Use canvas, not document?
+
     document.addEventListener('mousedown', mousedownListener);
     document.addEventListener('mouseup', mouseupListener);
+    document.addEventListener('contextmenu', contextmenuListener);
 
     MouseButtonEventHandlerProxy.get(eid).allocate(
       world,
       mousedownListener,
-      mouseupListener
+      mouseupListener,
+      contextmenuListener
     );
   });
 };

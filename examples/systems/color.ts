@@ -10,6 +10,7 @@ import {
 } from "../../src/components/entity_object3d";
 import { Grabbed } from "../../src/components/grab";
 import { Raycastable, Raycasted } from "../../src/components/raycast";
+import { Selected } from "../../src/components/select";
 
 const query = defineQuery([EntityObject3D, Raycastable]);
 const grabbedQuery = defineQuery([Grabbed]);
@@ -25,6 +26,8 @@ export const colorSystem = (world: IWorld) => {
     const material = (obj as Mesh).material as MeshBasicMaterial;
     if (hasComponent(world, Grabbed, eid)) {
       material.color.setHex(0x2222aa);
+    } else if (hasComponent(world, Selected, eid)) {
+      material.color.setHex(0x22aa22);
     } else if (!grabbedExist && hasComponent(world, Raycasted, eid)) {
       material.color.setHex(0xaa2222);
     } else {

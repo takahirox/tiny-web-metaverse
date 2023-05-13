@@ -21,6 +21,7 @@ export enum MouseButtonType {
 type MouseButtonEventHandlerValue = {
   mousedownListener: (event: MouseEvent) => void;
   mouseupListener: (event: MouseEvent) => void;
+  contextmenuListener: (event: MouseEvent) => void;
 };
 
 export const MouseButtonEventHandlerInit = defineComponent();
@@ -86,12 +87,14 @@ export class MouseButtonEventHandlerProxy {
   allocate(
     world: IWorld,
     mousedownListener: (event: MouseEvent) => void,
-    mouseupListener: (event: MouseEvent) => void
+    mouseupListener: (event: MouseEvent) => void,
+    contextmenuListener: (event: MouseEvent) => void
   ): void {
     addComponent(world, MouseButtonEventHandler, this.eid);
     MouseButtonEventHandlerMap.set(this.eid, {
       mousedownListener,
-      mouseupListener
+      mouseupListener,
+      contextmenuListener
     });
   }
 
@@ -106,6 +109,10 @@ export class MouseButtonEventHandlerProxy {
 
   get mouseupListener(): (event: MouseEvent) => void {
     return MouseButtonEventHandlerMap.get(this.eid).mouseupListener;
+  }
+
+  get contextmenuListener(): (event: MouseEvent) => void {
+    return MouseButtonEventHandlerMap.get(this.eid).contextmenuListener;
   }
 }
 

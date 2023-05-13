@@ -51,6 +51,7 @@ import {
 } from "./systems/mouse_move_event";
 import { mousePositionTrackSystem } from "./systems/mouse_position_track";
 import { mouseRaycastSystem } from "./systems/mouse_raycast";
+import { mouseSelectSystem } from "./systems/mouse_select";
 import { clearRaycastedSystem } from "./systems/raycast";
 import { renderSystem } from "./systems/render";
 import { rendererSystem } from "./systems/renderer";
@@ -103,6 +104,7 @@ export class App {
     this.registerSystem(updateMatricesSystem, SystemOrder.MatricesUpdate);
 
     this.registerSystem(mouseRaycastSystem, SystemOrder.BeforeRender);
+    this.registerSystem(mouseSelectSystem, SystemOrder.BeforeRender);
     this.registerSystem(grabSystem, SystemOrder.BeforeRender);
     this.registerSystem(grabbedObjectsMouseTrackSystem, SystemOrder.BeforeRender);
 
