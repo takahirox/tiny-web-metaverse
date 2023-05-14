@@ -15,9 +15,11 @@
   "homepage": "https://github.com/takahirox/tiny-web-metaverse-client#readme",
   "scripts": {
     "build": "webpack --config-name main",
-    "server": "webpack serve --config-name examples",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "webpack --watch --config-name main"
+    "watch": "webpack --watch --config-name main",
+    "examples:build": "webpack --config-name examples",
+    "examples:server": "webpack serve --config-name examples",
+    "examples:watch": "webpack --watch --config-name examples"
   },
   "dependencies": {
     "bitecs": "^0.3.38",

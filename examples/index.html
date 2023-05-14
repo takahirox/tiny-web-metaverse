@@ -19,6 +19,16 @@
 <body>
   <script type="module">
     import "./dist/example.bundle.js";
+    import Stats from "https://cdnjs.cloudflare.com/ajax/libs/stats.js/17/Stats.js";
+
+    const stats = new Stats();
+    document.body.appendChild(stats.dom);
+
+    const animate = () => {
+      requestAnimationFrame(animate);
+      stats.update();
+    };
+    animate();
   </script>
 </body>
 </html>
