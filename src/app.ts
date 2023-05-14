@@ -52,11 +52,11 @@ import {
 import { mousePositionTrackSystem } from "./systems/mouse_position_track";
 import { mouseRaycastSystem } from "./systems/mouse_raycast";
 import { mouseSelectSystem } from "./systems/mouse_select";
+import { perspectiveCameraSystem } from "./systems/perspective_camera";
 import { clearRaycastedSystem } from "./systems/raycast";
 import { renderSystem } from "./systems/render";
 import { rendererSystem } from "./systems/renderer";
 import { sceneSystem } from "./systems/scene";
-import { perspectiveCameraSystem } from "./systems/perspective_camera";
 import { timeSystem } from "./systems/time";
 import { updateMatricesSystem } from "./systems/update_matrices";
 import {
