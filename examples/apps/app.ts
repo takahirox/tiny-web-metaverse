@@ -20,9 +20,11 @@ import { InScene } from "../../src/components/scene";
 import { Selectable } from "../../src/components/select";
 import { SystemOrder } from "../../src/common";
 import { colorSystem } from "../systems/color";
+import { selectedObjectSystem } from "../systems/2d_ui/selected_object";
 
 const app = new App();
 app.registerSystem(colorSystem, SystemOrder.Render - 1);
+app.registerSystem(selectedObjectSystem, SystemOrder.Render - 1);
 
 const world = app.getWorld();
 

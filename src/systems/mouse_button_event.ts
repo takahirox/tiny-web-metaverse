@@ -9,6 +9,7 @@ import {
   MouseButtonEventHandler,
   MouseButtonEventHandlerDestroy,
   MouseButtonEventHandlerInit,
+  MouseButtonEventHandlerInitProxy,
   MouseButtonEventHandlerProxy,
   MouseButtonEventListener,
   MouseButtonEventProxy,
@@ -49,17 +50,19 @@ export const mouseButtonEventHandleSystem = (world: IWorld) => {
     removeComponent(world, MouseButtonEventHandlerDestroy, eid);
 
     const proxy = MouseButtonEventHandlerProxy.get(eid);
+    const target = proxy.target;
 
-    // TODO: Not document but canvas?
-    document.removeEventListener('mousedown', proxy.mousedownListener);
-    document.removeEventListener('mouseup', proxy.mouseupListener);
-    document.removeEventListener('contextmenu', proxy.contextmenuListener);
+    target.removeEventListener('mousedown', proxy.mousedownListener);
+    target.removeEventListener('mouseup', proxy.mouseupListener);
+    target.removeEventListener('contextmenu', proxy.contextmenuListener);
 
     proxy.free(world);
   });
 
   initEnterQuery(world).forEach(eid => {
-    removeComponent(world, MouseButtonEventHandlerInit, eid);
+    const proxy = MouseButtonEventHandlerInitProxy.get(eid);
+    const target = proxy.target;
+    proxy.free(world);
 
     const mousedownListener = (event: MouseEvent): void => {
       listenerQuery(world).forEach(eid => {
@@ -77,14 +80,13 @@ export const mouseButtonEventHandleSystem = (world: IWorld) => {
       event.preventDefault();
     };
 
-    // TODO: Use canvas, not document?
-
-    document.addEventListener('mousedown', mousedownListener);
-    document.addEventListener('mouseup', mouseupListener);
-    document.addEventListener('contextmenu', contextmenuListener);
+    target.addEventListener('mousedown', mousedownListener);
+    target.addEventListener('mouseup', mouseupListener);
+    target.addEventListener('contextmenu', contextmenuListener);
 
     MouseButtonEventHandlerProxy.get(eid).allocate(
       world,
+      target,
       mousedownListener,
       mouseupListener,
       contextmenuListener

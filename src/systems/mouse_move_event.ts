@@ -9,6 +9,7 @@ import {
   MouseMoveEventHandler,
   MouseMoveEventHandlerDestroy,
   MouseMoveEventHandlerInit,
+  MouseMoveEventHandlerInitProxy,
   MouseMoveEventHandlerProxy,
   MouseMoveEventListener,
   MouseMoveEventProxy
@@ -25,32 +26,33 @@ export const mouseMoveEventHandleSystem = (world: IWorld) => {
     removeComponent(world, MouseMoveEventHandlerDestroy, eid);
 
     const proxy = MouseMoveEventHandlerProxy.get(eid);
+    const target = proxy.target;
 
-    // TODO: Not document but canvas?
-    document.removeEventListener('mousemove', proxy.listener);
+    target.removeEventListener('mousemove', proxy.listener);
 
     proxy.free(world);
   });
 
   initEnterQuery(world).forEach(eid => {
-    removeComponent(world, MouseMoveEventHandlerInit, eid);
-
-    // TODO: Use canvas, not document.body?
+    const proxy = MouseMoveEventHandlerInitProxy.get(eid);
+    const target = proxy.target;
+    proxy.free(world);
 
     const listener = (event: MouseEvent): void => {
       listenerQuery(world).forEach(eid => {
         MouseMoveEventProxy.get(eid).add(
           world,
-          (event.offsetX / document.body.clientWidth) * 2.0 - 1.0,
-          -((event.offsetY / document.body.clientHeight) * 2.0 - 1.0)
+          (event.offsetX / target.clientWidth) * 2.0 - 1.0,
+          -((event.offsetY / target.clientHeight) * 2.0 - 1.0)
         );
       });
     };
 
-    document.addEventListener('mousemove', listener);
+    target.addEventListener('mousemove', listener);
 
     MouseMoveEventHandlerProxy.get(eid).allocate(
       world,
+      target,
       listener
     );
   });

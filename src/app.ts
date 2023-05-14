@@ -9,9 +9,9 @@ import { SystemOrder } from "./common";
 import { AvatarMouseControlsProxy } from "./components/avatar_mouse_controls";
 import { EntityObject3DProxy } from "./components/entity_object3d";
 import {
-  MouseButtonEventHandlerInit,
+  MouseButtonEventHandlerInitProxy,
   MouseButtonEventListener,
-  MouseMoveEventHandlerInit,
+  MouseMoveEventHandlerInitProxy,
   MouseMoveEventListener,
   MousePositionProxy,
   PreviousMousePositionProxy
@@ -75,13 +75,13 @@ export class App {
   private systems: RegisteredSystem[];
   private world: IWorld;
 
-  constructor() {
+  constructor(domElement: HTMLElement = document.body) {
     this.systems = [];
     this.world = createWorld();
-    this.init();
+    this.init(domElement);
   }
 
-  private init(): void {
+  private init(domElement: HTMLElement): void {
     // Built-in systems and entities
 
     this.registerSystem(timeSystem, SystemOrder.Time);
@@ -129,10 +129,10 @@ export class App {
     addComponent(this.world, KeyEventHandlerInit, keyEventHandlerEid);
 
     const mouseMoveEventHandlerEid = addEntity(this.world);
-    addComponent(this.world, MouseMoveEventHandlerInit, mouseMoveEventHandlerEid);
+    MouseMoveEventHandlerInitProxy.get(mouseMoveEventHandlerEid).allocate(this.world, domElement);
 
     const mouseButtonEventHandlerEid = addEntity(this.world);
-    addComponent(this.world, MouseButtonEventHandlerInit, mouseButtonEventHandlerEid);
+    MouseButtonEventHandlerInitProxy.get(mouseButtonEventHandlerEid).allocate(this.world, domElement);
 
     const resizeEventHandlerEid = addEntity(this.world);
     addComponent(this.world, WindowResizeEventHandlerInit, resizeEventHandlerEid);
@@ -150,7 +150,7 @@ export class App {
     addComponent(this.world, MouseButtonEventListener, avatarMouseControlsEid);
 
     const rendererEid = addEntity(this.world);
-    RendererInitProxy.get(rendererEid).allocate(this.world);
+    RendererInitProxy.get(rendererEid).allocate(this.world, {parentDomElement: domElement});
     addComponent(this.world, WindowSize, rendererEid);
     addComponent(this.world, WindowResizeEventListener, rendererEid);
 

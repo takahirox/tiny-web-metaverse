@@ -18,13 +18,18 @@ export enum MouseButtonType {
   Right
 };
 
+type MouseButtonEventHandlerInitValue = HTMLElement;
+
 type MouseButtonEventHandlerValue = {
+  target: HTMLElement;
   mousedownListener: (event: MouseEvent) => void;
   mouseupListener: (event: MouseEvent) => void;
   contextmenuListener: (event: MouseEvent) => void;
 };
 
 export const MouseButtonEventHandlerInit = defineComponent();
+const MouseButtonEventHandlerInitMap = new Map<number, MouseButtonEventHandlerInitValue>();
+
 export const MouseButtonEventHandlerDestroy = defineComponent();
 export const MouseButtonEventHandler = defineComponent();
 const MouseButtonEventHandlerMap = new Map<number, MouseButtonEventHandlerValue>();
@@ -43,9 +48,15 @@ const MouseButtonEventMap = new Map<number, MouseButtonEventValue[]>();
 export const MouseButtonEventListener = defineComponent();
 export const MouseButtonHold = defineComponent();
 
-type MouseMoveEventHandlerValue = (event: MouseEvent) => void;
+type MouseMoveEventHandlerInitValue = HTMLElement;
+type MouseMoveEventHandlerValue = {
+  target: HTMLElement;
+  listener: (event: MouseEvent) => void;
+};
 
 export const MouseMoveEventHandlerInit = defineComponent();
+const MouseMoveEventHandlerInitMap = new Map<number, MouseMoveEventHandlerInitValue>();
+
 export const MouseMoveEventHandlerDestroy = defineComponent();
 export const MouseMoveEventHandler = defineComponent();
 const MouseMoveEventHandlerMap = new Map<number, MouseMoveEventHandlerValue>();
@@ -71,6 +82,34 @@ const MousePositionMap = new Map<number, MousePositionValue>();
 export const PreviousMousePosition = defineComponent();
 const PreviousMousePositionMap = new Map<number, MousePositionValue>();
 
+export class MouseButtonEventHandlerInitProxy {
+  private static instance: MouseButtonEventHandlerInitProxy = new MouseButtonEventHandlerInitProxy();
+  private eid: number;
+
+  private constructor() {
+    this.eid = NULL_EID;
+  }
+
+  static get(eid: number): MouseButtonEventHandlerInitProxy {
+    MouseButtonEventHandlerInitProxy.instance.eid = eid;
+    return MouseButtonEventHandlerInitProxy.instance;
+  }
+
+  allocate(world: IWorld, target: HTMLElement): void {
+    addComponent(world, MouseButtonEventHandlerInit, this.eid);
+    MouseButtonEventHandlerInitMap.set(this.eid, target);
+  }
+
+  free(world: IWorld): void {
+    removeComponent(world, MouseButtonEventHandlerInit, this.eid);
+    MouseButtonEventHandlerInitMap.delete(this.eid);
+  }
+
+  get target(): HTMLElement {
+    return MouseButtonEventHandlerInitMap.get(this.eid)!;
+  }
+}
+
 export class MouseButtonEventHandlerProxy {
   private static instance: MouseButtonEventHandlerProxy = new MouseButtonEventHandlerProxy();
   private eid: number;
@@ -86,12 +125,14 @@ export class MouseButtonEventHandlerProxy {
 
   allocate(
     world: IWorld,
+    target: HTMLElement,
     mousedownListener: (event: MouseEvent) => void,
     mouseupListener: (event: MouseEvent) => void,
     contextmenuListener: (event: MouseEvent) => void
   ): void {
     addComponent(world, MouseButtonEventHandler, this.eid);
     MouseButtonEventHandlerMap.set(this.eid, {
+      target,
       mousedownListener,
       mouseupListener,
       contextmenuListener
@@ -101,6 +142,10 @@ export class MouseButtonEventHandlerProxy {
   free(world: IWorld): void {
     removeComponent(world, MouseButtonEventHandler, this.eid);
     MouseButtonEventHandlerMap.delete(this.eid);
+  }
+
+  get target(): HTMLElement {
+    return MouseButtonEventHandlerMap.get(this.eid).target;
   }
 
   get mousedownListener(): (event: MouseEvent) => void {
@@ -153,6 +198,34 @@ export class MouseButtonEventProxy {
   }
 }
 
+export class MouseMoveEventHandlerInitProxy {
+  private static instance: MouseMoveEventHandlerInitProxy = new MouseMoveEventHandlerInitProxy();
+  private eid: number;
+
+  private constructor() {
+    this.eid = NULL_EID;
+  }
+
+  static get(eid: number): MouseMoveEventHandlerInitProxy {
+    MouseMoveEventHandlerInitProxy.instance.eid = eid;
+    return MouseMoveEventHandlerInitProxy.instance;
+  }
+
+  allocate(world: IWorld, target: HTMLElement): void {
+    addComponent(world, MouseMoveEventHandlerInit, this.eid);
+    MouseMoveEventHandlerInitMap.set(this.eid, target);
+  }
+
+  free(world: IWorld): void {
+    removeComponent(world, MouseMoveEventHandlerInit, this.eid);
+    MouseMoveEventHandlerInitMap.delete(this.eid);
+  }
+
+  get target(): HTMLElement {
+    return MouseMoveEventHandlerInitMap.get(this.eid)!;
+  }
+}
+
 export class MouseMoveEventHandlerProxy {
   private static instance: MouseMoveEventHandlerProxy = new MouseMoveEventHandlerProxy();
   private eid: number;
@@ -168,10 +241,11 @@ export class MouseMoveEventHandlerProxy {
 
   allocate(
     world: IWorld,
+    target: HTMLElement,
     listener: (event: MouseEvent) => void
   ): void {
     addComponent(world, MouseMoveEventHandler, this.eid);
-    MouseMoveEventHandlerMap.set(this.eid, listener);
+    MouseMoveEventHandlerMap.set(this.eid, { listener, target });
   }
 
   free(world: IWorld): void {
@@ -180,7 +254,11 @@ export class MouseMoveEventHandlerProxy {
   }
 
   get listener(): (event: MouseEvent) => void {
-    return MouseMoveEventHandlerMap.get(this.eid)!;
+    return MouseMoveEventHandlerMap.get(this.eid)!.listener;
+  }
+
+  get target(): HTMLElement {
+    return MouseMoveEventHandlerMap.get(this.eid)!.target;
   }
 }
 

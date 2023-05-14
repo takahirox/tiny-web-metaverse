@@ -79,12 +79,12 @@ __webpack_require__.r(__webpack_exports__);
 
 
 class App {
-    constructor() {
+    constructor(domElement = document.body) {
         this.systems = [];
         this.world = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.createWorld)();
-        this.init();
+        this.init(domElement);
     }
-    init() {
+    init(domElement) {
         // Built-in systems and entities
         this.registerSystem(_systems_time__WEBPACK_IMPORTED_MODULE_29__.timeSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.Time);
         this.registerSystem(_systems_keyboard_event__WEBPACK_IMPORTED_MODULE_17__.keyEventHandleSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.EventHandling);
@@ -117,9 +117,9 @@ class App {
         const keyEventHandlerEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_keyboard__WEBPACK_IMPORTED_MODULE_5__.KeyEventHandlerInit, keyEventHandlerEid);
         const mouseMoveEventHandlerEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_mouse__WEBPACK_IMPORTED_MODULE_4__.MouseMoveEventHandlerInit, mouseMoveEventHandlerEid);
+        _components_mouse__WEBPACK_IMPORTED_MODULE_4__.MouseMoveEventHandlerInitProxy.get(mouseMoveEventHandlerEid).allocate(this.world, domElement);
         const mouseButtonEventHandlerEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_mouse__WEBPACK_IMPORTED_MODULE_4__.MouseButtonEventHandlerInit, mouseButtonEventHandlerEid);
+        _components_mouse__WEBPACK_IMPORTED_MODULE_4__.MouseButtonEventHandlerInitProxy.get(mouseButtonEventHandlerEid).allocate(this.world, domElement);
         const resizeEventHandlerEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_window_resize__WEBPACK_IMPORTED_MODULE_11__.WindowResizeEventHandlerInit, resizeEventHandlerEid);
         const mousePositionEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
@@ -132,7 +132,7 @@ class App {
         _components_avatar_mouse_controls__WEBPACK_IMPORTED_MODULE_2__.AvatarMouseControlsProxy.get(avatarMouseControlsEid).allocate(this.world);
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_mouse__WEBPACK_IMPORTED_MODULE_4__.MouseButtonEventListener, avatarMouseControlsEid);
         const rendererEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
-        _components_renderer__WEBPACK_IMPORTED_MODULE_6__.RendererInitProxy.get(rendererEid).allocate(this.world);
+        _components_renderer__WEBPACK_IMPORTED_MODULE_6__.RendererInitProxy.get(rendererEid).allocate(this.world, { parentDomElement: domElement });
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_window_resize__WEBPACK_IMPORTED_MODULE_11__.WindowSize, rendererEid);
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_window_resize__WEBPACK_IMPORTED_MODULE_11__.WindowResizeEventListener, rendererEid);
         const sceneEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
@@ -660,6 +660,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "MouseButtonEventHandler": () => (/* binding */ MouseButtonEventHandler),
 /* harmony export */   "MouseButtonEventHandlerDestroy": () => (/* binding */ MouseButtonEventHandlerDestroy),
 /* harmony export */   "MouseButtonEventHandlerInit": () => (/* binding */ MouseButtonEventHandlerInit),
+/* harmony export */   "MouseButtonEventHandlerInitProxy": () => (/* binding */ MouseButtonEventHandlerInitProxy),
 /* harmony export */   "MouseButtonEventHandlerProxy": () => (/* binding */ MouseButtonEventHandlerProxy),
 /* harmony export */   "MouseButtonEventListener": () => (/* binding */ MouseButtonEventListener),
 /* harmony export */   "MouseButtonEventProxy": () => (/* binding */ MouseButtonEventProxy),
@@ -670,6 +671,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "MouseMoveEventHandler": () => (/* binding */ MouseMoveEventHandler),
 /* harmony export */   "MouseMoveEventHandlerDestroy": () => (/* binding */ MouseMoveEventHandlerDestroy),
 /* harmony export */   "MouseMoveEventHandlerInit": () => (/* binding */ MouseMoveEventHandlerInit),
+/* harmony export */   "MouseMoveEventHandlerInitProxy": () => (/* binding */ MouseMoveEventHandlerInitProxy),
 /* harmony export */   "MouseMoveEventHandlerProxy": () => (/* binding */ MouseMoveEventHandlerProxy),
 /* harmony export */   "MouseMoveEventListener": () => (/* binding */ MouseMoveEventListener),
 /* harmony export */   "MouseMoveEventProxy": () => (/* binding */ MouseMoveEventProxy),
@@ -696,6 +698,7 @@ var MouseButtonType;
 })(MouseButtonType || (MouseButtonType = {}));
 ;
 const MouseButtonEventHandlerInit = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const MouseButtonEventHandlerInitMap = new Map();
 const MouseButtonEventHandlerDestroy = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 const MouseButtonEventHandler = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 const MouseButtonEventHandlerMap = new Map();
@@ -704,6 +707,7 @@ const MouseButtonEventMap = new Map();
 const MouseButtonEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 const MouseButtonHold = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 const MouseMoveEventHandlerInit = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const MouseMoveEventHandlerInitMap = new Map();
 const MouseMoveEventHandlerDestroy = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 const MouseMoveEventHandler = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 const MouseMoveEventHandlerMap = new Map();
@@ -714,6 +718,27 @@ const MousePosition = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 const MousePositionMap = new Map();
 const PreviousMousePosition = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 const PreviousMousePositionMap = new Map();
+class MouseButtonEventHandlerInitProxy {
+    constructor() {
+        this.eid = _src_common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
+    }
+    static get(eid) {
+        MouseButtonEventHandlerInitProxy.instance.eid = eid;
+        return MouseButtonEventHandlerInitProxy.instance;
+    }
+    allocate(world, target) {
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, MouseButtonEventHandlerInit, this.eid);
+        MouseButtonEventHandlerInitMap.set(this.eid, target);
+    }
+    free(world) {
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, MouseButtonEventHandlerInit, this.eid);
+        MouseButtonEventHandlerInitMap.delete(this.eid);
+    }
+    get target() {
+        return MouseButtonEventHandlerInitMap.get(this.eid);
+    }
+}
+MouseButtonEventHandlerInitProxy.instance = new MouseButtonEventHandlerInitProxy();
 class MouseButtonEventHandlerProxy {
     constructor() {
         this.eid = _src_common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
@@ -722,9 +747,10 @@ class MouseButtonEventHandlerProxy {
         MouseButtonEventHandlerProxy.instance.eid = eid;
         return MouseButtonEventHandlerProxy.instance;
     }
-    allocate(world, mousedownListener, mouseupListener, contextmenuListener) {
+    allocate(world, target, mousedownListener, mouseupListener, contextmenuListener) {
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, MouseButtonEventHandler, this.eid);
         MouseButtonEventHandlerMap.set(this.eid, {
+            target,
             mousedownListener,
             mouseupListener,
             contextmenuListener
@@ -733,6 +759,9 @@ class MouseButtonEventHandlerProxy {
     free(world) {
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, MouseButtonEventHandler, this.eid);
         MouseButtonEventHandlerMap.delete(this.eid);
+    }
+    get target() {
+        return MouseButtonEventHandlerMap.get(this.eid).target;
     }
     get mousedownListener() {
         return MouseButtonEventHandlerMap.get(this.eid).mousedownListener;
@@ -769,6 +798,27 @@ class MouseButtonEventProxy {
     }
 }
 MouseButtonEventProxy.instance = new MouseButtonEventProxy();
+class MouseMoveEventHandlerInitProxy {
+    constructor() {
+        this.eid = _src_common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
+    }
+    static get(eid) {
+        MouseMoveEventHandlerInitProxy.instance.eid = eid;
+        return MouseMoveEventHandlerInitProxy.instance;
+    }
+    allocate(world, target) {
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, MouseMoveEventHandlerInit, this.eid);
+        MouseMoveEventHandlerInitMap.set(this.eid, target);
+    }
+    free(world) {
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, MouseMoveEventHandlerInit, this.eid);
+        MouseMoveEventHandlerInitMap.delete(this.eid);
+    }
+    get target() {
+        return MouseMoveEventHandlerInitMap.get(this.eid);
+    }
+}
+MouseMoveEventHandlerInitProxy.instance = new MouseMoveEventHandlerInitProxy();
 class MouseMoveEventHandlerProxy {
     constructor() {
         this.eid = _src_common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
@@ -777,16 +827,19 @@ class MouseMoveEventHandlerProxy {
         MouseMoveEventHandlerProxy.instance.eid = eid;
         return MouseMoveEventHandlerProxy.instance;
     }
-    allocate(world, listener) {
+    allocate(world, target, listener) {
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, MouseMoveEventHandler, this.eid);
-        MouseMoveEventHandlerMap.set(this.eid, listener);
+        MouseMoveEventHandlerMap.set(this.eid, { listener, target });
     }
     free(world) {
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, MouseMoveEventHandler, this.eid);
         MouseMoveEventHandlerMap.delete(this.eid);
     }
     get listener() {
-        return MouseMoveEventHandlerMap.get(this.eid);
+        return MouseMoveEventHandlerMap.get(this.eid).listener;
+    }
+    get target() {
+        return MouseMoveEventHandlerMap.get(this.eid).target;
     }
 }
 MouseMoveEventHandlerProxy.instance = new MouseMoveEventHandlerProxy();
@@ -1672,14 +1725,16 @@ const mouseButtonEventHandleSystem = (world) => {
     destroyEnterQuery(world).forEach(eid => {
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseButtonEventHandlerDestroy, eid);
         const proxy = _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseButtonEventHandlerProxy.get(eid);
-        // TODO: Not document but canvas?
-        document.removeEventListener('mousedown', proxy.mousedownListener);
-        document.removeEventListener('mouseup', proxy.mouseupListener);
-        document.removeEventListener('contextmenu', proxy.contextmenuListener);
+        const target = proxy.target;
+        target.removeEventListener('mousedown', proxy.mousedownListener);
+        target.removeEventListener('mouseup', proxy.mouseupListener);
+        target.removeEventListener('contextmenu', proxy.contextmenuListener);
         proxy.free(world);
     });
     initEnterQuery(world).forEach(eid => {
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseButtonEventHandlerInit, eid);
+        const proxy = _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseButtonEventHandlerInitProxy.get(eid);
+        const target = proxy.target;
+        proxy.free(world);
         const mousedownListener = (event) => {
             listenerQuery(world).forEach(eid => {
                 addMouseButtonEvent(world, eid, _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseButtonEventType.Down, event);
@@ -1693,11 +1748,10 @@ const mouseButtonEventHandleSystem = (world) => {
         const contextmenuListener = (event) => {
             event.preventDefault();
         };
-        // TODO: Use canvas, not document?
-        document.addEventListener('mousedown', mousedownListener);
-        document.addEventListener('mouseup', mouseupListener);
-        document.addEventListener('contextmenu', contextmenuListener);
-        _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseButtonEventHandlerProxy.get(eid).allocate(world, mousedownListener, mouseupListener, contextmenuListener);
+        target.addEventListener('mousedown', mousedownListener);
+        target.addEventListener('mouseup', mouseupListener);
+        target.addEventListener('contextmenu', contextmenuListener);
+        _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseButtonEventHandlerProxy.get(eid).allocate(world, target, mousedownListener, mouseupListener, contextmenuListener);
     });
 };
 const mouseButtonEventClearSystem = (world) => {
@@ -1732,20 +1786,21 @@ const mouseMoveEventHandleSystem = (world) => {
     destroyEnterQuery(world).forEach(eid => {
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseMoveEventHandlerDestroy, eid);
         const proxy = _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseMoveEventHandlerProxy.get(eid);
-        // TODO: Not document but canvas?
-        document.removeEventListener('mousemove', proxy.listener);
+        const target = proxy.target;
+        target.removeEventListener('mousemove', proxy.listener);
         proxy.free(world);
     });
     initEnterQuery(world).forEach(eid => {
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseMoveEventHandlerInit, eid);
-        // TODO: Use canvas, not document.body?
+        const proxy = _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseMoveEventHandlerInitProxy.get(eid);
+        const target = proxy.target;
+        proxy.free(world);
         const listener = (event) => {
             listenerQuery(world).forEach(eid => {
-                _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseMoveEventProxy.get(eid).add(world, (event.offsetX / document.body.clientWidth) * 2.0 - 1.0, -((event.offsetY / document.body.clientHeight) * 2.0 - 1.0));
+                _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseMoveEventProxy.get(eid).add(world, (event.offsetX / target.clientWidth) * 2.0 - 1.0, -((event.offsetY / target.clientHeight) * 2.0 - 1.0));
             });
         };
-        document.addEventListener('mousemove', listener);
-        _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseMoveEventHandlerProxy.get(eid).allocate(world, listener);
+        target.addEventListener('mousemove', listener);
+        _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseMoveEventHandlerProxy.get(eid).allocate(world, target, listener);
     });
 };
 const mouseMoveEventClearSystem = (world) => {
