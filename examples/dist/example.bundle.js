@@ -2,30 +2,6 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./examples/systems/2d_ui/selected_object.ts":
-/*!***************************************************!*\
-  !*** ./examples/systems/2d_ui/selected_object.ts ***!
-  \***************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "selectedObjectSystem": () => (/* binding */ selectedObjectSystem)
-/* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
-/* harmony import */ var _src_components_select__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../src/components/select */ "./src/components/select.ts");
-
-
-const selectedEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_src_components_select__WEBPACK_IMPORTED_MODULE_1__.Selected]));
-const selectedObjectSystem = (world) => {
-    selectedEnterQuery(world).forEach(_eid => {
-        //window.alert(eid);
-    });
-};
-
-
-/***/ }),
-
 /***/ "./examples/systems/color.ts":
 /*!***********************************!*\
   !*** ./examples/systems/color.ts ***!
@@ -69,6 +45,123 @@ const colorSystem = (world) => {
             material.color.setHex(0x888888);
         }
     });
+};
+
+
+/***/ }),
+
+/***/ "./examples/systems/selected_object.ts":
+/*!*********************************************!*\
+  !*** ./examples/systems/selected_object.ts ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "selectedObjectSystem": () => (/* binding */ selectedObjectSystem)
+/* harmony export */ });
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var _src_common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../src/common */ "./src/common.ts");
+/* harmony import */ var _src_components_select__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../src/components/select */ "./src/components/select.ts");
+/* harmony import */ var _ui_side_bar__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../ui/side_bar */ "./examples/ui/side_bar.ts");
+
+
+
+
+const selectedQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_src_components_select__WEBPACK_IMPORTED_MODULE_2__.Selected]);
+const selectedEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)(selectedQuery);
+const selectedExitQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)(selectedQuery);
+const selectedObjectSystem = (world) => {
+    selectedExitQuery(world).forEach(() => {
+        (0,_ui_side_bar__WEBPACK_IMPORTED_MODULE_3__.updateEid)(_src_common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID);
+    });
+    selectedEnterQuery(world).forEach(eid => {
+        (0,_ui_side_bar__WEBPACK_IMPORTED_MODULE_3__.updateEid)(eid);
+    });
+    (0,_ui_side_bar__WEBPACK_IMPORTED_MODULE_3__.update)(world);
+};
+
+
+/***/ }),
+
+/***/ "./examples/ui/side_bar.ts":
+/*!*********************************!*\
+  !*** ./examples/ui/side_bar.ts ***!
+  \*********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "update": () => (/* binding */ update),
+/* harmony export */   "updateEid": () => (/* binding */ updateEid)
+/* harmony export */ });
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../src/components/entity_object3d */ "./src/components/entity_object3d.ts");
+/* harmony import */ var _src_common__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../src/common */ "./src/common.ts");
+
+
+
+let eid = _src_common__WEBPACK_IMPORTED_MODULE_2__.NULL_EID;
+/*
+<div>
+  <div>eid: ${eid}</div>
+  <div>position: ${position}</div>
+  <div>rotation: ${rotation}</div>
+  <div>scale: ${scale}</div>
+</div>
+*/
+const div = document.createElement('div');
+div.style.width = 'calc(220px - 1.0em)';
+div.style.height = 'calc(100% - 1.0em)';
+div.style.display = 'none';
+div.style.position = 'absolute';
+div.style.background = 'rgba(255.0, 255.0, 255.0, 0.5)';
+div.style.color = 'rgba(0.0, 0.0, 0.0, 1.0)';
+div.style.zIndex = '1';
+div.style.top = '0px';
+div.style.right = '0px';
+div.style.opacity = '1.0';
+div.style.borderLeft = 'solid 1px #000000';
+div.style.padding = '0.5em';
+div.style.margin = '0';
+document.body.appendChild(div);
+const eidDiv = document.createElement('div');
+div.appendChild(eidDiv);
+const positionDiv = document.createElement('div');
+positionDiv.style.display = 'none';
+div.appendChild(positionDiv);
+const rotationDiv = document.createElement('div');
+rotationDiv.style.display = 'none';
+div.appendChild(rotationDiv);
+const scaleDiv = document.createElement('div');
+scaleDiv.style.display = 'none';
+div.appendChild(scaleDiv);
+const updateEid = (newEid) => {
+    eid = newEid;
+};
+// TODO: Optimize. Updating each frame even without update is inefficient.
+const update = (world) => {
+    if (eid === _src_common__WEBPACK_IMPORTED_MODULE_2__.NULL_EID) {
+        div.style.display = 'none';
+    }
+    else {
+        div.style.display = 'block';
+        eidDiv.innerText = `eid: ${eid}`;
+        if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3D, eid)) {
+            const obj = _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3DProxy.get(eid).root;
+            positionDiv.innerText = `position: ${obj.position.x.toFixed(2)} ${obj.position.y.toFixed(2)} ${obj.position.z.toFixed(2)}`;
+            positionDiv.style.display = 'block';
+            rotationDiv.innerText = `rotation: ${obj.rotation.x.toFixed(2)} ${obj.rotation.y.toFixed(2)} ${obj.rotation.z.toFixed(2)}`;
+            rotationDiv.style.display = 'block';
+            scaleDiv.innerText = `scale: ${obj.scale.x.toFixed(2)} ${obj.scale.y.toFixed(2)} ${obj.scale.z.toFixed(2)}`;
+            scaleDiv.style.display = 'block';
+        }
+        else {
+            positionDiv.style.display = 'none';
+            rotationDiv.style.display = 'none';
+            scaleDiv.style.display = 'none';
+        }
+    }
 };
 
 
@@ -54968,7 +55061,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _src_components_select__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../src/components/select */ "./src/components/select.ts");
 /* harmony import */ var _src_common__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../src/common */ "./src/common.ts");
 /* harmony import */ var _systems_color__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../systems/color */ "./examples/systems/color.ts");
-/* harmony import */ var _systems_2d_ui_selected_object__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../systems/2d_ui/selected_object */ "./examples/systems/2d_ui/selected_object.ts");
+/* harmony import */ var _systems_selected_object__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../systems/selected_object */ "./examples/systems/selected_object.ts");
 
 
 
@@ -54986,7 +55079,7 @@ __webpack_require__.r(__webpack_exports__);
 
 const app = new _src_app__WEBPACK_IMPORTED_MODULE_1__.App();
 app.registerSystem(_systems_color__WEBPACK_IMPORTED_MODULE_12__.colorSystem, _src_common__WEBPACK_IMPORTED_MODULE_11__.SystemOrder.Render - 1);
-app.registerSystem(_systems_2d_ui_selected_object__WEBPACK_IMPORTED_MODULE_13__.selectedObjectSystem, _src_common__WEBPACK_IMPORTED_MODULE_11__.SystemOrder.Render - 1);
+app.registerSystem(_systems_selected_object__WEBPACK_IMPORTED_MODULE_13__.selectedObjectSystem, _src_common__WEBPACK_IMPORTED_MODULE_11__.SystemOrder.Render - 1);
 const world = app.getWorld();
 const gridEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
 (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_scene__WEBPACK_IMPORTED_MODULE_9__.InScene, gridEid);
