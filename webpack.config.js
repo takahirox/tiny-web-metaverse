@@ -16,6 +16,7 @@ module.exports = [
         }
       ]
     },
+    name: "main",
     output: {
       filename: 'tiny-web-metaverse-client.bundle.js',
       path: path.resolve(__dirname, 'dist')
@@ -50,6 +51,7 @@ module.exports = [
         }
       ]
     },
+    name: "examples",
     output: {
       filename: 'example.bundle.js',
       path: path.resolve(__dirname, 'examples', 'dist')
