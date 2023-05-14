@@ -9,7 +9,7 @@ import { NULL_EID } from "../common";
 
 type RendererParams = {
   height?: number;
-  parentDomElement?: HTMLElement;
+  canvas?: HTMLCanvasElement;
   pixelRatio?: number;
   width?: number;
 };
@@ -38,7 +38,7 @@ export class RendererInitProxy {
     addComponent(world, RendererInit, this.eid);
     RendererInitMap.set(this.eid, {
       height: params.height || window.innerHeight,
-      parentDomElement: params.parentDomElement || document.body,
+      canvas: params.canvas || document.createElement('canvas'),
       pixelRatio: params.pixelRatio || window.devicePixelRatio,
       width: params.width || window.innerWidth
     });
@@ -53,8 +53,8 @@ export class RendererInitProxy {
     return RendererInitMap.get(this.eid)!.height;
   }
 
-  get parentDomElement(): HTMLElement {
-    return RendererInitMap.get(this.eid)!.parentDomElement;
+  get canvas(): HTMLCanvasElement {
+    return RendererInitMap.get(this.eid)!.canvas;
   }
 
   get pixelRatio(): number {

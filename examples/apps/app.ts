@@ -23,6 +23,8 @@ import { colorSystem } from "../systems/color";
 import { selectedObjectSystem } from "../systems/selected_object";
 
 const app = new App();
+document.body.appendChild(app.getCanvas());
+
 app.registerSystem(colorSystem, SystemOrder.Render - 1);
 app.registerSystem(selectedObjectSystem, SystemOrder.Render - 1);
 

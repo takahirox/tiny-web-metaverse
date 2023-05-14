@@ -115,7 +115,7 @@ div.style.width = 'calc(220px - 1.0em)';
 div.style.height = 'calc(100% - 1.0em)';
 div.style.display = 'none';
 div.style.position = 'absolute';
-div.style.background = 'rgba(255.0, 255.0, 255.0, 0.5)';
+div.style.background = 'rgba(255.0, 255.0, 255.0, 0.9)';
 div.style.color = 'rgba(0.0, 0.0, 0.0, 1.0)';
 div.style.zIndex = '1';
 div.style.top = '0px';
@@ -139,7 +139,7 @@ div.appendChild(scaleDiv);
 const updateEid = (newEid) => {
     eid = newEid;
 };
-// TODO: Optimize. Updating each frame even without update is inefficient.
+// TODO: Optimize. Updating each frame even without object update is inefficient.
 const update = (world) => {
     if (eid === _src_common__WEBPACK_IMPORTED_MODULE_2__.NULL_EID) {
         div.style.display = 'none';
@@ -244,12 +244,17 @@ __webpack_require__.r(__webpack_exports__);
 
 
 class App {
-    constructor(domElement = document.body) {
+    constructor(canvas) {
+        if (canvas === undefined) {
+            canvas = document.createElement('canvas');
+            canvas.style.display = 'block';
+        }
+        this.canvas = canvas;
         this.systems = [];
         this.world = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.createWorld)();
-        this.init(domElement);
+        this.init();
     }
-    init(domElement) {
+    init() {
         // Built-in systems and entities
         this.registerSystem(_systems_time__WEBPACK_IMPORTED_MODULE_29__.timeSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.Time);
         this.registerSystem(_systems_keyboard_event__WEBPACK_IMPORTED_MODULE_17__.keyEventHandleSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.EventHandling);
@@ -282,9 +287,9 @@ class App {
         const keyEventHandlerEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_keyboard__WEBPACK_IMPORTED_MODULE_5__.KeyEventHandlerInit, keyEventHandlerEid);
         const mouseMoveEventHandlerEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
-        _components_mouse__WEBPACK_IMPORTED_MODULE_4__.MouseMoveEventHandlerInitProxy.get(mouseMoveEventHandlerEid).allocate(this.world, domElement);
+        _components_mouse__WEBPACK_IMPORTED_MODULE_4__.MouseMoveEventHandlerInitProxy.get(mouseMoveEventHandlerEid).allocate(this.world, this.canvas);
         const mouseButtonEventHandlerEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
-        _components_mouse__WEBPACK_IMPORTED_MODULE_4__.MouseButtonEventHandlerInitProxy.get(mouseButtonEventHandlerEid).allocate(this.world, domElement);
+        _components_mouse__WEBPACK_IMPORTED_MODULE_4__.MouseButtonEventHandlerInitProxy.get(mouseButtonEventHandlerEid).allocate(this.world, this.canvas);
         const resizeEventHandlerEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_window_resize__WEBPACK_IMPORTED_MODULE_11__.WindowResizeEventHandlerInit, resizeEventHandlerEid);
         const mousePositionEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
@@ -297,7 +302,7 @@ class App {
         _components_avatar_mouse_controls__WEBPACK_IMPORTED_MODULE_2__.AvatarMouseControlsProxy.get(avatarMouseControlsEid).allocate(this.world);
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_mouse__WEBPACK_IMPORTED_MODULE_4__.MouseButtonEventListener, avatarMouseControlsEid);
         const rendererEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
-        _components_renderer__WEBPACK_IMPORTED_MODULE_6__.RendererInitProxy.get(rendererEid).allocate(this.world, { parentDomElement: domElement });
+        _components_renderer__WEBPACK_IMPORTED_MODULE_6__.RendererInitProxy.get(rendererEid).allocate(this.world, { canvas: this.canvas });
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_window_resize__WEBPACK_IMPORTED_MODULE_11__.WindowSize, rendererEid);
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_window_resize__WEBPACK_IMPORTED_MODULE_11__.WindowResizeEventListener, rendererEid);
         const sceneEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
@@ -361,6 +366,9 @@ class App {
             this.tick();
         };
         runTick();
+    }
+    getCanvas() {
+        return this.canvas;
     }
     getWorld() {
         return this.world;
@@ -1196,7 +1204,7 @@ class RendererInitProxy {
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, RendererInit, this.eid);
         RendererInitMap.set(this.eid, {
             height: params.height || window.innerHeight,
-            parentDomElement: params.parentDomElement || document.body,
+            canvas: params.canvas || document.createElement('canvas'),
             pixelRatio: params.pixelRatio || window.devicePixelRatio,
             width: params.width || window.innerWidth
         });
@@ -1208,8 +1216,8 @@ class RendererInitProxy {
     get height() {
         return RendererInitMap.get(this.eid).height;
     }
-    get parentDomElement() {
-        return RendererInitMap.get(this.eid).parentDomElement;
+    get canvas() {
+        return RendererInitMap.get(this.eid).canvas;
     }
     get pixelRatio() {
         return RendererInitMap.get(this.eid).pixelRatio;
@@ -2112,7 +2120,7 @@ const mouseSelectSystem = (world) => {
                 if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_select__WEBPACK_IMPORTED_MODULE_3__.Selected, eid)) {
                     (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_select__WEBPACK_IMPORTED_MODULE_3__.Selected, eid);
                 }
-                if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_raycast__WEBPACK_IMPORTED_MODULE_2__.Raycasted, eid)) {
+                else if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_raycast__WEBPACK_IMPORTED_MODULE_2__.Raycasted, eid)) {
                     (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_select__WEBPACK_IMPORTED_MODULE_3__.Selected, eid);
                 }
             }
@@ -2269,15 +2277,15 @@ const rendererSystem = (world) => {
     });
     initEnterQuery(world).forEach(eid => {
         const initProxy = _components_renderer__WEBPACK_IMPORTED_MODULE_1__.RendererInitProxy.get(eid);
-        const parentElement = initProxy.parentDomElement;
+        const canvas = initProxy.canvas;
         const width = initProxy.width;
         const height = initProxy.height;
         const pixelRatio = initProxy.pixelRatio;
         initProxy.free(world);
-        const renderer = new three__WEBPACK_IMPORTED_MODULE_3__.WebGLRenderer();
+        // TODO: Configurable renderer parameters
+        const renderer = new three__WEBPACK_IMPORTED_MODULE_3__.WebGLRenderer({ antialias: true, canvas });
         renderer.setSize(width, height);
         renderer.setPixelRatio(pixelRatio);
-        parentElement.appendChild(renderer.domElement);
         const proxy = _components_renderer__WEBPACK_IMPORTED_MODULE_1__.RendererProxy.get(eid);
         proxy.allocate(world, renderer);
     });
@@ -55078,6 +55086,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const app = new _src_app__WEBPACK_IMPORTED_MODULE_1__.App();
+document.body.appendChild(app.getCanvas());
 app.registerSystem(_systems_color__WEBPACK_IMPORTED_MODULE_12__.colorSystem, _src_common__WEBPACK_IMPORTED_MODULE_11__.SystemOrder.Render - 1);
 app.registerSystem(_systems_selected_object__WEBPACK_IMPORTED_MODULE_13__.selectedObjectSystem, _src_common__WEBPACK_IMPORTED_MODULE_11__.SystemOrder.Render - 1);
 const world = app.getWorld();

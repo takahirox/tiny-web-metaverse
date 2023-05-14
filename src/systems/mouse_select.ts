@@ -25,8 +25,7 @@ export const mouseSelectSystem = (world: IWorld) => {
       if (e.type === MouseButtonEventType.Down) {
         if (hasComponent(world, Selected, eid)) {
           removeComponent(world, Selected, eid);
-        }
-        if (hasComponent(world, Raycasted, eid)) {
+        } else if (hasComponent(world, Raycasted, eid)) {
           addComponent(world, Selected, eid);
         }
       }

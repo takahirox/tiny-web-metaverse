@@ -73,15 +73,21 @@ type RegisteredSystem = {
 
 export class App {
   private systems: RegisteredSystem[];
+  private canvas: HTMLCanvasElement;
   private world: IWorld;
 
-  constructor(domElement: HTMLElement = document.body) {
+  constructor(canvas?: HTMLCanvasElement) {
+    if (canvas === undefined) {
+      canvas = document.createElement('canvas');
+      canvas.style.display = 'block';
+    }
+    this.canvas = canvas;
     this.systems = [];
     this.world = createWorld();
-    this.init(domElement);
+    this.init();
   }
 
-  private init(domElement: HTMLElement): void {
+  private init(): void {
     // Built-in systems and entities
 
     this.registerSystem(timeSystem, SystemOrder.Time);
@@ -129,10 +135,10 @@ export class App {
     addComponent(this.world, KeyEventHandlerInit, keyEventHandlerEid);
 
     const mouseMoveEventHandlerEid = addEntity(this.world);
-    MouseMoveEventHandlerInitProxy.get(mouseMoveEventHandlerEid).allocate(this.world, domElement);
+    MouseMoveEventHandlerInitProxy.get(mouseMoveEventHandlerEid).allocate(this.world, this.canvas);
 
     const mouseButtonEventHandlerEid = addEntity(this.world);
-    MouseButtonEventHandlerInitProxy.get(mouseButtonEventHandlerEid).allocate(this.world, domElement);
+    MouseButtonEventHandlerInitProxy.get(mouseButtonEventHandlerEid).allocate(this.world, this.canvas);
 
     const resizeEventHandlerEid = addEntity(this.world);
     addComponent(this.world, WindowResizeEventHandlerInit, resizeEventHandlerEid);
@@ -150,7 +156,7 @@ export class App {
     addComponent(this.world, MouseButtonEventListener, avatarMouseControlsEid);
 
     const rendererEid = addEntity(this.world);
-    RendererInitProxy.get(rendererEid).allocate(this.world, {parentDomElement: domElement});
+    RendererInitProxy.get(rendererEid).allocate(this.world, {canvas: this.canvas});
     addComponent(this.world, WindowSize, rendererEid);
     addComponent(this.world, WindowResizeEventListener, rendererEid);
 
@@ -225,6 +231,10 @@ export class App {
       this.tick();
     };
     runTick();
+  }
+
+  getCanvas(): HTMLCanvasElement {
+    return this.canvas;
   }
 
   getWorld(): IWorld {

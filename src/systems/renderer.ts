@@ -33,16 +33,16 @@ export const rendererSystem = (world: IWorld): void => {
 
   initEnterQuery(world).forEach(eid => {
     const initProxy = RendererInitProxy.get(eid);
-    const parentElement = initProxy.parentDomElement;
+    const canvas = initProxy.canvas;
     const width = initProxy.width;
     const height = initProxy.height;
     const pixelRatio = initProxy.pixelRatio;
     initProxy.free(world);
 
-    const renderer = new WebGLRenderer();
+    // TODO: Configurable renderer parameters
+    const renderer = new WebGLRenderer({antialias: true, canvas});
     renderer.setSize(width, height);
     renderer.setPixelRatio(pixelRatio);
-    parentElement.appendChild(renderer.domElement);
 
     const proxy = RendererProxy.get(eid);
     proxy.allocate(world, renderer);
