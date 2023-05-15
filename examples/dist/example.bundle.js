@@ -73,12 +73,11 @@ const selectedEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)(se
 const selectedExitQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)(selectedQuery);
 const selectedObjectSystem = (world) => {
     selectedExitQuery(world).forEach(() => {
-        (0,_ui_side_bar__WEBPACK_IMPORTED_MODULE_3__.updateEid)(_src_common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID);
+        (0,_ui_side_bar__WEBPACK_IMPORTED_MODULE_3__.notifyEid)(_src_common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID);
     });
     selectedEnterQuery(world).forEach(eid => {
-        (0,_ui_side_bar__WEBPACK_IMPORTED_MODULE_3__.updateEid)(eid);
+        (0,_ui_side_bar__WEBPACK_IMPORTED_MODULE_3__.notifyEid)(eid);
     });
-    (0,_ui_side_bar__WEBPACK_IMPORTED_MODULE_3__.update)(world);
 };
 
 
@@ -92,8 +91,8 @@ const selectedObjectSystem = (world) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "update": () => (/* binding */ update),
-/* harmony export */   "updateEid": () => (/* binding */ updateEid)
+/* harmony export */   "notifyEid": () => (/* binding */ notifyEid),
+/* harmony export */   "updateSidebarSystem": () => (/* binding */ updateSidebarSystem)
 /* harmony export */ });
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../src/components/entity_object3d */ "./src/components/entity_object3d.ts");
@@ -103,6 +102,7 @@ __webpack_require__.r(__webpack_exports__);
 
 const vector3Keys = ['x', 'y', 'z'];
 let eid = _src_common__WEBPACK_IMPORTED_MODULE_2__.NULL_EID;
+let needsUpdate = false;
 var PropertyType;
 (function (PropertyType) {
     PropertyType[PropertyType["Position"] = 0] = "Position";
@@ -276,18 +276,24 @@ const { root: scaleRootDiv, spans: scaleSpans, inputs: scaleInputs } = createSca
 div.appendChild(positionRootDiv);
 div.appendChild(rotationRootDiv);
 div.appendChild(scaleRootDiv);
-const updateEid = (newEid) => {
-    eid = newEid;
-    onInputQueue.length = 0;
+const notifyEid = (newEid) => {
+    if (eid !== newEid) {
+        eid = newEid;
+        needsUpdate = true;
+    }
 };
 // TODO: Optimize. Updating each frame even without object update is inefficient.
-const update = (world) => {
+const updateSidebarSystem = (world) => {
     if (eid === _src_common__WEBPACK_IMPORTED_MODULE_2__.NULL_EID) {
-        div.style.display = 'none';
+        if (needsUpdate) {
+            div.style.display = 'none';
+        }
     }
     else {
-        div.style.display = 'block';
-        eidDiv.innerText = `eid: ${eid}`;
+        if (needsUpdate) {
+            div.style.display = 'block';
+            eidDiv.innerText = `eid: ${eid}`;
+        }
         handleOnInputs(world, eid);
         if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3D, eid)) {
             const obj = _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3DProxy.get(eid).root;
@@ -304,6 +310,7 @@ const update = (world) => {
             scaleRootDiv.style.display = 'none';
         }
     }
+    needsUpdate = false;
 };
 
 
@@ -55198,7 +55205,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "app": () => (/* binding */ app)
 /* harmony export */ });
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
 /* harmony import */ var _src_app__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../src/app */ "./src/app.ts");
 /* harmony import */ var _src_components_avatar__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../src/components/avatar */ "./src/components/avatar.ts");
 /* harmony import */ var _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../src/components/entity_object3d */ "./src/components/entity_object3d.ts");
@@ -55212,6 +55219,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _src_common__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../src/common */ "./src/common.ts");
 /* harmony import */ var _systems_color__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../systems/color */ "./examples/systems/color.ts");
 /* harmony import */ var _systems_selected_object__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../systems/selected_object */ "./examples/systems/selected_object.ts");
+/* harmony import */ var _ui_side_bar__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../ui/side_bar */ "./examples/ui/side_bar.ts");
+
 
 
 
@@ -55229,18 +55238,19 @@ __webpack_require__.r(__webpack_exports__);
 
 const app = new _src_app__WEBPACK_IMPORTED_MODULE_1__.App();
 document.body.appendChild(app.getCanvas());
+app.registerSystem(_ui_side_bar__WEBPACK_IMPORTED_MODULE_14__.updateSidebarSystem, _src_common__WEBPACK_IMPORTED_MODULE_11__.SystemOrder.BeforeMatricesUpdate);
 app.registerSystem(_systems_color__WEBPACK_IMPORTED_MODULE_12__.colorSystem, _src_common__WEBPACK_IMPORTED_MODULE_11__.SystemOrder.Render - 1);
 app.registerSystem(_systems_selected_object__WEBPACK_IMPORTED_MODULE_13__.selectedObjectSystem, _src_common__WEBPACK_IMPORTED_MODULE_11__.SystemOrder.Render - 1);
 const world = app.getWorld();
 const gridEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
 (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_scene__WEBPACK_IMPORTED_MODULE_9__.InScene, gridEid);
-_src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__.EntityObject3DProxy.get(gridEid).addObject3D(world, new three__WEBPACK_IMPORTED_MODULE_14__.GridHelper());
+_src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__.EntityObject3DProxy.get(gridEid).addObject3D(world, new three__WEBPACK_IMPORTED_MODULE_15__.GridHelper());
 const avatarEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
 (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_avatar__WEBPACK_IMPORTED_MODULE_2__.Avatar, avatarEid);
 (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_network__WEBPACK_IMPORTED_MODULE_7__.Owned, avatarEid);
 (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_keyboard__WEBPACK_IMPORTED_MODULE_5__.KeyEventListener, avatarEid);
 (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_scene__WEBPACK_IMPORTED_MODULE_9__.InScene, avatarEid);
-_src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__.EntityObject3DProxy.get(avatarEid).addObject3D(world, new three__WEBPACK_IMPORTED_MODULE_14__.Mesh(new three__WEBPACK_IMPORTED_MODULE_14__.BoxGeometry(0.5, 0.5, 0.5), new three__WEBPACK_IMPORTED_MODULE_14__.MeshBasicMaterial({ color: 0x0000ff })));
+_src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__.EntityObject3DProxy.get(avatarEid).addObject3D(world, new three__WEBPACK_IMPORTED_MODULE_15__.Mesh(new three__WEBPACK_IMPORTED_MODULE_15__.BoxGeometry(0.5, 0.5, 0.5), new three__WEBPACK_IMPORTED_MODULE_15__.MeshBasicMaterial({ color: 0x0000ff })));
 _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__.EntityObject3DProxy.get(avatarEid).root.position.set(0.0, 0.25, 2.0);
 const mouseButtonEventEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
 (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_mouse__WEBPACK_IMPORTED_MODULE_6__.MouseButtonEventListener, mouseButtonEventEid);
@@ -55251,7 +55261,7 @@ for (let i = 0; i < 25; i++) {
     (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_grab__WEBPACK_IMPORTED_MODULE_4__.Grabbable, eid);
     (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_select__WEBPACK_IMPORTED_MODULE_10__.Selectable, eid);
     (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_scene__WEBPACK_IMPORTED_MODULE_9__.InScene, eid);
-    _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__.EntityObject3DProxy.get(eid).addObject3D(world, new three__WEBPACK_IMPORTED_MODULE_14__.Mesh(new three__WEBPACK_IMPORTED_MODULE_14__.BoxGeometry(0.5, 0.5, 0.5), new three__WEBPACK_IMPORTED_MODULE_14__.MeshBasicMaterial()));
+    _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__.EntityObject3DProxy.get(eid).addObject3D(world, new three__WEBPACK_IMPORTED_MODULE_15__.Mesh(new three__WEBPACK_IMPORTED_MODULE_15__.BoxGeometry(0.5, 0.5, 0.5), new three__WEBPACK_IMPORTED_MODULE_15__.MeshBasicMaterial()));
     _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__.EntityObject3DProxy.get(eid).root.position.set((Math.random() - 0.5) * 10.0, 0.25, (Math.random() - 0.5) * 10.0);
 }
 app.start();

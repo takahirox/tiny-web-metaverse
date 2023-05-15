@@ -21,10 +21,12 @@ import { Selectable } from "../../src/components/select";
 import { SystemOrder } from "../../src/common";
 import { colorSystem } from "../systems/color";
 import { selectedObjectSystem } from "../systems/selected_object";
+import { updateSidebarSystem } from "../ui/side_bar";
 
 const app = new App();
 document.body.appendChild(app.getCanvas());
 
+app.registerSystem(updateSidebarSystem, SystemOrder.BeforeMatricesUpdate);
 app.registerSystem(colorSystem, SystemOrder.Render - 1);
 app.registerSystem(selectedObjectSystem, SystemOrder.Render - 1);
 

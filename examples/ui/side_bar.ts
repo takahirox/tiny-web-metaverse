@@ -8,6 +8,7 @@ import { NULL_EID } from "../../src/common";
 
 const vector3Keys = ['x', 'y', 'z'] as const;
 let eid = NULL_EID;
+let needsUpdate = false;
 
 enum PropertyType {
   Position,
@@ -271,18 +272,24 @@ div.appendChild(positionRootDiv);
 div.appendChild(rotationRootDiv);
 div.appendChild(scaleRootDiv);
 
-export const updateEid = (newEid: number): void => {
-  eid = newEid;
-  onInputQueue.length = 0;
+export const notifyEid = (newEid: number): void => {
+  if (eid !== newEid) {
+    eid = newEid;
+    needsUpdate = true;
+  }
 };
 
 // TODO: Optimize. Updating each frame even without object update is inefficient.
-export const update = (world: IWorld): void => {
+export const updateSidebarSystem = (world: IWorld): void => {
   if (eid === NULL_EID) {
-    div.style.display = 'none';
+    if (needsUpdate) {
+      div.style.display = 'none';
+    }
   } else {
-    div.style.display = 'block';    
-    eidDiv.innerText = `eid: ${eid}`;
+    if (needsUpdate) {
+      div.style.display = 'block';
+      eidDiv.innerText = `eid: ${eid}`;
+    }
 
     handleOnInputs(world, eid);
 
@@ -301,4 +308,6 @@ export const update = (world: IWorld): void => {
       scaleRootDiv.style.display = 'none';
     }
   }
+
+  needsUpdate = false;
 };
