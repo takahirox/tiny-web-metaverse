@@ -281,7 +281,6 @@ export const notifyEid = (newEid: number): void => {
   }
 };
 
-// TODO: Optimize. Updating each frame even without object update is inefficient.
 export const updateSidebarSystem = (world: IWorld): void => {
   if (eid === NULL_EID) {
     if (needsUpdate) {

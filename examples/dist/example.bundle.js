@@ -285,7 +285,6 @@ const notifyEid = (newEid) => {
         needsUpdate = true;
     }
 };
-// TODO: Optimize. Updating each frame even without object update is inefficient.
 const updateSidebarSystem = (world) => {
     if (eid === _src_common__WEBPACK_IMPORTED_MODULE_3__.NULL_EID) {
         if (needsUpdate) {
