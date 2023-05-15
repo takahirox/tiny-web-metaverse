@@ -58,6 +58,7 @@ import { renderSystem } from "./systems/render";
 import { rendererSystem } from "./systems/renderer";
 import { sceneSystem } from "./systems/scene";
 import { timeSystem } from "./systems/time";
+import { clearTransformUpdatedSystem } from "./systems/transform";
 import { updateMatricesSystem } from "./systems/update_matrices";
 import {
   windowResizeEventHandleSystem,
@@ -104,18 +105,16 @@ export class App {
     this.registerSystem(perspectiveCameraSystem, SystemOrder.Setup);
 
     this.registerSystem(linearMoveSystem, SystemOrder.BeforeMatricesUpdate);
+    this.registerSystem(mouseRaycastSystem, SystemOrder.BeforeMatricesUpdate);
+    this.registerSystem(mouseSelectSystem, SystemOrder.BeforeMatricesUpdate);
+    this.registerSystem(grabSystem, SystemOrder.BeforeMatricesUpdate);
+    this.registerSystem(grabbedObjectsMouseTrackSystem, SystemOrder.BeforeMatricesUpdate);
+    this.registerSystem(avatarKeyControlsSystem, SystemOrder.BeforeMatricesUpdate);
+    this.registerSystem(avatarMouseControlsSystem, SystemOrder.BeforeMatricesUpdate);
 
     this.registerSystem(fpsCameraSystem, SystemOrder.MatricesUpdate - 1);
 
     this.registerSystem(updateMatricesSystem, SystemOrder.MatricesUpdate);
-
-    this.registerSystem(mouseRaycastSystem, SystemOrder.BeforeRender);
-    this.registerSystem(mouseSelectSystem, SystemOrder.BeforeRender);
-    this.registerSystem(grabSystem, SystemOrder.BeforeRender);
-    this.registerSystem(grabbedObjectsMouseTrackSystem, SystemOrder.BeforeRender);
-
-    this.registerSystem(avatarKeyControlsSystem, SystemOrder.BeforeRender);
-    this.registerSystem(avatarMouseControlsSystem, SystemOrder.BeforeRender);
 
     this.registerSystem(renderSystem, SystemOrder.Render);
 
@@ -124,6 +123,7 @@ export class App {
     this.registerSystem(mouseButtonEventClearSystem, SystemOrder.TearDown);
     this.registerSystem(windowResizeEventClearSystem, SystemOrder.TearDown);
     this.registerSystem(clearRaycastedSystem, SystemOrder.TearDown);
+    this.registerSystem(clearTransformUpdatedSystem, SystemOrder.TearDown);
 
     // Entity 0 for null entity
     addEntity(this.world);

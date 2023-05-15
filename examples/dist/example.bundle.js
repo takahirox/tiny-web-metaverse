@@ -96,12 +96,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../src/components/entity_object3d */ "./src/components/entity_object3d.ts");
-/* harmony import */ var _src_common__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../src/common */ "./src/common.ts");
+/* harmony import */ var _src_components_transform__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../src/components/transform */ "./src/components/transform.ts");
+/* harmony import */ var _src_common__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../src/common */ "./src/common.ts");
+
 
 
 
 const vector3Keys = ['x', 'y', 'z'];
-let eid = _src_common__WEBPACK_IMPORTED_MODULE_2__.NULL_EID;
+let eid = _src_common__WEBPACK_IMPORTED_MODULE_3__.NULL_EID;
 let needsUpdate = false;
 var PropertyType;
 (function (PropertyType) {
@@ -175,7 +177,7 @@ const createPositionElement = () => {
         input.max = '10.00';
         input.step = '0.01';
         input.addEventListener('input', () => {
-            if (eid === _src_common__WEBPACK_IMPORTED_MODULE_2__.NULL_EID) {
+            if (eid === _src_common__WEBPACK_IMPORTED_MODULE_3__.NULL_EID) {
                 return;
             }
             onInputQueue.push({
@@ -195,7 +197,7 @@ const createRotationElement = () => {
         input.max = `${Math.PI}`;
         input.step = '0.01';
         input.addEventListener('input', () => {
-            if (eid === _src_common__WEBPACK_IMPORTED_MODULE_2__.NULL_EID) {
+            if (eid === _src_common__WEBPACK_IMPORTED_MODULE_3__.NULL_EID) {
                 return;
             }
             onInputQueue.push({
@@ -216,7 +218,7 @@ const createScaleElement = () => {
         input.max = '10.0';
         input.step = '0.01';
         input.addEventListener('input', () => {
-            if (eid === _src_common__WEBPACK_IMPORTED_MODULE_2__.NULL_EID) {
+            if (eid === _src_common__WEBPACK_IMPORTED_MODULE_3__.NULL_EID) {
                 return;
             }
             onInputQueue.push({
@@ -249,6 +251,7 @@ const handleOnInputs = (world, eid) => {
                     obj.scale[input.key] = input.value;
                     break;
             }
+            (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_transform__WEBPACK_IMPORTED_MODULE_2__.TransformUpdated, eid);
         }
     }
     onInputQueue.length = 0;
@@ -284,7 +287,7 @@ const notifyEid = (newEid) => {
 };
 // TODO: Optimize. Updating each frame even without object update is inefficient.
 const updateSidebarSystem = (world) => {
-    if (eid === _src_common__WEBPACK_IMPORTED_MODULE_2__.NULL_EID) {
+    if (eid === _src_common__WEBPACK_IMPORTED_MODULE_3__.NULL_EID) {
         if (needsUpdate) {
             div.style.display = 'none';
         }
@@ -293,21 +296,24 @@ const updateSidebarSystem = (world) => {
         if (needsUpdate) {
             div.style.display = 'block';
             eidDiv.innerText = `eid: ${eid}`;
+            if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3D, eid)) {
+                positionRootDiv.style.display = 'block';
+                rotationRootDiv.style.display = 'block';
+                scaleRootDiv.style.display = 'block';
+            }
+            else {
+                positionRootDiv.style.display = 'none';
+                rotationRootDiv.style.display = 'none';
+                scaleRootDiv.style.display = 'none';
+            }
         }
         handleOnInputs(world, eid);
-        if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3D, eid)) {
+        if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3D, eid) &&
+            (needsUpdate || (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _src_components_transform__WEBPACK_IMPORTED_MODULE_2__.TransformUpdated, eid))) {
             const obj = _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3DProxy.get(eid).root;
             updateVector3(positionSpans, positionInputs, obj.position);
             updateVector3(rotationSpans, rotationInputs, obj.rotation);
             updateVector3(scaleSpans, scaleInputs, obj.scale);
-            positionRootDiv.style.display = 'block';
-            rotationRootDiv.style.display = 'block';
-            scaleRootDiv.style.display = 'block';
-        }
-        else {
-            positionRootDiv.style.display = 'none';
-            rotationRootDiv.style.display = 'none';
-            scaleRootDiv.style.display = 'none';
         }
     }
     needsUpdate = false;
@@ -327,7 +333,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "App": () => (/* binding */ App)
 /* harmony export */ });
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
 /* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./common */ "./src/common.ts");
 /* harmony import */ var _components_avatar_mouse_controls__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/avatar_mouse_controls */ "./src/components/avatar_mouse_controls.ts");
 /* harmony import */ var _components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/entity_object3d */ "./src/components/entity_object3d.ts");
@@ -357,8 +363,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _systems_renderer__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./systems/renderer */ "./src/systems/renderer.ts");
 /* harmony import */ var _systems_scene__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./systems/scene */ "./src/systems/scene.ts");
 /* harmony import */ var _systems_time__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./systems/time */ "./src/systems/time.ts");
-/* harmony import */ var _systems_update_matrices__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./systems/update_matrices */ "./src/systems/update_matrices.ts");
-/* harmony import */ var _systems_window_resize_event__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./systems/window_resize_event */ "./src/systems/window_resize_event.ts");
+/* harmony import */ var _systems_transform__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./systems/transform */ "./src/systems/transform.ts");
+/* harmony import */ var _systems_update_matrices__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./systems/update_matrices */ "./src/systems/update_matrices.ts");
+/* harmony import */ var _systems_window_resize_event__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./systems/window_resize_event */ "./src/systems/window_resize_event.ts");
+
 
 
 
@@ -409,26 +417,27 @@ class App {
         this.registerSystem(_systems_keyboard_event__WEBPACK_IMPORTED_MODULE_17__.keyEventHandleSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.EventHandling);
         this.registerSystem(_systems_mouse_move_event__WEBPACK_IMPORTED_MODULE_20__.mouseMoveEventHandleSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.EventHandling);
         this.registerSystem(_systems_mouse_button_event__WEBPACK_IMPORTED_MODULE_19__.mouseButtonEventHandleSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.EventHandling);
-        this.registerSystem(_systems_window_resize_event__WEBPACK_IMPORTED_MODULE_31__.windowResizeEventHandleSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.EventHandling);
+        this.registerSystem(_systems_window_resize_event__WEBPACK_IMPORTED_MODULE_32__.windowResizeEventHandleSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.EventHandling);
         this.registerSystem(_systems_mouse_position_track__WEBPACK_IMPORTED_MODULE_21__.mousePositionTrackSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.EventHandling + 1);
         this.registerSystem(_systems_renderer__WEBPACK_IMPORTED_MODULE_27__.rendererSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.Setup);
         this.registerSystem(_systems_scene__WEBPACK_IMPORTED_MODULE_28__.sceneSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.Setup);
         this.registerSystem(_systems_perspective_camera__WEBPACK_IMPORTED_MODULE_24__.perspectiveCameraSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.Setup);
         this.registerSystem(_systems_linear_move__WEBPACK_IMPORTED_MODULE_18__.linearMoveSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.BeforeMatricesUpdate);
+        this.registerSystem(_systems_mouse_raycast__WEBPACK_IMPORTED_MODULE_22__.mouseRaycastSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.BeforeMatricesUpdate);
+        this.registerSystem(_systems_mouse_select__WEBPACK_IMPORTED_MODULE_23__.mouseSelectSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.BeforeMatricesUpdate);
+        this.registerSystem(_systems_grab__WEBPACK_IMPORTED_MODULE_15__.grabSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.BeforeMatricesUpdate);
+        this.registerSystem(_systems_grab_mouse_track__WEBPACK_IMPORTED_MODULE_16__.grabbedObjectsMouseTrackSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.BeforeMatricesUpdate);
+        this.registerSystem(_systems_avatar_key_controls__WEBPACK_IMPORTED_MODULE_12__.avatarKeyControlsSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.BeforeMatricesUpdate);
+        this.registerSystem(_systems_avatar_mouse_controls__WEBPACK_IMPORTED_MODULE_13__.avatarMouseControlsSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.BeforeMatricesUpdate);
         this.registerSystem(_systems_fps_camera__WEBPACK_IMPORTED_MODULE_14__.fpsCameraSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.MatricesUpdate - 1);
-        this.registerSystem(_systems_update_matrices__WEBPACK_IMPORTED_MODULE_30__.updateMatricesSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.MatricesUpdate);
-        this.registerSystem(_systems_mouse_raycast__WEBPACK_IMPORTED_MODULE_22__.mouseRaycastSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.BeforeRender);
-        this.registerSystem(_systems_mouse_select__WEBPACK_IMPORTED_MODULE_23__.mouseSelectSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.BeforeRender);
-        this.registerSystem(_systems_grab__WEBPACK_IMPORTED_MODULE_15__.grabSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.BeforeRender);
-        this.registerSystem(_systems_grab_mouse_track__WEBPACK_IMPORTED_MODULE_16__.grabbedObjectsMouseTrackSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.BeforeRender);
-        this.registerSystem(_systems_avatar_key_controls__WEBPACK_IMPORTED_MODULE_12__.avatarKeyControlsSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.BeforeRender);
-        this.registerSystem(_systems_avatar_mouse_controls__WEBPACK_IMPORTED_MODULE_13__.avatarMouseControlsSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.BeforeRender);
+        this.registerSystem(_systems_update_matrices__WEBPACK_IMPORTED_MODULE_31__.updateMatricesSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.MatricesUpdate);
         this.registerSystem(_systems_render__WEBPACK_IMPORTED_MODULE_26__.renderSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.Render);
         this.registerSystem(_systems_keyboard_event__WEBPACK_IMPORTED_MODULE_17__.keyEventClearSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.TearDown);
         this.registerSystem(_systems_mouse_move_event__WEBPACK_IMPORTED_MODULE_20__.mouseMoveEventClearSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.TearDown);
         this.registerSystem(_systems_mouse_button_event__WEBPACK_IMPORTED_MODULE_19__.mouseButtonEventClearSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.TearDown);
-        this.registerSystem(_systems_window_resize_event__WEBPACK_IMPORTED_MODULE_31__.windowResizeEventClearSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.TearDown);
+        this.registerSystem(_systems_window_resize_event__WEBPACK_IMPORTED_MODULE_32__.windowResizeEventClearSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.TearDown);
         this.registerSystem(_systems_raycast__WEBPACK_IMPORTED_MODULE_25__.clearRaycastedSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.TearDown);
+        this.registerSystem(_systems_transform__WEBPACK_IMPORTED_MODULE_30__.clearTransformUpdatedSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.TearDown);
         // Entity 0 for null entity
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
         const timeEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
@@ -446,7 +455,7 @@ class App {
         _components_mouse__WEBPACK_IMPORTED_MODULE_4__.PreviousMousePositionProxy.get(mousePositionEid).allocate(this.world);
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_mouse__WEBPACK_IMPORTED_MODULE_4__.MouseMoveEventListener, mousePositionEid);
         const raycasterEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
-        _components_raycast__WEBPACK_IMPORTED_MODULE_9__.RaycasterProxy.get(raycasterEid).allocate(this.world, new three__WEBPACK_IMPORTED_MODULE_32__.Raycaster());
+        _components_raycast__WEBPACK_IMPORTED_MODULE_9__.RaycasterProxy.get(raycasterEid).allocate(this.world, new three__WEBPACK_IMPORTED_MODULE_33__.Raycaster());
         const avatarMouseControlsEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
         _components_avatar_mouse_controls__WEBPACK_IMPORTED_MODULE_2__.AvatarMouseControlsProxy.get(avatarMouseControlsEid).allocate(this.world);
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_mouse__WEBPACK_IMPORTED_MODULE_4__.MouseButtonEventListener, avatarMouseControlsEid);
@@ -1553,6 +1562,23 @@ TimeProxy.instance = new TimeProxy();
 
 /***/ }),
 
+/***/ "./src/components/transform.ts":
+/*!*************************************!*\
+  !*** ./src/components/transform.ts ***!
+  \*************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "TransformUpdated": () => (/* binding */ TransformUpdated)
+/* harmony export */ });
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+
+const TransformUpdated = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+
+
+/***/ }),
+
 /***/ "./src/components/window_resize.ts":
 /*!*****************************************!*\
   !*** ./src/components/window_resize.ts ***!
@@ -1692,7 +1718,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "avatarMouseControlsSystem": () => (/* binding */ avatarMouseControlsSystem)
 /* harmony export */ });
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
 /* harmony import */ var _components_avatar__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/avatar */ "./src/components/avatar.ts");
 /* harmony import */ var _components_avatar_mouse_controls__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/avatar_mouse_controls */ "./src/components/avatar_mouse_controls.ts");
 /* harmony import */ var _components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/entity_object3d */ "./src/components/entity_object3d.ts");
@@ -1700,6 +1726,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_mouse__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/mouse */ "./src/components/mouse.ts");
 /* harmony import */ var _components_network__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../components/network */ "./src/components/network.ts");
 /* harmony import */ var _components_raycast__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../components/raycast */ "./src/components/raycast.ts");
+/* harmony import */ var _components_transform__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../components/transform */ "./src/components/transform.ts");
 
 
 
@@ -1709,7 +1736,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const euler = new three__WEBPACK_IMPORTED_MODULE_8__.Euler(0, 0, 0, 'YXZ');
+
+const euler = new three__WEBPACK_IMPORTED_MODULE_9__.Euler(0, 0, 0, 'YXZ');
 const controlsQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_avatar_mouse_controls__WEBPACK_IMPORTED_MODULE_2__.AvatarMouseControls]);
 const avatarQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_avatar__WEBPACK_IMPORTED_MODULE_1__.Avatar, _components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__.EntityObject3D, _components_network__WEBPACK_IMPORTED_MODULE_6__.Owned]);
 const mouseQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_mouse__WEBPACK_IMPORTED_MODULE_5__.MousePosition, _components_mouse__WEBPACK_IMPORTED_MODULE_5__.PreviousMousePosition]);
@@ -1763,6 +1791,7 @@ const avatarMouseControlsSystem = (world) => {
                 euler.x = Math.max(PI_2 - MAX_POLAR_ANGLE, Math.min(PI_2 - MIN_POLAR_ANGLE, euler.x));
                 avatar.quaternion.setFromEuler(euler);
             });
+            (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_transform__WEBPACK_IMPORTED_MODULE_8__.TransformUpdated, avatarEid);
         });
     });
 };
@@ -1867,12 +1896,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "grabbedObjectsMouseTrackSystem": () => (/* binding */ grabbedObjectsMouseTrackSystem)
 /* harmony export */ });
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
 /* harmony import */ var _components_camera__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/camera */ "./src/components/camera.ts");
 /* harmony import */ var _components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/entity_object3d */ "./src/components/entity_object3d.ts");
 /* harmony import */ var _components_grab__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/grab */ "./src/components/grab.ts");
 /* harmony import */ var _components_mouse__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/mouse */ "./src/components/mouse.ts");
 /* harmony import */ var _components_scene__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/scene */ "./src/components/scene.ts");
+/* harmony import */ var _components_transform__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../components/transform */ "./src/components/transform.ts");
 
 
 
@@ -1880,7 +1910,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const ray = new three__WEBPACK_IMPORTED_MODULE_6__.Ray();
+
+const ray = new three__WEBPACK_IMPORTED_MODULE_7__.Ray();
 const cameraQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_camera__WEBPACK_IMPORTED_MODULE_1__.PerspectiveCameraTag, _components_camera__WEBPACK_IMPORTED_MODULE_1__.SceneCamera]);
 const mouseQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_mouse__WEBPACK_IMPORTED_MODULE_4__.MousePosition]);
 const grabbedQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__.EntityObject3D, _components_grab__WEBPACK_IMPORTED_MODULE_3__.Grabbed, _components_scene__WEBPACK_IMPORTED_MODULE_5__.InScene]);
@@ -1899,6 +1930,7 @@ const grabbedObjectsMouseTrackSystem = (world) => {
                     .position.copy(ray.direction)
                     .multiplyScalar(_components_grab__WEBPACK_IMPORTED_MODULE_3__.Grabbed.distance[grabbedEid])
                     .add(ray.origin);
+                (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_transform__WEBPACK_IMPORTED_MODULE_6__.TransformUpdated, grabbedEid);
             });
         });
     });
@@ -1971,23 +2003,26 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "linearMoveSystem": () => (/* binding */ linearMoveSystem)
 /* harmony export */ });
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
 /* harmony import */ var _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/entity_object3d */ "./src/components/entity_object3d.ts");
 /* harmony import */ var _components_linear_move__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/linear_move */ "./src/components/linear_move.ts");
 /* harmony import */ var _components_time__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/time */ "./src/components/time.ts");
+/* harmony import */ var _components_transform__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/transform */ "./src/components/transform.ts");
 
 
 
 
 
-const vec3 = new three__WEBPACK_IMPORTED_MODULE_4__.Vector3();
-const move = (eid, direction, speed, delta) => {
+
+const vec3 = new three__WEBPACK_IMPORTED_MODULE_5__.Vector3();
+const move = (world, eid, direction, speed, delta) => {
     const obj = _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3DProxy.get(eid).root;
     obj.position.add(direction
         .applyQuaternion(obj.quaternion)
         .setY(0)
         .normalize()
         .multiplyScalar(speed * delta));
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_transform__WEBPACK_IMPORTED_MODULE_4__.TransformUpdated, eid);
 };
 const timeQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_time__WEBPACK_IMPORTED_MODULE_3__.Time]);
 const backwardQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3D, _components_linear_move__WEBPACK_IMPORTED_MODULE_2__.LinearMoveBackward]);
@@ -1998,16 +2033,16 @@ const linearMoveSystem = (world) => {
     timeQuery(world).forEach(timeEid => {
         const delta = _components_time__WEBPACK_IMPORTED_MODULE_3__.TimeProxy.get(timeEid).delta;
         backwardQuery(world).forEach(eid => {
-            move(eid, vec3.set(0, 0, 1), _components_linear_move__WEBPACK_IMPORTED_MODULE_2__.LinearMoveBackward.speed[eid], delta);
+            move(world, eid, vec3.set(0, 0, 1), _components_linear_move__WEBPACK_IMPORTED_MODULE_2__.LinearMoveBackward.speed[eid], delta);
         });
         forwardQuery(world).forEach(eid => {
-            move(eid, vec3.set(0, 0, -1), _components_linear_move__WEBPACK_IMPORTED_MODULE_2__.LinearMoveForward.speed[eid], delta);
+            move(world, eid, vec3.set(0, 0, -1), _components_linear_move__WEBPACK_IMPORTED_MODULE_2__.LinearMoveForward.speed[eid], delta);
         });
         leftQuery(world).forEach(eid => {
-            move(eid, vec3.set(-1, 0, 0), _components_linear_move__WEBPACK_IMPORTED_MODULE_2__.LinearMoveLeft.speed[eid], delta);
+            move(world, eid, vec3.set(-1, 0, 0), _components_linear_move__WEBPACK_IMPORTED_MODULE_2__.LinearMoveLeft.speed[eid], delta);
         });
         rightQuery(world).forEach(eid => {
-            move(eid, vec3.set(1, 0, 0), _components_linear_move__WEBPACK_IMPORTED_MODULE_2__.LinearMoveRight.speed[eid], delta);
+            move(world, eid, vec3.set(1, 0, 0), _components_linear_move__WEBPACK_IMPORTED_MODULE_2__.LinearMoveRight.speed[eid], delta);
         });
     });
 };
@@ -2524,6 +2559,30 @@ const timeSystem = (world) => {
         const delta = clock.getDelta();
         proxy.delta = delta;
         proxy.elapsed += delta;
+    });
+};
+
+
+/***/ }),
+
+/***/ "./src/systems/transform.ts":
+/*!**********************************!*\
+  !*** ./src/systems/transform.ts ***!
+  \**********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "clearTransformUpdatedSystem": () => (/* binding */ clearTransformUpdatedSystem)
+/* harmony export */ });
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var _components_transform__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/transform */ "./src/components/transform.ts");
+
+
+const updatedQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_transform__WEBPACK_IMPORTED_MODULE_1__.TransformUpdated]);
+const clearTransformUpdatedSystem = (world) => {
+    updatedQuery(world).forEach(eid => {
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_transform__WEBPACK_IMPORTED_MODULE_1__.TransformUpdated, eid);
     });
 };
 

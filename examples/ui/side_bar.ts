@@ -1,9 +1,10 @@
-import { hasComponent, IWorld } from "bitecs";
+import { addComponent, hasComponent, IWorld } from "bitecs";
 import { Euler, Vector3 } from "three";
 import {
   EntityObject3D,
   EntityObject3DProxy
 } from "../../src/components/entity_object3d";
+import { TransformUpdated } from "../../src/components/transform";
 import { NULL_EID } from "../../src/common";
 
 const vector3Keys = ['x', 'y', 'z'] as const;
@@ -226,6 +227,7 @@ const handleOnInputs = (world: IWorld, eid: number) => {
           obj.scale[input.key] = input.value;
           break;
       }
+      addComponent(world, TransformUpdated, eid);
     }
   }
   onInputQueue.length = 0;
@@ -289,23 +291,26 @@ export const updateSidebarSystem = (world: IWorld): void => {
     if (needsUpdate) {
       div.style.display = 'block';
       eidDiv.innerText = `eid: ${eid}`;
+
+      if (hasComponent(world, EntityObject3D, eid)) {
+        positionRootDiv.style.display = 'block';
+        rotationRootDiv.style.display = 'block';
+        scaleRootDiv.style.display = 'block';
+      } else {
+        positionRootDiv.style.display = 'none';
+        rotationRootDiv.style.display = 'none';
+        scaleRootDiv.style.display = 'none';
+      }
     }
 
     handleOnInputs(world, eid);
 
-    if (hasComponent(world, EntityObject3D, eid)) {
+    if (hasComponent(world, EntityObject3D, eid) &&
+      (needsUpdate || hasComponent(world, TransformUpdated, eid))) {
       const obj = EntityObject3DProxy.get(eid).root;
       updateVector3(positionSpans, positionInputs, obj.position);
       updateVector3(rotationSpans, rotationInputs, obj.rotation);
       updateVector3(scaleSpans, scaleInputs, obj.scale);
-
-      positionRootDiv.style.display = 'block';
-      rotationRootDiv.style.display = 'block';
-      scaleRootDiv.style.display = 'block';
-    } else {
-      positionRootDiv.style.display = 'none';
-      rotationRootDiv.style.display = 'none';
-      scaleRootDiv.style.display = 'none';
     }
   }
 

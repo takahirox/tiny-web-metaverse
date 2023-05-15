@@ -1,4 +1,4 @@
-import { defineQuery, IWorld } from "bitecs";
+import { addComponent, defineQuery, IWorld } from "bitecs";
 import { Ray } from "three";
 import {
   PerspectiveCameraProxy,
@@ -15,6 +15,7 @@ import {
   MousePositionProxy
 } from "../components/mouse";
 import { InScene } from "../components/scene";
+import { TransformUpdated } from "../components/transform";
 
 const ray = new Ray();
 
@@ -41,6 +42,7 @@ export const grabbedObjectsMouseTrackSystem = (world: IWorld) => {
           .position.copy(ray.direction)
           .multiplyScalar(Grabbed.distance[grabbedEid])
           .add(ray.origin);
+        addComponent(world, TransformUpdated, grabbedEid);
       });
     });
   });

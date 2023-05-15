@@ -1,4 +1,4 @@
-import { defineQuery, IWorld } from "bitecs";
+import { addComponent, defineQuery, IWorld } from "bitecs";
 import { Vector3 } from "three";
 import {
   EntityObject3D,
@@ -11,10 +11,17 @@ import {
   LinearMoveRight
 } from "../components/linear_move";
 import { Time, TimeProxy } from "../components/time";
+import { TransformUpdated } from "../components/transform";
 
 const vec3 = new Vector3();
 
-const move = (eid: number, direction: Vector3, speed: number, delta: number): void => {
+const move = (
+  world: IWorld,
+  eid: number,
+  direction: Vector3,
+  speed: number,
+  delta: number
+): void => {
   const obj = EntityObject3DProxy.get(eid).root;
   obj.position.add(
     direction
@@ -23,6 +30,7 @@ const move = (eid: number, direction: Vector3, speed: number, delta: number): vo
       .normalize()
       .multiplyScalar(speed * delta)
   );
+  addComponent(world, TransformUpdated, eid);
 };
 
 const timeQuery = defineQuery([Time]);
@@ -35,19 +43,19 @@ export const linearMoveSystem = (world: IWorld) => {
     const delta = TimeProxy.get(timeEid).delta;
 
     backwardQuery(world).forEach(eid => {
-      move(eid, vec3.set(0, 0, 1), LinearMoveBackward.speed[eid], delta);
+      move(world, eid, vec3.set(0, 0, 1), LinearMoveBackward.speed[eid], delta);
     });
 
     forwardQuery(world).forEach(eid => {
-      move(eid, vec3.set(0, 0, -1), LinearMoveForward.speed[eid], delta);
+      move(world, eid, vec3.set(0, 0, -1), LinearMoveForward.speed[eid], delta);
     });
 
     leftQuery(world).forEach(eid => {
-      move(eid, vec3.set(-1, 0, 0), LinearMoveLeft.speed[eid], delta);
+      move(world, eid, vec3.set(-1, 0, 0), LinearMoveLeft.speed[eid], delta);
     });
 
     rightQuery(world).forEach(eid => {
-      move(eid, vec3.set(1, 0, 0), LinearMoveRight.speed[eid], delta);
+      move(world, eid, vec3.set(1, 0, 0), LinearMoveRight.speed[eid], delta);
     });
   });
 };

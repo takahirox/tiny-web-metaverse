@@ -1,4 +1,4 @@
-import { defineQuery, hasComponent, IWorld } from "bitecs";
+import { addComponent, defineQuery, hasComponent, IWorld } from "bitecs";
 import { Euler } from "three";
 import { Avatar } from "../components/avatar";
 import {
@@ -22,6 +22,7 @@ import {
 } from "../components/mouse";
 import { Owned } from "../components/network";
 import { Raycasted } from "../components/raycast";
+import { TransformUpdated } from "../components/transform";
 
 const euler = new Euler(0, 0, 0, 'YXZ');
 
@@ -87,6 +88,8 @@ export const avatarMouseControlsSystem = (world: IWorld) => {
         euler.x = Math.max(PI_2 - MAX_POLAR_ANGLE, Math.min(PI_2 - MIN_POLAR_ANGLE, euler.x));
         avatar.quaternion.setFromEuler(euler);
       });
+
+      addComponent(world, TransformUpdated, avatarEid);
     });
   });
 };
