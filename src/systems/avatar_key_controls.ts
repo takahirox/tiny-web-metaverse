@@ -7,12 +7,12 @@ import {
   LinearMoveLeft,
   LinearMoveRight
 } from "../components/linear_move";
-import { Owned } from "../components/network";
+import { Local } from "../components/network";
 
 const eventQuery = defineQuery([
   Avatar,
   KeyEvent,
-  Owned
+  Local
 ]);
 
 export const avatarKeyControlsSystem = (world: IWorld) => {

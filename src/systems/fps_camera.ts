@@ -9,9 +9,9 @@ import {
   EntityObject3D,
   EntityObject3DProxy
 } from "../components/entity_object3d";
-import { Owned } from "../components/network";
+import { Local } from "../components/network";
 
-const avatarQuery = defineQuery([Avatar, EntityObject3D, Owned]);
+const avatarQuery = defineQuery([Avatar, EntityObject3D, Local]);
 const cameraQuery = defineQuery([FpsCamera, PerspectiveCameraTag]);
 export const fpsCameraSystem = (world: IWorld) => {
   const avatarEids = avatarQuery(world);

@@ -14,7 +14,7 @@ import { EntityObject3DProxy } from "../../src/components/entity_object3d";
 import { Grabbable } from "../../src/components/grab";
 import { KeyEventListener } from "../../src/components/keyboard";
 import { MouseButtonEventListener } from "../../src/components/mouse";
-import { Owned } from "../../src/components/network";
+import { Local } from "../../src/components/network";
 import { Raycastable } from "../../src/components/raycast";
 import { InScene } from "../../src/components/scene";
 import { Selectable } from "../../src/components/select";
@@ -38,7 +38,7 @@ EntityObject3DProxy.get(gridEid).addObject3D(world, new GridHelper());
 
 const avatarEid = addEntity(world);
 addComponent(world, Avatar, avatarEid);
-addComponent(world, Owned, avatarEid);
+addComponent(world, Local, avatarEid);
 addComponent(world, KeyEventListener, avatarEid);
 addComponent(world, InScene, avatarEid);
 EntityObject3DProxy.get(avatarEid).addObject3D(world, new Mesh(

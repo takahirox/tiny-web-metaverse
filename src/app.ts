@@ -4,7 +4,7 @@ import {
   createWorld,
   IWorld
 } from "bitecs";
-import { Raycaster } from "three";
+import { MathUtils, Raycaster } from "three";
 import { SystemOrder } from "./common";
 import { AvatarMouseControlsProxy } from "./components/avatar_mouse_controls";
 import { EntityObject3DProxy } from "./components/entity_object3d";
@@ -17,6 +17,7 @@ import {
   PreviousMousePositionProxy
 } from "./components/mouse";
 import { KeyEventHandlerInit } from "./components/keyboard";
+import { NetworkEventReceiverInitProxy } from "./components/network";
 import { RendererInitProxy } from "./components/renderer";
 import { InScene, SceneInitProxy } from "./components/scene";
 import {
@@ -52,6 +53,8 @@ import {
 import { mousePositionTrackSystem } from "./systems/mouse_position_track";
 import { mouseRaycastSystem } from "./systems/mouse_raycast";
 import { mouseSelectSystem } from "./systems/mouse_select";
+import { networkEventClearSystem, networkEventHandleSystem } from "./systems/network_event";
+import { networkSendSystem } from "./systems/network_send";
 import { perspectiveCameraSystem } from "./systems/perspective_camera";
 import { clearRaycastedSystem } from "./systems/raycast";
 import { renderSystem } from "./systems/render";
@@ -64,6 +67,7 @@ import {
   windowResizeEventHandleSystem,
   windowResizeEventClearSystem
 } from "./systems/window_resize_event";
+import { PhoenixAdapter } from "./utils/phoenix_adapter";
 
 type System = (world: IWorld) => void;
 
@@ -72,19 +76,30 @@ type RegisteredSystem = {
   orderPriority: number;
 };
 
+const createCanvas = (): HTMLCanvasElement => {
+  const canvas = document.createElement('canvas');
+  canvas.style.display = 'block';
+  return canvas;
+};
+
 export class App {
   private systems: RegisteredSystem[];
   private canvas: HTMLCanvasElement;
   private world: IWorld;
+  private adapter: PhoenixAdapter;
+  readonly userId: string;
 
-  constructor(canvas?: HTMLCanvasElement) {
-    if (canvas === undefined) {
-      canvas = document.createElement('canvas');
-      canvas.style.display = 'block';
-    }
+  constructor(params: {
+    canvas?: HTMLCanvasElement,
+    userId?: string
+  } = {}) {
+    const canvas = params.canvas || createCanvas();
+    const userId = params.userId || MathUtils.generateUUID();
+
     this.canvas = canvas;
     this.systems = [];
     this.world = createWorld();
+    this.adapter = new PhoenixAdapter({userId});
     this.init();
   }
 
@@ -97,6 +112,7 @@ export class App {
     this.registerSystem(mouseMoveEventHandleSystem, SystemOrder.EventHandling);
     this.registerSystem(mouseButtonEventHandleSystem, SystemOrder.EventHandling);
     this.registerSystem(windowResizeEventHandleSystem, SystemOrder.EventHandling);
+    this.registerSystem(networkEventHandleSystem, SystemOrder.EventHandling);
 
     this.registerSystem(mousePositionTrackSystem, SystemOrder.EventHandling + 1);
 
@@ -113,6 +129,7 @@ export class App {
     this.registerSystem(avatarMouseControlsSystem, SystemOrder.BeforeMatricesUpdate);
 
     this.registerSystem(fpsCameraSystem, SystemOrder.MatricesUpdate - 1);
+    this.registerSystem(networkSendSystem, SystemOrder.MatricesUpdate - 1);
 
     this.registerSystem(updateMatricesSystem, SystemOrder.MatricesUpdate);
 
@@ -122,6 +139,7 @@ export class App {
     this.registerSystem(mouseMoveEventClearSystem, SystemOrder.TearDown);
     this.registerSystem(mouseButtonEventClearSystem, SystemOrder.TearDown);
     this.registerSystem(windowResizeEventClearSystem, SystemOrder.TearDown);
+    this.registerSystem(networkEventClearSystem, SystemOrder.TearDown);
     this.registerSystem(clearRaycastedSystem, SystemOrder.TearDown);
     this.registerSystem(clearTransformUpdatedSystem, SystemOrder.TearDown);
 
@@ -142,6 +160,9 @@ export class App {
 
     const resizeEventHandlerEid = addEntity(this.world);
     addComponent(this.world, WindowResizeEventHandlerInit, resizeEventHandlerEid);
+
+    const networkEventReceiverEid = addEntity(this.world);
+    NetworkEventReceiverInitProxy.get(networkEventReceiverEid).allocate(this.world, this.adapter);
 
     const mousePositionEid = addEntity(this.world);
     MousePositionProxy.get(mousePositionEid).allocate(this.world);

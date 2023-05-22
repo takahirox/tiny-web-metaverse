@@ -7,7 +7,7 @@ import {
 } from "../components/avatar_mouse_controls";
 import {
   EntityObject3D,
-  EntityObject3DProxy
+  EntityObject3DProxy,
 } from "../components/entity_object3d";
 import { Grabbed } from "../components/grab";
 import {
@@ -20,14 +20,14 @@ import {
   PreviousMousePosition,
   PreviousMousePositionProxy
 } from "../components/mouse";
-import { Owned } from "../components/network";
+import { Local } from "../components/network";
 import { Raycasted } from "../components/raycast";
 import { TransformUpdated } from "../components/transform";
 
 const euler = new Euler(0, 0, 0, 'YXZ');
 
 const controlsQuery = defineQuery([AvatarMouseControls]);
-const avatarQuery = defineQuery([Avatar, EntityObject3D, Owned]);
+const avatarQuery = defineQuery([Avatar, EntityObject3D, Local]);
 const mouseQuery = defineQuery([MousePosition, PreviousMousePosition]);
 const raycastedQuery = defineQuery([Raycasted]);
 const grabbedQuery = defineQuery([Grabbed]);

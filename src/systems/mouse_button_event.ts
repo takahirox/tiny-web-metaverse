@@ -65,6 +65,7 @@ export const mouseButtonEventHandleSystem = (world: IWorld) => {
     proxy.free(world);
 
     const mousedownListener = (event: MouseEvent): void => {
+      // TODO: May need to check world is still alive?
       listenerQuery(world).forEach(eid => {
         addMouseButtonEvent(world, eid, MouseButtonEventType.Down, event);
       });
