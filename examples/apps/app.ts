@@ -14,13 +14,17 @@ import { EntityObject3DProxy } from "../../src/components/entity_object3d";
 import { Grabbable } from "../../src/components/grab";
 import { KeyEventListener } from "../../src/components/keyboard";
 import { MouseButtonEventListener } from "../../src/components/mouse";
-import { Local } from "../../src/components/network";
+import {
+  Local,
+  UserNetworkEventListener
+} from "../../src/components/network";
 import { Raycastable } from "../../src/components/raycast";
 import { InScene } from "../../src/components/scene";
 import { Selectable } from "../../src/components/select";
 import { SystemOrder } from "../../src/common";
 import { colorSystem } from "../systems/color";
 import { selectedObjectSystem } from "../systems/selected_object";
+import { userEventSystem } from "../systems/user";
 import { updateSidebarSystem } from "../ui/side_bar";
 
 const app = new App();
@@ -29,6 +33,7 @@ document.body.appendChild(app.getCanvas());
 app.registerSystem(updateSidebarSystem, SystemOrder.BeforeMatricesUpdate);
 app.registerSystem(colorSystem, SystemOrder.Render - 1);
 app.registerSystem(selectedObjectSystem, SystemOrder.Render - 1);
+app.registerSystem(userEventSystem, SystemOrder.Render - 1);
 
 const world = app.getWorld();
 
@@ -49,6 +54,9 @@ EntityObject3DProxy.get(avatarEid).root.position.set(0.0, 0.25, 2.0);
 
 const mouseButtonEventEid = addEntity(world);
 addComponent(world, MouseButtonEventListener, mouseButtonEventEid);
+
+const userNetworkEventEid = addEntity(world);
+addComponent(world, UserNetworkEventListener, userNetworkEventEid);
 
 for (let i = 0; i < 25; i++) {
   const eid = addEntity(world);

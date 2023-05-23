@@ -54,7 +54,10 @@ import { mousePositionTrackSystem } from "./systems/mouse_position_track";
 import { mouseRaycastSystem } from "./systems/mouse_raycast";
 import { mouseSelectSystem } from "./systems/mouse_select";
 import { networkEventClearSystem, networkEventHandleSystem } from "./systems/network_event";
-import { networkSendSystem } from "./systems/network_send";
+import {
+  networkSendQueueClearSystem,
+  networkSendSystem
+} from "./systems/network_send";
 import { perspectiveCameraSystem } from "./systems/perspective_camera";
 import { clearRaycastedSystem } from "./systems/raycast";
 import { renderSystem } from "./systems/render";
@@ -140,6 +143,7 @@ export class App {
     this.registerSystem(mouseButtonEventClearSystem, SystemOrder.TearDown);
     this.registerSystem(windowResizeEventClearSystem, SystemOrder.TearDown);
     this.registerSystem(networkEventClearSystem, SystemOrder.TearDown);
+    this.registerSystem(networkSendQueueClearSystem, SystemOrder.TearDown);
     this.registerSystem(clearRaycastedSystem, SystemOrder.TearDown);
     this.registerSystem(clearTransformUpdatedSystem, SystemOrder.TearDown);
 

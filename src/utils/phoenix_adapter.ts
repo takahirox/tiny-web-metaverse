@@ -20,7 +20,7 @@ export class PhoenixAdapter {
     const socket = new Socket(url, {});
     socket.connect();
 
-    // TODO: Resolve user id conflicts
+    // TODO: Resolve user id conflicts. Generate UUID in server side?
     this.channel = socket.channel(topic, {user_id: userId});
     this.channel.join()
       .receive('ok', res => {
@@ -51,5 +51,10 @@ export class PhoenixAdapter {
     const ref = this.eventListenerMap.get(name);
     this.channel.off(name, ref);
     this.eventListenerMap.delete(name);
+  }
+
+  // TODO: Avoid any
+  push(name: string, data: any): void {
+    this.channel.push(name, data);
   }
 }
