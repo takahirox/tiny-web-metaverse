@@ -1,3 +1,5 @@
+import { IWorld } from "bitecs";
+
 export const NULL_EID = 0;
 
 export const SystemOrder = Object.freeze({
@@ -12,3 +14,10 @@ export const SystemOrder = Object.freeze({
   PostProcess: 800,
   TearDown: 900
 });
+
+// TODO: Avoid object
+export type Prefab = (world: IWorld, params: object) => number;
+export type PrefabMap = Map<string, Prefab>;
+
+// Ugh... Is passing prefabs good design?
+export type System = (world: IWorld, prefabs: Map<string, Prefab>) => void;

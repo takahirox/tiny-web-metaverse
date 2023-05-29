@@ -24,11 +24,10 @@ export const fpsCameraSystem = (world: IWorld) => {
     cameraEids.forEach(cameraEid => {
       const camera = PerspectiveCameraProxy.get(cameraEid).camera;
       // TODO: Optimize
-      camera.matrixWorld.identity();
+      camera.matrix.identity();
       // TODO: Remove magic number
-      camera.matrixWorld.elements[14] = -0.1;
-      camera.matrixWorld.multiply(avatar.matrixWorld);
-      camera.matrix.copy(camera.matrixWorld);
+      camera.matrix.elements[14] = -0.2;
+      camera.matrix.premultiply(avatar.matrix);
       camera.matrix.decompose(camera.position, camera.quaternion, camera.scale);
     });
   });

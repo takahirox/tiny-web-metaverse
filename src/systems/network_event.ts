@@ -4,13 +4,15 @@ import {
   removeComponent
 } from "bitecs";
 import {
+  ComponentNetworkEventListener,
+  EntityNetworkEventListener,
+  NetworkAdapter,
+  NetworkAdapterProxy,
   NetworkEvent,
   NetworkEventProxy,
   NetworkEventReceiver,
   NetworkEventReceiverDestroy,
   NetworkEventReceiverInit,
-  NetworkEventReceiverInitProxy,
-  NetworkEventReceiverProxy,
   NetworkMessageType,
   UserNetworkEventListener
 } from "../components/network";
@@ -18,7 +20,10 @@ import {
 const initQuery = defineQuery([NetworkEventReceiverInit]);
 const destroyQuery = defineQuery([NetworkEventReceiver, NetworkEventReceiverDestroy]);
 const userListenerQuery = defineQuery([UserNetworkEventListener]);
+const entityListenerQuery = defineQuery([EntityNetworkEventListener]);
+const componentListenerQuery = defineQuery([ComponentNetworkEventListener]);
 const eventQuery = defineQuery([NetworkEvent]);
+const adapterQuery = defineQuery([NetworkAdapter]);
 
 // TODO: Avoid any
 const addEvent = (
@@ -36,35 +41,72 @@ const addEvent = (
 };
 
 export const networkEventHandleSystem = (world: IWorld) => {
+  // Assumes that adapter entities are same as the ones that
+  // receivers are initialized with
   destroyQuery(world).forEach(eid => {
-    const proxy = NetworkEventReceiverProxy.get(eid);
-    const adapter = proxy.adapter;
-    adapter.removeEventListener(NetworkMessageType.UserJoined);
-    adapter.removeEventListener(NetworkMessageType.UserLeft);
-    proxy.free(world);
+    let destroyed = false;
 
-    removeComponent(world, NetworkEventReceiverDestroy, eid);
+    adapterQuery(world).forEach(adapterEid => {
+      const adapter = NetworkAdapterProxy.get(adapterEid).adapter;
+
+      adapter.removeEventListener(NetworkMessageType.UserJoined);
+      adapter.removeEventListener(NetworkMessageType.UserLeft);
+      adapter.removeEventListener(NetworkMessageType.CreateEntity);
+      adapter.removeEventListener(NetworkMessageType.RemoveEntity);
+      adapter.removeEventListener(NetworkMessageType.AddComponent);
+
+      destroyed = true;
+    });
+
+    if (destroyed) {
+      removeComponent(world, NetworkEventReceiverDestroy, eid);
+    }
   });
 
+  // Assumes that adapter entity is not added after receiver initialization
   initQuery(world).forEach(eid => {
-    const proxy = NetworkEventReceiverInitProxy.get(eid);
-    const adapter = proxy.adapter;
-    proxy.free(world);
+    let initialized = false;
 
-    adapter.addEventListener(NetworkMessageType.UserJoined, (payload) => {
-      // TODO: Check world is still alive?
-      userListenerQuery(world).forEach(eid => {
-        addEvent(world, eid, NetworkMessageType.UserJoined, payload);
+    adapterQuery(world).forEach(adapterEid => {
+      const adapter = NetworkAdapterProxy.get(adapterEid).adapter;
+
+      adapter.addEventListener(NetworkMessageType.UserJoined, (payload) => {
+        // TODO: Check world is still alive?
+        userListenerQuery(world).forEach(eid => {
+          addEvent(world, eid, NetworkMessageType.UserJoined, payload);
+        });
       });
+
+      adapter.addEventListener(NetworkMessageType.UserLeft, (payload) => {
+        userListenerQuery(world).forEach(eid => {
+          addEvent(world, eid, NetworkMessageType.UserLeft, payload);
+        });
+      });
+
+      adapter.addEventListener(NetworkMessageType.CreateEntity, (payload) => {
+        entityListenerQuery(world).forEach(eid => {
+          addEvent(world, eid, NetworkMessageType.CreateEntity, payload);
+        });
+      });
+
+      adapter.addEventListener(NetworkMessageType.RemoveEntity, (payload) => {
+        entityListenerQuery(world).forEach(eid => {
+          addEvent(world, eid, NetworkMessageType.RemoveEntity, payload);
+        });
+      });
+
+      adapter.addEventListener(NetworkMessageType.UpdateComponent, (payload) => {
+        componentListenerQuery(world).forEach(eid => {
+          addEvent(world, eid, NetworkMessageType.UpdateComponent, payload);
+        });
+      });
+
+      initialized = true;
     });
 
-    adapter.addEventListener(NetworkMessageType.UserLeft, (payload) => {
-      userListenerQuery(world).forEach(eid => {
-        addEvent(world, eid, NetworkMessageType.UserLeft, payload);
-      });
-    });
-
-    NetworkEventReceiverProxy.get(eid).allocate(world, adapter);
+    if (initialized) {
+      removeComponent(world, NetworkEventReceiverInit, eid);
+    }
   });
 };
 

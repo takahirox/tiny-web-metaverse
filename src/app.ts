@@ -5,7 +5,7 @@ import {
   IWorld
 } from "bitecs";
 import { MathUtils, Raycaster } from "three";
-import { SystemOrder } from "./common";
+import { Prefab, PrefabMap, System, SystemOrder } from "./common";
 import { AvatarMouseControlsProxy } from "./components/avatar_mouse_controls";
 import { EntityObject3DProxy } from "./components/entity_object3d";
 import {
@@ -17,7 +17,14 @@ import {
   PreviousMousePositionProxy
 } from "./components/mouse";
 import { KeyEventHandlerInit } from "./components/keyboard";
-import { NetworkEventReceiverInitProxy } from "./components/network";
+import {
+  ComponentNetworkEventListener,
+  EntityNetworkEventListener,
+  NetworkAdapterProxy,
+  NetworkedEntityManagerProxy,
+  NetworkEventReceiverInit,
+  NetworkEventSenderProxy
+} from "./components/network";
 import { RendererInitProxy } from "./components/renderer";
 import { InScene, SceneInitProxy } from "./components/scene";
 import {
@@ -54,10 +61,9 @@ import { mousePositionTrackSystem } from "./systems/mouse_position_track";
 import { mouseRaycastSystem } from "./systems/mouse_raycast";
 import { mouseSelectSystem } from "./systems/mouse_select";
 import { networkEventClearSystem, networkEventHandleSystem } from "./systems/network_event";
-import {
-  networkSendQueueClearSystem,
-  networkSendSystem
-} from "./systems/network_send";
+import { networkSendSystem } from "./systems/network_send";
+import { networkedSystem } from "./systems/networked";
+import { networkedEntitySystem } from "./systems/networked_entity";
 import { perspectiveCameraSystem } from "./systems/perspective_camera";
 import { clearRaycastedSystem } from "./systems/raycast";
 import { renderSystem } from "./systems/render";
@@ -72,8 +78,6 @@ import {
 } from "./systems/window_resize_event";
 import { PhoenixAdapter } from "./utils/phoenix_adapter";
 
-type System = (world: IWorld) => void;
-
 type RegisteredSystem = {
   system: System;
   orderPriority: number;
@@ -87,6 +91,7 @@ const createCanvas = (): HTMLCanvasElement => {
 
 export class App {
   private systems: RegisteredSystem[];
+  private prefabs: PrefabMap;
   private canvas: HTMLCanvasElement;
   private world: IWorld;
   private adapter: PhoenixAdapter;
@@ -101,6 +106,7 @@ export class App {
 
     this.canvas = canvas;
     this.systems = [];
+    this.prefabs = new Map();
     this.world = createWorld();
     this.adapter = new PhoenixAdapter({userId});
     this.init();
@@ -122,6 +128,8 @@ export class App {
     this.registerSystem(rendererSystem, SystemOrder.Setup);
     this.registerSystem(sceneSystem, SystemOrder.Setup);
     this.registerSystem(perspectiveCameraSystem, SystemOrder.Setup);
+    this.registerSystem(networkedSystem, SystemOrder.Setup);
+    this.registerSystem(networkedEntitySystem, SystemOrder.Setup);
 
     this.registerSystem(linearMoveSystem, SystemOrder.BeforeMatricesUpdate);
     this.registerSystem(mouseRaycastSystem, SystemOrder.BeforeMatricesUpdate);
@@ -143,7 +151,6 @@ export class App {
     this.registerSystem(mouseButtonEventClearSystem, SystemOrder.TearDown);
     this.registerSystem(windowResizeEventClearSystem, SystemOrder.TearDown);
     this.registerSystem(networkEventClearSystem, SystemOrder.TearDown);
-    this.registerSystem(networkSendQueueClearSystem, SystemOrder.TearDown);
     this.registerSystem(clearRaycastedSystem, SystemOrder.TearDown);
     this.registerSystem(clearTransformUpdatedSystem, SystemOrder.TearDown);
 
@@ -165,8 +172,19 @@ export class App {
     const resizeEventHandlerEid = addEntity(this.world);
     addComponent(this.world, WindowResizeEventHandlerInit, resizeEventHandlerEid);
 
+    const adapterEid = addEntity(this.world);
+    NetworkAdapterProxy.get(adapterEid).allocate(this.world, this.adapter);
+
     const networkEventReceiverEid = addEntity(this.world);
-    NetworkEventReceiverInitProxy.get(networkEventReceiverEid).allocate(this.world, this.adapter);
+    addComponent(this.world, NetworkEventReceiverInit, networkEventReceiverEid);
+
+    const networkEventSenderEid = addEntity(this.world);
+    NetworkEventSenderProxy.get(networkEventSenderEid).allocate(this.world);
+
+    const networkedEntityManagerEid = addEntity(this.world);
+    NetworkedEntityManagerProxy.get(networkedEntityManagerEid).allocate(this.world);
+    addComponent(this.world, ComponentNetworkEventListener, networkedEntityManagerEid);
+    addComponent(this.world, EntityNetworkEventListener, networkedEntityManagerEid);
 
     const mousePositionEid = addEntity(this.world);
     MousePositionProxy.get(mousePositionEid).allocate(this.world);
@@ -243,9 +261,16 @@ export class App {
     throw new Error(`${system.name} system is not registered.`);
   }
 
+  registerPrefab(key: string, prefab: Prefab): void {
+    if (this.prefabs.has(key)) {
+      throw new Error(`prefab ${key} is already used.`);
+    }
+    this.prefabs.set(key, prefab);
+  }
+
   tick() {
     for (const system of this.systems) {
-      system.system(this.world);
+      system.system(this.world, this.prefabs);
     }
   }
 

@@ -7,6 +7,7 @@ export class PhoenixAdapter {
   private channel: Channel;
   // Expects one listener per one event
   private eventListenerMap: Map<string, number>;
+  readonly userId: string;
 
   constructor(params: {
     topic?: string,
@@ -15,13 +16,13 @@ export class PhoenixAdapter {
   }) {
     const url = params.url || 'ws://localhost:4000/socket';
     const topic = params.topic || 'room:lobby';
-    const userId = params.userId;
+    this.userId = params.userId;
 
     const socket = new Socket(url, {});
     socket.connect();
 
     // TODO: Resolve user id conflicts. Generate UUID in server side?
-    this.channel = socket.channel(topic, {user_id: userId});
+    this.channel = socket.channel(topic, {user_id: this.userId});
     this.channel.join()
       .receive('ok', res => {
         console.log('PhoenixAdapter: Joined successfully', res);

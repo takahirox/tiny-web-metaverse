@@ -1,14 +1,11 @@
-import { Component } from "bitecs";
+import { MathUtils } from "three";
 
-export enum NetworkMessageType {
-  AddComponent = 'add_component',
-  CreateEntity = 'create_entity',
-  DeleteEntity = 'delete_entity',
-  RemoveComponent = 'remove_component',
-  TextMessage = 'text_message',
-  UpdateComponent = 'update_component',
-  UserJoined = 'user_joined'
+export const generateUUID = (): string => {
+  return MathUtils.generateUUID();
 };
+
+/*
+import { Component } from "bitecs";
 
 export class NetworkEntityManager {
   private networkIdToEidMap: Map<string, number>;
@@ -71,3 +68,4 @@ export class NetworkedComponentManager {
     this.componentToNameMap.delete(component);
   }
 }
+*/

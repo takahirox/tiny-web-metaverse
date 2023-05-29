@@ -8,29 +8,140 @@ import {
 import { PhoenixAdapter } from "../utils/phoenix_adapter";
 import { NULL_EID } from "../common";
 
-export const Networked = defineComponent();
-export const NetworkedTransform = defineComponent();
-
-type NetworkedValue = {
-  networkId: string;
+export enum NetworkMessageType {
+  AddComponent = 'add_component',
+  CreateEntity = 'create_entity',
+  RemoveEntity = 'remove_entity',
+  RemoveComponent = 'remove_component',
+  TextMessage = 'text_message',
+  UpdateComponent = 'update_component',
+  UserJoined = 'user_joined',
+  UserLeft = 'user_left',
+  UserList = 'user_list'
 };
 
-const NetworkedMap = new Map<number, NetworkedValue>();
+export enum NetworkedType {
+  Local = 'local',
+  Remote = 'remote',
+  Shared = 'shared'
+};
+
+// TODO: Avoid any
+type NetworkedComponentData = {
+  data: any;
+  version: number;
+};
+
+export const Networked = defineComponent();
+
+type NetworkedValue = {
+  components: Map<string, NetworkedComponentData>;
+  creator: string;
+  networkId: string;
+  prefabName: string;
+  type: NetworkedType;
+};
+
+export class NetworkedProxy {
+  private static instance: NetworkedProxy = new NetworkedProxy();
+  private eid: number;
+  private map: Map<number, NetworkedValue>;
+
+  private constructor() {
+    this.eid = NULL_EID;
+    this.map = new Map();
+  }
+
+  static get(eid: number): NetworkedProxy {
+    NetworkedProxy.instance.eid = eid;
+    return NetworkedProxy.instance;
+  }
+
+  allocate(
+    world: IWorld,
+    networkId: string,
+    type: NetworkedType,
+    creator: string,
+    prefabName: string
+  ): void {
+    addComponent(world, Networked, this.eid);
+    this.map.set(this.eid, {
+      components: new Map<string, NetworkedComponentData>(),
+      creator,
+      networkId,
+      prefabName,
+      type
+    });
+  }
+
+  free(world: IWorld): void {
+    this.map.delete(this.eid);
+    removeComponent(world, Networked, this.eid);
+  }
+
+  get creator(): string {
+    return this.map.get(this.eid)!.creator;
+  }
+
+  get networkId(): string {
+    return this.map.get(this.eid)!.networkId;
+  }
+
+  get prefabName(): string {
+    return this.map.get(this.eid)!.prefabName;
+  }
+
+  get type(): NetworkedType {
+    return this.map.get(this.eid)!.type;
+  }
+}
+
+export const NetworkedInit = defineComponent();
+
+type NetworkedInitValue = {
+  networkId: string;
+  prefabName: string;
+};
+
+export class NetworkedInitProxy {
+  private static instance: NetworkedInitProxy = new NetworkedInitProxy();
+  private eid: number;
+  private map: Map<number, NetworkedInitValue>;
+
+  private constructor() {
+    this.eid = NULL_EID;
+    this.map = new Map();
+  }
+
+  static get(eid: number): NetworkedInitProxy {
+    NetworkedInitProxy.instance.eid = eid;
+    return NetworkedInitProxy.instance;
+  }
+
+  allocate(world: IWorld, networkId: string, prefabName: string): void {
+    addComponent(world, NetworkedInit, this.eid);
+    this.map.set(this.eid, {networkId, prefabName});
+  }
+
+  free(world: IWorld): void {
+    this.map.delete(this.eid);
+    removeComponent(world, NetworkedInit, this.eid);
+  }
+
+  get networkId(): string {
+    return this.map.get(this.eid)!.networkId;
+  }
+
+  get prefabName(): string {
+    return this.map.get(this.eid)!.prefabName;
+  }
+}
 
 export const Local = defineComponent();
 export const Remote = defineComponent();
 export const Shared = defineComponent();
 
-export enum NetworkMessageType {
-  AddComponent = 'add_component',
-  CreateEntity = 'create_entity',
-  DeleteEntity = 'delete_entity',
-  RemoveComponent = 'remove_component',
-  TextMessage = 'text_message',
-  UpdateComponent = 'update_component',
-  UserJoined = 'user_joined',
-  UserLeft = 'user_left'
-};
+export const NetworkedTransform = defineComponent();
 
 // TODO: Avoid any
 type NetworkEventValue = {
@@ -43,57 +154,52 @@ export const NetworkEvent = defineComponent();
 const NetworkEventMap = new Map<number, NetworkEventValue[]>();
 
 // TODO: Allow other network adapter type
-type NetworkAdapter = PhoenixAdapter;
+type NetworkAdapterValue = PhoenixAdapter;
 
-type NetworkEventReceiverInitValue = {
-  adapter: NetworkAdapter;
-};
-
-type NetworkEventReceiverValue = {
-  adapter: NetworkAdapter;
-};
+export const NetworkAdapter = defineComponent();
+const NetworkAdapterMap = new Map<number, NetworkAdapterValue>;
 
 export const NetworkEventReceiver = defineComponent();
 export const NetworkEventReceiverInit = defineComponent();
 export const NetworkEventReceiverDestroy = defineComponent();
-const NetworkEventReceiverInitMap = new Map<number, NetworkEventReceiverInitValue>();
-const NetworkEventReceiverMap = new Map<number, NetworkEventReceiverValue>();
 
 export const TextMessageNetworkEventListener = defineComponent();
 export const UserNetworkEventListener = defineComponent();
 export const EntityNetworkEventListener = defineComponent();
-
-export const NetworkEventSendQueue = defineComponent();
-const NetworkEventSendQueueMap = new Map<number, NetworkEventValue[]>();
+export const ComponentNetworkEventListener = defineComponent();
 
 type NetworkEventSenderValue = {
-  adapter: NetworkAdapter;
+  lastSendTime: number;
 };
 
 export const NetworkEventSender = defineComponent();
 const NetworkEventSenderMap = new Map<number, NetworkEventSenderValue>();
 
-export class NetworkedProxy {
-  private static instance: NetworkedProxy = new NetworkedProxy();
+export class NetworkAdapterProxy {
+  private static instance: NetworkAdapterProxy = new NetworkAdapterProxy();
   private eid: number;
 
   private constructor() {
     this.eid = NULL_EID;
   }
 
-  static get(eid: number): NetworkedProxy {
-    NetworkedProxy.instance.eid = eid;
-    return NetworkedProxy.instance;
+  static get(eid: number): NetworkAdapterProxy {
+    NetworkAdapterProxy.instance.eid = eid;
+    return NetworkAdapterProxy.instance;
   }
 
-  allocate(world: IWorld, networkId: string): void {
-    addComponent(world, NetworkedProxy, this.eid);
-    NetworkedMap.set(this.eid, {networkId});
+  allocate(world: IWorld, adapter: NetworkAdapterValue): void {
+    addComponent(world, NetworkAdapter, this.eid);
+    NetworkAdapterMap.set(this.eid, adapter);
   }
 
   free(world: IWorld): void {
-    NetworkedMap.delete(this.eid);
-    removeComponent(world, NetworkedProxy, this.eid);
+    NetworkAdapterMap.delete(this.eid);
+    removeComponent(world, NetworkAdapter, this.eid);
+  }
+
+  get adapter(): NetworkAdapterValue {
+    return NetworkAdapterMap.get(this.eid)!;
   }
 }
 
@@ -133,98 +239,6 @@ export class NetworkEventProxy {
   }
 }
 
-export class NetworkEventReceiverInitProxy {
-  private static instance: NetworkEventReceiverInitProxy = new NetworkEventReceiverInitProxy();
-  private eid: number;
-
-  private constructor() {
-    this.eid = NULL_EID;
-  }
-
-  static get(eid: number): NetworkEventReceiverInitProxy {
-    NetworkEventReceiverInitProxy.instance.eid = eid;
-    return NetworkEventReceiverInitProxy.instance;
-  }
-
-  allocate(world: IWorld, adapter: NetworkAdapter): void {
-    addComponent(world, NetworkEventReceiverInit, this.eid);
-    NetworkEventReceiverInitMap.set(this.eid, {adapter});
-  }
-
-  free(world: IWorld): void {
-    NetworkEventReceiverInitMap.delete(this.eid);
-    removeComponent(world, NetworkEventReceiverInit, this.eid);
-  }
-
-  get adapter(): NetworkAdapter {
-    return NetworkEventReceiverInitMap.get(this.eid)!.adapter;
-  }
-}
-
-export class NetworkEventReceiverProxy {
-  private static instance: NetworkEventReceiverProxy = new NetworkEventReceiverProxy();
-  private eid: number;
-
-  private constructor() {
-    this.eid = NULL_EID;
-  }
-
-  static get(eid: number): NetworkEventReceiverProxy {
-    NetworkEventReceiverProxy.instance.eid = eid;
-    return NetworkEventReceiverProxy.instance;
-  }
-
-  allocate(world: IWorld, adapter: NetworkAdapter): void {
-    addComponent(world, NetworkEventReceiver, this.eid);
-    NetworkEventReceiverMap.set(this.eid, {adapter});
-  }
-
-  free(world: IWorld): void {
-    NetworkEventReceiverMap.delete(this.eid);
-    removeComponent(world, NetworkEventReceiver, this.eid);
-  }
-
-  get adapter(): NetworkAdapter {
-    return NetworkEventReceiverMap.get(this.eid)!.adapter;
-  }
-}
-
-export class NetworkEventSendQueueProxy {
-  private static instance: NetworkEventSendQueueProxy = new NetworkEventSendQueueProxy();
-  private eid: number;
-
-  private constructor() {
-    this.eid = NULL_EID;
-  }
-
-  static get(eid: number): NetworkEventSendQueueProxy {
-    NetworkEventSendQueueProxy.instance.eid = eid;
-    return NetworkEventSendQueueProxy.instance;
-  }
-
-  allocate(world: IWorld): void {
-    addComponent(world, NetworkEventSendQueue, this.eid);
-    NetworkEventSendQueueMap.set(this.eid, []);
-  }
-
-  free(world: IWorld): void {
-    NetworkEventSendQueueMap.delete(this.eid);
-    removeComponent(world, NetworkEventSendQueue, this.eid);
-  }
-
-  add(event: NetworkEventValue): void {
-    NetworkEventSendQueueMap.get(this.eid)!.push(event);
-  }
-
-  clear(): void {
-    NetworkEventSendQueueMap.get(this.eid)!.length = 0;
-  }
-
-  get events(): NetworkEventValue[] {
-    return NetworkEventSendQueueMap.get(this.eid)!;
-  }
-}
-
 export class NetworkEventSenderProxy {
   private static instance: NetworkEventSenderProxy = new NetworkEventSenderProxy();	
   private eid: number;
@@ -238,9 +252,9 @@ export class NetworkEventSenderProxy {
     return NetworkEventSenderProxy.instance;
   }
 
-  allocate(world: IWorld, adapter: NetworkAdapter): void {
+  allocate(world: IWorld): void {
     addComponent(world, NetworkEventSender, this.eid);
-    NetworkEventSenderMap.set(this.eid, { adapter });
+    NetworkEventSenderMap.set(this.eid, { lastSendTime: 0.0 });
   }
 
   free(world: IWorld): void {
@@ -248,7 +262,73 @@ export class NetworkEventSenderProxy {
     removeComponent(world, NetworkEventSender, this.eid);
   }
 
-  get adapter(): NetworkAdapter {
-    return NetworkEventSenderMap.get(this.eid).adapter;
+  get lastSendTime(): number {
+    return NetworkEventSenderMap.get(this.eid).lastSendTime;
+  }
+
+  set lastSendTime(lastSendTime: number) {
+    NetworkEventSenderMap.get(this.eid).lastSendTime = lastSendTime;
+  }
+}
+
+export const NetworkedEntityManager = defineComponent();
+
+type NetworkedEntityManagerValue = {
+  networkIdToEidMap: Map<string, number>;
+  eidToNetworkIdMap: Map<number, string>;
+  deleted: Set<string>;
+};
+
+export class NetworkedEntityManagerProxy {
+  private static instance: NetworkedEntityManagerProxy = new NetworkedEntityManagerProxy();
+  private eid: number;
+  private map: Map<number, NetworkedEntityManagerValue>;
+
+  private constructor() {
+    this.eid = NULL_EID;
+    this.map = new Map();
+  }
+
+  static get(eid: number): NetworkedEntityManagerProxy {
+    NetworkedEntityManagerProxy.instance.eid = eid;
+    return NetworkedEntityManagerProxy.instance;
+  }
+
+  allocate(world: IWorld): void {
+    addComponent(world, NetworkedEntityManager, this.eid);
+    this.map.set(this.eid, {
+      deleted: new Set(),
+      eidToNetworkIdMap: new Map(),
+      networkIdToEidMap: new Map()
+    });
+  }
+
+  free(world: IWorld): void {
+    this.map.delete(this.eid);
+    removeComponent(world, NetworkedEntityManager, this.eid);
+  }
+
+  add(eid: number, networkId: string): void {
+    this.map.get(this.eid).eidToNetworkIdMap.set(eid, networkId);
+    this.map.get(this.eid).networkIdToEidMap.set(networkId, eid);
+  }
+
+  remove(networkId: string): void {
+    const eid = this.map.get(this.eid).networkIdToEidMap.get(networkId);
+    this.map.get(this.eid).networkIdToEidMap.delete(networkId);
+    this.map.get(this.eid).eidToNetworkIdMap.delete(eid);
+    this.map.get(this.eid).deleted.add(networkId);
+  }
+
+  getNetworkId(eid: number): string {
+    return this.map.get(this.eid).eidToNetworkIdMap.get(eid)!;
+  }
+
+  getEid(networkId: string): number {
+    return this.map.get(this.eid).networkIdToEidMap.get(networkId)!;
+  }
+
+  deleted(networkId: string): boolean {
+    return this.map.get(this.eid).deleted.has(networkId);
   }
 }
