@@ -1,15 +1,15 @@
 import {
   addComponent,
   defineQuery,
-  hasComponent,
   IWorld,
   removeEntity
 } from "bitecs";
-import { Prefab } from "../common";
+import { NETWORK_INTERVAL, Prefab } from "../common";
 import {
-  EntityObject3D,
-  EntityObject3DProxy
-} from "../components/entity_object3d";
+  LinearTranslate,
+  LinearRotate,
+  LinearScale
+} from "../components/linear_transform";
 import {
   NetworkAdapter,
   NetworkAdapterProxy,
@@ -60,22 +60,30 @@ export const networkedEntitySystem = (world: IWorld, prefabs: Map<string, Prefab
           }
         }
         if (e.type === NetworkMessageType.UpdateComponent) {
-          const eid = managerProxy.getEid(e.data.network_id);
-          if (e.data.component_name === 'position') {
-            if (hasComponent(world, EntityObject3D, eid)) {
-              const root = EntityObject3DProxy.get(eid).root;
-              root.position.fromArray(JSON.parse(e.data.data));
-console.log('position update');
-            }
-          } else if (e.data.component_name === 'quaternion') {
-            if (hasComponent(world, EntityObject3D, eid)) {
-              const root = EntityObject3DProxy.get(eid).root;
-              root.quaternion.fromArray(JSON.parse(e.data.data));
-            }
-          } else if (e.data.component_name === 'scale') {
-            if (hasComponent(world, EntityObject3D, eid)) {
-              const root = EntityObject3DProxy.get(eid).root;
-              root.scale.fromArray(JSON.parse(e.data.data));
+          if (e.data.creator !== userId) {
+            const eid = managerProxy.getEid(e.data.network_id);
+            if (e.data.component_name === 'position') {
+              const data = JSON.parse(e.data.data);
+              addComponent(world, LinearTranslate, eid);
+              LinearTranslate.duration[eid] = NETWORK_INTERVAL;
+              LinearTranslate.targetX[eid] = data[0];
+              LinearTranslate.targetY[eid] = data[1];
+              LinearTranslate.targetZ[eid] = data[2];
+            } else if (e.data.component_name === 'quaternion') {
+              const data = JSON.parse(e.data.data);
+              addComponent(world, LinearRotate, eid);
+              LinearRotate.duration[eid] = NETWORK_INTERVAL;
+              LinearRotate.targetX[eid] = data[0];
+              LinearRotate.targetY[eid] = data[1];
+              LinearRotate.targetZ[eid] = data[2];
+              LinearRotate.targetW[eid] = data[3];
+            } else if (e.data.component_name === 'scale') {
+              const data = JSON.parse(e.data.data);
+              addComponent(world, LinearScale, eid);
+              LinearScale.duration[eid] = NETWORK_INTERVAL;
+              LinearScale.targetX[eid] = data[0];
+              LinearScale.targetY[eid] = data[1];
+              LinearScale.targetZ[eid] = data[2];
             }
           }
         }

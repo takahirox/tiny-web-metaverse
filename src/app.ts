@@ -49,6 +49,7 @@ import {
   keyEventClearSystem
 } from "./systems/keyboard_event";
 import { linearMoveSystem } from "./systems/linear_move";
+import { linearTransformSystem } from "./systems/linear_transform";
 import {
   mouseButtonEventClearSystem,
   mouseButtonEventHandleSystem
@@ -132,6 +133,7 @@ export class App {
     this.registerSystem(networkedEntitySystem, SystemOrder.Setup);
 
     this.registerSystem(linearMoveSystem, SystemOrder.BeforeMatricesUpdate);
+    this.registerSystem(linearTransformSystem, SystemOrder.BeforeMatricesUpdate);
     this.registerSystem(mouseRaycastSystem, SystemOrder.BeforeMatricesUpdate);
     this.registerSystem(mouseSelectSystem, SystemOrder.BeforeMatricesUpdate);
     this.registerSystem(grabSystem, SystemOrder.BeforeMatricesUpdate);

@@ -21,3 +21,6 @@ export type PrefabMap = Map<string, Prefab>;
 
 // Ugh... Is passing prefabs good design?
 export type System = (world: IWorld, prefabs: Map<string, Prefab>) => void;
+
+// TODO: Configurable
+export const NETWORK_INTERVAL = 1.0 / 60 * 5;

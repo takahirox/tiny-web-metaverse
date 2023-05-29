@@ -5,6 +5,7 @@ import {
   hasComponent,
   IWorld
 } from "bitecs";
+import { NETWORK_INTERVAL } from "../common";
 import {
   EntityObject3D,
   EntityObject3DProxy
@@ -24,9 +25,6 @@ import {
 } from "../components/network";
 import { Time, TimeProxy } from "../components/time";
 
-// TODO: Configurable
-const Interval = 1.0 / 60 * 5;
-
 const senderQuery = defineQuery([NetworkEventSender]);
 const timeQuery = defineQuery([Time]);
 const localQuery = defineQuery([Local, Networked]);
@@ -40,7 +38,8 @@ export const networkSendSystem = (world: IWorld) => {
     timeQuery(world).forEach(timeEid => {
       const timeProxy = TimeProxy.get(timeEid);
 
-      if (timeProxy.elapsed < senderProxy.lastSendTime + Interval) {
+      //
+      if (timeProxy.elapsed < senderProxy.lastSendTime + NETWORK_INTERVAL) {
         return;
       }
 

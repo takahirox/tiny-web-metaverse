@@ -407,7 +407,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "App": () => (/* binding */ App)
 /* harmony export */ });
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
 /* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./common */ "./src/common.ts");
 /* harmony import */ var _components_avatar_mouse_controls__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/avatar_mouse_controls */ "./src/components/avatar_mouse_controls.ts");
 /* harmony import */ var _components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/entity_object3d */ "./src/components/entity_object3d.ts");
@@ -427,25 +427,27 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _systems_grab_mouse_track__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./systems/grab_mouse_track */ "./src/systems/grab_mouse_track.ts");
 /* harmony import */ var _systems_keyboard_event__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./systems/keyboard_event */ "./src/systems/keyboard_event.ts");
 /* harmony import */ var _systems_linear_move__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./systems/linear_move */ "./src/systems/linear_move.ts");
-/* harmony import */ var _systems_mouse_button_event__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./systems/mouse_button_event */ "./src/systems/mouse_button_event.ts");
-/* harmony import */ var _systems_mouse_move_event__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./systems/mouse_move_event */ "./src/systems/mouse_move_event.ts");
-/* harmony import */ var _systems_mouse_position_track__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./systems/mouse_position_track */ "./src/systems/mouse_position_track.ts");
-/* harmony import */ var _systems_mouse_raycast__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./systems/mouse_raycast */ "./src/systems/mouse_raycast.ts");
-/* harmony import */ var _systems_mouse_select__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./systems/mouse_select */ "./src/systems/mouse_select.ts");
-/* harmony import */ var _systems_network_event__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./systems/network_event */ "./src/systems/network_event.ts");
-/* harmony import */ var _systems_network_send__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./systems/network_send */ "./src/systems/network_send.ts");
-/* harmony import */ var _systems_networked__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./systems/networked */ "./src/systems/networked.ts");
-/* harmony import */ var _systems_networked_entity__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./systems/networked_entity */ "./src/systems/networked_entity.ts");
-/* harmony import */ var _systems_perspective_camera__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./systems/perspective_camera */ "./src/systems/perspective_camera.ts");
-/* harmony import */ var _systems_raycast__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./systems/raycast */ "./src/systems/raycast.ts");
-/* harmony import */ var _systems_render__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./systems/render */ "./src/systems/render.ts");
-/* harmony import */ var _systems_renderer__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./systems/renderer */ "./src/systems/renderer.ts");
-/* harmony import */ var _systems_scene__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./systems/scene */ "./src/systems/scene.ts");
-/* harmony import */ var _systems_time__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./systems/time */ "./src/systems/time.ts");
-/* harmony import */ var _systems_transform__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./systems/transform */ "./src/systems/transform.ts");
-/* harmony import */ var _systems_update_matrices__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ./systems/update_matrices */ "./src/systems/update_matrices.ts");
-/* harmony import */ var _systems_window_resize_event__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./systems/window_resize_event */ "./src/systems/window_resize_event.ts");
-/* harmony import */ var _utils_phoenix_adapter__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! ./utils/phoenix_adapter */ "./src/utils/phoenix_adapter.ts");
+/* harmony import */ var _systems_linear_transform__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./systems/linear_transform */ "./src/systems/linear_transform.ts");
+/* harmony import */ var _systems_mouse_button_event__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./systems/mouse_button_event */ "./src/systems/mouse_button_event.ts");
+/* harmony import */ var _systems_mouse_move_event__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./systems/mouse_move_event */ "./src/systems/mouse_move_event.ts");
+/* harmony import */ var _systems_mouse_position_track__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./systems/mouse_position_track */ "./src/systems/mouse_position_track.ts");
+/* harmony import */ var _systems_mouse_raycast__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./systems/mouse_raycast */ "./src/systems/mouse_raycast.ts");
+/* harmony import */ var _systems_mouse_select__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./systems/mouse_select */ "./src/systems/mouse_select.ts");
+/* harmony import */ var _systems_network_event__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./systems/network_event */ "./src/systems/network_event.ts");
+/* harmony import */ var _systems_network_send__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./systems/network_send */ "./src/systems/network_send.ts");
+/* harmony import */ var _systems_networked__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./systems/networked */ "./src/systems/networked.ts");
+/* harmony import */ var _systems_networked_entity__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./systems/networked_entity */ "./src/systems/networked_entity.ts");
+/* harmony import */ var _systems_perspective_camera__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./systems/perspective_camera */ "./src/systems/perspective_camera.ts");
+/* harmony import */ var _systems_raycast__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./systems/raycast */ "./src/systems/raycast.ts");
+/* harmony import */ var _systems_render__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./systems/render */ "./src/systems/render.ts");
+/* harmony import */ var _systems_renderer__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./systems/renderer */ "./src/systems/renderer.ts");
+/* harmony import */ var _systems_scene__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./systems/scene */ "./src/systems/scene.ts");
+/* harmony import */ var _systems_time__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./systems/time */ "./src/systems/time.ts");
+/* harmony import */ var _systems_transform__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ./systems/transform */ "./src/systems/transform.ts");
+/* harmony import */ var _systems_update_matrices__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./systems/update_matrices */ "./src/systems/update_matrices.ts");
+/* harmony import */ var _systems_window_resize_event__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! ./systems/window_resize_event */ "./src/systems/window_resize_event.ts");
+/* harmony import */ var _utils_phoenix_adapter__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! ./utils/phoenix_adapter */ "./src/utils/phoenix_adapter.ts");
+
 
 
 
@@ -494,46 +496,47 @@ const createCanvas = () => {
 class App {
     constructor(params = {}) {
         const canvas = params.canvas || createCanvas();
-        const userId = params.userId || three__WEBPACK_IMPORTED_MODULE_39__.MathUtils.generateUUID();
+        const userId = params.userId || three__WEBPACK_IMPORTED_MODULE_40__.MathUtils.generateUUID();
         this.canvas = canvas;
         this.systems = [];
         this.prefabs = new Map();
         this.world = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.createWorld)();
-        this.adapter = new _utils_phoenix_adapter__WEBPACK_IMPORTED_MODULE_38__.PhoenixAdapter({ userId });
+        this.adapter = new _utils_phoenix_adapter__WEBPACK_IMPORTED_MODULE_39__.PhoenixAdapter({ userId });
         this.init();
     }
     init() {
         // Built-in systems and entities
-        this.registerSystem(_systems_time__WEBPACK_IMPORTED_MODULE_34__.timeSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.Time);
+        this.registerSystem(_systems_time__WEBPACK_IMPORTED_MODULE_35__.timeSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.Time);
         this.registerSystem(_systems_keyboard_event__WEBPACK_IMPORTED_MODULE_18__.keyEventHandleSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.EventHandling);
-        this.registerSystem(_systems_mouse_move_event__WEBPACK_IMPORTED_MODULE_21__.mouseMoveEventHandleSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.EventHandling);
-        this.registerSystem(_systems_mouse_button_event__WEBPACK_IMPORTED_MODULE_20__.mouseButtonEventHandleSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.EventHandling);
-        this.registerSystem(_systems_window_resize_event__WEBPACK_IMPORTED_MODULE_37__.windowResizeEventHandleSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.EventHandling);
-        this.registerSystem(_systems_network_event__WEBPACK_IMPORTED_MODULE_25__.networkEventHandleSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.EventHandling);
-        this.registerSystem(_systems_mouse_position_track__WEBPACK_IMPORTED_MODULE_22__.mousePositionTrackSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.EventHandling + 1);
-        this.registerSystem(_systems_renderer__WEBPACK_IMPORTED_MODULE_32__.rendererSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.Setup);
-        this.registerSystem(_systems_scene__WEBPACK_IMPORTED_MODULE_33__.sceneSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.Setup);
-        this.registerSystem(_systems_perspective_camera__WEBPACK_IMPORTED_MODULE_29__.perspectiveCameraSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.Setup);
-        this.registerSystem(_systems_networked__WEBPACK_IMPORTED_MODULE_27__.networkedSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.Setup);
-        this.registerSystem(_systems_networked_entity__WEBPACK_IMPORTED_MODULE_28__.networkedEntitySystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.Setup);
+        this.registerSystem(_systems_mouse_move_event__WEBPACK_IMPORTED_MODULE_22__.mouseMoveEventHandleSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.EventHandling);
+        this.registerSystem(_systems_mouse_button_event__WEBPACK_IMPORTED_MODULE_21__.mouseButtonEventHandleSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.EventHandling);
+        this.registerSystem(_systems_window_resize_event__WEBPACK_IMPORTED_MODULE_38__.windowResizeEventHandleSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.EventHandling);
+        this.registerSystem(_systems_network_event__WEBPACK_IMPORTED_MODULE_26__.networkEventHandleSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.EventHandling);
+        this.registerSystem(_systems_mouse_position_track__WEBPACK_IMPORTED_MODULE_23__.mousePositionTrackSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.EventHandling + 1);
+        this.registerSystem(_systems_renderer__WEBPACK_IMPORTED_MODULE_33__.rendererSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.Setup);
+        this.registerSystem(_systems_scene__WEBPACK_IMPORTED_MODULE_34__.sceneSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.Setup);
+        this.registerSystem(_systems_perspective_camera__WEBPACK_IMPORTED_MODULE_30__.perspectiveCameraSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.Setup);
+        this.registerSystem(_systems_networked__WEBPACK_IMPORTED_MODULE_28__.networkedSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.Setup);
+        this.registerSystem(_systems_networked_entity__WEBPACK_IMPORTED_MODULE_29__.networkedEntitySystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.Setup);
         this.registerSystem(_systems_linear_move__WEBPACK_IMPORTED_MODULE_19__.linearMoveSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.BeforeMatricesUpdate);
-        this.registerSystem(_systems_mouse_raycast__WEBPACK_IMPORTED_MODULE_23__.mouseRaycastSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.BeforeMatricesUpdate);
-        this.registerSystem(_systems_mouse_select__WEBPACK_IMPORTED_MODULE_24__.mouseSelectSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.BeforeMatricesUpdate);
+        this.registerSystem(_systems_linear_transform__WEBPACK_IMPORTED_MODULE_20__.linearTransformSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.BeforeMatricesUpdate);
+        this.registerSystem(_systems_mouse_raycast__WEBPACK_IMPORTED_MODULE_24__.mouseRaycastSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.BeforeMatricesUpdate);
+        this.registerSystem(_systems_mouse_select__WEBPACK_IMPORTED_MODULE_25__.mouseSelectSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.BeforeMatricesUpdate);
         this.registerSystem(_systems_grab__WEBPACK_IMPORTED_MODULE_16__.grabSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.BeforeMatricesUpdate);
         this.registerSystem(_systems_grab_mouse_track__WEBPACK_IMPORTED_MODULE_17__.grabbedObjectsMouseTrackSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.BeforeMatricesUpdate);
         this.registerSystem(_systems_avatar_key_controls__WEBPACK_IMPORTED_MODULE_13__.avatarKeyControlsSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.BeforeMatricesUpdate);
         this.registerSystem(_systems_avatar_mouse_controls__WEBPACK_IMPORTED_MODULE_14__.avatarMouseControlsSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.BeforeMatricesUpdate);
         this.registerSystem(_systems_fps_camera__WEBPACK_IMPORTED_MODULE_15__.fpsCameraSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.MatricesUpdate - 1);
-        this.registerSystem(_systems_network_send__WEBPACK_IMPORTED_MODULE_26__.networkSendSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.MatricesUpdate - 1);
-        this.registerSystem(_systems_update_matrices__WEBPACK_IMPORTED_MODULE_36__.updateMatricesSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.MatricesUpdate);
-        this.registerSystem(_systems_render__WEBPACK_IMPORTED_MODULE_31__.renderSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.Render);
+        this.registerSystem(_systems_network_send__WEBPACK_IMPORTED_MODULE_27__.networkSendSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.MatricesUpdate - 1);
+        this.registerSystem(_systems_update_matrices__WEBPACK_IMPORTED_MODULE_37__.updateMatricesSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.MatricesUpdate);
+        this.registerSystem(_systems_render__WEBPACK_IMPORTED_MODULE_32__.renderSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.Render);
         this.registerSystem(_systems_keyboard_event__WEBPACK_IMPORTED_MODULE_18__.keyEventClearSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.TearDown);
-        this.registerSystem(_systems_mouse_move_event__WEBPACK_IMPORTED_MODULE_21__.mouseMoveEventClearSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.TearDown);
-        this.registerSystem(_systems_mouse_button_event__WEBPACK_IMPORTED_MODULE_20__.mouseButtonEventClearSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.TearDown);
-        this.registerSystem(_systems_window_resize_event__WEBPACK_IMPORTED_MODULE_37__.windowResizeEventClearSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.TearDown);
-        this.registerSystem(_systems_network_event__WEBPACK_IMPORTED_MODULE_25__.networkEventClearSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.TearDown);
-        this.registerSystem(_systems_raycast__WEBPACK_IMPORTED_MODULE_30__.clearRaycastedSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.TearDown);
-        this.registerSystem(_systems_transform__WEBPACK_IMPORTED_MODULE_35__.clearTransformUpdatedSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.TearDown);
+        this.registerSystem(_systems_mouse_move_event__WEBPACK_IMPORTED_MODULE_22__.mouseMoveEventClearSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.TearDown);
+        this.registerSystem(_systems_mouse_button_event__WEBPACK_IMPORTED_MODULE_21__.mouseButtonEventClearSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.TearDown);
+        this.registerSystem(_systems_window_resize_event__WEBPACK_IMPORTED_MODULE_38__.windowResizeEventClearSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.TearDown);
+        this.registerSystem(_systems_network_event__WEBPACK_IMPORTED_MODULE_26__.networkEventClearSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.TearDown);
+        this.registerSystem(_systems_raycast__WEBPACK_IMPORTED_MODULE_31__.clearRaycastedSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.TearDown);
+        this.registerSystem(_systems_transform__WEBPACK_IMPORTED_MODULE_36__.clearTransformUpdatedSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.TearDown);
         // Entity 0 for null entity
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
         const timeEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
@@ -561,7 +564,7 @@ class App {
         _components_mouse__WEBPACK_IMPORTED_MODULE_4__.PreviousMousePositionProxy.get(mousePositionEid).allocate(this.world);
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_mouse__WEBPACK_IMPORTED_MODULE_4__.MouseMoveEventListener, mousePositionEid);
         const raycasterEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
-        _components_raycast__WEBPACK_IMPORTED_MODULE_10__.RaycasterProxy.get(raycasterEid).allocate(this.world, new three__WEBPACK_IMPORTED_MODULE_39__.Raycaster());
+        _components_raycast__WEBPACK_IMPORTED_MODULE_10__.RaycasterProxy.get(raycasterEid).allocate(this.world, new three__WEBPACK_IMPORTED_MODULE_40__.Raycaster());
         const avatarMouseControlsEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
         _components_avatar_mouse_controls__WEBPACK_IMPORTED_MODULE_2__.AvatarMouseControlsProxy.get(avatarMouseControlsEid).allocate(this.world);
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_mouse__WEBPACK_IMPORTED_MODULE_4__.MouseButtonEventListener, avatarMouseControlsEid);
@@ -656,6 +659,7 @@ class App {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "NETWORK_INTERVAL": () => (/* binding */ NETWORK_INTERVAL),
 /* harmony export */   "NULL_EID": () => (/* binding */ NULL_EID),
 /* harmony export */   "SystemOrder": () => (/* binding */ SystemOrder)
 /* harmony export */ });
@@ -672,6 +676,8 @@ const SystemOrder = Object.freeze({
     PostProcess: 800,
     TearDown: 900
 });
+// TODO: Configurable
+const NETWORK_INTERVAL = 1.0 / 60 * 5;
 
 
 /***/ }),
@@ -1087,6 +1093,43 @@ const LinearMoveBackward = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponen
 const LinearMoveForward = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({ speed: bitecs__WEBPACK_IMPORTED_MODULE_0__.Types.f32 });
 const LinearMoveLeft = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({ speed: bitecs__WEBPACK_IMPORTED_MODULE_0__.Types.f32 });
 const LinearMoveRight = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({ speed: bitecs__WEBPACK_IMPORTED_MODULE_0__.Types.f32 });
+
+
+/***/ }),
+
+/***/ "./src/components/linear_transform.ts":
+/*!********************************************!*\
+  !*** ./src/components/linear_transform.ts ***!
+  \********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "LinearRotate": () => (/* binding */ LinearRotate),
+/* harmony export */   "LinearScale": () => (/* binding */ LinearScale),
+/* harmony export */   "LinearTranslate": () => (/* binding */ LinearTranslate)
+/* harmony export */ });
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+
+const LinearTranslate = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({
+    duration: bitecs__WEBPACK_IMPORTED_MODULE_0__.Types.f32,
+    targetX: bitecs__WEBPACK_IMPORTED_MODULE_0__.Types.f32,
+    targetY: bitecs__WEBPACK_IMPORTED_MODULE_0__.Types.f32,
+    targetZ: bitecs__WEBPACK_IMPORTED_MODULE_0__.Types.f32
+});
+const LinearRotate = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({
+    duration: bitecs__WEBPACK_IMPORTED_MODULE_0__.Types.f32,
+    targetX: bitecs__WEBPACK_IMPORTED_MODULE_0__.Types.f32,
+    targetY: bitecs__WEBPACK_IMPORTED_MODULE_0__.Types.f32,
+    targetZ: bitecs__WEBPACK_IMPORTED_MODULE_0__.Types.f32,
+    targetW: bitecs__WEBPACK_IMPORTED_MODULE_0__.Types.f32
+});
+const LinearScale = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({
+    duration: bitecs__WEBPACK_IMPORTED_MODULE_0__.Types.f32,
+    targetX: bitecs__WEBPACK_IMPORTED_MODULE_0__.Types.f32,
+    targetY: bitecs__WEBPACK_IMPORTED_MODULE_0__.Types.f32,
+    targetZ: bitecs__WEBPACK_IMPORTED_MODULE_0__.Types.f32
+});
 
 
 /***/ }),
@@ -2397,6 +2440,94 @@ const linearMoveSystem = (world) => {
 
 /***/ }),
 
+/***/ "./src/systems/linear_transform.ts":
+/*!*****************************************!*\
+  !*** ./src/systems/linear_transform.ts ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "linearTransformSystem": () => (/* binding */ linearTransformSystem)
+/* harmony export */ });
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+/* harmony import */ var _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/entity_object3d */ "./src/components/entity_object3d.ts");
+/* harmony import */ var _components_linear_transform__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/linear_transform */ "./src/components/linear_transform.ts");
+/* harmony import */ var _components_time__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/time */ "./src/components/time.ts");
+/* harmony import */ var _components_transform__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/transform */ "./src/components/transform.ts");
+
+
+
+
+
+
+// Working variables
+const _vec3 = new three__WEBPACK_IMPORTED_MODULE_5__.Vector3();
+const _quat = new three__WEBPACK_IMPORTED_MODULE_5__.Quaternion();
+const timeQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_time__WEBPACK_IMPORTED_MODULE_3__.Time]);
+const linearTranslateQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_linear_transform__WEBPACK_IMPORTED_MODULE_2__.LinearTranslate, _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3D]);
+const linearRotateQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_linear_transform__WEBPACK_IMPORTED_MODULE_2__.LinearRotate, _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3D]);
+const linearScaleQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_linear_transform__WEBPACK_IMPORTED_MODULE_2__.LinearScale, _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3D]);
+const linearTransformSystem = (world) => {
+    // Assumes single Time entity
+    timeQuery(world).forEach(timeEid => {
+        const delta = _components_time__WEBPACK_IMPORTED_MODULE_3__.TimeProxy.get(timeEid).delta;
+        linearTranslateQuery(world).forEach(eid => {
+            const duration = _components_linear_transform__WEBPACK_IMPORTED_MODULE_2__.LinearTranslate.duration[eid];
+            const targetX = _components_linear_transform__WEBPACK_IMPORTED_MODULE_2__.LinearTranslate.targetX[eid];
+            const targetY = _components_linear_transform__WEBPACK_IMPORTED_MODULE_2__.LinearTranslate.targetY[eid];
+            const targetZ = _components_linear_transform__WEBPACK_IMPORTED_MODULE_2__.LinearTranslate.targetZ[eid];
+            const root = _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3DProxy.get(eid).root;
+            if (delta >= duration) {
+                root.position.set(targetX, targetY, targetZ);
+                (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_linear_transform__WEBPACK_IMPORTED_MODULE_2__.LinearTranslate, eid);
+            }
+            else {
+                root.position.lerp(_vec3.set(targetX, targetY, targetZ), delta / duration);
+                _components_linear_transform__WEBPACK_IMPORTED_MODULE_2__.LinearTranslate.duration[eid] = duration - delta;
+            }
+            (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_transform__WEBPACK_IMPORTED_MODULE_4__.TransformUpdated, eid);
+        });
+        linearRotateQuery(world).forEach(eid => {
+            const duration = _components_linear_transform__WEBPACK_IMPORTED_MODULE_2__.LinearRotate.duration[eid];
+            const targetX = _components_linear_transform__WEBPACK_IMPORTED_MODULE_2__.LinearRotate.targetX[eid];
+            const targetY = _components_linear_transform__WEBPACK_IMPORTED_MODULE_2__.LinearRotate.targetY[eid];
+            const targetZ = _components_linear_transform__WEBPACK_IMPORTED_MODULE_2__.LinearRotate.targetZ[eid];
+            const targetW = _components_linear_transform__WEBPACK_IMPORTED_MODULE_2__.LinearRotate.targetW[eid];
+            const root = _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3DProxy.get(eid).root;
+            if (delta >= duration) {
+                root.quaternion.set(targetX, targetY, targetZ, targetW);
+                (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_linear_transform__WEBPACK_IMPORTED_MODULE_2__.LinearRotate, eid);
+            }
+            else {
+                root.quaternion.slerp(_quat.set(targetX, targetY, targetZ, targetW), delta / duration);
+                _components_linear_transform__WEBPACK_IMPORTED_MODULE_2__.LinearRotate.duration[eid] = duration - delta;
+            }
+            (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_transform__WEBPACK_IMPORTED_MODULE_4__.TransformUpdated, eid);
+        });
+        linearScaleQuery(world).forEach(eid => {
+            const duration = _components_linear_transform__WEBPACK_IMPORTED_MODULE_2__.LinearScale.duration[eid];
+            const targetX = _components_linear_transform__WEBPACK_IMPORTED_MODULE_2__.LinearScale.targetX[eid];
+            const targetY = _components_linear_transform__WEBPACK_IMPORTED_MODULE_2__.LinearScale.targetY[eid];
+            const targetZ = _components_linear_transform__WEBPACK_IMPORTED_MODULE_2__.LinearScale.targetZ[eid];
+            const root = _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3DProxy.get(eid).root;
+            if (delta >= duration) {
+                root.scale.set(targetX, targetY, targetZ);
+                (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_linear_transform__WEBPACK_IMPORTED_MODULE_2__.LinearScale, eid);
+            }
+            else {
+                root.scale.lerp(_vec3.set(targetX, targetY, targetZ), delta / duration);
+                _components_linear_transform__WEBPACK_IMPORTED_MODULE_2__.LinearScale.duration[eid] = duration - delta;
+            }
+            (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_transform__WEBPACK_IMPORTED_MODULE_4__.TransformUpdated, eid);
+        });
+    });
+};
+
+
+/***/ }),
+
 /***/ "./src/systems/mouse_button_event.ts":
 /*!*******************************************!*\
   !*** ./src/systems/mouse_button_event.ts ***!
@@ -2765,43 +2896,44 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "networkSendSystem": () => (/* binding */ networkSendSystem)
 /* harmony export */ });
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
-/* harmony import */ var _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/entity_object3d */ "./src/components/entity_object3d.ts");
-/* harmony import */ var _components_network__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/network */ "./src/components/network.ts");
-/* harmony import */ var _components_time__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/time */ "./src/components/time.ts");
+/* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../common */ "./src/common.ts");
+/* harmony import */ var _components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/entity_object3d */ "./src/components/entity_object3d.ts");
+/* harmony import */ var _components_network__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/network */ "./src/components/network.ts");
+/* harmony import */ var _components_time__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/time */ "./src/components/time.ts");
 
 
 
 
-// TODO: Configurable
-const Interval = 1.0 / 60 * 5;
-const senderQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkEventSender]);
-const timeQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_time__WEBPACK_IMPORTED_MODULE_3__.Time]);
-const localQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_2__.Local, _components_network__WEBPACK_IMPORTED_MODULE_2__.Networked]);
+
+const senderQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_3__.NetworkEventSender]);
+const timeQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_time__WEBPACK_IMPORTED_MODULE_4__.Time]);
+const localQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_3__.Local, _components_network__WEBPACK_IMPORTED_MODULE_3__.Networked]);
 const localEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)(localQuery);
 const localExitQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)(localQuery);
-const adapterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkAdapter]);
+const adapterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_3__.NetworkAdapter]);
 const networkSendSystem = (world) => {
     senderQuery(world).forEach(senderEid => {
-        const senderProxy = _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkEventSenderProxy.get(senderEid);
+        const senderProxy = _components_network__WEBPACK_IMPORTED_MODULE_3__.NetworkEventSenderProxy.get(senderEid);
         timeQuery(world).forEach(timeEid => {
-            const timeProxy = _components_time__WEBPACK_IMPORTED_MODULE_3__.TimeProxy.get(timeEid);
-            if (timeProxy.elapsed < senderProxy.lastSendTime + Interval) {
+            const timeProxy = _components_time__WEBPACK_IMPORTED_MODULE_4__.TimeProxy.get(timeEid);
+            //
+            if (timeProxy.elapsed < senderProxy.lastSendTime + _common__WEBPACK_IMPORTED_MODULE_1__.NETWORK_INTERVAL) {
                 return;
             }
             senderProxy.lastSendTime = timeProxy.elapsed;
             adapterQuery(world).forEach(adapterEid => {
-                const adapter = _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkAdapterProxy.get(adapterEid).adapter;
+                const adapter = _components_network__WEBPACK_IMPORTED_MODULE_3__.NetworkAdapterProxy.get(adapterEid).adapter;
                 // TODO: Implement properly
                 localExitQuery(world).forEach(_localEid => {
                 });
                 localEnterQuery(world).forEach(localEid => {
                     // TODO: Where shold NetworkedTransform be handled?
                     // TODO: Implement properly
-                    if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedTransform, localEid) &&
-                        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3D, localEid)) {
-                        const networkedProxy = _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedProxy.get(localEid);
-                        const root = _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3DProxy.get(localEid).root;
-                        adapter.push(_components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkMessageType.CreateEntity, {
+                    if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_3__.NetworkedTransform, localEid) &&
+                        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__.EntityObject3D, localEid)) {
+                        const networkedProxy = _components_network__WEBPACK_IMPORTED_MODULE_3__.NetworkedProxy.get(localEid);
+                        const root = _components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__.EntityObject3DProxy.get(localEid).root;
+                        adapter.push(_components_network__WEBPACK_IMPORTED_MODULE_3__.NetworkMessageType.CreateEntity, {
                             components: [{
                                     name: 'position',
                                     data: JSON.stringify(root.position.toArray())
@@ -2814,17 +2946,17 @@ const networkSendSystem = (world) => {
                                 }],
                             network_id: networkedProxy.networkId,
                             prefab: networkedProxy.prefabName,
-                            shared: networkedProxy.type === _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedType.Shared
+                            shared: networkedProxy.type === _components_network__WEBPACK_IMPORTED_MODULE_3__.NetworkedType.Shared
                         });
                     }
                 });
                 // TODO: Implement properly
                 localQuery(world).forEach(localEid => {
-                    if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedTransform, localEid) &&
-                        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3D, localEid)) {
-                        const networkedProxy = _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedProxy.get(localEid);
-                        const root = _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3DProxy.get(localEid).root;
-                        adapter.push(_components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkMessageType.UpdateComponent, {
+                    if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_3__.NetworkedTransform, localEid) &&
+                        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__.EntityObject3D, localEid)) {
+                        const networkedProxy = _components_network__WEBPACK_IMPORTED_MODULE_3__.NetworkedProxy.get(localEid);
+                        const root = _components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__.EntityObject3DProxy.get(localEid).root;
+                        adapter.push(_components_network__WEBPACK_IMPORTED_MODULE_3__.NetworkMessageType.UpdateComponent, {
                             components: [{
                                     name: 'position',
                                     data: JSON.stringify(root.position.toArray())
@@ -2907,21 +3039,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "networkedEntitySystem": () => (/* binding */ networkedEntitySystem)
 /* harmony export */ });
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
-/* harmony import */ var _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/entity_object3d */ "./src/components/entity_object3d.ts");
-/* harmony import */ var _components_network__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/network */ "./src/components/network.ts");
+/* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../common */ "./src/common.ts");
+/* harmony import */ var _components_linear_transform__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/linear_transform */ "./src/components/linear_transform.ts");
+/* harmony import */ var _components_network__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/network */ "./src/components/network.ts");
 
 
 
-const adapterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkAdapter]);
-const managerQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedEntityManager, _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkEvent]);
+
+const adapterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_3__.NetworkAdapter]);
+const managerQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_3__.NetworkedEntityManager, _components_network__WEBPACK_IMPORTED_MODULE_3__.NetworkEvent]);
 const networkedEntitySystem = (world, prefabs) => {
     adapterQuery(world).forEach(adapterEid => {
-        const userId = _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkAdapterProxy.get(adapterEid).adapter.userId;
+        const userId = _components_network__WEBPACK_IMPORTED_MODULE_3__.NetworkAdapterProxy.get(adapterEid).adapter.userId;
         managerQuery(world).forEach(managerEid => {
-            const managerProxy = _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedEntityManagerProxy.get(managerEid);
-            for (const e of _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkEventProxy.get(managerEid).events) {
+            const managerProxy = _components_network__WEBPACK_IMPORTED_MODULE_3__.NetworkedEntityManagerProxy.get(managerEid);
+            for (const e of _components_network__WEBPACK_IMPORTED_MODULE_3__.NetworkEventProxy.get(managerEid).events) {
                 console.log(e);
-                if (e.type === _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkMessageType.CreateEntity) {
+                if (e.type === _components_network__WEBPACK_IMPORTED_MODULE_3__.NetworkMessageType.CreateEntity) {
                     if (e.data.creator !== userId) {
                         const prefab = prefabs.get(e.data.prefab);
                         // TODO: Fix me
@@ -2930,36 +3064,44 @@ const networkedEntitySystem = (world, prefabs) => {
                         const eid = prefab(world, params);
                         managerProxy.add(eid, e.data.network_id);
                         // TODO: Consider Shared
-                        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_2__.Remote, eid);
-                        _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedProxy.get(eid).allocate(world, e.data.network_id, _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedType.Remote, e.data.creator, e.data.prefab);
+                        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_3__.Remote, eid);
+                        _components_network__WEBPACK_IMPORTED_MODULE_3__.NetworkedProxy.get(eid).allocate(world, e.data.network_id, _components_network__WEBPACK_IMPORTED_MODULE_3__.NetworkedType.Remote, e.data.creator, e.data.prefab);
                     }
                 }
-                if (e.type === _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkMessageType.RemoveEntity) {
+                if (e.type === _components_network__WEBPACK_IMPORTED_MODULE_3__.NetworkMessageType.RemoveEntity) {
                     if (e.data.creator !== userId) {
                         const eid = managerProxy.getEid(e.data.network_id);
                         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeEntity)(world, eid);
                         managerProxy.remove(e.data.network_id);
                     }
                 }
-                if (e.type === _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkMessageType.UpdateComponent) {
-                    const eid = managerProxy.getEid(e.data.network_id);
-                    if (e.data.component_name === 'position') {
-                        if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3D, eid)) {
-                            const root = _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3DProxy.get(eid).root;
-                            root.position.fromArray(JSON.parse(e.data.data));
-                            console.log('position update');
+                if (e.type === _components_network__WEBPACK_IMPORTED_MODULE_3__.NetworkMessageType.UpdateComponent) {
+                    if (e.data.creator !== userId) {
+                        const eid = managerProxy.getEid(e.data.network_id);
+                        if (e.data.component_name === 'position') {
+                            const data = JSON.parse(e.data.data);
+                            (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_linear_transform__WEBPACK_IMPORTED_MODULE_2__.LinearTranslate, eid);
+                            _components_linear_transform__WEBPACK_IMPORTED_MODULE_2__.LinearTranslate.duration[eid] = _common__WEBPACK_IMPORTED_MODULE_1__.NETWORK_INTERVAL;
+                            _components_linear_transform__WEBPACK_IMPORTED_MODULE_2__.LinearTranslate.targetX[eid] = data[0];
+                            _components_linear_transform__WEBPACK_IMPORTED_MODULE_2__.LinearTranslate.targetY[eid] = data[1];
+                            _components_linear_transform__WEBPACK_IMPORTED_MODULE_2__.LinearTranslate.targetZ[eid] = data[2];
                         }
-                    }
-                    else if (e.data.component_name === 'quaternion') {
-                        if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3D, eid)) {
-                            const root = _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3DProxy.get(eid).root;
-                            root.quaternion.fromArray(JSON.parse(e.data.data));
+                        else if (e.data.component_name === 'quaternion') {
+                            const data = JSON.parse(e.data.data);
+                            (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_linear_transform__WEBPACK_IMPORTED_MODULE_2__.LinearRotate, eid);
+                            _components_linear_transform__WEBPACK_IMPORTED_MODULE_2__.LinearRotate.duration[eid] = _common__WEBPACK_IMPORTED_MODULE_1__.NETWORK_INTERVAL;
+                            _components_linear_transform__WEBPACK_IMPORTED_MODULE_2__.LinearRotate.targetX[eid] = data[0];
+                            _components_linear_transform__WEBPACK_IMPORTED_MODULE_2__.LinearRotate.targetY[eid] = data[1];
+                            _components_linear_transform__WEBPACK_IMPORTED_MODULE_2__.LinearRotate.targetZ[eid] = data[2];
+                            _components_linear_transform__WEBPACK_IMPORTED_MODULE_2__.LinearRotate.targetW[eid] = data[3];
                         }
-                    }
-                    else if (e.data.component_name === 'scale') {
-                        if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3D, eid)) {
-                            const root = _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3DProxy.get(eid).root;
-                            root.scale.fromArray(JSON.parse(e.data.data));
+                        else if (e.data.component_name === 'scale') {
+                            const data = JSON.parse(e.data.data);
+                            (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_linear_transform__WEBPACK_IMPORTED_MODULE_2__.LinearScale, eid);
+                            _components_linear_transform__WEBPACK_IMPORTED_MODULE_2__.LinearScale.duration[eid] = _common__WEBPACK_IMPORTED_MODULE_1__.NETWORK_INTERVAL;
+                            _components_linear_transform__WEBPACK_IMPORTED_MODULE_2__.LinearScale.targetX[eid] = data[0];
+                            _components_linear_transform__WEBPACK_IMPORTED_MODULE_2__.LinearScale.targetY[eid] = data[1];
+                            _components_linear_transform__WEBPACK_IMPORTED_MODULE_2__.LinearScale.targetZ[eid] = data[2];
                         }
                     }
                 }
