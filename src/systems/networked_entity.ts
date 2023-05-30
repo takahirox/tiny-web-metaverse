@@ -4,12 +4,7 @@ import {
   IWorld,
   removeEntity
 } from "bitecs";
-import { NETWORK_INTERVAL, Prefab } from "../common";
-import {
-  LinearTranslate,
-  LinearRotate,
-  LinearScale
-} from "../components/linear_transform";
+import { SystemParams } from "../common";
 import {
   NetworkAdapter,
   NetworkAdapterProxy,
@@ -26,7 +21,7 @@ import {
 const adapterQuery = defineQuery([NetworkAdapter]);
 const managerQuery = defineQuery([NetworkedEntityManager, NetworkEvent]);
 
-export const networkedEntitySystem = (world: IWorld, prefabs: Map<string, Prefab>) => {
+export const networkedEntitySystem = (world: IWorld, {prefabs, serializers}: SystemParams) => {
   adapterQuery(world).forEach(adapterEid => {
     const userId = NetworkAdapterProxy.get(adapterEid).adapter.userId;
     managerQuery(world).forEach(managerEid => {
@@ -62,28 +57,13 @@ export const networkedEntitySystem = (world: IWorld, prefabs: Map<string, Prefab
         if (e.type === NetworkMessageType.UpdateComponent) {
           if (e.data.creator !== userId) {
             const eid = managerProxy.getEid(e.data.network_id);
-            if (e.data.component_name === 'position') {
-              const data = JSON.parse(e.data.data);
-              addComponent(world, LinearTranslate, eid);
-              LinearTranslate.duration[eid] = NETWORK_INTERVAL;
-              LinearTranslate.targetX[eid] = data[0];
-              LinearTranslate.targetY[eid] = data[1];
-              LinearTranslate.targetZ[eid] = data[2];
-            } else if (e.data.component_name === 'quaternion') {
-              const data = JSON.parse(e.data.data);
-              addComponent(world, LinearRotate, eid);
-              LinearRotate.duration[eid] = NETWORK_INTERVAL;
-              LinearRotate.targetX[eid] = data[0];
-              LinearRotate.targetY[eid] = data[1];
-              LinearRotate.targetZ[eid] = data[2];
-              LinearRotate.targetW[eid] = data[3];
-            } else if (e.data.component_name === 'scale') {
-              const data = JSON.parse(e.data.data);
-              addComponent(world, LinearScale, eid);
-              LinearScale.duration[eid] = NETWORK_INTERVAL;
-              LinearScale.targetX[eid] = data[0];
-              LinearScale.targetY[eid] = data[1];
-              LinearScale.targetZ[eid] = data[2];
+            if (serializers.has(e.data.component_name)) {
+              serializers
+                .get(e.data.component_name)
+                .networkDeserializer(world, eid, JSON.parse(e.data.data));
+            } else {
+              // TODO: Proper error handling
+              console.warn(`Unknown component type ${e.data.component_name}`);
             }
           }
         }

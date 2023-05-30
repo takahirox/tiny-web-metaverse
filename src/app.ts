@@ -5,7 +5,15 @@ import {
   IWorld
 } from "bitecs";
 import { MathUtils, Raycaster } from "three";
-import { Prefab, PrefabMap, System, SystemOrder } from "./common";
+import {
+  Prefab,
+  PrefabMap,
+  SerializersMap,
+  Serializers,
+  System,
+  SystemParams,
+  SystemOrder
+} from "./common";
 import { AvatarMouseControlsProxy } from "./components/avatar_mouse_controls";
 import { EntityObject3DProxy } from "./components/entity_object3d";
 import {
@@ -39,6 +47,11 @@ import {
   WindowResizeEventListener,
   WindowSize
 } from "./components/window_resize";
+import {
+  positionSerializers,
+  quaternionSerializers,
+  scaleSerializers
+} from "./serializations/transform";
 import { avatarKeyControlsSystem } from "./systems/avatar_key_controls";
 import { avatarMouseControlsSystem } from "./systems/avatar_mouse_controls";
 import { fpsCameraSystem } from "./systems/fps_camera";
@@ -92,7 +105,9 @@ const createCanvas = (): HTMLCanvasElement => {
 
 export class App {
   private systems: RegisteredSystem[];
+  private systemParams: SystemParams;
   private prefabs: PrefabMap;
+  private serializers: SerializersMap;
   private canvas: HTMLCanvasElement;
   private world: IWorld;
   private adapter: PhoenixAdapter;
@@ -108,6 +123,11 @@ export class App {
     this.canvas = canvas;
     this.systems = [];
     this.prefabs = new Map();
+    this.serializers = new Map();
+    this.systemParams = {
+      prefabs: this.prefabs,
+      serializers: this.serializers
+    };
     this.world = createWorld();
     this.adapter = new PhoenixAdapter({userId});
     this.init();
@@ -155,6 +175,10 @@ export class App {
     this.registerSystem(networkEventClearSystem, SystemOrder.TearDown);
     this.registerSystem(clearRaycastedSystem, SystemOrder.TearDown);
     this.registerSystem(clearTransformUpdatedSystem, SystemOrder.TearDown);
+
+    this.registerSerializers('position', positionSerializers);
+    this.registerSerializers('quaternion', quaternionSerializers);
+    this.registerSerializers('scale', scaleSerializers);
 
     // Entity 0 for null entity
     addEntity(this.world);
@@ -265,14 +289,21 @@ export class App {
 
   registerPrefab(key: string, prefab: Prefab): void {
     if (this.prefabs.has(key)) {
-      throw new Error(`prefab ${key} is already used.`);
+      throw new Error(`prefab key ${key} is already used.`);
     }
     this.prefabs.set(key, prefab);
   }
 
+  registerSerializers(key: string, serializers: Serializers): void {
+    if (this.serializers.has(key)) {
+      throw new Error(`serializer key ${key} is already used.`);
+    }
+    this.serializers.set(key, serializers);
+  }
+
   tick() {
     for (const system of this.systems) {
-      system.system(this.world, this.prefabs);
+      system.system(this.world, this.systemParams);
     }
   }
 

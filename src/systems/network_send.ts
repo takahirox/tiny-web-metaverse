@@ -38,7 +38,9 @@ export const networkSendSystem = (world: IWorld) => {
     timeQuery(world).forEach(timeEid => {
       const timeProxy = TimeProxy.get(timeEid);
 
-      //
+      //　Sends messages at fixed intervals (rather than anytime updated) so
+      // that frequently updated components do not cause a client to flood
+      // the network with an unnecessary amount of update messages
       if (timeProxy.elapsed < senderProxy.lastSendTime + NETWORK_INTERVAL) {
         return;
       }
@@ -48,7 +50,7 @@ export const networkSendSystem = (world: IWorld) => {
       adapterQuery(world).forEach(adapterEid => {
         const adapter = NetworkAdapterProxy.get(adapterEid).adapter;
 
-        // TODO: Implement properly
+        // TODO: Implement
         localExitQuery(world).forEach(_localEid => {
 
         });

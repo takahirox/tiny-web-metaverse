@@ -19,8 +19,28 @@ export const SystemOrder = Object.freeze({
 export type Prefab = (world: IWorld, params: object) => number;
 export type PrefabMap = Map<string, Prefab>;
 
+// TODO: Avoid any
+export type Serializer = (world: IWorld, eid: number) => any;
+export type Deserializer = (world: IWorld, eid: number, data: any) => void;
+export type NetworkDeserializer = (world: IWorld, eid: number, data: any) => void;
+export type DiffChecker = (world: IWorld, eid: number, cache: any) => void;
+export type Serializers = {
+  deserializer: Deserializer,
+  diffChecker: DiffChecker,
+  networkDeserializer: NetworkDeserializer,
+  serializer: Serializer
+};
+export type SerializersMap = Map<string, Serializers>;
+
 // Ugh... Is passing prefabs good design?
-export type System = (world: IWorld, prefabs: Map<string, Prefab>) => void;
+export type SystemParams = {
+  prefabs: PrefabMap,
+  serializers: SerializersMap
+};
+export type System = (world: IWorld, params: SystemParams) => void;
 
 // TODO: Configurable
 export const NETWORK_INTERVAL = 1.0 / 60 * 5;
+
+// TODO: More accurate number
+export const F32_EPSILON = 0.00001;
