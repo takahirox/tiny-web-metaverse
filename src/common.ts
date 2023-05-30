@@ -23,7 +23,7 @@ export type PrefabMap = Map<string, Prefab>;
 export type Serializer = (world: IWorld, eid: number) => any;
 export type Deserializer = (world: IWorld, eid: number, data: any) => void;
 export type NetworkDeserializer = (world: IWorld, eid: number, data: any) => void;
-export type DiffChecker = (world: IWorld, eid: number, cache: any) => void;
+export type DiffChecker = (world: IWorld, eid: number, cache: any) => boolean;
 export type Serializers = {
   deserializer: Deserializer,
   diffChecker: DiffChecker,

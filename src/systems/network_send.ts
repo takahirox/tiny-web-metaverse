@@ -51,19 +51,21 @@ export const networkSendSystem = (world: IWorld, {serializerKeys, serializers}: 
         });
 
         localEnterQuery(world).forEach(localEid => {
+          const networkedProxy = NetworkedProxy.get(localEid);
           const components = [];
           // TODO: More efficient lookup?
           for (const component of getEntityComponents(world, localEid)) {
             if (serializerKeys.has(component)) {
               const name = serializerKeys.get(component)!;
+              const data = serializers.get(name).serializer(world, localEid);
+              networkedProxy.setCache(name, data);
               components.push({
                 name,
-                data: JSON.stringify(serializers.get(name).serializer(world, localEid))
+                data: JSON.stringify(data)
               });
             }
           }
 
-          const networkedProxy = NetworkedProxy.get(localEid);
           adapter.push(
             NetworkMessageType.CreateEntity,
             {
@@ -77,14 +79,24 @@ export const networkSendSystem = (world: IWorld, {serializerKeys, serializers}: 
 
         // TODO: Implement properly
         localQuery(world).forEach(localEid => {
+          const networkedProxy = NetworkedProxy.get(localEid);
           const components = [];
           for (const component of getEntityComponents(world, localEid)) {
             if (serializerKeys.has(component)) {
               const name = serializerKeys.get(component)!;
-              components.push({
-                name,
-                data: JSON.stringify(serializers.get(name).serializer(world, localEid))
-              });
+              if (networkedProxy.hasCache(name)) {
+                const cache = networkedProxy.getCache(name);
+                if (serializers.get(name).diffChecker(world, localEid, cache)) {
+                  const data = serializers.get(name).serializer(world, localEid);
+                  networkedProxy.setCache(name, data);
+                  components.push({
+                    name,
+                    data: JSON.stringify(data)
+                  });
+                }
+              } else {
+                // TODO: Send add component message?
+              }
             }
           }
 
@@ -93,7 +105,7 @@ export const networkSendSystem = (world: IWorld, {serializerKeys, serializers}: 
               NetworkMessageType.UpdateComponent,
               {
                 components,
-                network_id: NetworkedProxy.get(localEid).networkId
+                network_id: networkedProxy.networkId
               }
             );
           }

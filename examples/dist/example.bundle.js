@@ -3115,18 +3115,20 @@ const networkSendSystem = (world, { serializerKeys, serializers }) => {
                 localExitQuery(world).forEach(_localEid => {
                 });
                 localEnterQuery(world).forEach(localEid => {
+                    const networkedProxy = _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedProxy.get(localEid);
                     const components = [];
                     // TODO: More efficient lookup?
                     for (const component of (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.getEntityComponents)(world, localEid)) {
                         if (serializerKeys.has(component)) {
                             const name = serializerKeys.get(component);
+                            const data = serializers.get(name).serializer(world, localEid);
+                            networkedProxy.setCache(name, data);
                             components.push({
                                 name,
-                                data: JSON.stringify(serializers.get(name).serializer(world, localEid))
+                                data: JSON.stringify(data)
                             });
                         }
                     }
-                    const networkedProxy = _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedProxy.get(localEid);
                     adapter.push(_components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkMessageType.CreateEntity, {
                         components,
                         network_id: networkedProxy.networkId,
@@ -3136,20 +3138,31 @@ const networkSendSystem = (world, { serializerKeys, serializers }) => {
                 });
                 // TODO: Implement properly
                 localQuery(world).forEach(localEid => {
+                    const networkedProxy = _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedProxy.get(localEid);
                     const components = [];
                     for (const component of (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.getEntityComponents)(world, localEid)) {
                         if (serializerKeys.has(component)) {
                             const name = serializerKeys.get(component);
-                            components.push({
-                                name,
-                                data: JSON.stringify(serializers.get(name).serializer(world, localEid))
-                            });
+                            if (networkedProxy.hasCache(name)) {
+                                const cache = networkedProxy.getCache(name);
+                                if (serializers.get(name).diffChecker(world, localEid, cache)) {
+                                    const data = serializers.get(name).serializer(world, localEid);
+                                    networkedProxy.setCache(name, data);
+                                    components.push({
+                                        name,
+                                        data: JSON.stringify(data)
+                                    });
+                                }
+                            }
+                            else {
+                                // TODO: Send add component message?
+                            }
                         }
                     }
                     if (components.length > 0) {
                         adapter.push(_components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkMessageType.UpdateComponent, {
                             components,
-                            network_id: _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedProxy.get(localEid).networkId
+                            network_id: networkedProxy.networkId
                         });
                     }
                 });
