@@ -6,13 +6,19 @@ import {
 import { SphereGeometry, Mesh, MeshBasicMaterial } from "three";
 import { Avatar } from "../../src/components/avatar";
 import { EntityObject3DProxy } from "../../src/components/entity_object3d";
-import { NetworkedTransform } from "../../src/components/network";
+import {
+　　NetworkedPosition,
+  NetworkedQuaternion,
+  NetworkedScale
+} from "../../src/components/network";
 import { InScene } from "../../src/components/scene";
 
 export const AvatarPrefab = (world: IWorld): number => {
   const eid = addEntity(world);
   addComponent(world, Avatar, eid);
-  addComponent(world, NetworkedTransform, eid);
+  addComponent(world, NetworkedPosition, eid);
+  addComponent(world, NetworkedQuaternion, eid);
+  addComponent(world, NetworkedScale, eid);
   addComponent(world, InScene, eid);
 
   const avatarObject = new Mesh(

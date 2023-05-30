@@ -27,7 +27,9 @@ __webpack_require__.r(__webpack_exports__);
 const AvatarPrefab = (world) => {
     const eid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
     (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_avatar__WEBPACK_IMPORTED_MODULE_1__.Avatar, eid);
-    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_network__WEBPACK_IMPORTED_MODULE_3__.NetworkedTransform, eid);
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_network__WEBPACK_IMPORTED_MODULE_3__.NetworkedPosition, eid);
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_network__WEBPACK_IMPORTED_MODULE_3__.NetworkedQuaternion, eid);
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_network__WEBPACK_IMPORTED_MODULE_3__.NetworkedScale, eid);
     (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_scene__WEBPACK_IMPORTED_MODULE_4__.InScene, eid);
     const avatarObject = new three__WEBPACK_IMPORTED_MODULE_5__.Mesh(new three__WEBPACK_IMPORTED_MODULE_5__.SphereGeometry(0.25), new three__WEBPACK_IMPORTED_MODULE_5__.MeshBasicMaterial({ color: 0xaaaacc }));
     const leftEyeObject = new three__WEBPACK_IMPORTED_MODULE_5__.Mesh(new three__WEBPACK_IMPORTED_MODULE_5__.SphereGeometry(0.05), new three__WEBPACK_IMPORTED_MODULE_5__.MeshBasicMaterial({ color: 0x000000 }));
@@ -503,8 +505,10 @@ class App {
         this.systems = [];
         this.prefabs = new Map();
         this.serializers = new Map();
+        this.serializerKeys = new Map();
         this.systemParams = {
             prefabs: this.prefabs,
+            serializerKeys: this.serializerKeys,
             serializers: this.serializers
         };
         this.world = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.createWorld)();
@@ -544,9 +548,9 @@ class App {
         this.registerSystem(_systems_network_event__WEBPACK_IMPORTED_MODULE_27__.networkEventClearSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.TearDown);
         this.registerSystem(_systems_raycast__WEBPACK_IMPORTED_MODULE_32__.clearRaycastedSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.TearDown);
         this.registerSystem(_systems_transform__WEBPACK_IMPORTED_MODULE_37__.clearTransformUpdatedSystem, _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.TearDown);
-        this.registerSerializers('position', _serializations_transform__WEBPACK_IMPORTED_MODULE_13__.positionSerializers);
-        this.registerSerializers('quaternion', _serializations_transform__WEBPACK_IMPORTED_MODULE_13__.quaternionSerializers);
-        this.registerSerializers('scale', _serializations_transform__WEBPACK_IMPORTED_MODULE_13__.scaleSerializers);
+        this.registerSerializers('position', _components_network__WEBPACK_IMPORTED_MODULE_6__.NetworkedPosition, _serializations_transform__WEBPACK_IMPORTED_MODULE_13__.positionSerializers);
+        this.registerSerializers('quaternion', _components_network__WEBPACK_IMPORTED_MODULE_6__.NetworkedQuaternion, _serializations_transform__WEBPACK_IMPORTED_MODULE_13__.quaternionSerializers);
+        this.registerSerializers('scale', _components_network__WEBPACK_IMPORTED_MODULE_6__.NetworkedScale, _serializations_transform__WEBPACK_IMPORTED_MODULE_13__.scaleSerializers);
         // Entity 0 for null entity
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
         const timeEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
@@ -637,9 +641,12 @@ class App {
         }
         this.prefabs.set(key, prefab);
     }
-    registerSerializers(key, serializers) {
+    registerSerializers(key, component, serializers) {
         if (this.serializers.has(key)) {
             throw new Error(`serializer key ${key} is already used.`);
+        }
+        if (component !== null) {
+            this.serializerKeys.set(component, key);
         }
         this.serializers.set(key, serializers);
     }
@@ -1460,8 +1467,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "NetworkedEntityManagerProxy": () => (/* binding */ NetworkedEntityManagerProxy),
 /* harmony export */   "NetworkedInit": () => (/* binding */ NetworkedInit),
 /* harmony export */   "NetworkedInitProxy": () => (/* binding */ NetworkedInitProxy),
+/* harmony export */   "NetworkedPosition": () => (/* binding */ NetworkedPosition),
 /* harmony export */   "NetworkedProxy": () => (/* binding */ NetworkedProxy),
-/* harmony export */   "NetworkedTransform": () => (/* binding */ NetworkedTransform),
+/* harmony export */   "NetworkedQuaternion": () => (/* binding */ NetworkedQuaternion),
+/* harmony export */   "NetworkedScale": () => (/* binding */ NetworkedScale),
 /* harmony export */   "NetworkedType": () => (/* binding */ NetworkedType),
 /* harmony export */   "Remote": () => (/* binding */ Remote),
 /* harmony export */   "Shared": () => (/* binding */ Shared),
@@ -1509,12 +1518,22 @@ class NetworkedProxy {
             creator,
             networkId,
             prefabName,
-            type
+            type,
+            cache: new Map()
         });
     }
     free(world) {
         this.map.delete(this.eid);
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, Networked, this.eid);
+    }
+    hasCache(key) {
+        return this.map.get(this.eid).cache.has(key);
+    }
+    getCache(key) {
+        return this.map.get(this.eid).cache.get(key);
+    }
+    setCache(key, cache) {
+        this.map.get(this.eid).cache.set(key, cache);
     }
     get creator() {
         return this.map.get(this.eid).creator;
@@ -1559,7 +1578,9 @@ NetworkedInitProxy.instance = new NetworkedInitProxy();
 const Local = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 const Remote = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 const Shared = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const NetworkedTransform = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const NetworkedPosition = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const NetworkedQuaternion = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const NetworkedScale = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 const NetworkEvent = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 const NetworkEventMap = new Map();
 const NetworkAdapter = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
@@ -3064,25 +3085,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../common */ "./src/common.ts");
-/* harmony import */ var _components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/entity_object3d */ "./src/components/entity_object3d.ts");
-/* harmony import */ var _components_network__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/network */ "./src/components/network.ts");
-/* harmony import */ var _components_time__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/time */ "./src/components/time.ts");
+/* harmony import */ var _components_network__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/network */ "./src/components/network.ts");
+/* harmony import */ var _components_time__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/time */ "./src/components/time.ts");
 
 
 
 
-
-const senderQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_3__.NetworkEventSender]);
-const timeQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_time__WEBPACK_IMPORTED_MODULE_4__.Time]);
-const localQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_3__.Local, _components_network__WEBPACK_IMPORTED_MODULE_3__.Networked]);
+const senderQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkEventSender]);
+const timeQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_time__WEBPACK_IMPORTED_MODULE_3__.Time]);
+const localQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_2__.Local, _components_network__WEBPACK_IMPORTED_MODULE_2__.Networked]);
 const localEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)(localQuery);
 const localExitQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)(localQuery);
-const adapterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_3__.NetworkAdapter]);
-const networkSendSystem = (world) => {
+const adapterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkAdapter]);
+const networkSendSystem = (world, { serializerKeys, serializers }) => {
     senderQuery(world).forEach(senderEid => {
-        const senderProxy = _components_network__WEBPACK_IMPORTED_MODULE_3__.NetworkEventSenderProxy.get(senderEid);
+        const senderProxy = _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkEventSenderProxy.get(senderEid);
         timeQuery(world).forEach(timeEid => {
-            const timeProxy = _components_time__WEBPACK_IMPORTED_MODULE_4__.TimeProxy.get(timeEid);
+            const timeProxy = _components_time__WEBPACK_IMPORTED_MODULE_3__.TimeProxy.get(timeEid);
             //　Sends messages at fixed intervals (rather than anytime updated) so
             // that frequently updated components do not cause a client to flood
             // the network with an unnecessary amount of update messages
@@ -3091,52 +3110,46 @@ const networkSendSystem = (world) => {
             }
             senderProxy.lastSendTime = timeProxy.elapsed;
             adapterQuery(world).forEach(adapterEid => {
-                const adapter = _components_network__WEBPACK_IMPORTED_MODULE_3__.NetworkAdapterProxy.get(adapterEid).adapter;
+                const adapter = _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkAdapterProxy.get(adapterEid).adapter;
                 // TODO: Implement
                 localExitQuery(world).forEach(_localEid => {
                 });
                 localEnterQuery(world).forEach(localEid => {
-                    // TODO: Where shold NetworkedTransform be handled?
-                    // TODO: Implement properly
-                    if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_3__.NetworkedTransform, localEid) &&
-                        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__.EntityObject3D, localEid)) {
-                        const networkedProxy = _components_network__WEBPACK_IMPORTED_MODULE_3__.NetworkedProxy.get(localEid);
-                        const root = _components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__.EntityObject3DProxy.get(localEid).root;
-                        adapter.push(_components_network__WEBPACK_IMPORTED_MODULE_3__.NetworkMessageType.CreateEntity, {
-                            components: [{
-                                    name: 'position',
-                                    data: JSON.stringify(root.position.toArray())
-                                }, {
-                                    name: 'quaternion',
-                                    data: JSON.stringify(root.quaternion.toArray())
-                                }, {
-                                    name: 'scale',
-                                    data: JSON.stringify(root.scale.toArray())
-                                }],
-                            network_id: networkedProxy.networkId,
-                            prefab: networkedProxy.prefabName,
-                            shared: networkedProxy.type === _components_network__WEBPACK_IMPORTED_MODULE_3__.NetworkedType.Shared
-                        });
+                    const components = [];
+                    // TODO: More efficient lookup?
+                    for (const component of (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.getEntityComponents)(world, localEid)) {
+                        if (serializerKeys.has(component)) {
+                            const name = serializerKeys.get(component);
+                            components.push({
+                                name,
+                                data: JSON.stringify(serializers.get(name).serializer(world, localEid))
+                            });
+                        }
                     }
+                    const networkedProxy = _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedProxy.get(localEid);
+                    adapter.push(_components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkMessageType.CreateEntity, {
+                        components,
+                        network_id: networkedProxy.networkId,
+                        prefab: networkedProxy.prefabName,
+                        shared: networkedProxy.type === _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedType.Shared
+                    });
                 });
                 // TODO: Implement properly
                 localQuery(world).forEach(localEid => {
-                    if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_3__.NetworkedTransform, localEid) &&
-                        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__.EntityObject3D, localEid)) {
-                        const networkedProxy = _components_network__WEBPACK_IMPORTED_MODULE_3__.NetworkedProxy.get(localEid);
-                        const root = _components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__.EntityObject3DProxy.get(localEid).root;
-                        adapter.push(_components_network__WEBPACK_IMPORTED_MODULE_3__.NetworkMessageType.UpdateComponent, {
-                            components: [{
-                                    name: 'position',
-                                    data: JSON.stringify(root.position.toArray())
-                                }, {
-                                    name: 'quaternion',
-                                    data: JSON.stringify(root.quaternion.toArray())
-                                }, {
-                                    name: 'scale',
-                                    data: JSON.stringify(root.scale.toArray())
-                                }],
-                            network_id: networkedProxy.networkId
+                    const components = [];
+                    for (const component of (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.getEntityComponents)(world, localEid)) {
+                        if (serializerKeys.has(component)) {
+                            const name = serializerKeys.get(component);
+                            components.push({
+                                name,
+                                data: JSON.stringify(serializers.get(name).serializer(world, localEid))
+                            });
+                        }
+                    }
+                    if (components.length > 0) {
+                        adapter.push(_components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkMessageType.UpdateComponent, {
+                            components,
+                            network_id: _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedProxy.get(localEid).networkId
                         });
                     }
                 });
@@ -3219,7 +3232,7 @@ const networkedEntitySystem = (world, { prefabs, serializers }) => {
         managerQuery(world).forEach(managerEid => {
             const managerProxy = _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkedEntityManagerProxy.get(managerEid);
             for (const e of _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkEventProxy.get(managerEid).events) {
-                console.log(e);
+                //console.log(e);
                 if (e.type === _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkMessageType.CreateEntity) {
                     if (e.data.creator !== userId) {
                         const prefab = prefabs.get(e.data.prefab);

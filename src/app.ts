@@ -1,6 +1,7 @@
 import {
   addComponent,
   addEntity,
+  Component,
   createWorld,
   IWorld
 } from "bitecs";
@@ -8,6 +9,7 @@ import { MathUtils, Raycaster } from "three";
 import {
   Prefab,
   PrefabMap,
+  SerializerKeyMap,
   SerializersMap,
   Serializers,
   System,
@@ -30,6 +32,9 @@ import {
   EntityNetworkEventListener,
   NetworkAdapterProxy,
   NetworkedEntityManagerProxy,
+  NetworkedPosition,
+  NetworkedQuaternion,
+  NetworkedScale,
   NetworkEventReceiverInit,
   NetworkEventSenderProxy
 } from "./components/network";
@@ -108,6 +113,7 @@ export class App {
   private systemParams: SystemParams;
   private prefabs: PrefabMap;
   private serializers: SerializersMap;
+  private serializerKeys: SerializerKeyMap;
   private canvas: HTMLCanvasElement;
   private world: IWorld;
   private adapter: PhoenixAdapter;
@@ -124,8 +130,10 @@ export class App {
     this.systems = [];
     this.prefabs = new Map();
     this.serializers = new Map();
+    this.serializerKeys = new Map();
     this.systemParams = {
       prefabs: this.prefabs,
+      serializerKeys: this.serializerKeys,
       serializers: this.serializers
     };
     this.world = createWorld();
@@ -176,9 +184,9 @@ export class App {
     this.registerSystem(clearRaycastedSystem, SystemOrder.TearDown);
     this.registerSystem(clearTransformUpdatedSystem, SystemOrder.TearDown);
 
-    this.registerSerializers('position', positionSerializers);
-    this.registerSerializers('quaternion', quaternionSerializers);
-    this.registerSerializers('scale', scaleSerializers);
+    this.registerSerializers('position', NetworkedPosition, positionSerializers);
+    this.registerSerializers('quaternion', NetworkedQuaternion, quaternionSerializers);
+    this.registerSerializers('scale', NetworkedScale, scaleSerializers);
 
     // Entity 0 for null entity
     addEntity(this.world);
@@ -294,9 +302,12 @@ export class App {
     this.prefabs.set(key, prefab);
   }
 
-  registerSerializers(key: string, serializers: Serializers): void {
+  registerSerializers(key: string, component: Component | null, serializers: Serializers): void {
     if (this.serializers.has(key)) {
       throw new Error(`serializer key ${key} is already used.`);
+    }
+    if (component !== null) {
+      this.serializerKeys.set(component, key);
     }
     this.serializers.set(key, serializers);
   }

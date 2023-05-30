@@ -27,7 +27,7 @@ export const networkedEntitySystem = (world: IWorld, {prefabs, serializers}: Sys
     managerQuery(world).forEach(managerEid => {
       const managerProxy = NetworkedEntityManagerProxy.get(managerEid);
       for (const e of NetworkEventProxy.get(managerEid).events) {
-        console.log(e);
+        //console.log(e);
         if (e.type === NetworkMessageType.CreateEntity) {
           if (e.data.creator !== userId) {
             const prefab = prefabs.get(e.data.prefab);

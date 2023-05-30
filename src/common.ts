@@ -1,4 +1,4 @@
-import { IWorld } from "bitecs";
+import { Component, IWorld } from "bitecs";
 
 export const NULL_EID = 0;
 
@@ -31,10 +31,12 @@ export type Serializers = {
   serializer: Serializer
 };
 export type SerializersMap = Map<string, Serializers>;
+export type SerializerKeyMap = Map<Component, string>;
 
 // Ugh... Is passing prefabs good design?
 export type SystemParams = {
   prefabs: PrefabMap,
+  serializerKeys: SerializerKeyMap,
   serializers: SerializersMap
 };
 export type System = (world: IWorld, params: SystemParams) => void;

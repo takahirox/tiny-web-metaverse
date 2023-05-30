@@ -35,6 +35,8 @@ type NetworkedComponentData = {
 export const Networked = defineComponent();
 
 type NetworkedValue = {
+  // TODO: Avoid any
+  cache: Map<string, any>;
   components: Map<string, NetworkedComponentData>;
   creator: string;
   networkId: string;
@@ -70,13 +72,26 @@ export class NetworkedProxy {
       creator,
       networkId,
       prefabName,
-      type
+      type,
+      cache: new Map()
     });
   }
 
   free(world: IWorld): void {
     this.map.delete(this.eid);
     removeComponent(world, Networked, this.eid);
+  }
+
+  hasCache(key: string): boolean {
+    return this.map.get(this.eid)!.cache.has(key);
+  }
+
+  getCache(key: string): any {
+    return this.map.get(this.eid)!.cache.get(key);
+  }
+
+　　setCache(key: string, cache: any): void {
+    this.map.get(this.eid)!.cache.set(key, cache);
   }
 
   get creator(): string {
@@ -141,7 +156,9 @@ export const Local = defineComponent();
 export const Remote = defineComponent();
 export const Shared = defineComponent();
 
-export const NetworkedTransform = defineComponent();
+export const NetworkedPosition = defineComponent();
+export const NetworkedQuaternion = defineComponent();
+export const NetworkedScale = defineComponent();
 
 // TODO: Avoid any
 type NetworkEventValue = {

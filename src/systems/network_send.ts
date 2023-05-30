@@ -2,21 +2,16 @@ import {
   defineQuery,
   enterQuery,
   exitQuery,
-  hasComponent,
+  getEntityComponents,
   IWorld
 } from "bitecs";
-import { NETWORK_INTERVAL } from "../common";
-import {
-  EntityObject3D,
-  EntityObject3DProxy
-} from "../components/entity_object3d";
+import { NETWORK_INTERVAL, SystemParams } from "../common";
 import {
   Local,
   NetworkAdapter,
   NetworkAdapterProxy,
   Networked,
   NetworkedProxy,
-  NetworkedTransform,
   NetworkedType,
   NetworkEventSender,
   NetworkEventSenderProxy,
@@ -32,7 +27,7 @@ const localEnterQuery = enterQuery(localQuery);
 const localExitQuery = exitQuery(localQuery);
 const adapterQuery = defineQuery([NetworkAdapter]);
 
-export const networkSendSystem = (world: IWorld) => {
+export const networkSendSystem = (world: IWorld, {serializerKeys, serializers}: SystemParams) => {
   senderQuery(world).forEach(senderEid => {
     const senderProxy = NetworkEventSenderProxy.get(senderEid);
     timeQuery(world).forEach(timeEid => {
@@ -56,53 +51,49 @@ export const networkSendSystem = (world: IWorld) => {
         });
 
         localEnterQuery(world).forEach(localEid => {
-          // TODO: Where shold NetworkedTransform be handled?
-          // TODO: Implement properly
-          if (hasComponent(world, NetworkedTransform, localEid) &&
-            hasComponent(world, EntityObject3D, localEid)) {
-            const networkedProxy = NetworkedProxy.get(localEid);
-            const root = EntityObject3DProxy.get(localEid).root;
-            adapter.push(
-              NetworkMessageType.CreateEntity,
-              {
-                components: [{
-                  name: 'position',
-                  data: JSON.stringify(root.position.toArray())
-                }, {
-                  name: 'quaternion',
-                  data: JSON.stringify(root.quaternion.toArray())
-                }, {
-                  name: 'scale',
-                  data: JSON.stringify(root.scale.toArray())
-                }],
-                network_id: networkedProxy.networkId,
-                prefab: networkedProxy.prefabName,
-                shared: networkedProxy.type === NetworkedType.Shared
-              }
-            );
+          const components = [];
+          // TODO: More efficient lookup?
+          for (const component of getEntityComponents(world, localEid)) {
+            if (serializerKeys.has(component)) {
+              const name = serializerKeys.get(component)!;
+              components.push({
+                name,
+                data: JSON.stringify(serializers.get(name).serializer(world, localEid))
+              });
+            }
           }
+
+          const networkedProxy = NetworkedProxy.get(localEid);
+          adapter.push(
+            NetworkMessageType.CreateEntity,
+            {
+              components,
+              network_id: networkedProxy.networkId,
+              prefab: networkedProxy.prefabName,
+              shared: networkedProxy.type === NetworkedType.Shared
+            }
+          );
         });
 
         // TODO: Implement properly
         localQuery(world).forEach(localEid => {
-          if (hasComponent(world, NetworkedTransform, localEid) &&
-            hasComponent(world, EntityObject3D, localEid)) {
-            const networkedProxy = NetworkedProxy.get(localEid);
-            const root = EntityObject3DProxy.get(localEid).root;
+          const components = [];
+          for (const component of getEntityComponents(world, localEid)) {
+            if (serializerKeys.has(component)) {
+              const name = serializerKeys.get(component)!;
+              components.push({
+                name,
+                data: JSON.stringify(serializers.get(name).serializer(world, localEid))
+              });
+            }
+          }
+
+          if (components.length > 0) {
             adapter.push(
               NetworkMessageType.UpdateComponent,
               {
-                components: [{
-                  name: 'position',
-                  data: JSON.stringify(root.position.toArray())
-                }, {
-                  name: 'quaternion',
-                  data: JSON.stringify(root.quaternion.toArray())
-                }, {
-                  name: 'scale',
-                  data: JSON.stringify(root.scale.toArray())
-                }],
-                network_id: networkedProxy.networkId
+                components,
+                network_id: NetworkedProxy.get(localEid).networkId
               }
             );
           }
