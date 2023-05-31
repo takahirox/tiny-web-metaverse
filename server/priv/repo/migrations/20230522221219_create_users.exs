@@ -4,7 +4,7 @@ defmodule Server.Repo.Migrations.CreateUsers do
   def change do
     create table(:users) do
       add :user_id, :string
-      add :removed, :boolean, default: false, null: false
+      add :version, :integer, default: 1, null: false
 
       timestamps()
     end

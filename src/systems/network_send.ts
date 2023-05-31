@@ -50,10 +50,10 @@ export const networkSendSystem = (world: IWorld, {serializerKeys, serializers}: 
 
         });
 
+        //
         localEnterQuery(world).forEach(localEid => {
           const networkedProxy = NetworkedProxy.get(localEid);
           const components = [];
-          // TODO: More efficient lookup?
           for (const component of getEntityComponents(world, localEid)) {
             if (serializerKeys.has(component)) {
               const name = serializerKeys.get(component)!;
@@ -77,10 +77,11 @@ export const networkSendSystem = (world: IWorld, {serializerKeys, serializers}: 
           );
         });
 
-        // TODO: Implement properly
+        //
         localQuery(world).forEach(localEid => {
           const networkedProxy = NetworkedProxy.get(localEid);
           const components = [];
+          // TODO: More efficient lookup?
           for (const component of getEntityComponents(world, localEid)) {
             if (serializerKeys.has(component)) {
               const name = serializerKeys.get(component)!;

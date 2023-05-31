@@ -45,6 +45,16 @@ export const networkedEntitySystem = (world: IWorld, {prefabs, serializers}: Sys
               e.data.creator,
               e.data.prefab
             );
+            for (const c of e.data.components) {
+              if (serializers.has(c.component_name)) {
+                serializers
+                  .get(c.component_name)
+                  .networkDeserializer(world, eid, JSON.parse(c.data));
+              } else {
+                // TODO: Proper error handling
+                console.warn(`Unknown component type ${c.component_name}`);
+              }
+            }
           }
         }
         if (e.type === NetworkMessageType.RemoveEntity) {
@@ -55,15 +65,18 @@ export const networkedEntitySystem = (world: IWorld, {prefabs, serializers}: Sys
           }
         }
         if (e.type === NetworkMessageType.UpdateComponent) {
-          if (e.data.creator !== userId) {
+          if (e.data.owner !== userId) {
             const eid = managerProxy.getEid(e.data.network_id);
-            if (serializers.has(e.data.component_name)) {
-              serializers
-                .get(e.data.component_name)
-                .networkDeserializer(world, eid, JSON.parse(e.data.data));
-            } else {
-              // TODO: Proper error handling
-              console.warn(`Unknown component type ${e.data.component_name}`);
+            // TODO: Duplicated code with the above
+            for (const c of e.data.components) {
+              if (serializers.has(c.component_name)) {
+                serializers
+                  .get(c.component_name)
+                  .networkDeserializer(world, eid, JSON.parse(c.data));
+              } else {
+                // TODO: Proper error handling
+                console.warn(`Unknown component type ${c.component_name}`);
+              }
             }
           }
         }

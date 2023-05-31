@@ -35,7 +35,6 @@ const addEvent = (
   NetworkEventProxy.get(eid).add(
     world,
     type,
-    payload.version,
     payload.data
   );
 };

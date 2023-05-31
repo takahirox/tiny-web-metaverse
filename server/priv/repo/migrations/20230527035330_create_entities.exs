@@ -6,9 +6,9 @@ defmodule Server.Repo.Migrations.CreateEntities do
       add :network_id, :string
       add :creator, :string
       add :shared, :boolean, default: false, null: false
-      add :removed, :boolean, default: false, null: false
       add :prefab, :string
       add :prefab_params, :text
+      add :version, :integer, default: 1
 
       timestamps()
     end

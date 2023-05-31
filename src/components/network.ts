@@ -163,8 +163,7 @@ export const NetworkedScale = defineComponent();
 // TODO: Avoid any
 type NetworkEventValue = {
   data: any,
-  type: NetworkMessageType,
-  version: number
+  type: NetworkMessageType
 };
 
 export const NetworkEvent = defineComponent();
@@ -236,14 +235,13 @@ export class NetworkEventProxy {
   add(
     world: IWorld,
     type: NetworkMessageType,
-    version: number,
     data: any
   ): void {
     if (!hasComponent(world, NetworkEvent, this.eid)) {
       addComponent(world, NetworkEvent, this.eid);
       NetworkEventMap.set(this.eid, []);
     }
-    NetworkEventMap.get(this.eid)!.push({data, type, version});
+    NetworkEventMap.get(this.eid)!.push({data, type});
   }
 
   free(world: IWorld): void {

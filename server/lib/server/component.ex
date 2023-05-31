@@ -8,7 +8,8 @@ defmodule Server.Component do
     field :data, :string
     field :network_id, :string
     field :owner, :string
-    field :removed, :boolean, default: false
+    field :version, :integer, default: 1
+    # TODO: Add component_id (UUID)?
 
     timestamps()
   end
@@ -16,8 +17,8 @@ defmodule Server.Component do
   @doc false
   def changeset(component, attrs) do
     component
-    |> cast(attrs, [:component_name, :creator, :owner, :network_id, :data, :removed])
-    |> validate_required([:component_name, :creator, :owner, :network_id, :data, :removed])
+    |> cast(attrs, [:component_name, :creator, :owner, :network_id, :data])
+    |> validate_required([:component_name, :creator, :owner, :network_id, :data])
     |> unique_constraint([:component_name, :network_id])
   end
 end

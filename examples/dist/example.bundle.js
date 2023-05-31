@@ -1623,12 +1623,12 @@ class NetworkEventProxy {
         NetworkEventProxy.instance.eid = eid;
         return NetworkEventProxy.instance;
     }
-    add(world, type, version, data) {
+    add(world, type, data) {
         if (!(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, NetworkEvent, this.eid)) {
             (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, NetworkEvent, this.eid);
             NetworkEventMap.set(this.eid, []);
         }
-        NetworkEventMap.get(this.eid).push({ data, type, version });
+        NetworkEventMap.get(this.eid).push({ data, type });
     }
     free(world) {
         NetworkEventMap.delete(this.eid);
@@ -3006,7 +3006,7 @@ const eventQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_compone
 const adapterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkAdapter]);
 // TODO: Avoid any
 const addEvent = (world, eid, type, payload) => {
-    _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkEventProxy.get(eid).add(world, type, payload.version, payload.data);
+    _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkEventProxy.get(eid).add(world, type, payload.data);
 };
 const networkEventHandleSystem = (world) => {
     // Assumes that adapter entities are same as the ones that
@@ -3114,10 +3114,10 @@ const networkSendSystem = (world, { serializerKeys, serializers }) => {
                 // TODO: Implement
                 localExitQuery(world).forEach(_localEid => {
                 });
+                //
                 localEnterQuery(world).forEach(localEid => {
                     const networkedProxy = _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedProxy.get(localEid);
                     const components = [];
-                    // TODO: More efficient lookup?
                     for (const component of (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.getEntityComponents)(world, localEid)) {
                         if (serializerKeys.has(component)) {
                             const name = serializerKeys.get(component);
@@ -3136,10 +3136,11 @@ const networkSendSystem = (world, { serializerKeys, serializers }) => {
                         shared: networkedProxy.type === _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedType.Shared
                     });
                 });
-                // TODO: Implement properly
+                //
                 localQuery(world).forEach(localEid => {
                     const networkedProxy = _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedProxy.get(localEid);
                     const components = [];
+                    // TODO: More efficient lookup?
                     for (const component of (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.getEntityComponents)(world, localEid)) {
                         if (serializerKeys.has(component)) {
                             const name = serializerKeys.get(component);
@@ -3257,6 +3258,17 @@ const networkedEntitySystem = (world, { prefabs, serializers }) => {
                         // TODO: Consider Shared
                         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_1__.Remote, eid);
                         _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkedProxy.get(eid).allocate(world, e.data.network_id, _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkedType.Remote, e.data.creator, e.data.prefab);
+                        for (const c of e.data.components) {
+                            if (serializers.has(c.component_name)) {
+                                serializers
+                                    .get(c.component_name)
+                                    .networkDeserializer(world, eid, JSON.parse(c.data));
+                            }
+                            else {
+                                // TODO: Proper error handling
+                                console.warn(`Unknown component type ${c.component_name}`);
+                            }
+                        }
                     }
                 }
                 if (e.type === _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkMessageType.RemoveEntity) {
@@ -3267,16 +3279,19 @@ const networkedEntitySystem = (world, { prefabs, serializers }) => {
                     }
                 }
                 if (e.type === _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkMessageType.UpdateComponent) {
-                    if (e.data.creator !== userId) {
+                    if (e.data.owner !== userId) {
                         const eid = managerProxy.getEid(e.data.network_id);
-                        if (serializers.has(e.data.component_name)) {
-                            serializers
-                                .get(e.data.component_name)
-                                .networkDeserializer(world, eid, JSON.parse(e.data.data));
-                        }
-                        else {
-                            // TODO: Proper error handling
-                            console.warn(`Unknown component type ${e.data.component_name}`);
+                        // TODO: Duplicated code with the above
+                        for (const c of e.data.components) {
+                            if (serializers.has(c.component_name)) {
+                                serializers
+                                    .get(c.component_name)
+                                    .networkDeserializer(world, eid, JSON.parse(c.data));
+                            }
+                            else {
+                                // TODO: Proper error handling
+                                console.warn(`Unknown component type ${c.component_name}`);
+                            }
                         }
                     }
                 }

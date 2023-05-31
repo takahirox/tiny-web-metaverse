@@ -8,7 +8,7 @@ defmodule Server.Repo.Migrations.CreateComponents do
       add :owner, :string
       add :network_id, :string
       add :data, :text
-      add :removed, :boolean, default: false, null: false
+      add :version, :integer, default: 1
 
       timestamps()
     end
