@@ -573,6 +573,7 @@ class App {
         _components_network__WEBPACK_IMPORTED_MODULE_6__.NetworkedEntityManagerProxy.get(networkedEntityManagerEid).allocate(this.world);
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_network__WEBPACK_IMPORTED_MODULE_6__.ComponentNetworkEventListener, networkedEntityManagerEid);
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_network__WEBPACK_IMPORTED_MODULE_6__.EntityNetworkEventListener, networkedEntityManagerEid);
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_network__WEBPACK_IMPORTED_MODULE_6__.UserNetworkEventListener, networkedEntityManagerEid);
         const mousePositionEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
         _components_mouse__WEBPACK_IMPORTED_MODULE_4__.MousePositionProxy.get(mousePositionEid).allocate(this.world);
         _components_mouse__WEBPACK_IMPORTED_MODULE_4__.PreviousMousePositionProxy.get(mousePositionEid).allocate(this.world);
@@ -1678,25 +1679,43 @@ class NetworkedEntityManagerProxy {
         this.map.set(this.eid, {
             deleted: new Set(),
             eidToNetworkIdMap: new Map(),
-            networkIdToEidMap: new Map()
+            networkIdToEidMap: new Map(),
+            networkIdToUserIdMap: new Map(),
+            userIdToNetworkIdsMap: new Map()
         });
     }
     free(world) {
         this.map.delete(this.eid);
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, NetworkedEntityManager, this.eid);
     }
-    add(eid, networkId) {
+    add(eid, networkId, userId) {
         this.map.get(this.eid).eidToNetworkIdMap.set(eid, networkId);
         this.map.get(this.eid).networkIdToEidMap.set(networkId, eid);
+        this.map.get(this.eid).networkIdToUserIdMap.set(networkId, userId);
+        if (!this.map.get(this.eid).userIdToNetworkIdsMap.has(userId)) {
+            this.map.get(this.eid).userIdToNetworkIdsMap.set(userId, []);
+        }
+        this.map.get(this.eid).userIdToNetworkIdsMap.get(userId).push(networkId);
     }
     remove(networkId) {
         const eid = this.map.get(this.eid).networkIdToEidMap.get(networkId);
         this.map.get(this.eid).networkIdToEidMap.delete(networkId);
         this.map.get(this.eid).eidToNetworkIdMap.delete(eid);
+        const userId = this.map.get(this.eid).networkIdToUserIdMap.get(networkId);
+        this.map.get(this.eid).networkIdToUserIdMap.delete(networkId);
+        this.map.get(this.eid).userIdToNetworkIdsMap.get(userId).splice(this.map.get(this.eid).userIdToNetworkIdsMap.get(userId).indexOf(networkId), 1);
         this.map.get(this.eid).deleted.add(networkId);
     }
     getNetworkId(eid) {
         return this.map.get(this.eid).eidToNetworkIdMap.get(eid);
+    }
+    getNetworkIdsByUserId(userId) {
+        return this.map.get(this.eid).userIdToNetworkIdsMap.get(userId);
+    }
+    clearNetworkIdsByUserId(userId) {
+        while (this.getNetworkIdsByUserId(userId).length > 0) {
+            this.remove(this.getNetworkIdsByUserId(userId)[0]);
+        }
     }
     getEid(networkId) {
         return this.map.get(this.eid).networkIdToEidMap.get(networkId);
@@ -3235,29 +3254,47 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "networkedEntitySystem": () => (/* binding */ networkedEntitySystem)
 /* harmony export */ });
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
-/* harmony import */ var _components_network__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/network */ "./src/components/network.ts");
+/* harmony import */ var _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/entity_object3d */ "./src/components/entity_object3d.ts");
+/* harmony import */ var _components_network__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/network */ "./src/components/network.ts");
+/* harmony import */ var _components_scene__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/scene */ "./src/components/scene.ts");
 
 
-const adapterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkAdapter]);
-const managerQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkedEntityManager, _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkEvent]);
+
+
+const adapterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkAdapter]);
+const managerQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedEntityManager, _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkEvent]);
+// TODO: Implement properly
+const removeComponentsAndEntity = (world, eid) => {
+    // TODO: We may need a helper function to remove entity because
+    //       some components need proxy to be removed and some other
+    //       components need to be removed in system with Destroy component
+    // Remove associated object 3Ds from the scene
+    // TODO: This may be needed to be done in the future helper function
+    if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3D, eid) &&
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_scene__WEBPACK_IMPORTED_MODULE_3__.InScene, eid)) {
+        const root = _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3DProxy.get(eid).root;
+        root.parent.remove(root);
+    }
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeEntity)(world, eid);
+};
 const networkedEntitySystem = (world, { prefabs, serializers }) => {
     adapterQuery(world).forEach(adapterEid => {
-        const userId = _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkAdapterProxy.get(adapterEid).adapter.userId;
+        const userId = _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkAdapterProxy.get(adapterEid).adapter.userId;
         managerQuery(world).forEach(managerEid => {
-            const managerProxy = _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkedEntityManagerProxy.get(managerEid);
-            for (const e of _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkEventProxy.get(managerEid).events) {
+            const managerProxy = _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedEntityManagerProxy.get(managerEid);
+            for (const e of _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkEventProxy.get(managerEid).events) {
                 //console.log(e);
-                if (e.type === _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkMessageType.CreateEntity) {
+                if (e.type === _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkMessageType.CreateEntity) {
                     if (e.data.creator !== userId) {
                         const prefab = prefabs.get(e.data.prefab);
                         // TODO: Fix me
                         const params = e.data.prefab_params !== undefined
                             ? JSON.parse(e.data.prefab_params) : undefined;
                         const eid = prefab(world, params);
-                        managerProxy.add(eid, e.data.network_id);
+                        managerProxy.add(eid, e.data.network_id, e.data.creator);
                         // TODO: Consider Shared
-                        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_1__.Remote, eid);
-                        _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkedProxy.get(eid).allocate(world, e.data.network_id, _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkedType.Remote, e.data.creator, e.data.prefab);
+                        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_2__.Remote, eid);
+                        _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedProxy.get(eid).allocate(world, e.data.network_id, _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedType.Remote, e.data.creator, e.data.prefab);
                         for (const c of e.data.components) {
                             if (serializers.has(c.component_name)) {
                                 serializers
@@ -3271,14 +3308,14 @@ const networkedEntitySystem = (world, { prefabs, serializers }) => {
                         }
                     }
                 }
-                if (e.type === _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkMessageType.RemoveEntity) {
+                if (e.type === _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkMessageType.RemoveEntity) {
                     if (e.data.creator !== userId) {
                         const eid = managerProxy.getEid(e.data.network_id);
-                        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeEntity)(world, eid);
+                        removeComponentsAndEntity(world, eid);
                         managerProxy.remove(e.data.network_id);
                     }
                 }
-                if (e.type === _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkMessageType.UpdateComponent) {
+                if (e.type === _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkMessageType.UpdateComponent) {
                     if (e.data.owner !== userId) {
                         const eid = managerProxy.getEid(e.data.network_id);
                         // TODO: Duplicated code with the above
@@ -3293,6 +3330,15 @@ const networkedEntitySystem = (world, { prefabs, serializers }) => {
                                 console.warn(`Unknown component type ${c.component_name}`);
                             }
                         }
+                    }
+                }
+                if (e.type === _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkMessageType.UserLeft) {
+                    if (e.data.user_id !== userId) {
+                        for (const networkId of managerProxy.getNetworkIdsByUserId(e.data)) {
+                            const eid = managerProxy.getEid(networkId);
+                            removeComponentsAndEntity(world, eid);
+                        }
+                        managerProxy.clearNetworkIdsByUserId(e.data);
                     }
                 }
             }

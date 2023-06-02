@@ -36,7 +36,8 @@ import {
   NetworkedQuaternion,
   NetworkedScale,
   NetworkEventReceiverInit,
-  NetworkEventSenderProxy
+  NetworkEventSenderProxy,
+  UserNetworkEventListener
 } from "./components/network";
 import { RendererInitProxy } from "./components/renderer";
 import { InScene, SceneInitProxy } from "./components/scene";
@@ -219,6 +220,7 @@ export class App {
     NetworkedEntityManagerProxy.get(networkedEntityManagerEid).allocate(this.world);
     addComponent(this.world, ComponentNetworkEventListener, networkedEntityManagerEid);
     addComponent(this.world, EntityNetworkEventListener, networkedEntityManagerEid);
+    addComponent(this.world, UserNetworkEventListener, networkedEntityManagerEid);
 
     const mousePositionEid = addEntity(this.world);
     MousePositionProxy.get(mousePositionEid).allocate(this.world);

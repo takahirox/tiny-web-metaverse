@@ -1,10 +1,15 @@
 import {
   addComponent,
   defineQuery,
+  hasComponent,
   IWorld,
   removeEntity
 } from "bitecs";
 import { SystemParams } from "../common";
+import {
+  EntityObject3D,
+  EntityObject3DProxy
+} from "../components/entity_object3d";
 import {
   NetworkAdapter,
   NetworkAdapterProxy,
@@ -17,9 +22,27 @@ import {
   NetworkMessageType,
   Remote
 } from "../components/network";
+import { InScene } from "../components/scene";
 
 const adapterQuery = defineQuery([NetworkAdapter]);
 const managerQuery = defineQuery([NetworkedEntityManager, NetworkEvent]);
+
+// TODO: Implement properly
+const removeComponentsAndEntity = (world: IWorld, eid: number): void => {
+  // TODO: We may need a helper function to remove entity because
+  //       some components need proxy to be removed and some other
+  //       components need to be removed in system with Destroy component
+
+  // Remove associated object 3Ds from the scene
+  // TODO: This may be needed to be done in the future helper function
+  if (hasComponent(world, EntityObject3D, eid) &&
+    hasComponent(world, InScene, eid)) {
+    const root = EntityObject3DProxy.get(eid).root;
+    root.parent.remove(root);
+  }
+
+  removeEntity(world, eid);
+};
 
 export const networkedEntitySystem = (world: IWorld, {prefabs, serializers}: SystemParams) => {
   adapterQuery(world).forEach(adapterEid => {
@@ -35,7 +58,7 @@ export const networkedEntitySystem = (world: IWorld, {prefabs, serializers}: Sys
             const params = e.data.prefab_params !== undefined
               ? JSON.parse(e.data.prefab_params) : undefined;
             const eid = prefab(world, params);
-            managerProxy.add(eid, e.data.network_id);
+            managerProxy.add(eid, e.data.network_id, e.data.creator);
             // TODO: Consider Shared
             addComponent(world, Remote, eid);
             NetworkedProxy.get(eid).allocate(
@@ -60,7 +83,7 @@ export const networkedEntitySystem = (world: IWorld, {prefabs, serializers}: Sys
         if (e.type === NetworkMessageType.RemoveEntity) {
           if (e.data.creator !== userId) {
             const eid = managerProxy.getEid(e.data.network_id);
-            removeEntity(world, eid);
+            removeComponentsAndEntity(world, eid);
             managerProxy.remove(e.data.network_id);
           }
         }
@@ -78,6 +101,15 @@ export const networkedEntitySystem = (world: IWorld, {prefabs, serializers}: Sys
                 console.warn(`Unknown component type ${c.component_name}`);
               }
             }
+          }
+        }
+        if (e.type === NetworkMessageType.UserLeft) {
+          if (e.data.user_id !== userId) {
+            for (const networkId of managerProxy.getNetworkIdsByUserId(e.data)) {
+              const eid = managerProxy.getEid(networkId);
+              removeComponentsAndEntity(world, eid);
+		    }
+            managerProxy.clearNetworkIdsByUserId(e.data);
           }
         }
       }

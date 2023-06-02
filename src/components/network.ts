@@ -289,9 +289,11 @@ export class NetworkEventSenderProxy {
 export const NetworkedEntityManager = defineComponent();
 
 type NetworkedEntityManagerValue = {
-  networkIdToEidMap: Map<string, number>;
-  eidToNetworkIdMap: Map<number, string>;
   deleted: Set<string>;
+  eidToNetworkIdMap: Map<number, string>;
+  networkIdToEidMap: Map<string, number>;
+  networkIdToUserIdMap: Map<string, string>;
+  userIdToNetworkIdsMap: Map<string, string[]>;
 };
 
 export class NetworkedEntityManagerProxy {
@@ -314,7 +316,9 @@ export class NetworkedEntityManagerProxy {
     this.map.set(this.eid, {
       deleted: new Set(),
       eidToNetworkIdMap: new Map(),
-      networkIdToEidMap: new Map()
+      networkIdToEidMap: new Map(),
+      networkIdToUserIdMap: new Map(),
+      userIdToNetworkIdsMap: new Map()
     });
   }
 
@@ -323,20 +327,42 @@ export class NetworkedEntityManagerProxy {
     removeComponent(world, NetworkedEntityManager, this.eid);
   }
 
-  add(eid: number, networkId: string): void {
+  add(eid: number, networkId: string, userId: string): void {
     this.map.get(this.eid).eidToNetworkIdMap.set(eid, networkId);
     this.map.get(this.eid).networkIdToEidMap.set(networkId, eid);
+
+    this.map.get(this.eid).networkIdToUserIdMap.set(networkId, userId);
+    if (!this.map.get(this.eid).userIdToNetworkIdsMap.has(userId)) {
+      this.map.get(this.eid).userIdToNetworkIdsMap.set(userId, []);
+	}
+    this.map.get(this.eid).userIdToNetworkIdsMap.get(userId).push(networkId);
   }
 
   remove(networkId: string): void {
     const eid = this.map.get(this.eid).networkIdToEidMap.get(networkId);
     this.map.get(this.eid).networkIdToEidMap.delete(networkId);
     this.map.get(this.eid).eidToNetworkIdMap.delete(eid);
+
+    const userId = this.map.get(this.eid).networkIdToUserIdMap.get(networkId);
+    this.map.get(this.eid).networkIdToUserIdMap.delete(networkId);
+    this.map.get(this.eid).userIdToNetworkIdsMap.get(userId).splice(
+      this.map.get(this.eid).userIdToNetworkIdsMap.get(userId).indexOf(networkId), 1);
+
     this.map.get(this.eid).deleted.add(networkId);
   }
 
   getNetworkId(eid: number): string {
     return this.map.get(this.eid).eidToNetworkIdMap.get(eid)!;
+  }
+
+  getNetworkIdsByUserId(userId: string): string[] {
+    return this.map.get(this.eid).userIdToNetworkIdsMap.get(userId)!;
+  }
+
+  clearNetworkIdsByUserId(userId: string): void {
+    while(this.getNetworkIdsByUserId(userId).length > 0) {
+      this.remove(this.getNetworkIdsByUserId(userId)[0]);
+    }
   }
 
   getEid(networkId: string): number {
