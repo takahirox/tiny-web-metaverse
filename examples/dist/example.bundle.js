@@ -2,6 +2,23 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./examples/components/user_event_handler.ts":
+/*!***************************************************!*\
+  !*** ./examples/components/user_event_handler.ts ***!
+  \***************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "UserEventHandler": () => (/* binding */ UserEventHandler)
+/* harmony export */ });
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+
+const UserEventHandler = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+
+
+/***/ }),
+
 /***/ "./examples/prefabs/avatar.ts":
 /*!************************************!*\
   !*** ./examples/prefabs/avatar.ts ***!
@@ -138,9 +155,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var _src_components_network__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../src/components/network */ "./src/components/network.ts");
+/* harmony import */ var _components_user_event_handler__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/user_event_handler */ "./examples/components/user_event_handler.ts");
 
 
-const eventEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_src_components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkEvent, _src_components_network__WEBPACK_IMPORTED_MODULE_1__.UserNetworkEventListener]));
+
+const eventEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_src_components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkEvent, _components_user_event_handler__WEBPACK_IMPORTED_MODULE_2__.UserEventHandler, _src_components_network__WEBPACK_IMPORTED_MODULE_1__.UserNetworkEventListener]));
 const userEventSystem = (world) => {
     eventEnterQuery(world).forEach(eid => {
         for (const e of _src_components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkEventProxy.get(eid).events) {
@@ -57605,7 +57624,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "app": () => (/* binding */ app)
 /* harmony export */ });
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
 /* harmony import */ var _src_app__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../src/app */ "./src/app.ts");
 /* harmony import */ var _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../src/components/entity_object3d */ "./src/components/entity_object3d.ts");
 /* harmony import */ var _src_components_grab__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../src/components/grab */ "./src/components/grab.ts");
@@ -57617,11 +57636,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _src_components_select__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../src/components/select */ "./src/components/select.ts");
 /* harmony import */ var _src_common__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../src/common */ "./src/common.ts");
 /* harmony import */ var _src_utils_network__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../src/utils/network */ "./src/utils/network.ts");
-/* harmony import */ var _prefabs_avatar__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../prefabs/avatar */ "./examples/prefabs/avatar.ts");
-/* harmony import */ var _systems_color__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../systems/color */ "./examples/systems/color.ts");
-/* harmony import */ var _systems_selected_object__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../systems/selected_object */ "./examples/systems/selected_object.ts");
-/* harmony import */ var _systems_user__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../systems/user */ "./examples/systems/user.ts");
-/* harmony import */ var _ui_side_bar__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../ui/side_bar */ "./examples/ui/side_bar.ts");
+/* harmony import */ var _components_user_event_handler__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../components/user_event_handler */ "./examples/components/user_event_handler.ts");
+/* harmony import */ var _prefabs_avatar__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../prefabs/avatar */ "./examples/prefabs/avatar.ts");
+/* harmony import */ var _systems_color__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../systems/color */ "./examples/systems/color.ts");
+/* harmony import */ var _systems_selected_object__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../systems/selected_object */ "./examples/systems/selected_object.ts");
+/* harmony import */ var _systems_user__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../systems/user */ "./examples/systems/user.ts");
+/* harmony import */ var _ui_side_bar__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../ui/side_bar */ "./examples/ui/side_bar.ts");
+
 
 
 
@@ -57642,24 +57663,25 @@ __webpack_require__.r(__webpack_exports__);
 
 const app = new _src_app__WEBPACK_IMPORTED_MODULE_1__.App();
 document.body.appendChild(app.getCanvas());
-app.registerSystem(_ui_side_bar__WEBPACK_IMPORTED_MODULE_16__.updateSidebarSystem, _src_common__WEBPACK_IMPORTED_MODULE_10__.SystemOrder.BeforeMatricesUpdate);
-app.registerSystem(_systems_color__WEBPACK_IMPORTED_MODULE_13__.colorSystem, _src_common__WEBPACK_IMPORTED_MODULE_10__.SystemOrder.Render - 1);
-app.registerSystem(_systems_selected_object__WEBPACK_IMPORTED_MODULE_14__.selectedObjectSystem, _src_common__WEBPACK_IMPORTED_MODULE_10__.SystemOrder.Render - 1);
-app.registerSystem(_systems_user__WEBPACK_IMPORTED_MODULE_15__.userEventSystem, _src_common__WEBPACK_IMPORTED_MODULE_10__.SystemOrder.Render - 1);
-app.registerPrefab('avatar', _prefabs_avatar__WEBPACK_IMPORTED_MODULE_12__.AvatarPrefab);
+app.registerSystem(_ui_side_bar__WEBPACK_IMPORTED_MODULE_17__.updateSidebarSystem, _src_common__WEBPACK_IMPORTED_MODULE_10__.SystemOrder.BeforeMatricesUpdate);
+app.registerSystem(_systems_color__WEBPACK_IMPORTED_MODULE_14__.colorSystem, _src_common__WEBPACK_IMPORTED_MODULE_10__.SystemOrder.Render - 1);
+app.registerSystem(_systems_selected_object__WEBPACK_IMPORTED_MODULE_15__.selectedObjectSystem, _src_common__WEBPACK_IMPORTED_MODULE_10__.SystemOrder.Render - 1);
+app.registerSystem(_systems_user__WEBPACK_IMPORTED_MODULE_16__.userEventSystem, _src_common__WEBPACK_IMPORTED_MODULE_10__.SystemOrder.Render - 1);
+app.registerPrefab('avatar', _prefabs_avatar__WEBPACK_IMPORTED_MODULE_13__.AvatarPrefab);
 const world = app.getWorld();
 const gridEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
 (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_scene__WEBPACK_IMPORTED_MODULE_8__.InScene, gridEid);
-_src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__.EntityObject3DProxy.get(gridEid).addObject3D(world, new three__WEBPACK_IMPORTED_MODULE_17__.GridHelper());
-const avatarEid = (0,_prefabs_avatar__WEBPACK_IMPORTED_MODULE_12__.AvatarPrefab)(world);
+_src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__.EntityObject3DProxy.get(gridEid).addObject3D(world, new three__WEBPACK_IMPORTED_MODULE_18__.GridHelper());
+const avatarEid = (0,_prefabs_avatar__WEBPACK_IMPORTED_MODULE_13__.AvatarPrefab)(world);
 _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__.EntityObject3DProxy.get(avatarEid).root.position.set(0.0, 0.25, 2.0);
 _src_components_network__WEBPACK_IMPORTED_MODULE_6__.NetworkedInitProxy.get(avatarEid).allocate(world, (0,_src_utils_network__WEBPACK_IMPORTED_MODULE_11__.generateUUID)(), 'avatar');
 (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_network__WEBPACK_IMPORTED_MODULE_6__.Local, avatarEid);
 (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_keyboard__WEBPACK_IMPORTED_MODULE_4__.KeyEventListener, avatarEid);
 const mouseButtonEventEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
 (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_mouse__WEBPACK_IMPORTED_MODULE_5__.MouseButtonEventListener, mouseButtonEventEid);
-const userNetworkEventEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
-(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_network__WEBPACK_IMPORTED_MODULE_6__.UserNetworkEventListener, userNetworkEventEid);
+const userEventHandlerEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
+(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_user_event_handler__WEBPACK_IMPORTED_MODULE_12__.UserEventHandler, userEventHandlerEid);
+(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_network__WEBPACK_IMPORTED_MODULE_6__.UserNetworkEventListener, userEventHandlerEid);
 for (let i = 0; i < 25; i++) {
     const eid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
     (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_raycast__WEBPACK_IMPORTED_MODULE_7__.Raycastable, eid);
@@ -57667,7 +57689,7 @@ for (let i = 0; i < 25; i++) {
     (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_grab__WEBPACK_IMPORTED_MODULE_3__.Grabbable, eid);
     (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_select__WEBPACK_IMPORTED_MODULE_9__.Selectable, eid);
     (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_scene__WEBPACK_IMPORTED_MODULE_8__.InScene, eid);
-    _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__.EntityObject3DProxy.get(eid).addObject3D(world, new three__WEBPACK_IMPORTED_MODULE_17__.Mesh(new three__WEBPACK_IMPORTED_MODULE_17__.BoxGeometry(0.5, 0.5, 0.5), new three__WEBPACK_IMPORTED_MODULE_17__.MeshBasicMaterial()));
+    _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__.EntityObject3DProxy.get(eid).addObject3D(world, new three__WEBPACK_IMPORTED_MODULE_18__.Mesh(new three__WEBPACK_IMPORTED_MODULE_18__.BoxGeometry(0.5, 0.5, 0.5), new three__WEBPACK_IMPORTED_MODULE_18__.MeshBasicMaterial()));
     _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__.EntityObject3DProxy.get(eid).root.position.set((Math.random() - 0.5) * 10.0, 0.25, (Math.random() - 0.5) * 10.0);
 }
 app.start();

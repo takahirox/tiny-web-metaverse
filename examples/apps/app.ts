@@ -23,6 +23,7 @@ import { InScene } from "../../src/components/scene";
 import { Selectable } from "../../src/components/select";
 import { SystemOrder } from "../../src/common";
 import { generateUUID } from "../../src/utils/network";
+import { UserEventHandler } from "../components/user_event_handler";
 import { AvatarPrefab } from "../prefabs/avatar";
 import { colorSystem } from "../systems/color";
 import { selectedObjectSystem } from "../systems/selected_object";
@@ -55,8 +56,9 @@ addComponent(world, KeyEventListener, avatarEid);
 const mouseButtonEventEid = addEntity(world);
 addComponent(world, MouseButtonEventListener, mouseButtonEventEid);
 
-const userNetworkEventEid = addEntity(world);
-addComponent(world, UserNetworkEventListener, userNetworkEventEid);
+const userEventHandlerEid = addEntity(world);
+addComponent(world, UserEventHandler, userEventHandlerEid);
+addComponent(world, UserNetworkEventListener, userEventHandlerEid);
 
 for (let i = 0; i < 25; i++) {
   const eid = addEntity(world);

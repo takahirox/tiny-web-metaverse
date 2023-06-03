@@ -5,9 +5,10 @@ import {
   NetworkMessageType,
   UserNetworkEventListener
 } from "../../src/components/network";
+import { UserEventHandler } from "../components/user_event_handler";
 
 const eventEnterQuery = 
-  enterQuery(defineQuery([NetworkEvent, UserNetworkEventListener]));
+  enterQuery(defineQuery([NetworkEvent, UserEventHandler, UserNetworkEventListener]));
 
 export const userEventSystem = (world: IWorld) => {
   eventEnterQuery(world).forEach(eid => {
