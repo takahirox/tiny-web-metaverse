@@ -1,71 +1,30 @@
+import { addComponent, IWorld } from "bitecs";
 import { MathUtils } from "three";
+import {
+  Local,
+  NetworkedInitProxy,
+  NetworkedType,
+  Shared
+} from "../components/network";
 
-export const generateUUID = (): string => {
+const generateUUID = (): string => {
   return MathUtils.generateUUID();
 };
 
-/*
-import { Component } from "bitecs";
-
-export class NetworkEntityManager {
-  private networkIdToEidMap: Map<string, number>;
-  private eidToNetworkIdMap: Map<number, string>;
-  private deletedNetworkEntities: Set<string>;
-
-  constructor() {	
-    this.networkIdToEidMap = new Map();
-    this.eidToNetworkIdMap = new Map();
-    this.deletedNetworkEntities = new Set();
+// For creating local or shared networked entity from local client.
+// Networked entity created by remote clients are set up in networked entity system.
+export const setupNetworkedEntity = (
+  world: IWorld,
+  eid: number,
+  prefabName: string,
+  type: NetworkedType.Local | NetworkedType.Shared
+): void => {
+  NetworkedInitProxy.get(eid).allocate(world, generateUUID(), prefabName);
+  if (type === NetworkedType.Local) {
+    addComponent(world, Local, eid);
+  } else if (type === NetworkedType.Shared) {
+    addComponent(world, Shared, eid);
+  } else {
+    throw new Error(`Invalid networked type ${type}`);
   }
-
-  register(networkId: string, eid: number): void {
-    if (this.deletedEntity(networkId)) {
-      return;
-    }
-    this.networkIdToEidMap.set(networkId, eid);
-    this.eidToNetworkIdMap.set(eid, networkId);
-  }
-
-  remove(networkId: string): void {
-    if (this.deletedEntity(networkId)) {
-      return;
-    }
-    if (!this.networkIdToEidMap.has(networkId)) {
-      // TODO: Error handling
-      return;
-    }
-    const eid = this.networkIdToEidMap.get(networkId)!;
-    this.networkIdToEidMap.delete(networkId);  
-    this.eidToNetworkIdMap.delete(eid);
-  }
-
-  deletedEntity(id: string): boolean {
-    return this.deletedNetworkEntities.has(id);
-  }
-}
-
-export class NetworkedComponentManager {
-  private nameToComponentMap: Map<string, Component>;
-  private componentToNameMap: Map<Component, string>;
-
-  constructor() {
-    this.nameToComponentMap = new Map();
-    this.componentToNameMap = new Map();
-  }
-
-  register(name: string, component: Component): void {
-    this.nameToComponentMap.set(name, component);
-    this.componentToNameMap.set(component, name);
-  }
-
-  deregister(name: string): void {
-    if (!this.nameToComponentMap.has(name)) {
-      // TODO: Error handling?
-      return;
-    }
-    const component = this.nameToComponentMap.get(name)!;
-    this.nameToComponentMap.delete(name);
-    this.componentToNameMap.delete(component);
-  }
-}
-*/
+};

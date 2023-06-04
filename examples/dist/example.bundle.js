@@ -615,8 +615,7 @@ class App {
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_camera__WEBPACK_IMPORTED_MODULE_9__.SceneCamera, cameraEid);
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_window_resize__WEBPACK_IMPORTED_MODULE_12__.WindowSize, cameraEid);
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_window_resize__WEBPACK_IMPORTED_MODULE_12__.WindowResizeEventListener, cameraEid);
-        const proxy = _components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__.EntityObject3DProxy.get(cameraEid);
-        proxy.allocate(this.world);
+        _components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__.EntityObject3DProxy.get(cameraEid).allocate(this.world);
     }
     registerSystem(system, orderPriority = _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder.BeforeMatricesUpdate) {
         // TODO: Optimize
@@ -3229,6 +3228,8 @@ __webpack_require__.r(__webpack_exports__);
 
 const adapterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkAdapter]);
 const initQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkedInit]);
+// For creating local or shared networked entity from local client.
+// Networked entity created by remote clients are set up in networked entity system.
 const networkedSystem = (world) => {
     initQuery(world).forEach(eid => {
         let initialized = false;
@@ -3236,22 +3237,20 @@ const networkedSystem = (world) => {
         // Assumes single adapter entity
         adapterQuery(world).forEach(adapterEid => {
             const userId = _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkAdapterProxy.get(adapterEid).adapter.userId;
-            let type = null;
+            let type;
             // Assumes either one
-            // TODO: Error handling if multiple components are set?
+            // TODO: Error handling if multiple components or Remote are set?
             if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_1__.Local, eid)) {
                 type = _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkedType.Local;
-            }
-            else if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_1__.Remote, eid)) {
-                type = _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkedType.Remote;
             }
             else if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_1__.Shared, eid)) {
                 type = _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkedType.Shared;
             }
-            if (type !== null) {
-                _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkedProxy.get(eid).allocate(world, proxy.networkId, type, userId, proxy.prefabName);
-                initialized = true;
+            else {
+                throw new Error(`Invalid networked type ${type}`);
             }
+            _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkedProxy.get(eid).allocate(world, proxy.networkId, type, userId, proxy.prefabName);
+            initialized = true;
         });
         if (initialized) {
             proxy.free(world);
@@ -3311,9 +3310,16 @@ const networkedEntitySystem = (world, { prefabs, serializers }) => {
                             ? JSON.parse(e.data.prefab_params) : undefined;
                         const eid = prefab(world, params);
                         managerProxy.add(eid, e.data.network_id, e.data.creator);
-                        // TODO: Consider Shared
-                        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_2__.Remote, eid);
-                        _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedProxy.get(eid).allocate(world, e.data.network_id, _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedType.Remote, e.data.creator, e.data.prefab);
+                        let type;
+                        if (e.data.shared) {
+                            (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_2__.Shared, eid);
+                            type = _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedType.Shared;
+                        }
+                        else {
+                            (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_2__.Remote, eid);
+                            type = _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedType.Remote;
+                        }
+                        _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedProxy.get(eid).allocate(world, e.data.network_id, type, e.data.creator, e.data.prefab);
                         for (const c of e.data.components) {
                             if (serializers.has(c.component_name)) {
                                 serializers
@@ -3721,78 +3727,31 @@ const windowResizeEventClearSystem = (world) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "generateUUID": () => (/* binding */ generateUUID)
+/* harmony export */   "setupNetworkedEntity": () => (/* binding */ setupNetworkedEntity)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+/* harmony import */ var _components_network__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/network */ "./src/components/network.ts");
+
+
 
 const generateUUID = () => {
-    return three__WEBPACK_IMPORTED_MODULE_0__.MathUtils.generateUUID();
+    return three__WEBPACK_IMPORTED_MODULE_2__.MathUtils.generateUUID();
 };
-/*
-import { Component } from "bitecs";
-
-export class NetworkEntityManager {
-  private networkIdToEidMap: Map<string, number>;
-  private eidToNetworkIdMap: Map<number, string>;
-  private deletedNetworkEntities: Set<string>;
-
-  constructor() {
-    this.networkIdToEidMap = new Map();
-    this.eidToNetworkIdMap = new Map();
-    this.deletedNetworkEntities = new Set();
-  }
-
-  register(networkId: string, eid: number): void {
-    if (this.deletedEntity(networkId)) {
-      return;
+// For creating local or shared networked entity from local client.
+// Networked entity created by remote clients are set up in networked entity system.
+const setupNetworkedEntity = (world, eid, prefabName, type) => {
+    _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkedInitProxy.get(eid).allocate(world, generateUUID(), prefabName);
+    if (type === _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkedType.Local) {
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_1__.Local, eid);
     }
-    this.networkIdToEidMap.set(networkId, eid);
-    this.eidToNetworkIdMap.set(eid, networkId);
-  }
-
-  remove(networkId: string): void {
-    if (this.deletedEntity(networkId)) {
-      return;
+    else if (type === _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkedType.Shared) {
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_1__.Shared, eid);
     }
-    if (!this.networkIdToEidMap.has(networkId)) {
-      // TODO: Error handling
-      return;
+    else {
+        throw new Error(`Invalid networked type ${type}`);
     }
-    const eid = this.networkIdToEidMap.get(networkId)!;
-    this.networkIdToEidMap.delete(networkId);
-    this.eidToNetworkIdMap.delete(eid);
-  }
-
-  deletedEntity(id: string): boolean {
-    return this.deletedNetworkEntities.has(id);
-  }
-}
-
-export class NetworkedComponentManager {
-  private nameToComponentMap: Map<string, Component>;
-  private componentToNameMap: Map<Component, string>;
-
-  constructor() {
-    this.nameToComponentMap = new Map();
-    this.componentToNameMap = new Map();
-  }
-
-  register(name: string, component: Component): void {
-    this.nameToComponentMap.set(name, component);
-    this.componentToNameMap.set(component, name);
-  }
-
-  deregister(name: string): void {
-    if (!this.nameToComponentMap.has(name)) {
-      // TODO: Error handling?
-      return;
-    }
-    const component = this.nameToComponentMap.get(name)!;
-    this.nameToComponentMap.delete(name);
-    this.componentToNameMap.delete(component);
-  }
-}
-*/
+};
 
 
 /***/ }),
@@ -57672,11 +57631,12 @@ const world = app.getWorld();
 const gridEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
 (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_scene__WEBPACK_IMPORTED_MODULE_8__.InScene, gridEid);
 _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__.EntityObject3DProxy.get(gridEid).addObject3D(world, new three__WEBPACK_IMPORTED_MODULE_18__.GridHelper());
+// TODO: Separately calling prefab function and passing a corresponding
+//       prefab name to setupNetworkedEntity() sounds like duplicated. Fix me.
 const avatarEid = (0,_prefabs_avatar__WEBPACK_IMPORTED_MODULE_13__.AvatarPrefab)(world);
 _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__.EntityObject3DProxy.get(avatarEid).root.position.set(0.0, 0.25, 2.0);
-_src_components_network__WEBPACK_IMPORTED_MODULE_6__.NetworkedInitProxy.get(avatarEid).allocate(world, (0,_src_utils_network__WEBPACK_IMPORTED_MODULE_11__.generateUUID)(), 'avatar');
-(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_network__WEBPACK_IMPORTED_MODULE_6__.Local, avatarEid);
 (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_keyboard__WEBPACK_IMPORTED_MODULE_4__.KeyEventListener, avatarEid);
+(0,_src_utils_network__WEBPACK_IMPORTED_MODULE_11__.setupNetworkedEntity)(world, avatarEid, 'avatar', _src_components_network__WEBPACK_IMPORTED_MODULE_6__.NetworkedType.Local);
 const mouseButtonEventEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
 (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_mouse__WEBPACK_IMPORTED_MODULE_5__.MouseButtonEventListener, mouseButtonEventEid);
 const userEventHandlerEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);

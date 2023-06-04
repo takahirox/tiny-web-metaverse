@@ -20,7 +20,8 @@ import {
   NetworkEvent,
   NetworkEventProxy,
   NetworkMessageType,
-  Remote
+  Remote,
+  Shared
 } from "../components/network";
 import { InScene } from "../components/scene";
 
@@ -59,12 +60,18 @@ export const networkedEntitySystem = (world: IWorld, {prefabs, serializers}: Sys
               ? JSON.parse(e.data.prefab_params) : undefined;
             const eid = prefab(world, params);
             managerProxy.add(eid, e.data.network_id, e.data.creator);
-            // TODO: Consider Shared
-            addComponent(world, Remote, eid);
+            let type: NetworkedType;
+            if (e.data.shared) {
+              addComponent(world, Shared, eid);
+              type = NetworkedType.Shared;
+            } else {
+              addComponent(world, Remote, eid);
+              type = NetworkedType.Remote;
+            }
             NetworkedProxy.get(eid).allocate(
               world,
               e.data.network_id,
-              NetworkedType.Remote,
+              type,
               e.data.creator,
               e.data.prefab
             );

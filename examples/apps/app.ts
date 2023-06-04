@@ -14,15 +14,14 @@ import { Grabbable } from "../../src/components/grab";
 import { KeyEventListener } from "../../src/components/keyboard";
 import { MouseButtonEventListener } from "../../src/components/mouse";
 import {
-  Local,
-  NetworkedInitProxy,
+  NetworkedType,
   UserNetworkEventListener
 } from "../../src/components/network";
 import { Raycastable } from "../../src/components/raycast";
 import { InScene } from "../../src/components/scene";
 import { Selectable } from "../../src/components/select";
 import { SystemOrder } from "../../src/common";
-import { generateUUID } from "../../src/utils/network";
+import { setupNetworkedEntity } from "../../src/utils/network";
 import { UserEventHandler } from "../components/user_event_handler";
 import { AvatarPrefab } from "../prefabs/avatar";
 import { colorSystem } from "../systems/color";
@@ -46,12 +45,12 @@ const gridEid = addEntity(world);
 addComponent(world, InScene, gridEid);
 EntityObject3DProxy.get(gridEid).addObject3D(world, new GridHelper());
 
+// TODO: Separately calling prefab function and passing a corresponding
+//       prefab name to setupNetworkedEntity() sounds like duplicated. Fix me.
 const avatarEid = AvatarPrefab(world);
 EntityObject3DProxy.get(avatarEid).root.position.set(0.0, 0.25, 2.0);
-
-NetworkedInitProxy.get(avatarEid).allocate(world, generateUUID(), 'avatar');
-addComponent(world, Local, avatarEid);
 addComponent(world, KeyEventListener, avatarEid);
+setupNetworkedEntity(world, avatarEid, 'avatar', NetworkedType.Local);
 
 const mouseButtonEventEid = addEntity(world);
 addComponent(world, MouseButtonEventListener, mouseButtonEventEid);

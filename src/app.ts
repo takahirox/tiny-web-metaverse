@@ -249,9 +249,7 @@ export class App {
     addComponent(this.world, SceneCamera, cameraEid);
     addComponent(this.world, WindowSize, cameraEid);
     addComponent(this.world, WindowResizeEventListener, cameraEid);
-
-    const proxy = EntityObject3DProxy.get(cameraEid);
-    proxy.allocate(this.world);
+    EntityObject3DProxy.get(cameraEid).allocate(this.world);
   }
 
   registerSystem(
