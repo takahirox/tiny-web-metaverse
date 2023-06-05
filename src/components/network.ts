@@ -90,7 +90,7 @@ export class NetworkedProxy {
     return this.map.get(this.eid)!.cache.get(key);
   }
 
-　　setCache(key: string, cache: any): void {
+  setCache(key: string, cache: any): void {
     this.map.get(this.eid)!.cache.set(key, cache);
   }
 

@@ -68,7 +68,8 @@ export const networkedEntitySystem = (world: IWorld, {prefabs, serializers}: Sys
               addComponent(world, Remote, eid);
               type = NetworkedType.Remote;
             }
-            NetworkedProxy.get(eid).allocate(
+            const networkedProxy = NetworkedProxy.get(eid);
+            networkedProxy.allocate(
               world,
               e.data.network_id,
               type,
@@ -77,9 +78,11 @@ export const networkedEntitySystem = (world: IWorld, {prefabs, serializers}: Sys
             );
             for (const c of e.data.components) {
               if (serializers.has(c.component_name)) {
+                const data = JSON.parse(c.data);
                 serializers
                   .get(c.component_name)
-                  .networkDeserializer(world, eid, JSON.parse(c.data));
+                  .networkDeserializer(world, eid, data);
+                networkedProxy.setCache(c.component_name, data);
               } else {
                 // TODO: Proper error handling
                 console.warn(`Unknown component type ${c.component_name}`);

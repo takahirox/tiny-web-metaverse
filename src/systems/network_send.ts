@@ -1,31 +1,32 @@
 import {
   defineQuery,
   enterQuery,
-  exitQuery,
+  hasComponent,
   getEntityComponents,
   IWorld
 } from "bitecs";
 import { NETWORK_INTERVAL, SystemParams } from "../common";
 import {
-  Local,
   NetworkAdapter,
   NetworkAdapterProxy,
   Networked,
+  NetworkedEntityManager,
+  NetworkedEntityManagerProxy,
   NetworkedProxy,
   NetworkedType,
   NetworkEventSender,
   NetworkEventSenderProxy,
-  NetworkMessageType
-//  Shared
+  NetworkMessageType,
+  Remote
 } from "../components/network";
 import { Time, TimeProxy } from "../components/time";
 
 const senderQuery = defineQuery([NetworkEventSender]);
 const timeQuery = defineQuery([Time]);
-const localQuery = defineQuery([Local, Networked]);
-const localEnterQuery = enterQuery(localQuery);
-const localExitQuery = exitQuery(localQuery);
+const networkedQuery = defineQuery([Networked]);
+const networkedEnterQuery = enterQuery(networkedQuery);
 const adapterQuery = defineQuery([NetworkAdapter]);
+const managerQuery = defineQuery([NetworkedEntityManager]);
 
 export const networkSendSystem = (world: IWorld, {serializerKeys, serializers}: SystemParams) => {
   senderQuery(world).forEach(senderEid => {
@@ -33,7 +34,7 @@ export const networkSendSystem = (world: IWorld, {serializerKeys, serializers}: 
     timeQuery(world).forEach(timeEid => {
       const timeProxy = TimeProxy.get(timeEid);
 
-      //　Sends messages at fixed intervals (rather than anytime updated) so
+      // Sends messages at fixed intervals (rather than anytime updated) so
       // that frequently updated components do not cause a client to flood
       // the network with an unnecessary amount of update messages
       if (timeProxy.elapsed < senderProxy.lastSendTime + NETWORK_INTERVAL) {
@@ -44,51 +45,72 @@ export const networkSendSystem = (world: IWorld, {serializerKeys, serializers}: 
 
       adapterQuery(world).forEach(adapterEid => {
         const adapter = NetworkAdapterProxy.get(adapterEid).adapter;
+        const myUserId = adapter.userId;
 
-        // TODO: Implement
-        localExitQuery(world).forEach(_localEid => {
+        managerQuery(world).forEach(managerEid => {
+          // TODO: Implement exit
 
+          //
+          networkedEnterQuery(world).forEach(networkedEid => {
+            // TODO: Possible to use non-Remote Query for optimization?
+            if (hasComponent(world, Remote, networkedEid)) {
+              return;
+            }
+
+            const networkedProxy = NetworkedProxy.get(networkedEid);
+
+            if (networkedProxy.creator !== myUserId) {
+              return;
+            }
+
+            const components = [];
+            for (const component of getEntityComponents(world, networkedEid)) {
+              if (serializerKeys.has(component)) {
+                const name = serializerKeys.get(component)!;
+                const data = serializers.get(name).serializer(world, networkedEid);
+                networkedProxy.setCache(name, data);
+                components.push({
+                  name,
+                  data: JSON.stringify(data)
+                });
+              }
+            }
+
+            const networkId = networkedProxy.networkId;
+
+            adapter.push(
+              NetworkMessageType.CreateEntity,
+              {
+                components,
+                network_id: networkId,
+                prefab: networkedProxy.prefabName,
+                shared: networkedProxy.type === NetworkedType.Shared
+              }
+            );
+
+            NetworkedEntityManagerProxy.get(managerEid)
+              .add(networkedEid, networkId, myUserId);
+          });
         });
 
         //
-        localEnterQuery(world).forEach(localEid => {
-          const networkedProxy = NetworkedProxy.get(localEid);
-          const components = [];
-          for (const component of getEntityComponents(world, localEid)) {
-            if (serializerKeys.has(component)) {
-              const name = serializerKeys.get(component)!;
-              const data = serializers.get(name).serializer(world, localEid);
-              networkedProxy.setCache(name, data);
-              components.push({
-                name,
-                data: JSON.stringify(data)
-              });
-            }
+        networkedQuery(world).forEach(networkedEid => {
+          // TODO: Possible to use non-Remote Query for optimization?
+          if (hasComponent(world, Remote, networkedEid)) {
+            return;
           }
 
-          adapter.push(
-            NetworkMessageType.CreateEntity,
-            {
-              components,
-              network_id: networkedProxy.networkId,
-              prefab: networkedProxy.prefabName,
-              shared: networkedProxy.type === NetworkedType.Shared
-            }
-          );
-        });
+          const networkedProxy = NetworkedProxy.get(networkedEid);
 
-        //
-        localQuery(world).forEach(localEid => {
-          const networkedProxy = NetworkedProxy.get(localEid);
           const components = [];
           // TODO: More efficient lookup?
-          for (const component of getEntityComponents(world, localEid)) {
+          for (const component of getEntityComponents(world, networkedEid)) {
             if (serializerKeys.has(component)) {
               const name = serializerKeys.get(component)!;
               if (networkedProxy.hasCache(name)) {
                 const cache = networkedProxy.getCache(name);
-                if (serializers.get(name).diffChecker(world, localEid, cache)) {
-                  const data = serializers.get(name).serializer(world, localEid);
+                if (serializers.get(name).diffChecker(world, networkedEid, cache)) {
+                  const data = serializers.get(name).serializer(world, networkedEid);
                   networkedProxy.setCache(name, data);
                   components.push({
                     name,

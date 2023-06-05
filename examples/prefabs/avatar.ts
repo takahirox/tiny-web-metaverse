@@ -7,7 +7,7 @@ import { SphereGeometry, Mesh, MeshBasicMaterial } from "three";
 import { Avatar } from "../../src/components/avatar";
 import { EntityObject3DProxy } from "../../src/components/entity_object3d";
 import {
-　　NetworkedPosition,
+  NetworkedPosition,
   NetworkedQuaternion,
   NetworkedScale
 } from "../../src/components/network";

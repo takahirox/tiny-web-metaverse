@@ -62,6 +62,51 @@ const AvatarPrefab = (world) => {
 
 /***/ }),
 
+/***/ "./examples/prefabs/cube.ts":
+/*!**********************************!*\
+  !*** ./examples/prefabs/cube.ts ***!
+  \**********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "CubePrefab": () => (/* binding */ CubePrefab)
+/* harmony export */ });
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+/* harmony import */ var _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../src/components/entity_object3d */ "./src/components/entity_object3d.ts");
+/* harmony import */ var _src_components_grab__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../src/components/grab */ "./src/components/grab.ts");
+/* harmony import */ var _src_components_mouse__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../src/components/mouse */ "./src/components/mouse.ts");
+/* harmony import */ var _src_components_network__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../src/components/network */ "./src/components/network.ts");
+/* harmony import */ var _src_components_raycast__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../src/components/raycast */ "./src/components/raycast.ts");
+/* harmony import */ var _src_components_scene__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../src/components/scene */ "./src/components/scene.ts");
+/* harmony import */ var _src_components_select__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../src/components/select */ "./src/components/select.ts");
+
+
+
+
+
+
+
+
+
+const CubePrefab = (world) => {
+    const eid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_network__WEBPACK_IMPORTED_MODULE_4__.NetworkedPosition, eid);
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_network__WEBPACK_IMPORTED_MODULE_4__.NetworkedQuaternion, eid);
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_network__WEBPACK_IMPORTED_MODULE_4__.NetworkedScale, eid);
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_raycast__WEBPACK_IMPORTED_MODULE_5__.Raycastable, eid);
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_mouse__WEBPACK_IMPORTED_MODULE_3__.MouseButtonEventListener, eid);
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_grab__WEBPACK_IMPORTED_MODULE_2__.Grabbable, eid);
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_select__WEBPACK_IMPORTED_MODULE_7__.Selectable, eid);
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_scene__WEBPACK_IMPORTED_MODULE_6__.InScene, eid);
+    _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3DProxy.get(eid).addObject3D(world, new three__WEBPACK_IMPORTED_MODULE_8__.Mesh(new three__WEBPACK_IMPORTED_MODULE_8__.BoxGeometry(0.5, 0.5, 0.5), new three__WEBPACK_IMPORTED_MODULE_8__.MeshBasicMaterial()));
+    return eid;
+};
+
+
+/***/ }),
+
 /***/ "./examples/systems/color.ts":
 /*!***********************************!*\
   !*** ./examples/systems/color.ts ***!
@@ -3130,16 +3175,16 @@ __webpack_require__.r(__webpack_exports__);
 
 const senderQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkEventSender]);
 const timeQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_time__WEBPACK_IMPORTED_MODULE_3__.Time]);
-const localQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_2__.Local, _components_network__WEBPACK_IMPORTED_MODULE_2__.Networked]);
-const localEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)(localQuery);
-const localExitQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)(localQuery);
+const networkedQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_2__.Networked]);
+const networkedEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)(networkedQuery);
 const adapterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkAdapter]);
+const managerQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedEntityManager]);
 const networkSendSystem = (world, { serializerKeys, serializers }) => {
     senderQuery(world).forEach(senderEid => {
         const senderProxy = _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkEventSenderProxy.get(senderEid);
         timeQuery(world).forEach(timeEid => {
             const timeProxy = _components_time__WEBPACK_IMPORTED_MODULE_3__.TimeProxy.get(timeEid);
-            //　Sends messages at fixed intervals (rather than anytime updated) so
+            // Sends messages at fixed intervals (rather than anytime updated) so
             // that frequently updated components do not cause a client to flood
             // the network with an unnecessary amount of update messages
             if (timeProxy.elapsed < senderProxy.lastSendTime + _common__WEBPACK_IMPORTED_MODULE_1__.NETWORK_INTERVAL) {
@@ -3148,43 +3193,58 @@ const networkSendSystem = (world, { serializerKeys, serializers }) => {
             senderProxy.lastSendTime = timeProxy.elapsed;
             adapterQuery(world).forEach(adapterEid => {
                 const adapter = _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkAdapterProxy.get(adapterEid).adapter;
-                // TODO: Implement
-                localExitQuery(world).forEach(_localEid => {
-                });
-                //
-                localEnterQuery(world).forEach(localEid => {
-                    const networkedProxy = _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedProxy.get(localEid);
-                    const components = [];
-                    for (const component of (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.getEntityComponents)(world, localEid)) {
-                        if (serializerKeys.has(component)) {
-                            const name = serializerKeys.get(component);
-                            const data = serializers.get(name).serializer(world, localEid);
-                            networkedProxy.setCache(name, data);
-                            components.push({
-                                name,
-                                data: JSON.stringify(data)
-                            });
+                const myUserId = adapter.userId;
+                managerQuery(world).forEach(managerEid => {
+                    // TODO: Implement exit
+                    //
+                    networkedEnterQuery(world).forEach(networkedEid => {
+                        // TODO: Possible to use non-Remote Query for optimization?
+                        if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_2__.Remote, networkedEid)) {
+                            return;
                         }
-                    }
-                    adapter.push(_components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkMessageType.CreateEntity, {
-                        components,
-                        network_id: networkedProxy.networkId,
-                        prefab: networkedProxy.prefabName,
-                        shared: networkedProxy.type === _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedType.Shared
+                        const networkedProxy = _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedProxy.get(networkedEid);
+                        if (networkedProxy.creator !== myUserId) {
+                            return;
+                        }
+                        const components = [];
+                        for (const component of (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.getEntityComponents)(world, networkedEid)) {
+                            if (serializerKeys.has(component)) {
+                                const name = serializerKeys.get(component);
+                                const data = serializers.get(name).serializer(world, networkedEid);
+                                networkedProxy.setCache(name, data);
+                                components.push({
+                                    name,
+                                    data: JSON.stringify(data)
+                                });
+                            }
+                        }
+                        const networkId = networkedProxy.networkId;
+                        adapter.push(_components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkMessageType.CreateEntity, {
+                            components,
+                            network_id: networkId,
+                            prefab: networkedProxy.prefabName,
+                            shared: networkedProxy.type === _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedType.Shared
+                        });
+                        _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedEntityManagerProxy.get(managerEid)
+                            .add(networkedEid, networkId, myUserId);
                     });
                 });
                 //
-                localQuery(world).forEach(localEid => {
-                    const networkedProxy = _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedProxy.get(localEid);
+                networkedQuery(world).forEach(networkedEid => {
+                    // TODO: Possible to use non-Remote Query for optimization?
+                    if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_2__.Remote, networkedEid)) {
+                        return;
+                    }
+                    const networkedProxy = _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedProxy.get(networkedEid);
                     const components = [];
                     // TODO: More efficient lookup?
-                    for (const component of (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.getEntityComponents)(world, localEid)) {
+                    for (const component of (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.getEntityComponents)(world, networkedEid)) {
                         if (serializerKeys.has(component)) {
                             const name = serializerKeys.get(component);
                             if (networkedProxy.hasCache(name)) {
                                 const cache = networkedProxy.getCache(name);
-                                if (serializers.get(name).diffChecker(world, localEid, cache)) {
-                                    const data = serializers.get(name).serializer(world, localEid);
+                                if (serializers.get(name).diffChecker(world, networkedEid, cache)) {
+                                    const data = serializers.get(name).serializer(world, networkedEid);
                                     networkedProxy.setCache(name, data);
                                     components.push({
                                         name,
@@ -3319,12 +3379,15 @@ const networkedEntitySystem = (world, { prefabs, serializers }) => {
                             (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_2__.Remote, eid);
                             type = _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedType.Remote;
                         }
-                        _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedProxy.get(eid).allocate(world, e.data.network_id, type, e.data.creator, e.data.prefab);
+                        const networkedProxy = _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedProxy.get(eid);
+                        networkedProxy.allocate(world, e.data.network_id, type, e.data.creator, e.data.prefab);
                         for (const c of e.data.components) {
                             if (serializers.has(c.component_name)) {
+                                const data = JSON.parse(c.data);
                                 serializers
                                     .get(c.component_name)
-                                    .networkDeserializer(world, eid, JSON.parse(c.data));
+                                    .networkDeserializer(world, eid, data);
+                                networkedProxy.setCache(c.component_name, data);
                             }
                             else {
                                 // TODO: Proper error handling
@@ -57583,26 +57646,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "app": () => (/* binding */ app)
 /* harmony export */ });
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
 /* harmony import */ var _src_app__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../src/app */ "./src/app.ts");
 /* harmony import */ var _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../src/components/entity_object3d */ "./src/components/entity_object3d.ts");
-/* harmony import */ var _src_components_grab__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../src/components/grab */ "./src/components/grab.ts");
-/* harmony import */ var _src_components_keyboard__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../src/components/keyboard */ "./src/components/keyboard.ts");
-/* harmony import */ var _src_components_mouse__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../src/components/mouse */ "./src/components/mouse.ts");
-/* harmony import */ var _src_components_network__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../src/components/network */ "./src/components/network.ts");
-/* harmony import */ var _src_components_raycast__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../src/components/raycast */ "./src/components/raycast.ts");
-/* harmony import */ var _src_components_scene__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../src/components/scene */ "./src/components/scene.ts");
-/* harmony import */ var _src_components_select__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../src/components/select */ "./src/components/select.ts");
-/* harmony import */ var _src_common__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../src/common */ "./src/common.ts");
-/* harmony import */ var _src_utils_network__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../src/utils/network */ "./src/utils/network.ts");
-/* harmony import */ var _components_user_event_handler__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../components/user_event_handler */ "./examples/components/user_event_handler.ts");
-/* harmony import */ var _prefabs_avatar__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../prefabs/avatar */ "./examples/prefabs/avatar.ts");
-/* harmony import */ var _systems_color__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../systems/color */ "./examples/systems/color.ts");
-/* harmony import */ var _systems_selected_object__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../systems/selected_object */ "./examples/systems/selected_object.ts");
-/* harmony import */ var _systems_user__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../systems/user */ "./examples/systems/user.ts");
-/* harmony import */ var _ui_side_bar__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../ui/side_bar */ "./examples/ui/side_bar.ts");
-
-
+/* harmony import */ var _src_components_keyboard__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../src/components/keyboard */ "./src/components/keyboard.ts");
+/* harmony import */ var _src_components_mouse__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../src/components/mouse */ "./src/components/mouse.ts");
+/* harmony import */ var _src_components_network__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../src/components/network */ "./src/components/network.ts");
+/* harmony import */ var _src_components_scene__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../src/components/scene */ "./src/components/scene.ts");
+/* harmony import */ var _src_common__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../src/common */ "./src/common.ts");
+/* harmony import */ var _src_utils_network__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../src/utils/network */ "./src/utils/network.ts");
+/* harmony import */ var _components_user_event_handler__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../components/user_event_handler */ "./examples/components/user_event_handler.ts");
+/* harmony import */ var _prefabs_avatar__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../prefabs/avatar */ "./examples/prefabs/avatar.ts");
+/* harmony import */ var _prefabs_cube__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../prefabs/cube */ "./examples/prefabs/cube.ts");
+/* harmony import */ var _systems_color__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../systems/color */ "./examples/systems/color.ts");
+/* harmony import */ var _systems_selected_object__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../systems/selected_object */ "./examples/systems/selected_object.ts");
+/* harmony import */ var _systems_user__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../systems/user */ "./examples/systems/user.ts");
+/* harmony import */ var _ui_side_bar__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../ui/side_bar */ "./examples/ui/side_bar.ts");
 
 
 
@@ -57622,36 +57681,30 @@ __webpack_require__.r(__webpack_exports__);
 
 const app = new _src_app__WEBPACK_IMPORTED_MODULE_1__.App();
 document.body.appendChild(app.getCanvas());
-app.registerSystem(_ui_side_bar__WEBPACK_IMPORTED_MODULE_17__.updateSidebarSystem, _src_common__WEBPACK_IMPORTED_MODULE_10__.SystemOrder.BeforeMatricesUpdate);
-app.registerSystem(_systems_color__WEBPACK_IMPORTED_MODULE_14__.colorSystem, _src_common__WEBPACK_IMPORTED_MODULE_10__.SystemOrder.Render - 1);
-app.registerSystem(_systems_selected_object__WEBPACK_IMPORTED_MODULE_15__.selectedObjectSystem, _src_common__WEBPACK_IMPORTED_MODULE_10__.SystemOrder.Render - 1);
-app.registerSystem(_systems_user__WEBPACK_IMPORTED_MODULE_16__.userEventSystem, _src_common__WEBPACK_IMPORTED_MODULE_10__.SystemOrder.Render - 1);
-app.registerPrefab('avatar', _prefabs_avatar__WEBPACK_IMPORTED_MODULE_13__.AvatarPrefab);
+app.registerSystem(_ui_side_bar__WEBPACK_IMPORTED_MODULE_15__.updateSidebarSystem, _src_common__WEBPACK_IMPORTED_MODULE_7__.SystemOrder.BeforeMatricesUpdate);
+app.registerSystem(_systems_color__WEBPACK_IMPORTED_MODULE_12__.colorSystem, _src_common__WEBPACK_IMPORTED_MODULE_7__.SystemOrder.Render - 1);
+app.registerSystem(_systems_selected_object__WEBPACK_IMPORTED_MODULE_13__.selectedObjectSystem, _src_common__WEBPACK_IMPORTED_MODULE_7__.SystemOrder.Render - 1);
+app.registerSystem(_systems_user__WEBPACK_IMPORTED_MODULE_14__.userEventSystem, _src_common__WEBPACK_IMPORTED_MODULE_7__.SystemOrder.Render - 1);
+app.registerPrefab('avatar', _prefabs_avatar__WEBPACK_IMPORTED_MODULE_10__.AvatarPrefab);
+app.registerPrefab('cube', _prefabs_cube__WEBPACK_IMPORTED_MODULE_11__.CubePrefab);
 const world = app.getWorld();
 const gridEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
-(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_scene__WEBPACK_IMPORTED_MODULE_8__.InScene, gridEid);
-_src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__.EntityObject3DProxy.get(gridEid).addObject3D(world, new three__WEBPACK_IMPORTED_MODULE_18__.GridHelper());
+(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_scene__WEBPACK_IMPORTED_MODULE_6__.InScene, gridEid);
+_src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__.EntityObject3DProxy.get(gridEid).addObject3D(world, new three__WEBPACK_IMPORTED_MODULE_16__.GridHelper());
 // TODO: Separately calling prefab function and passing a corresponding
 //       prefab name to setupNetworkedEntity() sounds like duplicated. Fix me.
-const avatarEid = (0,_prefabs_avatar__WEBPACK_IMPORTED_MODULE_13__.AvatarPrefab)(world);
+const avatarEid = (0,_prefabs_avatar__WEBPACK_IMPORTED_MODULE_10__.AvatarPrefab)(world);
 _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__.EntityObject3DProxy.get(avatarEid).root.position.set(0.0, 0.25, 2.0);
-(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_keyboard__WEBPACK_IMPORTED_MODULE_4__.KeyEventListener, avatarEid);
-(0,_src_utils_network__WEBPACK_IMPORTED_MODULE_11__.setupNetworkedEntity)(world, avatarEid, 'avatar', _src_components_network__WEBPACK_IMPORTED_MODULE_6__.NetworkedType.Local);
+(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_keyboard__WEBPACK_IMPORTED_MODULE_3__.KeyEventListener, avatarEid);
+(0,_src_utils_network__WEBPACK_IMPORTED_MODULE_8__.setupNetworkedEntity)(world, avatarEid, 'avatar', _src_components_network__WEBPACK_IMPORTED_MODULE_5__.NetworkedType.Local);
 const mouseButtonEventEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
-(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_mouse__WEBPACK_IMPORTED_MODULE_5__.MouseButtonEventListener, mouseButtonEventEid);
+(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_mouse__WEBPACK_IMPORTED_MODULE_4__.MouseButtonEventListener, mouseButtonEventEid);
 const userEventHandlerEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
-(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_user_event_handler__WEBPACK_IMPORTED_MODULE_12__.UserEventHandler, userEventHandlerEid);
-(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_network__WEBPACK_IMPORTED_MODULE_6__.UserNetworkEventListener, userEventHandlerEid);
-for (let i = 0; i < 25; i++) {
-    const eid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
-    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_raycast__WEBPACK_IMPORTED_MODULE_7__.Raycastable, eid);
-    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_mouse__WEBPACK_IMPORTED_MODULE_5__.MouseButtonEventListener, eid);
-    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_grab__WEBPACK_IMPORTED_MODULE_3__.Grabbable, eid);
-    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_select__WEBPACK_IMPORTED_MODULE_9__.Selectable, eid);
-    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_scene__WEBPACK_IMPORTED_MODULE_8__.InScene, eid);
-    _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__.EntityObject3DProxy.get(eid).addObject3D(world, new three__WEBPACK_IMPORTED_MODULE_18__.Mesh(new three__WEBPACK_IMPORTED_MODULE_18__.BoxGeometry(0.5, 0.5, 0.5), new three__WEBPACK_IMPORTED_MODULE_18__.MeshBasicMaterial()));
-    _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__.EntityObject3DProxy.get(eid).root.position.set((Math.random() - 0.5) * 10.0, 0.25, (Math.random() - 0.5) * 10.0);
-}
+(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_user_event_handler__WEBPACK_IMPORTED_MODULE_9__.UserEventHandler, userEventHandlerEid);
+(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_network__WEBPACK_IMPORTED_MODULE_5__.UserNetworkEventListener, userEventHandlerEid);
+const cubeEid = (0,_prefabs_cube__WEBPACK_IMPORTED_MODULE_11__.CubePrefab)(world);
+_src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__.EntityObject3DProxy.get(cubeEid).root.position.set((Math.random() - 0.5) * 10.0, 0.25, (Math.random() - 0.5) * 10.0);
+(0,_src_utils_network__WEBPACK_IMPORTED_MODULE_8__.setupNetworkedEntity)(world, cubeEid, 'cube', _src_components_network__WEBPACK_IMPORTED_MODULE_5__.NetworkedType.Shared);
 app.start();
 
 
