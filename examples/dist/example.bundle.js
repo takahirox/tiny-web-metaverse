@@ -2170,6 +2170,13 @@ __webpack_require__.r(__webpack_exports__);
 // TODO: Validation
 // Position
 const serializePosition = (world, eid) => {
+    if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_linear_transform__WEBPACK_IMPORTED_MODULE_3__.LinearTranslate, eid)) {
+        return [
+            _components_linear_transform__WEBPACK_IMPORTED_MODULE_3__.LinearTranslate.targetX[eid],
+            _components_linear_transform__WEBPACK_IMPORTED_MODULE_3__.LinearTranslate.targetY[eid],
+            _components_linear_transform__WEBPACK_IMPORTED_MODULE_3__.LinearTranslate.targetZ[eid]
+        ];
+    }
     if (!(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__.EntityObject3D, eid)) {
         throw new Error('serializePosition requires EntityObject3D component.');
     }
@@ -2193,8 +2200,13 @@ const deserializeNetworkedPosition = (world, eid, data) => {
     _components_linear_transform__WEBPACK_IMPORTED_MODULE_3__.LinearTranslate.targetZ[eid] = data[2];
 };
 const checkPositionDiff = (world, eid, cache) => {
+    if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_linear_transform__WEBPACK_IMPORTED_MODULE_3__.LinearTranslate, eid)) {
+        return Math.abs(_components_linear_transform__WEBPACK_IMPORTED_MODULE_3__.LinearTranslate.targetX[eid] - cache[0]) > _common__WEBPACK_IMPORTED_MODULE_1__.F32_EPSILON ||
+            Math.abs(_components_linear_transform__WEBPACK_IMPORTED_MODULE_3__.LinearTranslate.targetY[eid] - cache[1]) > _common__WEBPACK_IMPORTED_MODULE_1__.F32_EPSILON ||
+            Math.abs(_components_linear_transform__WEBPACK_IMPORTED_MODULE_3__.LinearTranslate.targetZ[eid] - cache[2]) > _common__WEBPACK_IMPORTED_MODULE_1__.F32_EPSILON;
+    }
     if (!(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__.EntityObject3D, eid)) {
-        throw new Error('checkPositionDiff requires EntityObject3D component.');
+        throw new Error('checkPositionDiff requires LinearTranslate or EntityObject3D component.');
     }
     const position = _components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__.EntityObject3DProxy.get(eid).root.position;
     return Math.abs(position.x - cache[0]) > _common__WEBPACK_IMPORTED_MODULE_1__.F32_EPSILON ||
@@ -2203,6 +2215,14 @@ const checkPositionDiff = (world, eid, cache) => {
 };
 // Quaternion
 const serializeQuaternion = (world, eid) => {
+    if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_linear_transform__WEBPACK_IMPORTED_MODULE_3__.LinearRotate, eid)) {
+        return [
+            _components_linear_transform__WEBPACK_IMPORTED_MODULE_3__.LinearRotate.targetX[eid],
+            _components_linear_transform__WEBPACK_IMPORTED_MODULE_3__.LinearRotate.targetY[eid],
+            _components_linear_transform__WEBPACK_IMPORTED_MODULE_3__.LinearRotate.targetZ[eid],
+            _components_linear_transform__WEBPACK_IMPORTED_MODULE_3__.LinearRotate.targetW[eid]
+        ];
+    }
     if (!(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__.EntityObject3D, eid)) {
         throw new Error('serializeQuaternion requires EntityObject3D component.');
     }
@@ -2228,8 +2248,14 @@ const deserializeNetworkedQuaternion = (world, eid, data) => {
     _components_linear_transform__WEBPACK_IMPORTED_MODULE_3__.LinearRotate.targetW[eid] = data[3];
 };
 const checkQuaternionDiff = (world, eid, cache) => {
+    if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_linear_transform__WEBPACK_IMPORTED_MODULE_3__.LinearRotate, eid)) {
+        return Math.abs(_components_linear_transform__WEBPACK_IMPORTED_MODULE_3__.LinearRotate.targetX[eid] - cache[0]) > _common__WEBPACK_IMPORTED_MODULE_1__.F32_EPSILON ||
+            Math.abs(_components_linear_transform__WEBPACK_IMPORTED_MODULE_3__.LinearRotate.targetY[eid] - cache[1]) > _common__WEBPACK_IMPORTED_MODULE_1__.F32_EPSILON ||
+            Math.abs(_components_linear_transform__WEBPACK_IMPORTED_MODULE_3__.LinearRotate.targetZ[eid] - cache[2]) > _common__WEBPACK_IMPORTED_MODULE_1__.F32_EPSILON ||
+            Math.abs(_components_linear_transform__WEBPACK_IMPORTED_MODULE_3__.LinearRotate.targetW[eid] - cache[3]) > _common__WEBPACK_IMPORTED_MODULE_1__.F32_EPSILON;
+    }
     if (!(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__.EntityObject3D, eid)) {
-        throw new Error('checkQuaternionDiff requires EntityObject3D component.');
+        throw new Error('checkQuaternionDiff requires LinearRotate or EntityObject3D component.');
     }
     const quaternion = _components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__.EntityObject3DProxy.get(eid).root.quaternion;
     return Math.abs(quaternion.x - cache[0]) > _common__WEBPACK_IMPORTED_MODULE_1__.F32_EPSILON ||
@@ -2239,6 +2265,13 @@ const checkQuaternionDiff = (world, eid, cache) => {
 };
 // Scale
 const serializeScale = (world, eid) => {
+    if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_linear_transform__WEBPACK_IMPORTED_MODULE_3__.LinearScale, eid)) {
+        return [
+            _components_linear_transform__WEBPACK_IMPORTED_MODULE_3__.LinearScale.targetX[eid],
+            _components_linear_transform__WEBPACK_IMPORTED_MODULE_3__.LinearScale.targetY[eid],
+            _components_linear_transform__WEBPACK_IMPORTED_MODULE_3__.LinearScale.targetZ[eid]
+        ];
+    }
     if (!(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__.EntityObject3D, eid)) {
         throw new Error('serializeScale requires EntityObject3D component.');
     }
@@ -2255,13 +2288,18 @@ const deserializeNetworkedScale = (world, eid, data) => {
     if (!(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__.EntityObject3D, eid)) {
         throw new Error('deserializeNetworkedScale requires EntityObject3D component.');
     }
-    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_linear_transform__WEBPACK_IMPORTED_MODULE_3__.LinearTranslate, eid);
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_linear_transform__WEBPACK_IMPORTED_MODULE_3__.LinearScale, eid);
     _components_linear_transform__WEBPACK_IMPORTED_MODULE_3__.LinearScale.duration[eid] = _common__WEBPACK_IMPORTED_MODULE_1__.NETWORK_INTERVAL;
     _components_linear_transform__WEBPACK_IMPORTED_MODULE_3__.LinearScale.targetX[eid] = data[0];
     _components_linear_transform__WEBPACK_IMPORTED_MODULE_3__.LinearScale.targetY[eid] = data[1];
     _components_linear_transform__WEBPACK_IMPORTED_MODULE_3__.LinearScale.targetZ[eid] = data[2];
 };
 const checkScaleDiff = (world, eid, cache) => {
+    if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_linear_transform__WEBPACK_IMPORTED_MODULE_3__.LinearScale, eid)) {
+        return Math.abs(_components_linear_transform__WEBPACK_IMPORTED_MODULE_3__.LinearScale.targetX[eid] - cache[0]) > _common__WEBPACK_IMPORTED_MODULE_1__.F32_EPSILON ||
+            Math.abs(_components_linear_transform__WEBPACK_IMPORTED_MODULE_3__.LinearScale.targetY[eid] - cache[1]) > _common__WEBPACK_IMPORTED_MODULE_1__.F32_EPSILON ||
+            Math.abs(_components_linear_transform__WEBPACK_IMPORTED_MODULE_3__.LinearScale.targetZ[eid] - cache[2]) > _common__WEBPACK_IMPORTED_MODULE_1__.F32_EPSILON;
+    }
     if (!(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__.EntityObject3D, eid)) {
         throw new Error('checkScaleDiff requires EntityObject3D component.');
     }

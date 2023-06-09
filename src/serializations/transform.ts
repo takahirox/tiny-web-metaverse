@@ -26,6 +26,13 @@ export type SerializedScale = [x: number, y: number, z: number];
 // Position
 
 const serializePosition = (world: IWorld, eid: number): SerializedPosition => {
+  if (hasComponent(world, LinearTranslate, eid)) {
+    return [
+      LinearTranslate.targetX[eid],
+      LinearTranslate.targetY[eid],
+      LinearTranslate.targetZ[eid]
+    ];
+  }
   if (!hasComponent(world, EntityObject3D, eid)) {
     throw new Error('serializePosition requires EntityObject3D component.');
   }
@@ -52,8 +59,13 @@ const deserializeNetworkedPosition = (world: IWorld, eid: number, data: Serializ
 };
 
 const checkPositionDiff = (world: IWorld, eid: number, cache: SerializedPosition): boolean => {
+  if (hasComponent(world, LinearTranslate, eid)) {
+    return Math.abs(LinearTranslate.targetX[eid] - cache[0]) > F32_EPSILON ||
+      Math.abs(LinearTranslate.targetY[eid] - cache[1]) > F32_EPSILON ||
+      Math.abs(LinearTranslate.targetZ[eid] - cache[2]) > F32_EPSILON;
+  }
   if (!hasComponent(world, EntityObject3D, eid)) {
-    throw new Error('checkPositionDiff requires EntityObject3D component.');
+    throw new Error('checkPositionDiff requires LinearTranslate or EntityObject3D component.');
   }
   const position = EntityObject3DProxy.get(eid).root.position;
   return Math.abs(position.x - cache[0]) > F32_EPSILON ||
@@ -64,6 +76,14 @@ const checkPositionDiff = (world: IWorld, eid: number, cache: SerializedPosition
 // Quaternion
 
 const serializeQuaternion = (world: IWorld, eid: number): SerializedQuaternion => {
+  if (hasComponent(world, LinearRotate, eid)) {
+    return [
+      LinearRotate.targetX[eid],
+      LinearRotate.targetY[eid],
+      LinearRotate.targetZ[eid],
+      LinearRotate.targetW[eid]
+    ];
+  }
   if (!hasComponent(world, EntityObject3D, eid)) {
     throw new Error('serializeQuaternion requires EntityObject3D component.');
   }
@@ -92,8 +112,14 @@ const deserializeNetworkedQuaternion = (world: IWorld, eid: number, data: Serial
 };
 
 const checkQuaternionDiff = (world: IWorld, eid: number, cache: SerializedQuaternion): boolean => {
+  if (hasComponent(world, LinearRotate, eid)) {
+    return Math.abs(LinearRotate.targetX[eid] - cache[0]) > F32_EPSILON ||
+      Math.abs(LinearRotate.targetY[eid] - cache[1]) > F32_EPSILON ||
+      Math.abs(LinearRotate.targetZ[eid] - cache[2]) > F32_EPSILON ||
+      Math.abs(LinearRotate.targetW[eid] - cache[3]) > F32_EPSILON;
+  }
   if (!hasComponent(world, EntityObject3D, eid)) {
-    throw new Error('checkQuaternionDiff requires EntityObject3D component.');
+    throw new Error('checkQuaternionDiff requires LinearRotate or EntityObject3D component.');
   }
   const quaternion = EntityObject3DProxy.get(eid).root.quaternion;
   return Math.abs(quaternion.x - cache[0]) > F32_EPSILON ||
@@ -105,6 +131,13 @@ const checkQuaternionDiff = (world: IWorld, eid: number, cache: SerializedQuater
 // Scale
 
 const serializeScale = (world: IWorld, eid: number): SerializedScale => {
+  if (hasComponent(world, LinearScale, eid)) {
+    return [
+      LinearScale.targetX[eid],
+      LinearScale.targetY[eid],
+      LinearScale.targetZ[eid]
+    ];
+  }
   if (!hasComponent(world, EntityObject3D, eid)) {
     throw new Error('serializeScale requires EntityObject3D component.');
   }
@@ -123,7 +156,7 @@ const deserializeNetworkedScale = (world: IWorld, eid: number, data: SerializedS
   if (!hasComponent(world, EntityObject3D, eid)) {
     throw new Error('deserializeNetworkedScale requires EntityObject3D component.');
   }
-  addComponent(world, LinearTranslate, eid);
+  addComponent(world, LinearScale, eid);
   LinearScale.duration[eid] = NETWORK_INTERVAL;
   LinearScale.targetX[eid] = data[0];
   LinearScale.targetY[eid] = data[1];
@@ -131,6 +164,11 @@ const deserializeNetworkedScale = (world: IWorld, eid: number, data: SerializedS
 };
 
 const checkScaleDiff = (world: IWorld, eid: number, cache: SerializedScale): boolean => {
+  if (hasComponent(world, LinearScale, eid)) {
+    return Math.abs(LinearScale.targetX[eid] - cache[0]) > F32_EPSILON ||
+      Math.abs(LinearScale.targetY[eid] - cache[1]) > F32_EPSILON ||
+      Math.abs(LinearScale.targetZ[eid] - cache[2]) > F32_EPSILON;
+  }
   if (!hasComponent(world, EntityObject3D, eid)) {
     throw new Error('checkScaleDiff requires EntityObject3D component.');
   }
