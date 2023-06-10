@@ -81,7 +81,8 @@ export const networkedEntitySystem = (world: IWorld, {prefabs, serializers}: Sys
                 const data = JSON.parse(c.data);
                 serializers
                   .get(c.component_name)
-                  .networkDeserializer(world, eid, data);
+                  // TODO: Write comment, why not networkedDeserializer but deserializer
+                  .deserializer(world, eid, data);
                 networkedProxy.initNetworkedComponent(
                   c.component_name,
                   data,
@@ -103,18 +104,32 @@ export const networkedEntitySystem = (world: IWorld, {prefabs, serializers}: Sys
           }
         }
         if (e.type === NetworkMessageType.UpdateComponent) {
-          if (e.data.owner !== userId) {
-            const eid = managerProxy.getEid(e.data.network_id);
-            // TODO: Duplicated code with the above
-            for (const c of e.data.components) {
-              if (serializers.has(c.component_name)) {
-                serializers
-                  .get(c.component_name)
-                  .networkDeserializer(world, eid, JSON.parse(c.data));
-              } else {
-                // TODO: Proper error handling
-                console.warn(`Unknown component type ${c.component_name}`);
+          // TODO: There is a chance that update component message arrives
+          //       earlier than create entity message.
+          //       Save to local storage and apply it when ready?
+          const eid = managerProxy.getEid(e.data.network_id);
+          // TODO: Duplicated code with the above
+          for (const c of e.data.components) {
+            if (serializers.has(c.component_name)) {
+              const networkedProxy = NetworkedProxy.get(eid);
+              const networkedComponent = networkedProxy.getNetworkedComponent(c.component_name);
+              if (c.version > networkedComponent.version) {
+                const data = JSON.parse(c.data);
+                if (c.owner !== userId) {
+                  serializers
+                    .get(c.component_name)
+                    .networkDeserializer(world, eid, data);
+                }
+                networkedProxy.updateNetworkedComponent(
+                  c.component_name,
+                  data,
+                  c.owner,
+                  c.version
+                );
               }
+            } else {
+              // TODO: Proper error handling
+              console.warn(`Unknown component type ${c.component_name}`);
             }
           }
         }

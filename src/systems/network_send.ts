@@ -5,7 +5,11 @@ import {
   getEntityComponents,
   IWorld
 } from "bitecs";
-import { NETWORK_INTERVAL, SystemParams } from "../common";
+import {
+  INITIAL_VERSION,
+  NETWORK_INTERVAL,
+  SystemParams
+} from "../common";
 import {
   NetworkAdapter,
   NetworkAdapterProxy,
@@ -72,7 +76,7 @@ export const networkSendSystem = (world: IWorld, {serializerKeys, serializers}: 
                   name,
 				  data,
                   myUserId,
-                  1
+                  INITIAL_VERSION
                 );
                 components.push({
                   name,
@@ -93,7 +97,8 @@ export const networkSendSystem = (world: IWorld, {serializerKeys, serializers}: 
               }
             );
 
-            NetworkedEntityManagerProxy.get(managerEid)
+            NetworkedEntityManagerProxy
+              .get(managerEid)
               .add(networkedEid, networkId, myUserId);
           });
         });
@@ -116,7 +121,6 @@ export const networkSendSystem = (world: IWorld, {serializerKeys, serializers}: 
                 const cache = networkedProxy.getNetworkedComponent(name).cache;
                 if (serializers.get(name).diffChecker(world, networkedEid, cache)) {
                   const data = serializers.get(name).serializer(world, networkedEid);
-                  networkedProxy.getNetworkedComponent(name).cache = data;
                   components.push({
                     name,
                     data: JSON.stringify(data)

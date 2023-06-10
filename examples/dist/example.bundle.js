@@ -747,11 +747,14 @@ class App {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "F32_EPSILON": () => (/* binding */ F32_EPSILON),
+/* harmony export */   "INITIAL_VERSION": () => (/* binding */ INITIAL_VERSION),
 /* harmony export */   "NETWORK_INTERVAL": () => (/* binding */ NETWORK_INTERVAL),
 /* harmony export */   "NULL_EID": () => (/* binding */ NULL_EID),
 /* harmony export */   "SystemOrder": () => (/* binding */ SystemOrder)
 /* harmony export */ });
 const NULL_EID = 0;
+//
+const INITIAL_VERSION = 0;
 const SystemOrder = Object.freeze({
     Time: 0,
     EventHandling: 100,
@@ -1598,6 +1601,12 @@ class NetworkedProxy {
             owner,
             version
         });
+    }
+    updateNetworkedComponent(key, cache, owner, version) {
+        const component = this.map.get(this.eid).components.get(key);
+        component.cache = cache;
+        component.owner = owner;
+        component.version = version;
     }
     getNetworkedComponent(key) {
         return this.map.get(this.eid).components.get(key);
@@ -3255,7 +3264,7 @@ const networkSendSystem = (world, { serializerKeys, serializers }) => {
                             if (serializerKeys.has(component)) {
                                 const name = serializerKeys.get(component);
                                 const data = serializers.get(name).serializer(world, networkedEid);
-                                networkedProxy.initNetworkedComponent(name, data, myUserId, 1);
+                                networkedProxy.initNetworkedComponent(name, data, myUserId, _common__WEBPACK_IMPORTED_MODULE_1__.INITIAL_VERSION);
                                 components.push({
                                     name,
                                     data: JSON.stringify(data)
@@ -3289,7 +3298,6 @@ const networkSendSystem = (world, { serializerKeys, serializers }) => {
                                 const cache = networkedProxy.getNetworkedComponent(name).cache;
                                 if (serializers.get(name).diffChecker(world, networkedEid, cache)) {
                                     const data = serializers.get(name).serializer(world, networkedEid);
-                                    networkedProxy.getNetworkedComponent(name).cache = data;
                                     components.push({
                                         name,
                                         data: JSON.stringify(data)
@@ -3430,7 +3438,8 @@ const networkedEntitySystem = (world, { prefabs, serializers }) => {
                                 const data = JSON.parse(c.data);
                                 serializers
                                     .get(c.component_name)
-                                    .networkDeserializer(world, eid, data);
+                                    // TODO: Write comment, why not networkedDeserializer but deserializer
+                                    .deserializer(world, eid, data);
                                 networkedProxy.initNetworkedComponent(c.component_name, data, c.owner, c.version);
                             }
                             else {
@@ -3448,19 +3457,28 @@ const networkedEntitySystem = (world, { prefabs, serializers }) => {
                     }
                 }
                 if (e.type === _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkMessageType.UpdateComponent) {
-                    if (e.data.owner !== userId) {
-                        const eid = managerProxy.getEid(e.data.network_id);
-                        // TODO: Duplicated code with the above
-                        for (const c of e.data.components) {
-                            if (serializers.has(c.component_name)) {
-                                serializers
-                                    .get(c.component_name)
-                                    .networkDeserializer(world, eid, JSON.parse(c.data));
+                    // TODO: There is a chance that update component message arrives
+                    //       earlier than create entity message.
+                    //       Save to local storage and apply it when ready?
+                    const eid = managerProxy.getEid(e.data.network_id);
+                    // TODO: Duplicated code with the above
+                    for (const c of e.data.components) {
+                        if (serializers.has(c.component_name)) {
+                            const networkedProxy = _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedProxy.get(eid);
+                            const networkedComponent = networkedProxy.getNetworkedComponent(c.component_name);
+                            if (c.version > networkedComponent.version) {
+                                const data = JSON.parse(c.data);
+                                if (c.owner !== userId) {
+                                    serializers
+                                        .get(c.component_name)
+                                        .networkDeserializer(world, eid, data);
+                                }
+                                networkedProxy.updateNetworkedComponent(c.component_name, data, c.owner, c.version);
                             }
-                            else {
-                                // TODO: Proper error handling
-                                console.warn(`Unknown component type ${c.component_name}`);
-                            }
+                        }
+                        else {
+                            // TODO: Proper error handling
+                            console.warn(`Unknown component type ${c.component_name}`);
                         }
                     }
                 }

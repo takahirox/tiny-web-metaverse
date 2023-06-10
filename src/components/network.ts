@@ -99,6 +99,18 @@ export class NetworkedProxy {
     });
   }
 
+  updateNetworkedComponent(
+    key: string,
+    cache: CacheData,
+    owner: string,
+    version: number
+  ): void {
+    const component = this.map.get(this.eid)!.components.get(key);
+    component.cache = cache;
+    component.owner = owner;
+    component.version = version;
+  }
+
   getNetworkedComponent(key: string): NetworkedComponent {
     return this.map.get(this.eid)!.components.get(key);
   }
