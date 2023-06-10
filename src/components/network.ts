@@ -82,16 +82,29 @@ export class NetworkedProxy {
     removeComponent(world, Networked, this.eid);
   }
 
-  hasCache(key: string): boolean {
+  hasNetworkedComponent(key: string): boolean {
     return this.map.get(this.eid)!.components.has(key);
   }
 
-  getCache(key: string): any {
-    return this.map.get(this.eid)!.components.get(key).cache;
+  initNetworkedComponent(
+    key: string,
+    cache: CacheData,
+    owner: string,
+    version: number
+  ): void {
+    this.map.get(this.eid)!.components.set(key, {
+      cache,
+      owner,
+      version
+    });
   }
 
-  setCache(key: string, cache: any): void {
-    this.map.get(this.eid)!.components.get(key).cache = cache;
+  getNetworkedComponent(key: string): NetworkedComponent {
+    return this.map.get(this.eid)!.components.get(key);
+  }
+
+  removeNetworkedComponent(key: string): void {
+    this.map.get(this.eid)!.components.delete(key);
   }
 
   get creator(): string {

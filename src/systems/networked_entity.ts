@@ -82,7 +82,12 @@ export const networkedEntitySystem = (world: IWorld, {prefabs, serializers}: Sys
                 serializers
                   .get(c.component_name)
                   .networkDeserializer(world, eid, data);
-                networkedProxy.setCache(c.component_name, data);
+                networkedProxy.initNetworkedComponent(
+                  c.component_name,
+                  data,
+                  c.owner,
+                  c.version
+                );
               } else {
                 // TODO: Proper error handling
                 console.warn(`Unknown component type ${c.component_name}`);

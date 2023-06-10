@@ -68,7 +68,12 @@ export const networkSendSystem = (world: IWorld, {serializerKeys, serializers}: 
               if (serializerKeys.has(component)) {
                 const name = serializerKeys.get(component)!;
                 const data = serializers.get(name).serializer(world, networkedEid);
-                networkedProxy.setCache(name, data);
+                networkedProxy.initNetworkedComponent(
+                  name,
+				  data,
+                  myUserId,
+                  1
+                );
                 components.push({
                   name,
                   data: JSON.stringify(data)
@@ -107,11 +112,11 @@ export const networkSendSystem = (world: IWorld, {serializerKeys, serializers}: 
           for (const component of getEntityComponents(world, networkedEid)) {
             if (serializerKeys.has(component)) {
               const name = serializerKeys.get(component)!;
-              if (networkedProxy.hasCache(name)) {
-                const cache = networkedProxy.getCache(name);
+              if (networkedProxy.hasNetworkedComponent(name)) {
+                const cache = networkedProxy.getNetworkedComponent(name).cache;
                 if (serializers.get(name).diffChecker(world, networkedEid, cache)) {
                   const data = serializers.get(name).serializer(world, networkedEid);
-                  networkedProxy.setCache(name, data);
+                  networkedProxy.getNetworkedComponent(name).cache = data;
                   components.push({
                     name,
                     data: JSON.stringify(data)

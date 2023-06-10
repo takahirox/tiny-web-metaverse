@@ -1589,14 +1589,21 @@ class NetworkedProxy {
         this.map.delete(this.eid);
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, Networked, this.eid);
     }
-    hasCache(key) {
+    hasNetworkedComponent(key) {
         return this.map.get(this.eid).components.has(key);
     }
-    getCache(key) {
-        return this.map.get(this.eid).components.get(key).cache;
+    initNetworkedComponent(key, cache, owner, version) {
+        this.map.get(this.eid).components.set(key, {
+            cache,
+            owner,
+            version
+        });
     }
-    setCache(key, cache) {
-        this.map.get(this.eid).components.get(key).cache = cache;
+    getNetworkedComponent(key) {
+        return this.map.get(this.eid).components.get(key);
+    }
+    removeNetworkedComponent(key) {
+        this.map.get(this.eid).components.delete(key);
     }
     get creator() {
         return this.map.get(this.eid).creator;
@@ -3248,7 +3255,7 @@ const networkSendSystem = (world, { serializerKeys, serializers }) => {
                             if (serializerKeys.has(component)) {
                                 const name = serializerKeys.get(component);
                                 const data = serializers.get(name).serializer(world, networkedEid);
-                                networkedProxy.setCache(name, data);
+                                networkedProxy.initNetworkedComponent(name, data, myUserId, 1);
                                 components.push({
                                     name,
                                     data: JSON.stringify(data)
@@ -3278,11 +3285,11 @@ const networkSendSystem = (world, { serializerKeys, serializers }) => {
                     for (const component of (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.getEntityComponents)(world, networkedEid)) {
                         if (serializerKeys.has(component)) {
                             const name = serializerKeys.get(component);
-                            if (networkedProxy.hasCache(name)) {
-                                const cache = networkedProxy.getCache(name);
+                            if (networkedProxy.hasNetworkedComponent(name)) {
+                                const cache = networkedProxy.getNetworkedComponent(name).cache;
                                 if (serializers.get(name).diffChecker(world, networkedEid, cache)) {
                                     const data = serializers.get(name).serializer(world, networkedEid);
-                                    networkedProxy.setCache(name, data);
+                                    networkedProxy.getNetworkedComponent(name).cache = data;
                                     components.push({
                                         name,
                                         data: JSON.stringify(data)
@@ -3424,7 +3431,7 @@ const networkedEntitySystem = (world, { prefabs, serializers }) => {
                                 serializers
                                     .get(c.component_name)
                                     .networkDeserializer(world, eid, data);
-                                networkedProxy.setCache(c.component_name, data);
+                                networkedProxy.initNetworkedComponent(c.component_name, data, c.owner, c.version);
                             }
                             else {
                                 // TODO: Proper error handling
