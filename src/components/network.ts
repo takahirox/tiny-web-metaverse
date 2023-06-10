@@ -27,17 +27,18 @@ export enum NetworkedType {
 };
 
 // TODO: Avoid any
-type NetworkedComponentData = {
-  data: any;
+type CacheData = any;
+
+type NetworkedComponent = {
+  cache: CacheData;
+  owner: string;
   version: number;
 };
 
 export const Networked = defineComponent();
 
 type NetworkedValue = {
-  // TODO: Avoid any
-  cache: Map<string, any>;
-  components: Map<string, NetworkedComponentData>;
+  components: Map<string, NetworkedComponent>;
   creator: string;
   networkId: string;
   prefabName: string;
@@ -68,12 +69,11 @@ export class NetworkedProxy {
   ): void {
     addComponent(world, Networked, this.eid);
     this.map.set(this.eid, {
-      components: new Map<string, NetworkedComponentData>(),
+      components: new Map<string, NetworkedComponent>(),
       creator,
       networkId,
       prefabName,
-      type,
-      cache: new Map()
+      type
     });
   }
 
@@ -83,15 +83,15 @@ export class NetworkedProxy {
   }
 
   hasCache(key: string): boolean {
-    return this.map.get(this.eid)!.cache.has(key);
+    return this.map.get(this.eid)!.components.has(key);
   }
 
   getCache(key: string): any {
-    return this.map.get(this.eid)!.cache.get(key);
+    return this.map.get(this.eid)!.components.get(key).cache;
   }
 
   setCache(key: string, cache: any): void {
-    this.map.get(this.eid)!.cache.set(key, cache);
+    this.map.get(this.eid)!.components.get(key).cache = cache;
   }
 
   get creator(): string {

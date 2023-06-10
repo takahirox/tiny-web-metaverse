@@ -1582,8 +1582,7 @@ class NetworkedProxy {
             creator,
             networkId,
             prefabName,
-            type,
-            cache: new Map()
+            type
         });
     }
     free(world) {
@@ -1591,13 +1590,13 @@ class NetworkedProxy {
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, Networked, this.eid);
     }
     hasCache(key) {
-        return this.map.get(this.eid).cache.has(key);
+        return this.map.get(this.eid).components.has(key);
     }
     getCache(key) {
-        return this.map.get(this.eid).cache.get(key);
+        return this.map.get(this.eid).components.get(key).cache;
     }
     setCache(key, cache) {
-        this.map.get(this.eid).cache.set(key, cache);
+        this.map.get(this.eid).components.get(key).cache = cache;
     }
     get creator() {
         return this.map.get(this.eid).creator;
