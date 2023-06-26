@@ -12,7 +12,11 @@
       "./node_modules/@types"
     ]
   },
+  "extends": "../../tsconfig.json",
+  "include": [
+    "./**/*"
+  ],
   "exclude": [
-    "node_modules"
+    "./dist/*"
   ]
 }

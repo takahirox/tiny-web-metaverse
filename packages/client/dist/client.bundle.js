@@ -2,466 +2,6 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./examples/components/user_event_handler.ts":
-/*!***************************************************!*\
-  !*** ./examples/components/user_event_handler.ts ***!
-  \***************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "UserEventHandler": () => (/* binding */ UserEventHandler)
-/* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
-
-const UserEventHandler = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-
-
-/***/ }),
-
-/***/ "./examples/prefabs/avatar.ts":
-/*!************************************!*\
-  !*** ./examples/prefabs/avatar.ts ***!
-  \************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "AvatarPrefab": () => (/* binding */ AvatarPrefab)
-/* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
-/* harmony import */ var _src_components_avatar__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../src/components/avatar */ "./src/components/avatar.ts");
-/* harmony import */ var _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../src/components/entity_object3d */ "./src/components/entity_object3d.ts");
-/* harmony import */ var _src_components_network__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../src/components/network */ "./src/components/network.ts");
-/* harmony import */ var _src_components_scene__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../src/components/scene */ "./src/components/scene.ts");
-
-
-
-
-
-
-const AvatarPrefab = (world) => {
-    const eid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
-    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_avatar__WEBPACK_IMPORTED_MODULE_1__.Avatar, eid);
-    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_network__WEBPACK_IMPORTED_MODULE_3__.NetworkedPosition, eid);
-    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_network__WEBPACK_IMPORTED_MODULE_3__.NetworkedQuaternion, eid);
-    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_network__WEBPACK_IMPORTED_MODULE_3__.NetworkedScale, eid);
-    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_scene__WEBPACK_IMPORTED_MODULE_4__.InScene, eid);
-    const avatarObject = new three__WEBPACK_IMPORTED_MODULE_5__.Mesh(new three__WEBPACK_IMPORTED_MODULE_5__.SphereGeometry(0.25), new three__WEBPACK_IMPORTED_MODULE_5__.MeshBasicMaterial({ color: 0xaaaacc }));
-    const leftEyeObject = new three__WEBPACK_IMPORTED_MODULE_5__.Mesh(new three__WEBPACK_IMPORTED_MODULE_5__.SphereGeometry(0.05), new three__WEBPACK_IMPORTED_MODULE_5__.MeshBasicMaterial({ color: 0x000000 }));
-    leftEyeObject.position.set(-0.07, 0.1, -0.2);
-    const rightEyeObject = new three__WEBPACK_IMPORTED_MODULE_5__.Mesh(new three__WEBPACK_IMPORTED_MODULE_5__.SphereGeometry(0.05), new three__WEBPACK_IMPORTED_MODULE_5__.MeshBasicMaterial({ color: 0x000000 }));
-    rightEyeObject.position.set(0.07, 0.1, -0.2);
-    avatarObject.add(leftEyeObject);
-    avatarObject.add(rightEyeObject);
-    _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__.EntityObject3DProxy.get(eid).addObject3D(world, avatarObject);
-    return eid;
-};
-
-
-/***/ }),
-
-/***/ "./examples/prefabs/cube.ts":
-/*!**********************************!*\
-  !*** ./examples/prefabs/cube.ts ***!
-  \**********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "CubePrefab": () => (/* binding */ CubePrefab)
-/* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
-/* harmony import */ var _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../src/components/entity_object3d */ "./src/components/entity_object3d.ts");
-/* harmony import */ var _src_components_grab__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../src/components/grab */ "./src/components/grab.ts");
-/* harmony import */ var _src_components_mouse__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../src/components/mouse */ "./src/components/mouse.ts");
-/* harmony import */ var _src_components_network__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../src/components/network */ "./src/components/network.ts");
-/* harmony import */ var _src_components_raycast__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../src/components/raycast */ "./src/components/raycast.ts");
-/* harmony import */ var _src_components_scene__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../src/components/scene */ "./src/components/scene.ts");
-/* harmony import */ var _src_components_select__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../src/components/select */ "./src/components/select.ts");
-
-
-
-
-
-
-
-
-
-const CubePrefab = (world) => {
-    const eid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
-    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_network__WEBPACK_IMPORTED_MODULE_4__.NetworkedPosition, eid);
-    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_network__WEBPACK_IMPORTED_MODULE_4__.NetworkedQuaternion, eid);
-    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_network__WEBPACK_IMPORTED_MODULE_4__.NetworkedScale, eid);
-    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_raycast__WEBPACK_IMPORTED_MODULE_5__.Raycastable, eid);
-    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_mouse__WEBPACK_IMPORTED_MODULE_3__.MouseButtonEventListener, eid);
-    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_grab__WEBPACK_IMPORTED_MODULE_2__.Grabbable, eid);
-    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_select__WEBPACK_IMPORTED_MODULE_7__.Selectable, eid);
-    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_scene__WEBPACK_IMPORTED_MODULE_6__.InScene, eid);
-    _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3DProxy.get(eid).addObject3D(world, new three__WEBPACK_IMPORTED_MODULE_8__.Mesh(new three__WEBPACK_IMPORTED_MODULE_8__.BoxGeometry(0.5, 0.5, 0.5), new three__WEBPACK_IMPORTED_MODULE_8__.MeshBasicMaterial()));
-    return eid;
-};
-
-
-/***/ }),
-
-/***/ "./examples/systems/color.ts":
-/*!***********************************!*\
-  !*** ./examples/systems/color.ts ***!
-  \***********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "colorSystem": () => (/* binding */ colorSystem)
-/* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
-/* harmony import */ var _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../src/components/entity_object3d */ "./src/components/entity_object3d.ts");
-/* harmony import */ var _src_components_grab__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../src/components/grab */ "./src/components/grab.ts");
-/* harmony import */ var _src_components_raycast__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../src/components/raycast */ "./src/components/raycast.ts");
-/* harmony import */ var _src_components_select__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../src/components/select */ "./src/components/select.ts");
-
-
-
-
-
-const query = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3D, _src_components_raycast__WEBPACK_IMPORTED_MODULE_3__.Raycastable]);
-const grabbedQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_src_components_grab__WEBPACK_IMPORTED_MODULE_2__.Grabbed]);
-const colorSystem = (world) => {
-    const grabbedExist = grabbedQuery(world).length > 0;
-    query(world).forEach(eid => {
-        const obj = _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3DProxy.get(eid).root;
-        if (obj.material === undefined) {
-            return;
-        }
-        const material = obj.material;
-        if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _src_components_grab__WEBPACK_IMPORTED_MODULE_2__.Grabbed, eid)) {
-            material.color.setHex(0x2222aa);
-        }
-        else if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _src_components_select__WEBPACK_IMPORTED_MODULE_4__.Selected, eid)) {
-            material.color.setHex(0x22aa22);
-        }
-        else if (!grabbedExist && (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _src_components_raycast__WEBPACK_IMPORTED_MODULE_3__.Raycasted, eid)) {
-            material.color.setHex(0xaa2222);
-        }
-        else {
-            material.color.setHex(0x888888);
-        }
-    });
-};
-
-
-/***/ }),
-
-/***/ "./examples/systems/selected_object.ts":
-/*!*********************************************!*\
-  !*** ./examples/systems/selected_object.ts ***!
-  \*********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "selectedObjectSystem": () => (/* binding */ selectedObjectSystem)
-/* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
-/* harmony import */ var _src_common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../src/common */ "./src/common.ts");
-/* harmony import */ var _src_components_select__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../src/components/select */ "./src/components/select.ts");
-/* harmony import */ var _ui_side_bar__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../ui/side_bar */ "./examples/ui/side_bar.ts");
-
-
-
-
-const selectedQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_src_components_select__WEBPACK_IMPORTED_MODULE_2__.Selected]);
-const selectedEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)(selectedQuery);
-const selectedExitQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)(selectedQuery);
-const selectedObjectSystem = (world) => {
-    selectedExitQuery(world).forEach(() => {
-        (0,_ui_side_bar__WEBPACK_IMPORTED_MODULE_3__.notifyEid)(_src_common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID);
-    });
-    selectedEnterQuery(world).forEach(eid => {
-        (0,_ui_side_bar__WEBPACK_IMPORTED_MODULE_3__.notifyEid)(eid);
-    });
-};
-
-
-/***/ }),
-
-/***/ "./examples/systems/user.ts":
-/*!**********************************!*\
-  !*** ./examples/systems/user.ts ***!
-  \**********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "userEventSystem": () => (/* binding */ userEventSystem)
-/* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
-/* harmony import */ var _src_components_network__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../src/components/network */ "./src/components/network.ts");
-/* harmony import */ var _components_user_event_handler__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/user_event_handler */ "./examples/components/user_event_handler.ts");
-
-
-
-const eventEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_src_components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkEvent, _components_user_event_handler__WEBPACK_IMPORTED_MODULE_2__.UserEventHandler, _src_components_network__WEBPACK_IMPORTED_MODULE_1__.UserNetworkEventListener]));
-const userEventSystem = (world) => {
-    eventEnterQuery(world).forEach(eid => {
-        for (const e of _src_components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkEventProxy.get(eid).events) {
-            switch (e.type) {
-                // TODO: Implement properly
-                case _src_components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkMessageType.UserJoined:
-                    console.log(e);
-                    break;
-                case _src_components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkMessageType.UserLeft:
-                    console.log(e);
-                    break;
-            }
-        }
-    });
-};
-
-
-/***/ }),
-
-/***/ "./examples/ui/side_bar.ts":
-/*!*********************************!*\
-  !*** ./examples/ui/side_bar.ts ***!
-  \*********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "notifyEid": () => (/* binding */ notifyEid),
-/* harmony export */   "updateSidebarSystem": () => (/* binding */ updateSidebarSystem)
-/* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
-/* harmony import */ var _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../src/components/entity_object3d */ "./src/components/entity_object3d.ts");
-/* harmony import */ var _src_components_transform__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../src/components/transform */ "./src/components/transform.ts");
-/* harmony import */ var _src_common__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../src/common */ "./src/common.ts");
-
-
-
-
-const vector3Keys = ['x', 'y', 'z'];
-let eid = _src_common__WEBPACK_IMPORTED_MODULE_3__.NULL_EID;
-let needsUpdate = false;
-var PropertyType;
-(function (PropertyType) {
-    PropertyType[PropertyType["Position"] = 0] = "Position";
-    PropertyType[PropertyType["Rotation"] = 1] = "Rotation";
-    PropertyType[PropertyType["Scale"] = 2] = "Scale";
-})(PropertyType || (PropertyType = {}));
-;
-const onInputQueue = [];
-/*
-<div>
-  <div>eid: ${eid}</div>
-  <div>position:
-    <div>x: <span>${position.x}</span> <input type="range" /></div>
-    <div>y: <span>${position.y}</span> <input type="range" /></div>
-    <div>z: <span>${position.z}</span> <input type="range" /></div>
-  </div>
-  <div>rotation:
-    <div>x: <span>${rotation.x}</span> <input type="range" /></div>
-    <div>y: <span>${rotation.y}</span> <input type="range" /></div>
-    <div>z: <span>${rotation.z}</span> <input type="range" /></div>
-  </div>
-  <div>scale:
-    <div>x: <span>${scale.x}</span> <input type="range" /></div>
-    <div>y: <span>${scale.y}</span> <input type="range" /></div>
-    <div>z: <span>${scale.z}</span> <input type="range" /></div>
-  </div>
-</div>
-*/
-const createPropertyElement = (label) => {
-    const div = document.createElement('div');
-    div.style.display = 'flex';
-    div.style.paddingLeft = '1em';
-    div.innerText = `${label} `;
-    const span = document.createElement('span');
-    span.style.width = '6em';
-    div.appendChild(span);
-    const input = document.createElement('input');
-    input.type = 'range';
-    input.style.width = '100px';
-    div.appendChild(input);
-    return { div, span, input };
-};
-const createVector3Element = (label) => {
-    const root = document.createElement('div');
-    root.innerText = `${label}:`;
-    root.style.display = 'none';
-    const divs = {};
-    const spans = {};
-    const inputs = {};
-    for (const key of vector3Keys) {
-        const { div, span, input } = createPropertyElement(`${key}:`);
-        divs[key] = div;
-        spans[key] = span;
-        inputs[key] = input;
-        root.appendChild(div);
-    }
-    return {
-        root,
-        divs: divs,
-        spans: spans,
-        inputs: inputs
-    };
-};
-const createPositionElement = () => {
-    const result = createVector3Element('position');
-    for (const key of vector3Keys) {
-        const input = result.inputs[key];
-        // TODO: Are these min and max good?
-        input.min = '-10.00';
-        input.max = '10.00';
-        input.step = '0.01';
-        input.addEventListener('input', () => {
-            if (eid === _src_common__WEBPACK_IMPORTED_MODULE_3__.NULL_EID) {
-                return;
-            }
-            onInputQueue.push({
-                property: PropertyType.Position,
-                key: key,
-                value: Number(input.value)
-            });
-        });
-    }
-    return result;
-};
-const createRotationElement = () => {
-    const result = createVector3Element('rotation');
-    for (const key of vector3Keys) {
-        const input = result.inputs[key];
-        input.min = `-${Math.PI}`;
-        input.max = `${Math.PI}`;
-        input.step = '0.01';
-        input.addEventListener('input', () => {
-            if (eid === _src_common__WEBPACK_IMPORTED_MODULE_3__.NULL_EID) {
-                return;
-            }
-            onInputQueue.push({
-                property: PropertyType.Rotation,
-                key: key,
-                value: Number(input.value)
-            });
-        });
-    }
-    return result;
-};
-const createScaleElement = () => {
-    const result = createVector3Element('scale');
-    for (const key of vector3Keys) {
-        const input = result.inputs[key];
-        // TODO: Are these min and max good?
-        input.min = '0.01';
-        input.max = '10.0';
-        input.step = '0.01';
-        input.addEventListener('input', () => {
-            if (eid === _src_common__WEBPACK_IMPORTED_MODULE_3__.NULL_EID) {
-                return;
-            }
-            onInputQueue.push({
-                property: PropertyType.Scale,
-                key: key,
-                value: Number(input.value)
-            });
-        });
-    }
-    return result;
-};
-const updateVector3 = (spans, inputs, value) => {
-    for (const key of vector3Keys) {
-        spans[key].innerText = `${value[key].toFixed(2)}`;
-        inputs[key].value = `${value[key]}`;
-    }
-};
-const handleOnInputs = (world, eid) => {
-    if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3D, eid)) {
-        const obj = _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3DProxy.get(eid).root;
-        for (const input of onInputQueue) {
-            switch (input.property) {
-                case PropertyType.Position:
-                    obj.position[input.key] = input.value;
-                    break;
-                case PropertyType.Rotation:
-                    obj.rotation[input.key] = input.value;
-                    break;
-                case PropertyType.Scale:
-                    obj.scale[input.key] = input.value;
-                    break;
-            }
-            (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_transform__WEBPACK_IMPORTED_MODULE_2__.TransformUpdated, eid);
-        }
-    }
-    onInputQueue.length = 0;
-};
-const div = document.createElement('div');
-div.style.width = 'calc(200px - 1.0em)';
-div.style.height = 'calc(100% - 1.0em)';
-div.style.display = 'none';
-div.style.position = 'absolute';
-div.style.background = 'rgba(255.0, 255.0, 255.0, 0.9)';
-div.style.color = 'rgba(0.0, 0.0, 0.0, 1.0)';
-div.style.zIndex = '1';
-div.style.top = '0px';
-div.style.right = '0px';
-div.style.opacity = '1.0';
-div.style.borderLeft = 'solid 1px #000000';
-div.style.padding = '0.5em';
-div.style.margin = '0';
-document.body.appendChild(div);
-const eidDiv = document.createElement('div');
-div.appendChild(eidDiv);
-const { root: positionRootDiv, spans: positionSpans, inputs: positionInputs } = createPositionElement();
-const { root: rotationRootDiv, spans: rotationSpans, inputs: rotationInputs } = createRotationElement();
-const { root: scaleRootDiv, spans: scaleSpans, inputs: scaleInputs } = createScaleElement();
-div.appendChild(positionRootDiv);
-div.appendChild(rotationRootDiv);
-div.appendChild(scaleRootDiv);
-const notifyEid = (newEid) => {
-    if (eid !== newEid) {
-        eid = newEid;
-        needsUpdate = true;
-    }
-};
-const updateSidebarSystem = (world) => {
-    if (eid === _src_common__WEBPACK_IMPORTED_MODULE_3__.NULL_EID) {
-        if (needsUpdate) {
-            div.style.display = 'none';
-        }
-    }
-    else {
-        if (needsUpdate) {
-            div.style.display = 'block';
-            eidDiv.innerText = `eid: ${eid}`;
-            if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3D, eid)) {
-                positionRootDiv.style.display = 'block';
-                rotationRootDiv.style.display = 'block';
-                scaleRootDiv.style.display = 'block';
-            }
-            else {
-                positionRootDiv.style.display = 'none';
-                rotationRootDiv.style.display = 'none';
-                scaleRootDiv.style.display = 'none';
-            }
-        }
-        handleOnInputs(world, eid);
-        if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3D, eid) &&
-            (needsUpdate || (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _src_components_transform__WEBPACK_IMPORTED_MODULE_2__.TransformUpdated, eid))) {
-            const obj = _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3DProxy.get(eid).root;
-            updateVector3(positionSpans, positionInputs, obj.position);
-            updateVector3(rotationSpans, rotationInputs, obj.rotation);
-            updateVector3(scaleSpans, scaleInputs, obj.scale);
-        }
-    }
-    needsUpdate = false;
-};
-
-
-/***/ }),
-
 /***/ "./src/app.ts":
 /*!********************!*\
   !*** ./src/app.ts ***!
@@ -470,10 +10,10 @@ const updateSidebarSystem = (world) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "App": () => (/* binding */ App)
+/* harmony export */   App: () => (/* binding */ App)
 /* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! three */ "../../node_modules/three/build/three.module.js");
 /* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./common */ "./src/common.ts");
 /* harmony import */ var _components_avatar_mouse_controls__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/avatar_mouse_controls */ "./src/components/avatar_mouse_controls.ts");
 /* harmony import */ var _components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/entity_object3d */ "./src/components/entity_object3d.ts");
@@ -746,11 +286,11 @@ class App {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "F32_EPSILON": () => (/* binding */ F32_EPSILON),
-/* harmony export */   "INITIAL_VERSION": () => (/* binding */ INITIAL_VERSION),
-/* harmony export */   "NETWORK_INTERVAL": () => (/* binding */ NETWORK_INTERVAL),
-/* harmony export */   "NULL_EID": () => (/* binding */ NULL_EID),
-/* harmony export */   "SystemOrder": () => (/* binding */ SystemOrder)
+/* harmony export */   F32_EPSILON: () => (/* binding */ F32_EPSILON),
+/* harmony export */   INITIAL_VERSION: () => (/* binding */ INITIAL_VERSION),
+/* harmony export */   NETWORK_INTERVAL: () => (/* binding */ NETWORK_INTERVAL),
+/* harmony export */   NULL_EID: () => (/* binding */ NULL_EID),
+/* harmony export */   SystemOrder: () => (/* binding */ SystemOrder)
 /* harmony export */ });
 const NULL_EID = 0;
 //
@@ -783,9 +323,9 @@ const F32_EPSILON = 0.00001;
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "Avatar": () => (/* binding */ Avatar)
+/* harmony export */   Avatar: () => (/* binding */ Avatar)
 /* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
 
 const Avatar = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 
@@ -800,10 +340,10 @@ const Avatar = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "AvatarMouseControls": () => (/* binding */ AvatarMouseControls),
-/* harmony export */   "AvatarMouseControlsProxy": () => (/* binding */ AvatarMouseControlsProxy)
+/* harmony export */   AvatarMouseControls: () => (/* binding */ AvatarMouseControls),
+/* harmony export */   AvatarMouseControlsProxy: () => (/* binding */ AvatarMouseControlsProxy)
 /* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../common */ "./src/common.ts");
 
 
@@ -845,15 +385,15 @@ AvatarMouseControlsProxy.instance = new AvatarMouseControlsProxy();
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "FpsCamera": () => (/* binding */ FpsCamera),
-/* harmony export */   "PerspectiveCameraDestroy": () => (/* binding */ PerspectiveCameraDestroy),
-/* harmony export */   "PerspectiveCameraInit": () => (/* binding */ PerspectiveCameraInit),
-/* harmony export */   "PerspectiveCameraInitProxy": () => (/* binding */ PerspectiveCameraInitProxy),
-/* harmony export */   "PerspectiveCameraProxy": () => (/* binding */ PerspectiveCameraProxy),
-/* harmony export */   "PerspectiveCameraTag": () => (/* binding */ PerspectiveCameraTag),
-/* harmony export */   "SceneCamera": () => (/* binding */ SceneCamera)
+/* harmony export */   FpsCamera: () => (/* binding */ FpsCamera),
+/* harmony export */   PerspectiveCameraDestroy: () => (/* binding */ PerspectiveCameraDestroy),
+/* harmony export */   PerspectiveCameraInit: () => (/* binding */ PerspectiveCameraInit),
+/* harmony export */   PerspectiveCameraInitProxy: () => (/* binding */ PerspectiveCameraInitProxy),
+/* harmony export */   PerspectiveCameraProxy: () => (/* binding */ PerspectiveCameraProxy),
+/* harmony export */   PerspectiveCameraTag: () => (/* binding */ PerspectiveCameraTag),
+/* harmony export */   SceneCamera: () => (/* binding */ SceneCamera)
 /* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../common */ "./src/common.ts");
 
 
@@ -932,12 +472,12 @@ PerspectiveCameraProxy.instance = new PerspectiveCameraProxy();
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "EntityObject3D": () => (/* binding */ EntityObject3D),
-/* harmony export */   "EntityObject3DProxy": () => (/* binding */ EntityObject3DProxy),
-/* harmony export */   "EntityRootGroup": () => (/* binding */ EntityRootGroup)
+/* harmony export */   EntityObject3D: () => (/* binding */ EntityObject3D),
+/* harmony export */   EntityObject3DProxy: () => (/* binding */ EntityObject3DProxy),
+/* harmony export */   EntityRootGroup: () => (/* binding */ EntityRootGroup)
 /* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "../../node_modules/three/build/three.module.js");
 /* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../common */ "./src/common.ts");
 
 
@@ -1062,10 +602,10 @@ EntityObject3DProxy.instance = new EntityObject3DProxy();
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "Grabbable": () => (/* binding */ Grabbable),
-/* harmony export */   "Grabbed": () => (/* binding */ Grabbed)
+/* harmony export */   Grabbable: () => (/* binding */ Grabbable),
+/* harmony export */   Grabbed: () => (/* binding */ Grabbed)
 /* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
 
 const Grabbable = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 const Grabbed = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({
@@ -1084,17 +624,17 @@ const Grabbed = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "KeyEvent": () => (/* binding */ KeyEvent),
-/* harmony export */   "KeyEventHandler": () => (/* binding */ KeyEventHandler),
-/* harmony export */   "KeyEventHandlerDestroy": () => (/* binding */ KeyEventHandlerDestroy),
-/* harmony export */   "KeyEventHandlerInit": () => (/* binding */ KeyEventHandlerInit),
-/* harmony export */   "KeyEventHandlerProxy": () => (/* binding */ KeyEventHandlerProxy),
-/* harmony export */   "KeyEventListener": () => (/* binding */ KeyEventListener),
-/* harmony export */   "KeyEventProxy": () => (/* binding */ KeyEventProxy),
-/* harmony export */   "KeyEventType": () => (/* binding */ KeyEventType),
-/* harmony export */   "KeyHold": () => (/* binding */ KeyHold)
+/* harmony export */   KeyEvent: () => (/* binding */ KeyEvent),
+/* harmony export */   KeyEventHandler: () => (/* binding */ KeyEventHandler),
+/* harmony export */   KeyEventHandlerDestroy: () => (/* binding */ KeyEventHandlerDestroy),
+/* harmony export */   KeyEventHandlerInit: () => (/* binding */ KeyEventHandlerInit),
+/* harmony export */   KeyEventHandlerProxy: () => (/* binding */ KeyEventHandlerProxy),
+/* harmony export */   KeyEventListener: () => (/* binding */ KeyEventListener),
+/* harmony export */   KeyEventProxy: () => (/* binding */ KeyEventProxy),
+/* harmony export */   KeyEventType: () => (/* binding */ KeyEventType),
+/* harmony export */   KeyHold: () => (/* binding */ KeyHold)
 /* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../common */ "./src/common.ts");
 
 
@@ -1175,12 +715,12 @@ KeyEventProxy.instance = new KeyEventProxy();
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "LinearMoveBackward": () => (/* binding */ LinearMoveBackward),
-/* harmony export */   "LinearMoveForward": () => (/* binding */ LinearMoveForward),
-/* harmony export */   "LinearMoveLeft": () => (/* binding */ LinearMoveLeft),
-/* harmony export */   "LinearMoveRight": () => (/* binding */ LinearMoveRight)
+/* harmony export */   LinearMoveBackward: () => (/* binding */ LinearMoveBackward),
+/* harmony export */   LinearMoveForward: () => (/* binding */ LinearMoveForward),
+/* harmony export */   LinearMoveLeft: () => (/* binding */ LinearMoveLeft),
+/* harmony export */   LinearMoveRight: () => (/* binding */ LinearMoveRight)
 /* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
 
 const LinearMoveBackward = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({ speed: bitecs__WEBPACK_IMPORTED_MODULE_0__.Types.f32 });
 const LinearMoveForward = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({ speed: bitecs__WEBPACK_IMPORTED_MODULE_0__.Types.f32 });
@@ -1198,11 +738,11 @@ const LinearMoveRight = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)(
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "LinearRotate": () => (/* binding */ LinearRotate),
-/* harmony export */   "LinearScale": () => (/* binding */ LinearScale),
-/* harmony export */   "LinearTranslate": () => (/* binding */ LinearTranslate)
+/* harmony export */   LinearRotate: () => (/* binding */ LinearRotate),
+/* harmony export */   LinearScale: () => (/* binding */ LinearScale),
+/* harmony export */   LinearTranslate: () => (/* binding */ LinearTranslate)
 /* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
 
 const LinearTranslate = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({
     duration: bitecs__WEBPACK_IMPORTED_MODULE_0__.Types.f32,
@@ -1235,31 +775,31 @@ const LinearScale = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "MouseButtonEvent": () => (/* binding */ MouseButtonEvent),
-/* harmony export */   "MouseButtonEventHandler": () => (/* binding */ MouseButtonEventHandler),
-/* harmony export */   "MouseButtonEventHandlerDestroy": () => (/* binding */ MouseButtonEventHandlerDestroy),
-/* harmony export */   "MouseButtonEventHandlerInit": () => (/* binding */ MouseButtonEventHandlerInit),
-/* harmony export */   "MouseButtonEventHandlerInitProxy": () => (/* binding */ MouseButtonEventHandlerInitProxy),
-/* harmony export */   "MouseButtonEventHandlerProxy": () => (/* binding */ MouseButtonEventHandlerProxy),
-/* harmony export */   "MouseButtonEventListener": () => (/* binding */ MouseButtonEventListener),
-/* harmony export */   "MouseButtonEventProxy": () => (/* binding */ MouseButtonEventProxy),
-/* harmony export */   "MouseButtonEventType": () => (/* binding */ MouseButtonEventType),
-/* harmony export */   "MouseButtonHold": () => (/* binding */ MouseButtonHold),
-/* harmony export */   "MouseButtonType": () => (/* binding */ MouseButtonType),
-/* harmony export */   "MouseMoveEvent": () => (/* binding */ MouseMoveEvent),
-/* harmony export */   "MouseMoveEventHandler": () => (/* binding */ MouseMoveEventHandler),
-/* harmony export */   "MouseMoveEventHandlerDestroy": () => (/* binding */ MouseMoveEventHandlerDestroy),
-/* harmony export */   "MouseMoveEventHandlerInit": () => (/* binding */ MouseMoveEventHandlerInit),
-/* harmony export */   "MouseMoveEventHandlerInitProxy": () => (/* binding */ MouseMoveEventHandlerInitProxy),
-/* harmony export */   "MouseMoveEventHandlerProxy": () => (/* binding */ MouseMoveEventHandlerProxy),
-/* harmony export */   "MouseMoveEventListener": () => (/* binding */ MouseMoveEventListener),
-/* harmony export */   "MouseMoveEventProxy": () => (/* binding */ MouseMoveEventProxy),
-/* harmony export */   "MousePosition": () => (/* binding */ MousePosition),
-/* harmony export */   "MousePositionProxy": () => (/* binding */ MousePositionProxy),
-/* harmony export */   "PreviousMousePosition": () => (/* binding */ PreviousMousePosition),
-/* harmony export */   "PreviousMousePositionProxy": () => (/* binding */ PreviousMousePositionProxy)
+/* harmony export */   MouseButtonEvent: () => (/* binding */ MouseButtonEvent),
+/* harmony export */   MouseButtonEventHandler: () => (/* binding */ MouseButtonEventHandler),
+/* harmony export */   MouseButtonEventHandlerDestroy: () => (/* binding */ MouseButtonEventHandlerDestroy),
+/* harmony export */   MouseButtonEventHandlerInit: () => (/* binding */ MouseButtonEventHandlerInit),
+/* harmony export */   MouseButtonEventHandlerInitProxy: () => (/* binding */ MouseButtonEventHandlerInitProxy),
+/* harmony export */   MouseButtonEventHandlerProxy: () => (/* binding */ MouseButtonEventHandlerProxy),
+/* harmony export */   MouseButtonEventListener: () => (/* binding */ MouseButtonEventListener),
+/* harmony export */   MouseButtonEventProxy: () => (/* binding */ MouseButtonEventProxy),
+/* harmony export */   MouseButtonEventType: () => (/* binding */ MouseButtonEventType),
+/* harmony export */   MouseButtonHold: () => (/* binding */ MouseButtonHold),
+/* harmony export */   MouseButtonType: () => (/* binding */ MouseButtonType),
+/* harmony export */   MouseMoveEvent: () => (/* binding */ MouseMoveEvent),
+/* harmony export */   MouseMoveEventHandler: () => (/* binding */ MouseMoveEventHandler),
+/* harmony export */   MouseMoveEventHandlerDestroy: () => (/* binding */ MouseMoveEventHandlerDestroy),
+/* harmony export */   MouseMoveEventHandlerInit: () => (/* binding */ MouseMoveEventHandlerInit),
+/* harmony export */   MouseMoveEventHandlerInitProxy: () => (/* binding */ MouseMoveEventHandlerInitProxy),
+/* harmony export */   MouseMoveEventHandlerProxy: () => (/* binding */ MouseMoveEventHandlerProxy),
+/* harmony export */   MouseMoveEventListener: () => (/* binding */ MouseMoveEventListener),
+/* harmony export */   MouseMoveEventProxy: () => (/* binding */ MouseMoveEventProxy),
+/* harmony export */   MousePosition: () => (/* binding */ MousePosition),
+/* harmony export */   MousePositionProxy: () => (/* binding */ MousePositionProxy),
+/* harmony export */   PreviousMousePosition: () => (/* binding */ PreviousMousePosition),
+/* harmony export */   PreviousMousePositionProxy: () => (/* binding */ PreviousMousePositionProxy)
 /* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var _src_common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../src/common */ "./src/common.ts");
 
 
@@ -1516,35 +1056,35 @@ PreviousMousePositionProxy.instance = new PreviousMousePositionProxy();
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "ComponentNetworkEventListener": () => (/* binding */ ComponentNetworkEventListener),
-/* harmony export */   "EntityNetworkEventListener": () => (/* binding */ EntityNetworkEventListener),
-/* harmony export */   "Local": () => (/* binding */ Local),
-/* harmony export */   "NetworkAdapter": () => (/* binding */ NetworkAdapter),
-/* harmony export */   "NetworkAdapterProxy": () => (/* binding */ NetworkAdapterProxy),
-/* harmony export */   "NetworkEvent": () => (/* binding */ NetworkEvent),
-/* harmony export */   "NetworkEventProxy": () => (/* binding */ NetworkEventProxy),
-/* harmony export */   "NetworkEventReceiver": () => (/* binding */ NetworkEventReceiver),
-/* harmony export */   "NetworkEventReceiverDestroy": () => (/* binding */ NetworkEventReceiverDestroy),
-/* harmony export */   "NetworkEventReceiverInit": () => (/* binding */ NetworkEventReceiverInit),
-/* harmony export */   "NetworkEventSender": () => (/* binding */ NetworkEventSender),
-/* harmony export */   "NetworkEventSenderProxy": () => (/* binding */ NetworkEventSenderProxy),
-/* harmony export */   "NetworkMessageType": () => (/* binding */ NetworkMessageType),
-/* harmony export */   "Networked": () => (/* binding */ Networked),
-/* harmony export */   "NetworkedEntityManager": () => (/* binding */ NetworkedEntityManager),
-/* harmony export */   "NetworkedEntityManagerProxy": () => (/* binding */ NetworkedEntityManagerProxy),
-/* harmony export */   "NetworkedInit": () => (/* binding */ NetworkedInit),
-/* harmony export */   "NetworkedInitProxy": () => (/* binding */ NetworkedInitProxy),
-/* harmony export */   "NetworkedPosition": () => (/* binding */ NetworkedPosition),
-/* harmony export */   "NetworkedProxy": () => (/* binding */ NetworkedProxy),
-/* harmony export */   "NetworkedQuaternion": () => (/* binding */ NetworkedQuaternion),
-/* harmony export */   "NetworkedScale": () => (/* binding */ NetworkedScale),
-/* harmony export */   "NetworkedType": () => (/* binding */ NetworkedType),
-/* harmony export */   "Remote": () => (/* binding */ Remote),
-/* harmony export */   "Shared": () => (/* binding */ Shared),
-/* harmony export */   "TextMessageNetworkEventListener": () => (/* binding */ TextMessageNetworkEventListener),
-/* harmony export */   "UserNetworkEventListener": () => (/* binding */ UserNetworkEventListener)
+/* harmony export */   ComponentNetworkEventListener: () => (/* binding */ ComponentNetworkEventListener),
+/* harmony export */   EntityNetworkEventListener: () => (/* binding */ EntityNetworkEventListener),
+/* harmony export */   Local: () => (/* binding */ Local),
+/* harmony export */   NetworkAdapter: () => (/* binding */ NetworkAdapter),
+/* harmony export */   NetworkAdapterProxy: () => (/* binding */ NetworkAdapterProxy),
+/* harmony export */   NetworkEvent: () => (/* binding */ NetworkEvent),
+/* harmony export */   NetworkEventProxy: () => (/* binding */ NetworkEventProxy),
+/* harmony export */   NetworkEventReceiver: () => (/* binding */ NetworkEventReceiver),
+/* harmony export */   NetworkEventReceiverDestroy: () => (/* binding */ NetworkEventReceiverDestroy),
+/* harmony export */   NetworkEventReceiverInit: () => (/* binding */ NetworkEventReceiverInit),
+/* harmony export */   NetworkEventSender: () => (/* binding */ NetworkEventSender),
+/* harmony export */   NetworkEventSenderProxy: () => (/* binding */ NetworkEventSenderProxy),
+/* harmony export */   NetworkMessageType: () => (/* binding */ NetworkMessageType),
+/* harmony export */   Networked: () => (/* binding */ Networked),
+/* harmony export */   NetworkedEntityManager: () => (/* binding */ NetworkedEntityManager),
+/* harmony export */   NetworkedEntityManagerProxy: () => (/* binding */ NetworkedEntityManagerProxy),
+/* harmony export */   NetworkedInit: () => (/* binding */ NetworkedInit),
+/* harmony export */   NetworkedInitProxy: () => (/* binding */ NetworkedInitProxy),
+/* harmony export */   NetworkedPosition: () => (/* binding */ NetworkedPosition),
+/* harmony export */   NetworkedProxy: () => (/* binding */ NetworkedProxy),
+/* harmony export */   NetworkedQuaternion: () => (/* binding */ NetworkedQuaternion),
+/* harmony export */   NetworkedScale: () => (/* binding */ NetworkedScale),
+/* harmony export */   NetworkedType: () => (/* binding */ NetworkedType),
+/* harmony export */   Remote: () => (/* binding */ Remote),
+/* harmony export */   Shared: () => (/* binding */ Shared),
+/* harmony export */   TextMessageNetworkEventListener: () => (/* binding */ TextMessageNetworkEventListener),
+/* harmony export */   UserNetworkEventListener: () => (/* binding */ UserNetworkEventListener)
 /* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../common */ "./src/common.ts");
 
 
@@ -1815,12 +1355,12 @@ NetworkedEntityManagerProxy.instance = new NetworkedEntityManagerProxy();
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "Raycastable": () => (/* binding */ Raycastable),
-/* harmony export */   "Raycasted": () => (/* binding */ Raycasted),
-/* harmony export */   "RaycasterProxy": () => (/* binding */ RaycasterProxy),
-/* harmony export */   "RaycasterTag": () => (/* binding */ RaycasterTag)
+/* harmony export */   Raycastable: () => (/* binding */ Raycastable),
+/* harmony export */   Raycasted: () => (/* binding */ Raycasted),
+/* harmony export */   RaycasterProxy: () => (/* binding */ RaycasterProxy),
+/* harmony export */   RaycasterTag: () => (/* binding */ RaycasterTag)
 /* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../common */ "./src/common.ts");
 
 
@@ -1863,13 +1403,13 @@ RaycasterProxy.instance = new RaycasterProxy();
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "Renderer": () => (/* binding */ Renderer),
-/* harmony export */   "RendererDestroy": () => (/* binding */ RendererDestroy),
-/* harmony export */   "RendererInit": () => (/* binding */ RendererInit),
-/* harmony export */   "RendererInitProxy": () => (/* binding */ RendererInitProxy),
-/* harmony export */   "RendererProxy": () => (/* binding */ RendererProxy)
+/* harmony export */   Renderer: () => (/* binding */ Renderer),
+/* harmony export */   RendererDestroy: () => (/* binding */ RendererDestroy),
+/* harmony export */   RendererInit: () => (/* binding */ RendererInit),
+/* harmony export */   RendererInitProxy: () => (/* binding */ RendererInitProxy),
+/* harmony export */   RendererProxy: () => (/* binding */ RendererProxy)
 /* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../common */ "./src/common.ts");
 
 
@@ -1946,13 +1486,13 @@ RendererProxy.instance = new RendererProxy();
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "InScene": () => (/* binding */ InScene),
-/* harmony export */   "SceneInit": () => (/* binding */ SceneInit),
-/* harmony export */   "SceneInitProxy": () => (/* binding */ SceneInitProxy),
-/* harmony export */   "SceneProxy": () => (/* binding */ SceneProxy),
-/* harmony export */   "SceneTag": () => (/* binding */ SceneTag)
+/* harmony export */   InScene: () => (/* binding */ InScene),
+/* harmony export */   SceneInit: () => (/* binding */ SceneInit),
+/* harmony export */   SceneInitProxy: () => (/* binding */ SceneInitProxy),
+/* harmony export */   SceneProxy: () => (/* binding */ SceneProxy),
+/* harmony export */   SceneTag: () => (/* binding */ SceneTag)
 /* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../common */ "./src/common.ts");
 
 
@@ -2017,10 +1557,10 @@ SceneProxy.instance = new SceneProxy();
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "Selectable": () => (/* binding */ Selectable),
-/* harmony export */   "Selected": () => (/* binding */ Selected)
+/* harmony export */   Selectable: () => (/* binding */ Selectable),
+/* harmony export */   Selected: () => (/* binding */ Selected)
 /* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
 
 const Selectable = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 const Selected = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
@@ -2036,11 +1576,11 @@ const Selected = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "Time": () => (/* binding */ Time),
-/* harmony export */   "TimeInit": () => (/* binding */ TimeInit),
-/* harmony export */   "TimeProxy": () => (/* binding */ TimeProxy)
+/* harmony export */   Time: () => (/* binding */ Time),
+/* harmony export */   TimeInit: () => (/* binding */ TimeInit),
+/* harmony export */   TimeProxy: () => (/* binding */ TimeProxy)
 /* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../common */ "./src/common.ts");
 
 
@@ -2098,9 +1638,9 @@ TimeProxy.instance = new TimeProxy();
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "TransformUpdated": () => (/* binding */ TransformUpdated)
+/* harmony export */   TransformUpdated: () => (/* binding */ TransformUpdated)
 /* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
 
 const TransformUpdated = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 
@@ -2115,15 +1655,15 @@ const TransformUpdated = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "WindowResizeEvent": () => (/* binding */ WindowResizeEvent),
-/* harmony export */   "WindowResizeEventHandler": () => (/* binding */ WindowResizeEventHandler),
-/* harmony export */   "WindowResizeEventHandlerDestroy": () => (/* binding */ WindowResizeEventHandlerDestroy),
-/* harmony export */   "WindowResizeEventHandlerInit": () => (/* binding */ WindowResizeEventHandlerInit),
-/* harmony export */   "WindowResizeEventHandlerProxy": () => (/* binding */ WindowResizeEventHandlerProxy),
-/* harmony export */   "WindowResizeEventListener": () => (/* binding */ WindowResizeEventListener),
-/* harmony export */   "WindowSize": () => (/* binding */ WindowSize)
+/* harmony export */   WindowResizeEvent: () => (/* binding */ WindowResizeEvent),
+/* harmony export */   WindowResizeEventHandler: () => (/* binding */ WindowResizeEventHandler),
+/* harmony export */   WindowResizeEventHandlerDestroy: () => (/* binding */ WindowResizeEventHandlerDestroy),
+/* harmony export */   WindowResizeEventHandlerInit: () => (/* binding */ WindowResizeEventHandlerInit),
+/* harmony export */   WindowResizeEventHandlerProxy: () => (/* binding */ WindowResizeEventHandlerProxy),
+/* harmony export */   WindowResizeEventListener: () => (/* binding */ WindowResizeEventListener),
+/* harmony export */   WindowSize: () => (/* binding */ WindowSize)
 /* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../common */ "./src/common.ts");
 
 
@@ -2168,11 +1708,11 @@ WindowResizeEventHandlerProxy.instance = new WindowResizeEventHandlerProxy();
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "positionSerializers": () => (/* binding */ positionSerializers),
-/* harmony export */   "quaternionSerializers": () => (/* binding */ quaternionSerializers),
-/* harmony export */   "scaleSerializers": () => (/* binding */ scaleSerializers)
+/* harmony export */   positionSerializers: () => (/* binding */ positionSerializers),
+/* harmony export */   quaternionSerializers: () => (/* binding */ quaternionSerializers),
+/* harmony export */   scaleSerializers: () => (/* binding */ scaleSerializers)
 /* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../common */ "./src/common.ts");
 /* harmony import */ var _components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/entity_object3d */ "./src/components/entity_object3d.ts");
 /* harmony import */ var _components_linear_transform__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/linear_transform */ "./src/components/linear_transform.ts");
@@ -2354,9 +1894,9 @@ const scaleSerializers = {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "avatarKeyControlsSystem": () => (/* binding */ avatarKeyControlsSystem)
+/* harmony export */   avatarKeyControlsSystem: () => (/* binding */ avatarKeyControlsSystem)
 /* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var _components_avatar__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/avatar */ "./src/components/avatar.ts");
 /* harmony import */ var _components_keyboard__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/keyboard */ "./src/components/keyboard.ts");
 /* harmony import */ var _components_linear_move__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/linear_move */ "./src/components/linear_move.ts");
@@ -2429,10 +1969,10 @@ const avatarKeyControlsSystem = (world) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "avatarMouseControlsSystem": () => (/* binding */ avatarMouseControlsSystem)
+/* harmony export */   avatarMouseControlsSystem: () => (/* binding */ avatarMouseControlsSystem)
 /* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! three */ "../../node_modules/three/build/three.module.js");
 /* harmony import */ var _components_avatar__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/avatar */ "./src/components/avatar.ts");
 /* harmony import */ var _components_avatar_mouse_controls__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/avatar_mouse_controls */ "./src/components/avatar_mouse_controls.ts");
 /* harmony import */ var _components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/entity_object3d */ "./src/components/entity_object3d.ts");
@@ -2521,9 +2061,9 @@ const avatarMouseControlsSystem = (world) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "fpsCameraSystem": () => (/* binding */ fpsCameraSystem)
+/* harmony export */   fpsCameraSystem: () => (/* binding */ fpsCameraSystem)
 /* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var _components_avatar__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/avatar */ "./src/components/avatar.ts");
 /* harmony import */ var _components_camera__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/camera */ "./src/components/camera.ts");
 /* harmony import */ var _components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/entity_object3d */ "./src/components/entity_object3d.ts");
@@ -2564,9 +2104,9 @@ const fpsCameraSystem = (world) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "grabSystem": () => (/* binding */ grabSystem)
+/* harmony export */   grabSystem: () => (/* binding */ grabSystem)
 /* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var _components_grab__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/grab */ "./src/components/grab.ts");
 /* harmony import */ var _components_raycast__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/raycast */ "./src/components/raycast.ts");
 /* harmony import */ var _components_mouse__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/mouse */ "./src/components/mouse.ts");
@@ -2606,10 +2146,10 @@ const grabSystem = (world) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "grabbedObjectsMouseTrackSystem": () => (/* binding */ grabbedObjectsMouseTrackSystem)
+/* harmony export */   grabbedObjectsMouseTrackSystem: () => (/* binding */ grabbedObjectsMouseTrackSystem)
 /* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! three */ "../../node_modules/three/build/three.module.js");
 /* harmony import */ var _components_camera__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/camera */ "./src/components/camera.ts");
 /* harmony import */ var _components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/entity_object3d */ "./src/components/entity_object3d.ts");
 /* harmony import */ var _components_grab__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/grab */ "./src/components/grab.ts");
@@ -2660,10 +2200,10 @@ const grabbedObjectsMouseTrackSystem = (world) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "keyEventClearSystem": () => (/* binding */ keyEventClearSystem),
-/* harmony export */   "keyEventHandleSystem": () => (/* binding */ keyEventHandleSystem)
+/* harmony export */   keyEventClearSystem: () => (/* binding */ keyEventClearSystem),
+/* harmony export */   keyEventHandleSystem: () => (/* binding */ keyEventHandleSystem)
 /* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var _components_keyboard__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/keyboard */ "./src/components/keyboard.ts");
 
 
@@ -2713,10 +2253,10 @@ const keyEventClearSystem = (world) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "linearMoveSystem": () => (/* binding */ linearMoveSystem)
+/* harmony export */   linearMoveSystem: () => (/* binding */ linearMoveSystem)
 /* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! three */ "../../node_modules/three/build/three.module.js");
 /* harmony import */ var _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/entity_object3d */ "./src/components/entity_object3d.ts");
 /* harmony import */ var _components_linear_move__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/linear_move */ "./src/components/linear_move.ts");
 /* harmony import */ var _components_time__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/time */ "./src/components/time.ts");
@@ -2771,10 +2311,10 @@ const linearMoveSystem = (world) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "linearTransformSystem": () => (/* binding */ linearTransformSystem)
+/* harmony export */   linearTransformSystem: () => (/* binding */ linearTransformSystem)
 /* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! three */ "../../node_modules/three/build/three.module.js");
 /* harmony import */ var _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/entity_object3d */ "./src/components/entity_object3d.ts");
 /* harmony import */ var _components_linear_transform__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/linear_transform */ "./src/components/linear_transform.ts");
 /* harmony import */ var _components_time__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/time */ "./src/components/time.ts");
@@ -2859,10 +2399,10 @@ const linearTransformSystem = (world) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "mouseButtonEventClearSystem": () => (/* binding */ mouseButtonEventClearSystem),
-/* harmony export */   "mouseButtonEventHandleSystem": () => (/* binding */ mouseButtonEventHandleSystem)
+/* harmony export */   mouseButtonEventClearSystem: () => (/* binding */ mouseButtonEventClearSystem),
+/* harmony export */   mouseButtonEventHandleSystem: () => (/* binding */ mouseButtonEventHandleSystem)
 /* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var _components_mouse__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/mouse */ "./src/components/mouse.ts");
 
 
@@ -2930,10 +2470,10 @@ const mouseButtonEventClearSystem = (world) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "mouseMoveEventClearSystem": () => (/* binding */ mouseMoveEventClearSystem),
-/* harmony export */   "mouseMoveEventHandleSystem": () => (/* binding */ mouseMoveEventHandleSystem)
+/* harmony export */   mouseMoveEventClearSystem: () => (/* binding */ mouseMoveEventClearSystem),
+/* harmony export */   mouseMoveEventHandleSystem: () => (/* binding */ mouseMoveEventHandleSystem)
 /* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var _components_mouse__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/mouse */ "./src/components/mouse.ts");
 
 
@@ -2979,9 +2519,9 @@ const mouseMoveEventClearSystem = (world) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "mousePositionTrackSystem": () => (/* binding */ mousePositionTrackSystem)
+/* harmony export */   mousePositionTrackSystem: () => (/* binding */ mousePositionTrackSystem)
 /* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var _components_mouse__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/mouse */ "./src/components/mouse.ts");
 
 
@@ -3010,10 +2550,10 @@ const mousePositionTrackSystem = (world) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "mouseRaycastSystem": () => (/* binding */ mouseRaycastSystem)
+/* harmony export */   mouseRaycastSystem: () => (/* binding */ mouseRaycastSystem)
 /* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! three */ "../../node_modules/three/build/three.module.js");
 /* harmony import */ var _components_camera__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/camera */ "./src/components/camera.ts");
 /* harmony import */ var _components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/entity_object3d */ "./src/components/entity_object3d.ts");
 /* harmony import */ var _components_mouse__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/mouse */ "./src/components/mouse.ts");
@@ -3085,9 +2625,9 @@ const mouseRaycastSystem = (world) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "mouseSelectSystem": () => (/* binding */ mouseSelectSystem)
+/* harmony export */   mouseSelectSystem: () => (/* binding */ mouseSelectSystem)
 /* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var _components_mouse__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/mouse */ "./src/components/mouse.ts");
 /* harmony import */ var _components_raycast__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/raycast */ "./src/components/raycast.ts");
 /* harmony import */ var _components_select__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/select */ "./src/components/select.ts");
@@ -3125,10 +2665,10 @@ const mouseSelectSystem = (world) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "networkEventClearSystem": () => (/* binding */ networkEventClearSystem),
-/* harmony export */   "networkEventHandleSystem": () => (/* binding */ networkEventHandleSystem)
+/* harmony export */   networkEventClearSystem: () => (/* binding */ networkEventClearSystem),
+/* harmony export */   networkEventHandleSystem: () => (/* binding */ networkEventHandleSystem)
 /* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var _components_network__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/network */ "./src/components/network.ts");
 
 
@@ -3216,9 +2756,9 @@ const networkEventClearSystem = (world) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "networkSendSystem": () => (/* binding */ networkSendSystem)
+/* harmony export */   networkSendSystem: () => (/* binding */ networkSendSystem)
 /* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../common */ "./src/common.ts");
 /* harmony import */ var _components_network__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/network */ "./src/components/network.ts");
 /* harmony import */ var _components_time__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/time */ "./src/components/time.ts");
@@ -3278,7 +2818,8 @@ const networkSendSystem = (world, { serializerKeys, serializers }) => {
                             prefab: networkedProxy.prefabName,
                             shared: networkedProxy.type === _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedType.Shared
                         });
-                        _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedEntityManagerProxy.get(managerEid)
+                        _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedEntityManagerProxy
+                            .get(managerEid)
                             .add(networkedEid, networkId, myUserId);
                     });
                 });
@@ -3332,9 +2873,9 @@ const networkSendSystem = (world, { serializerKeys, serializers }) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "networkedSystem": () => (/* binding */ networkedSystem)
+/* harmony export */   networkedSystem: () => (/* binding */ networkedSystem)
 /* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var _components_network__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/network */ "./src/components/network.ts");
 
 
@@ -3381,9 +2922,9 @@ const networkedSystem = (world) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "networkedEntitySystem": () => (/* binding */ networkedEntitySystem)
+/* harmony export */   networkedEntitySystem: () => (/* binding */ networkedEntitySystem)
 /* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/entity_object3d */ "./src/components/entity_object3d.ts");
 /* harmony import */ var _components_network__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/network */ "./src/components/network.ts");
 /* harmony import */ var _components_scene__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/scene */ "./src/components/scene.ts");
@@ -3507,10 +3048,10 @@ const networkedEntitySystem = (world, { prefabs, serializers }) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "perspectiveCameraSystem": () => (/* binding */ perspectiveCameraSystem)
+/* harmony export */   perspectiveCameraSystem: () => (/* binding */ perspectiveCameraSystem)
 /* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! three */ "../../node_modules/three/build/three.module.js");
 /* harmony import */ var _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/entity_object3d */ "./src/components/entity_object3d.ts");
 /* harmony import */ var _components_camera__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/camera */ "./src/components/camera.ts");
 /* harmony import */ var _components_window_resize__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/window_resize */ "./src/components/window_resize.ts");
@@ -3559,9 +3100,9 @@ const perspectiveCameraSystem = (world) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "clearRaycastedSystem": () => (/* binding */ clearRaycastedSystem)
+/* harmony export */   clearRaycastedSystem: () => (/* binding */ clearRaycastedSystem)
 /* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var _components_raycast__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/raycast */ "./src/components/raycast.ts");
 
 
@@ -3583,9 +3124,9 @@ const clearRaycastedSystem = (world) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "renderSystem": () => (/* binding */ renderSystem)
+/* harmony export */   renderSystem: () => (/* binding */ renderSystem)
 /* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var _components_renderer__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/renderer */ "./src/components/renderer.ts");
 /* harmony import */ var _components_scene__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/scene */ "./src/components/scene.ts");
 /* harmony import */ var _components_camera__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/camera */ "./src/components/camera.ts");
@@ -3623,10 +3164,10 @@ const renderSystem = (world) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "rendererSystem": () => (/* binding */ rendererSystem)
+/* harmony export */   rendererSystem: () => (/* binding */ rendererSystem)
 /* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three */ "../../node_modules/three/build/three.module.js");
 /* harmony import */ var _components_renderer__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/renderer */ "./src/components/renderer.ts");
 /* harmony import */ var _components_window_resize__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/window_resize */ "./src/components/window_resize.ts");
 
@@ -3674,10 +3215,10 @@ const rendererSystem = (world) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "sceneSystem": () => (/* binding */ sceneSystem)
+/* harmony export */   sceneSystem: () => (/* binding */ sceneSystem)
 /* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three */ "../../node_modules/three/build/three.module.js");
 /* harmony import */ var _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/entity_object3d */ "./src/components/entity_object3d.ts");
 /* harmony import */ var _components_scene__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/scene */ "./src/components/scene.ts");
 
@@ -3722,10 +3263,10 @@ const sceneSystem = (world) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "timeSystem": () => (/* binding */ timeSystem)
+/* harmony export */   timeSystem: () => (/* binding */ timeSystem)
 /* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "../../node_modules/three/build/three.module.js");
 /* harmony import */ var _components_time__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/time */ "./src/components/time.ts");
 
 
@@ -3757,9 +3298,9 @@ const timeSystem = (world) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "clearTransformUpdatedSystem": () => (/* binding */ clearTransformUpdatedSystem)
+/* harmony export */   clearTransformUpdatedSystem: () => (/* binding */ clearTransformUpdatedSystem)
 /* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var _components_transform__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/transform */ "./src/components/transform.ts");
 
 
@@ -3781,9 +3322,9 @@ const clearTransformUpdatedSystem = (world) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "updateMatricesSystem": () => (/* binding */ updateMatricesSystem)
+/* harmony export */   updateMatricesSystem: () => (/* binding */ updateMatricesSystem)
 /* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var _components_scene__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/scene */ "./src/components/scene.ts");
 
 
@@ -3806,10 +3347,10 @@ const updateMatricesSystem = (world) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "windowResizeEventClearSystem": () => (/* binding */ windowResizeEventClearSystem),
-/* harmony export */   "windowResizeEventHandleSystem": () => (/* binding */ windowResizeEventHandleSystem)
+/* harmony export */   windowResizeEventClearSystem: () => (/* binding */ windowResizeEventClearSystem),
+/* harmony export */   windowResizeEventHandleSystem: () => (/* binding */ windowResizeEventHandleSystem)
 /* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var _components_window_resize__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/window_resize */ "./src/components/window_resize.ts");
 
 
@@ -3844,43 +3385,6 @@ const windowResizeEventClearSystem = (world) => {
 
 /***/ }),
 
-/***/ "./src/utils/network.ts":
-/*!******************************!*\
-  !*** ./src/utils/network.ts ***!
-  \******************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "setupNetworkedEntity": () => (/* binding */ setupNetworkedEntity)
-/* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
-/* harmony import */ var _components_network__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/network */ "./src/components/network.ts");
-
-
-
-const generateUUID = () => {
-    return three__WEBPACK_IMPORTED_MODULE_2__.MathUtils.generateUUID();
-};
-// For creating local or shared networked entity from local client.
-// Networked entity created by remote clients are set up in networked entity system.
-const setupNetworkedEntity = (world, eid, prefabName, type) => {
-    _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkedInitProxy.get(eid).allocate(world, generateUUID(), prefabName);
-    if (type === _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkedType.Local) {
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_1__.Local, eid);
-    }
-    else if (type === _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkedType.Shared) {
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_1__.Shared, eid);
-    }
-    else {
-        throw new Error(`Invalid networked type ${type}`);
-    }
-};
-
-
-/***/ }),
-
 /***/ "./src/utils/phoenix_adapter.ts":
 /*!**************************************!*\
   !*** ./src/utils/phoenix_adapter.ts ***!
@@ -3889,9 +3393,9 @@ const setupNetworkedEntity = (world, eid, prefabName, type) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "PhoenixAdapter": () => (/* binding */ PhoenixAdapter)
+/* harmony export */   PhoenixAdapter: () => (/* binding */ PhoenixAdapter)
 /* harmony export */ });
-/* harmony import */ var phoenix__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! phoenix */ "./node_modules/phoenix/priv/static/phoenix.mjs");
+/* harmony import */ var phoenix__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! phoenix */ "../../node_modules/phoenix/priv/static/phoenix.mjs");
 
 class PhoenixAdapter {
     constructor(params) {
@@ -3938,44 +3442,44 @@ class PhoenixAdapter {
 
 /***/ }),
 
-/***/ "./node_modules/bitecs/dist/index.mjs":
-/*!********************************************!*\
-  !*** ./node_modules/bitecs/dist/index.mjs ***!
-  \********************************************/
+/***/ "../../node_modules/bitecs/dist/index.mjs":
+/*!************************************************!*\
+  !*** ../../node_modules/bitecs/dist/index.mjs ***!
+  \************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "Changed": () => (/* binding */ Changed),
-/* harmony export */   "DESERIALIZE_MODE": () => (/* binding */ DESERIALIZE_MODE),
-/* harmony export */   "Not": () => (/* binding */ Not),
-/* harmony export */   "Types": () => (/* binding */ Types),
-/* harmony export */   "addComponent": () => (/* binding */ addComponent),
-/* harmony export */   "addEntity": () => (/* binding */ addEntity),
-/* harmony export */   "commitRemovals": () => (/* binding */ commitRemovals),
-/* harmony export */   "createWorld": () => (/* binding */ createWorld),
-/* harmony export */   "defineComponent": () => (/* binding */ defineComponent),
-/* harmony export */   "defineDeserializer": () => (/* binding */ defineDeserializer),
-/* harmony export */   "defineQuery": () => (/* binding */ defineQuery),
-/* harmony export */   "defineSerializer": () => (/* binding */ defineSerializer),
-/* harmony export */   "defineSystem": () => (/* binding */ defineSystem),
-/* harmony export */   "deleteWorld": () => (/* binding */ deleteWorld),
-/* harmony export */   "enterQuery": () => (/* binding */ enterQuery),
-/* harmony export */   "entityExists": () => (/* binding */ entityExists),
-/* harmony export */   "exitQuery": () => (/* binding */ exitQuery),
-/* harmony export */   "getEntityComponents": () => (/* binding */ getEntityComponents),
-/* harmony export */   "getWorldComponents": () => (/* binding */ getWorldComponents),
-/* harmony export */   "hasComponent": () => (/* binding */ hasComponent),
-/* harmony export */   "parentArray": () => (/* binding */ parentArray),
-/* harmony export */   "pipe": () => (/* binding */ pipe),
-/* harmony export */   "registerComponent": () => (/* binding */ registerComponent),
-/* harmony export */   "registerComponents": () => (/* binding */ registerComponents),
-/* harmony export */   "removeComponent": () => (/* binding */ removeComponent),
-/* harmony export */   "removeEntity": () => (/* binding */ removeEntity),
-/* harmony export */   "removeQuery": () => (/* binding */ removeQuery),
-/* harmony export */   "resetChangedQuery": () => (/* binding */ resetChangedQuery),
-/* harmony export */   "resetWorld": () => (/* binding */ resetWorld),
-/* harmony export */   "setDefaultSize": () => (/* binding */ setDefaultSize)
+/* harmony export */   Changed: () => (/* binding */ Changed),
+/* harmony export */   DESERIALIZE_MODE: () => (/* binding */ DESERIALIZE_MODE),
+/* harmony export */   Not: () => (/* binding */ Not),
+/* harmony export */   Types: () => (/* binding */ Types),
+/* harmony export */   addComponent: () => (/* binding */ addComponent),
+/* harmony export */   addEntity: () => (/* binding */ addEntity),
+/* harmony export */   commitRemovals: () => (/* binding */ commitRemovals),
+/* harmony export */   createWorld: () => (/* binding */ createWorld),
+/* harmony export */   defineComponent: () => (/* binding */ defineComponent),
+/* harmony export */   defineDeserializer: () => (/* binding */ defineDeserializer),
+/* harmony export */   defineQuery: () => (/* binding */ defineQuery),
+/* harmony export */   defineSerializer: () => (/* binding */ defineSerializer),
+/* harmony export */   defineSystem: () => (/* binding */ defineSystem),
+/* harmony export */   deleteWorld: () => (/* binding */ deleteWorld),
+/* harmony export */   enterQuery: () => (/* binding */ enterQuery),
+/* harmony export */   entityExists: () => (/* binding */ entityExists),
+/* harmony export */   exitQuery: () => (/* binding */ exitQuery),
+/* harmony export */   getEntityComponents: () => (/* binding */ getEntityComponents),
+/* harmony export */   getWorldComponents: () => (/* binding */ getWorldComponents),
+/* harmony export */   hasComponent: () => (/* binding */ hasComponent),
+/* harmony export */   parentArray: () => (/* binding */ parentArray),
+/* harmony export */   pipe: () => (/* binding */ pipe),
+/* harmony export */   registerComponent: () => (/* binding */ registerComponent),
+/* harmony export */   registerComponents: () => (/* binding */ registerComponents),
+/* harmony export */   removeComponent: () => (/* binding */ removeComponent),
+/* harmony export */   removeEntity: () => (/* binding */ removeEntity),
+/* harmony export */   removeQuery: () => (/* binding */ removeQuery),
+/* harmony export */   resetChangedQuery: () => (/* binding */ resetChangedQuery),
+/* harmony export */   resetWorld: () => (/* binding */ resetWorld),
+/* harmony export */   setDefaultSize: () => (/* binding */ setDefaultSize)
 /* harmony export */ });
 // src/Constants.js
 var TYPES_ENUM = {
@@ -5017,19 +4521,19 @@ var Types = TYPES_ENUM;
 
 /***/ }),
 
-/***/ "./node_modules/phoenix/priv/static/phoenix.mjs":
-/*!******************************************************!*\
-  !*** ./node_modules/phoenix/priv/static/phoenix.mjs ***!
-  \******************************************************/
+/***/ "../../node_modules/phoenix/priv/static/phoenix.mjs":
+/*!**********************************************************!*\
+  !*** ../../node_modules/phoenix/priv/static/phoenix.mjs ***!
+  \**********************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "Channel": () => (/* binding */ Channel),
-/* harmony export */   "LongPoll": () => (/* binding */ LongPoll),
-/* harmony export */   "Presence": () => (/* binding */ Presence),
-/* harmony export */   "Serializer": () => (/* binding */ serializer_default),
-/* harmony export */   "Socket": () => (/* binding */ Socket)
+/* harmony export */   Channel: () => (/* binding */ Channel),
+/* harmony export */   LongPoll: () => (/* binding */ LongPoll),
+/* harmony export */   Presence: () => (/* binding */ Presence),
+/* harmony export */   Serializer: () => (/* binding */ serializer_default),
+/* harmony export */   Socket: () => (/* binding */ Socket)
 /* harmony export */ });
 // js/phoenix/utils.js
 var closure = (value) => {
@@ -6183,423 +5687,423 @@ var Socket = class {
 
 /***/ }),
 
-/***/ "./node_modules/three/build/three.module.js":
-/*!**************************************************!*\
-  !*** ./node_modules/three/build/three.module.js ***!
-  \**************************************************/
+/***/ "../../node_modules/three/build/three.module.js":
+/*!******************************************************!*\
+  !*** ../../node_modules/three/build/three.module.js ***!
+  \******************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "ACESFilmicToneMapping": () => (/* binding */ ACESFilmicToneMapping),
-/* harmony export */   "AddEquation": () => (/* binding */ AddEquation),
-/* harmony export */   "AddOperation": () => (/* binding */ AddOperation),
-/* harmony export */   "AdditiveAnimationBlendMode": () => (/* binding */ AdditiveAnimationBlendMode),
-/* harmony export */   "AdditiveBlending": () => (/* binding */ AdditiveBlending),
-/* harmony export */   "AlphaFormat": () => (/* binding */ AlphaFormat),
-/* harmony export */   "AlwaysDepth": () => (/* binding */ AlwaysDepth),
-/* harmony export */   "AlwaysStencilFunc": () => (/* binding */ AlwaysStencilFunc),
-/* harmony export */   "AmbientLight": () => (/* binding */ AmbientLight),
-/* harmony export */   "AmbientLightProbe": () => (/* binding */ AmbientLightProbe),
-/* harmony export */   "AnimationAction": () => (/* binding */ AnimationAction),
-/* harmony export */   "AnimationClip": () => (/* binding */ AnimationClip),
-/* harmony export */   "AnimationLoader": () => (/* binding */ AnimationLoader),
-/* harmony export */   "AnimationMixer": () => (/* binding */ AnimationMixer),
-/* harmony export */   "AnimationObjectGroup": () => (/* binding */ AnimationObjectGroup),
-/* harmony export */   "AnimationUtils": () => (/* binding */ AnimationUtils),
-/* harmony export */   "ArcCurve": () => (/* binding */ ArcCurve),
-/* harmony export */   "ArrayCamera": () => (/* binding */ ArrayCamera),
-/* harmony export */   "ArrowHelper": () => (/* binding */ ArrowHelper),
-/* harmony export */   "Audio": () => (/* binding */ Audio),
-/* harmony export */   "AudioAnalyser": () => (/* binding */ AudioAnalyser),
-/* harmony export */   "AudioContext": () => (/* binding */ AudioContext),
-/* harmony export */   "AudioListener": () => (/* binding */ AudioListener),
-/* harmony export */   "AudioLoader": () => (/* binding */ AudioLoader),
-/* harmony export */   "AxesHelper": () => (/* binding */ AxesHelper),
-/* harmony export */   "BackSide": () => (/* binding */ BackSide),
-/* harmony export */   "BasicDepthPacking": () => (/* binding */ BasicDepthPacking),
-/* harmony export */   "BasicShadowMap": () => (/* binding */ BasicShadowMap),
-/* harmony export */   "Bone": () => (/* binding */ Bone),
-/* harmony export */   "BooleanKeyframeTrack": () => (/* binding */ BooleanKeyframeTrack),
-/* harmony export */   "Box2": () => (/* binding */ Box2),
-/* harmony export */   "Box3": () => (/* binding */ Box3),
-/* harmony export */   "Box3Helper": () => (/* binding */ Box3Helper),
-/* harmony export */   "BoxBufferGeometry": () => (/* binding */ BoxBufferGeometry),
-/* harmony export */   "BoxGeometry": () => (/* binding */ BoxGeometry),
-/* harmony export */   "BoxHelper": () => (/* binding */ BoxHelper),
-/* harmony export */   "BufferAttribute": () => (/* binding */ BufferAttribute),
-/* harmony export */   "BufferGeometry": () => (/* binding */ BufferGeometry),
-/* harmony export */   "BufferGeometryLoader": () => (/* binding */ BufferGeometryLoader),
-/* harmony export */   "ByteType": () => (/* binding */ ByteType),
-/* harmony export */   "Cache": () => (/* binding */ Cache),
-/* harmony export */   "Camera": () => (/* binding */ Camera),
-/* harmony export */   "CameraHelper": () => (/* binding */ CameraHelper),
-/* harmony export */   "CanvasTexture": () => (/* binding */ CanvasTexture),
-/* harmony export */   "CapsuleBufferGeometry": () => (/* binding */ CapsuleBufferGeometry),
-/* harmony export */   "CapsuleGeometry": () => (/* binding */ CapsuleGeometry),
-/* harmony export */   "CatmullRomCurve3": () => (/* binding */ CatmullRomCurve3),
-/* harmony export */   "CineonToneMapping": () => (/* binding */ CineonToneMapping),
-/* harmony export */   "CircleBufferGeometry": () => (/* binding */ CircleBufferGeometry),
-/* harmony export */   "CircleGeometry": () => (/* binding */ CircleGeometry),
-/* harmony export */   "ClampToEdgeWrapping": () => (/* binding */ ClampToEdgeWrapping),
-/* harmony export */   "Clock": () => (/* binding */ Clock),
-/* harmony export */   "Color": () => (/* binding */ Color),
-/* harmony export */   "ColorKeyframeTrack": () => (/* binding */ ColorKeyframeTrack),
-/* harmony export */   "ColorManagement": () => (/* binding */ ColorManagement),
-/* harmony export */   "CompressedArrayTexture": () => (/* binding */ CompressedArrayTexture),
-/* harmony export */   "CompressedTexture": () => (/* binding */ CompressedTexture),
-/* harmony export */   "CompressedTextureLoader": () => (/* binding */ CompressedTextureLoader),
-/* harmony export */   "ConeBufferGeometry": () => (/* binding */ ConeBufferGeometry),
-/* harmony export */   "ConeGeometry": () => (/* binding */ ConeGeometry),
-/* harmony export */   "CubeCamera": () => (/* binding */ CubeCamera),
-/* harmony export */   "CubeReflectionMapping": () => (/* binding */ CubeReflectionMapping),
-/* harmony export */   "CubeRefractionMapping": () => (/* binding */ CubeRefractionMapping),
-/* harmony export */   "CubeTexture": () => (/* binding */ CubeTexture),
-/* harmony export */   "CubeTextureLoader": () => (/* binding */ CubeTextureLoader),
-/* harmony export */   "CubeUVReflectionMapping": () => (/* binding */ CubeUVReflectionMapping),
-/* harmony export */   "CubicBezierCurve": () => (/* binding */ CubicBezierCurve),
-/* harmony export */   "CubicBezierCurve3": () => (/* binding */ CubicBezierCurve3),
-/* harmony export */   "CubicInterpolant": () => (/* binding */ CubicInterpolant),
-/* harmony export */   "CullFaceBack": () => (/* binding */ CullFaceBack),
-/* harmony export */   "CullFaceFront": () => (/* binding */ CullFaceFront),
-/* harmony export */   "CullFaceFrontBack": () => (/* binding */ CullFaceFrontBack),
-/* harmony export */   "CullFaceNone": () => (/* binding */ CullFaceNone),
-/* harmony export */   "Curve": () => (/* binding */ Curve),
-/* harmony export */   "CurvePath": () => (/* binding */ CurvePath),
-/* harmony export */   "CustomBlending": () => (/* binding */ CustomBlending),
-/* harmony export */   "CustomToneMapping": () => (/* binding */ CustomToneMapping),
-/* harmony export */   "CylinderBufferGeometry": () => (/* binding */ CylinderBufferGeometry),
-/* harmony export */   "CylinderGeometry": () => (/* binding */ CylinderGeometry),
-/* harmony export */   "Cylindrical": () => (/* binding */ Cylindrical),
-/* harmony export */   "Data3DTexture": () => (/* binding */ Data3DTexture),
-/* harmony export */   "DataArrayTexture": () => (/* binding */ DataArrayTexture),
-/* harmony export */   "DataTexture": () => (/* binding */ DataTexture),
-/* harmony export */   "DataTextureLoader": () => (/* binding */ DataTextureLoader),
-/* harmony export */   "DataUtils": () => (/* binding */ DataUtils),
-/* harmony export */   "DecrementStencilOp": () => (/* binding */ DecrementStencilOp),
-/* harmony export */   "DecrementWrapStencilOp": () => (/* binding */ DecrementWrapStencilOp),
-/* harmony export */   "DefaultLoadingManager": () => (/* binding */ DefaultLoadingManager),
-/* harmony export */   "DepthFormat": () => (/* binding */ DepthFormat),
-/* harmony export */   "DepthStencilFormat": () => (/* binding */ DepthStencilFormat),
-/* harmony export */   "DepthTexture": () => (/* binding */ DepthTexture),
-/* harmony export */   "DirectionalLight": () => (/* binding */ DirectionalLight),
-/* harmony export */   "DirectionalLightHelper": () => (/* binding */ DirectionalLightHelper),
-/* harmony export */   "DiscreteInterpolant": () => (/* binding */ DiscreteInterpolant),
-/* harmony export */   "DisplayP3ColorSpace": () => (/* binding */ DisplayP3ColorSpace),
-/* harmony export */   "DodecahedronBufferGeometry": () => (/* binding */ DodecahedronBufferGeometry),
-/* harmony export */   "DodecahedronGeometry": () => (/* binding */ DodecahedronGeometry),
-/* harmony export */   "DoubleSide": () => (/* binding */ DoubleSide),
-/* harmony export */   "DstAlphaFactor": () => (/* binding */ DstAlphaFactor),
-/* harmony export */   "DstColorFactor": () => (/* binding */ DstColorFactor),
-/* harmony export */   "DynamicCopyUsage": () => (/* binding */ DynamicCopyUsage),
-/* harmony export */   "DynamicDrawUsage": () => (/* binding */ DynamicDrawUsage),
-/* harmony export */   "DynamicReadUsage": () => (/* binding */ DynamicReadUsage),
-/* harmony export */   "EdgesGeometry": () => (/* binding */ EdgesGeometry),
-/* harmony export */   "EllipseCurve": () => (/* binding */ EllipseCurve),
-/* harmony export */   "EqualDepth": () => (/* binding */ EqualDepth),
-/* harmony export */   "EqualStencilFunc": () => (/* binding */ EqualStencilFunc),
-/* harmony export */   "EquirectangularReflectionMapping": () => (/* binding */ EquirectangularReflectionMapping),
-/* harmony export */   "EquirectangularRefractionMapping": () => (/* binding */ EquirectangularRefractionMapping),
-/* harmony export */   "Euler": () => (/* binding */ Euler),
-/* harmony export */   "EventDispatcher": () => (/* binding */ EventDispatcher),
-/* harmony export */   "ExtrudeBufferGeometry": () => (/* binding */ ExtrudeBufferGeometry),
-/* harmony export */   "ExtrudeGeometry": () => (/* binding */ ExtrudeGeometry),
-/* harmony export */   "FileLoader": () => (/* binding */ FileLoader),
-/* harmony export */   "Float16BufferAttribute": () => (/* binding */ Float16BufferAttribute),
-/* harmony export */   "Float32BufferAttribute": () => (/* binding */ Float32BufferAttribute),
-/* harmony export */   "Float64BufferAttribute": () => (/* binding */ Float64BufferAttribute),
-/* harmony export */   "FloatType": () => (/* binding */ FloatType),
-/* harmony export */   "Fog": () => (/* binding */ Fog),
-/* harmony export */   "FogExp2": () => (/* binding */ FogExp2),
-/* harmony export */   "FramebufferTexture": () => (/* binding */ FramebufferTexture),
-/* harmony export */   "FrontSide": () => (/* binding */ FrontSide),
-/* harmony export */   "Frustum": () => (/* binding */ Frustum),
-/* harmony export */   "GLBufferAttribute": () => (/* binding */ GLBufferAttribute),
-/* harmony export */   "GLSL1": () => (/* binding */ GLSL1),
-/* harmony export */   "GLSL3": () => (/* binding */ GLSL3),
-/* harmony export */   "GreaterDepth": () => (/* binding */ GreaterDepth),
-/* harmony export */   "GreaterEqualDepth": () => (/* binding */ GreaterEqualDepth),
-/* harmony export */   "GreaterEqualStencilFunc": () => (/* binding */ GreaterEqualStencilFunc),
-/* harmony export */   "GreaterStencilFunc": () => (/* binding */ GreaterStencilFunc),
-/* harmony export */   "GridHelper": () => (/* binding */ GridHelper),
-/* harmony export */   "Group": () => (/* binding */ Group),
-/* harmony export */   "HalfFloatType": () => (/* binding */ HalfFloatType),
-/* harmony export */   "HemisphereLight": () => (/* binding */ HemisphereLight),
-/* harmony export */   "HemisphereLightHelper": () => (/* binding */ HemisphereLightHelper),
-/* harmony export */   "HemisphereLightProbe": () => (/* binding */ HemisphereLightProbe),
-/* harmony export */   "IcosahedronBufferGeometry": () => (/* binding */ IcosahedronBufferGeometry),
-/* harmony export */   "IcosahedronGeometry": () => (/* binding */ IcosahedronGeometry),
-/* harmony export */   "ImageBitmapLoader": () => (/* binding */ ImageBitmapLoader),
-/* harmony export */   "ImageLoader": () => (/* binding */ ImageLoader),
-/* harmony export */   "ImageUtils": () => (/* binding */ ImageUtils),
-/* harmony export */   "IncrementStencilOp": () => (/* binding */ IncrementStencilOp),
-/* harmony export */   "IncrementWrapStencilOp": () => (/* binding */ IncrementWrapStencilOp),
-/* harmony export */   "InstancedBufferAttribute": () => (/* binding */ InstancedBufferAttribute),
-/* harmony export */   "InstancedBufferGeometry": () => (/* binding */ InstancedBufferGeometry),
-/* harmony export */   "InstancedInterleavedBuffer": () => (/* binding */ InstancedInterleavedBuffer),
-/* harmony export */   "InstancedMesh": () => (/* binding */ InstancedMesh),
-/* harmony export */   "Int16BufferAttribute": () => (/* binding */ Int16BufferAttribute),
-/* harmony export */   "Int32BufferAttribute": () => (/* binding */ Int32BufferAttribute),
-/* harmony export */   "Int8BufferAttribute": () => (/* binding */ Int8BufferAttribute),
-/* harmony export */   "IntType": () => (/* binding */ IntType),
-/* harmony export */   "InterleavedBuffer": () => (/* binding */ InterleavedBuffer),
-/* harmony export */   "InterleavedBufferAttribute": () => (/* binding */ InterleavedBufferAttribute),
-/* harmony export */   "Interpolant": () => (/* binding */ Interpolant),
-/* harmony export */   "InterpolateDiscrete": () => (/* binding */ InterpolateDiscrete),
-/* harmony export */   "InterpolateLinear": () => (/* binding */ InterpolateLinear),
-/* harmony export */   "InterpolateSmooth": () => (/* binding */ InterpolateSmooth),
-/* harmony export */   "InvertStencilOp": () => (/* binding */ InvertStencilOp),
-/* harmony export */   "KeepStencilOp": () => (/* binding */ KeepStencilOp),
-/* harmony export */   "KeyframeTrack": () => (/* binding */ KeyframeTrack),
-/* harmony export */   "LOD": () => (/* binding */ LOD),
-/* harmony export */   "LatheBufferGeometry": () => (/* binding */ LatheBufferGeometry),
-/* harmony export */   "LatheGeometry": () => (/* binding */ LatheGeometry),
-/* harmony export */   "Layers": () => (/* binding */ Layers),
-/* harmony export */   "LessDepth": () => (/* binding */ LessDepth),
-/* harmony export */   "LessEqualDepth": () => (/* binding */ LessEqualDepth),
-/* harmony export */   "LessEqualStencilFunc": () => (/* binding */ LessEqualStencilFunc),
-/* harmony export */   "LessStencilFunc": () => (/* binding */ LessStencilFunc),
-/* harmony export */   "Light": () => (/* binding */ Light),
-/* harmony export */   "LightProbe": () => (/* binding */ LightProbe),
-/* harmony export */   "Line": () => (/* binding */ Line),
-/* harmony export */   "Line3": () => (/* binding */ Line3),
-/* harmony export */   "LineBasicMaterial": () => (/* binding */ LineBasicMaterial),
-/* harmony export */   "LineCurve": () => (/* binding */ LineCurve),
-/* harmony export */   "LineCurve3": () => (/* binding */ LineCurve3),
-/* harmony export */   "LineDashedMaterial": () => (/* binding */ LineDashedMaterial),
-/* harmony export */   "LineLoop": () => (/* binding */ LineLoop),
-/* harmony export */   "LineSegments": () => (/* binding */ LineSegments),
-/* harmony export */   "LinearEncoding": () => (/* binding */ LinearEncoding),
-/* harmony export */   "LinearFilter": () => (/* binding */ LinearFilter),
-/* harmony export */   "LinearInterpolant": () => (/* binding */ LinearInterpolant),
-/* harmony export */   "LinearMipMapLinearFilter": () => (/* binding */ LinearMipMapLinearFilter),
-/* harmony export */   "LinearMipMapNearestFilter": () => (/* binding */ LinearMipMapNearestFilter),
-/* harmony export */   "LinearMipmapLinearFilter": () => (/* binding */ LinearMipmapLinearFilter),
-/* harmony export */   "LinearMipmapNearestFilter": () => (/* binding */ LinearMipmapNearestFilter),
-/* harmony export */   "LinearSRGBColorSpace": () => (/* binding */ LinearSRGBColorSpace),
-/* harmony export */   "LinearToneMapping": () => (/* binding */ LinearToneMapping),
-/* harmony export */   "Loader": () => (/* binding */ Loader),
-/* harmony export */   "LoaderUtils": () => (/* binding */ LoaderUtils),
-/* harmony export */   "LoadingManager": () => (/* binding */ LoadingManager),
-/* harmony export */   "LoopOnce": () => (/* binding */ LoopOnce),
-/* harmony export */   "LoopPingPong": () => (/* binding */ LoopPingPong),
-/* harmony export */   "LoopRepeat": () => (/* binding */ LoopRepeat),
-/* harmony export */   "LuminanceAlphaFormat": () => (/* binding */ LuminanceAlphaFormat),
-/* harmony export */   "LuminanceFormat": () => (/* binding */ LuminanceFormat),
-/* harmony export */   "MOUSE": () => (/* binding */ MOUSE),
-/* harmony export */   "Material": () => (/* binding */ Material),
-/* harmony export */   "MaterialLoader": () => (/* binding */ MaterialLoader),
-/* harmony export */   "MathUtils": () => (/* binding */ MathUtils),
-/* harmony export */   "Matrix3": () => (/* binding */ Matrix3),
-/* harmony export */   "Matrix4": () => (/* binding */ Matrix4),
-/* harmony export */   "MaxEquation": () => (/* binding */ MaxEquation),
-/* harmony export */   "Mesh": () => (/* binding */ Mesh),
-/* harmony export */   "MeshBasicMaterial": () => (/* binding */ MeshBasicMaterial),
-/* harmony export */   "MeshDepthMaterial": () => (/* binding */ MeshDepthMaterial),
-/* harmony export */   "MeshDistanceMaterial": () => (/* binding */ MeshDistanceMaterial),
-/* harmony export */   "MeshLambertMaterial": () => (/* binding */ MeshLambertMaterial),
-/* harmony export */   "MeshMatcapMaterial": () => (/* binding */ MeshMatcapMaterial),
-/* harmony export */   "MeshNormalMaterial": () => (/* binding */ MeshNormalMaterial),
-/* harmony export */   "MeshPhongMaterial": () => (/* binding */ MeshPhongMaterial),
-/* harmony export */   "MeshPhysicalMaterial": () => (/* binding */ MeshPhysicalMaterial),
-/* harmony export */   "MeshStandardMaterial": () => (/* binding */ MeshStandardMaterial),
-/* harmony export */   "MeshToonMaterial": () => (/* binding */ MeshToonMaterial),
-/* harmony export */   "MinEquation": () => (/* binding */ MinEquation),
-/* harmony export */   "MirroredRepeatWrapping": () => (/* binding */ MirroredRepeatWrapping),
-/* harmony export */   "MixOperation": () => (/* binding */ MixOperation),
-/* harmony export */   "MultiplyBlending": () => (/* binding */ MultiplyBlending),
-/* harmony export */   "MultiplyOperation": () => (/* binding */ MultiplyOperation),
-/* harmony export */   "NearestFilter": () => (/* binding */ NearestFilter),
-/* harmony export */   "NearestMipMapLinearFilter": () => (/* binding */ NearestMipMapLinearFilter),
-/* harmony export */   "NearestMipMapNearestFilter": () => (/* binding */ NearestMipMapNearestFilter),
-/* harmony export */   "NearestMipmapLinearFilter": () => (/* binding */ NearestMipmapLinearFilter),
-/* harmony export */   "NearestMipmapNearestFilter": () => (/* binding */ NearestMipmapNearestFilter),
-/* harmony export */   "NeverDepth": () => (/* binding */ NeverDepth),
-/* harmony export */   "NeverStencilFunc": () => (/* binding */ NeverStencilFunc),
-/* harmony export */   "NoBlending": () => (/* binding */ NoBlending),
-/* harmony export */   "NoColorSpace": () => (/* binding */ NoColorSpace),
-/* harmony export */   "NoToneMapping": () => (/* binding */ NoToneMapping),
-/* harmony export */   "NormalAnimationBlendMode": () => (/* binding */ NormalAnimationBlendMode),
-/* harmony export */   "NormalBlending": () => (/* binding */ NormalBlending),
-/* harmony export */   "NotEqualDepth": () => (/* binding */ NotEqualDepth),
-/* harmony export */   "NotEqualStencilFunc": () => (/* binding */ NotEqualStencilFunc),
-/* harmony export */   "NumberKeyframeTrack": () => (/* binding */ NumberKeyframeTrack),
-/* harmony export */   "Object3D": () => (/* binding */ Object3D),
-/* harmony export */   "ObjectLoader": () => (/* binding */ ObjectLoader),
-/* harmony export */   "ObjectSpaceNormalMap": () => (/* binding */ ObjectSpaceNormalMap),
-/* harmony export */   "OctahedronBufferGeometry": () => (/* binding */ OctahedronBufferGeometry),
-/* harmony export */   "OctahedronGeometry": () => (/* binding */ OctahedronGeometry),
-/* harmony export */   "OneFactor": () => (/* binding */ OneFactor),
-/* harmony export */   "OneMinusDstAlphaFactor": () => (/* binding */ OneMinusDstAlphaFactor),
-/* harmony export */   "OneMinusDstColorFactor": () => (/* binding */ OneMinusDstColorFactor),
-/* harmony export */   "OneMinusSrcAlphaFactor": () => (/* binding */ OneMinusSrcAlphaFactor),
-/* harmony export */   "OneMinusSrcColorFactor": () => (/* binding */ OneMinusSrcColorFactor),
-/* harmony export */   "OrthographicCamera": () => (/* binding */ OrthographicCamera),
-/* harmony export */   "PCFShadowMap": () => (/* binding */ PCFShadowMap),
-/* harmony export */   "PCFSoftShadowMap": () => (/* binding */ PCFSoftShadowMap),
-/* harmony export */   "PMREMGenerator": () => (/* binding */ PMREMGenerator),
-/* harmony export */   "Path": () => (/* binding */ Path),
-/* harmony export */   "PerspectiveCamera": () => (/* binding */ PerspectiveCamera),
-/* harmony export */   "Plane": () => (/* binding */ Plane),
-/* harmony export */   "PlaneBufferGeometry": () => (/* binding */ PlaneBufferGeometry),
-/* harmony export */   "PlaneGeometry": () => (/* binding */ PlaneGeometry),
-/* harmony export */   "PlaneHelper": () => (/* binding */ PlaneHelper),
-/* harmony export */   "PointLight": () => (/* binding */ PointLight),
-/* harmony export */   "PointLightHelper": () => (/* binding */ PointLightHelper),
-/* harmony export */   "Points": () => (/* binding */ Points),
-/* harmony export */   "PointsMaterial": () => (/* binding */ PointsMaterial),
-/* harmony export */   "PolarGridHelper": () => (/* binding */ PolarGridHelper),
-/* harmony export */   "PolyhedronBufferGeometry": () => (/* binding */ PolyhedronBufferGeometry),
-/* harmony export */   "PolyhedronGeometry": () => (/* binding */ PolyhedronGeometry),
-/* harmony export */   "PositionalAudio": () => (/* binding */ PositionalAudio),
-/* harmony export */   "PropertyBinding": () => (/* binding */ PropertyBinding),
-/* harmony export */   "PropertyMixer": () => (/* binding */ PropertyMixer),
-/* harmony export */   "QuadraticBezierCurve": () => (/* binding */ QuadraticBezierCurve),
-/* harmony export */   "QuadraticBezierCurve3": () => (/* binding */ QuadraticBezierCurve3),
-/* harmony export */   "Quaternion": () => (/* binding */ Quaternion),
-/* harmony export */   "QuaternionKeyframeTrack": () => (/* binding */ QuaternionKeyframeTrack),
-/* harmony export */   "QuaternionLinearInterpolant": () => (/* binding */ QuaternionLinearInterpolant),
-/* harmony export */   "RED_GREEN_RGTC2_Format": () => (/* binding */ RED_GREEN_RGTC2_Format),
-/* harmony export */   "RED_RGTC1_Format": () => (/* binding */ RED_RGTC1_Format),
-/* harmony export */   "REVISION": () => (/* binding */ REVISION),
-/* harmony export */   "RGBADepthPacking": () => (/* binding */ RGBADepthPacking),
-/* harmony export */   "RGBAFormat": () => (/* binding */ RGBAFormat),
-/* harmony export */   "RGBAIntegerFormat": () => (/* binding */ RGBAIntegerFormat),
-/* harmony export */   "RGBA_ASTC_10x10_Format": () => (/* binding */ RGBA_ASTC_10x10_Format),
-/* harmony export */   "RGBA_ASTC_10x5_Format": () => (/* binding */ RGBA_ASTC_10x5_Format),
-/* harmony export */   "RGBA_ASTC_10x6_Format": () => (/* binding */ RGBA_ASTC_10x6_Format),
-/* harmony export */   "RGBA_ASTC_10x8_Format": () => (/* binding */ RGBA_ASTC_10x8_Format),
-/* harmony export */   "RGBA_ASTC_12x10_Format": () => (/* binding */ RGBA_ASTC_12x10_Format),
-/* harmony export */   "RGBA_ASTC_12x12_Format": () => (/* binding */ RGBA_ASTC_12x12_Format),
-/* harmony export */   "RGBA_ASTC_4x4_Format": () => (/* binding */ RGBA_ASTC_4x4_Format),
-/* harmony export */   "RGBA_ASTC_5x4_Format": () => (/* binding */ RGBA_ASTC_5x4_Format),
-/* harmony export */   "RGBA_ASTC_5x5_Format": () => (/* binding */ RGBA_ASTC_5x5_Format),
-/* harmony export */   "RGBA_ASTC_6x5_Format": () => (/* binding */ RGBA_ASTC_6x5_Format),
-/* harmony export */   "RGBA_ASTC_6x6_Format": () => (/* binding */ RGBA_ASTC_6x6_Format),
-/* harmony export */   "RGBA_ASTC_8x5_Format": () => (/* binding */ RGBA_ASTC_8x5_Format),
-/* harmony export */   "RGBA_ASTC_8x6_Format": () => (/* binding */ RGBA_ASTC_8x6_Format),
-/* harmony export */   "RGBA_ASTC_8x8_Format": () => (/* binding */ RGBA_ASTC_8x8_Format),
-/* harmony export */   "RGBA_BPTC_Format": () => (/* binding */ RGBA_BPTC_Format),
-/* harmony export */   "RGBA_ETC2_EAC_Format": () => (/* binding */ RGBA_ETC2_EAC_Format),
-/* harmony export */   "RGBA_PVRTC_2BPPV1_Format": () => (/* binding */ RGBA_PVRTC_2BPPV1_Format),
-/* harmony export */   "RGBA_PVRTC_4BPPV1_Format": () => (/* binding */ RGBA_PVRTC_4BPPV1_Format),
-/* harmony export */   "RGBA_S3TC_DXT1_Format": () => (/* binding */ RGBA_S3TC_DXT1_Format),
-/* harmony export */   "RGBA_S3TC_DXT3_Format": () => (/* binding */ RGBA_S3TC_DXT3_Format),
-/* harmony export */   "RGBA_S3TC_DXT5_Format": () => (/* binding */ RGBA_S3TC_DXT5_Format),
-/* harmony export */   "RGB_ETC1_Format": () => (/* binding */ RGB_ETC1_Format),
-/* harmony export */   "RGB_ETC2_Format": () => (/* binding */ RGB_ETC2_Format),
-/* harmony export */   "RGB_PVRTC_2BPPV1_Format": () => (/* binding */ RGB_PVRTC_2BPPV1_Format),
-/* harmony export */   "RGB_PVRTC_4BPPV1_Format": () => (/* binding */ RGB_PVRTC_4BPPV1_Format),
-/* harmony export */   "RGB_S3TC_DXT1_Format": () => (/* binding */ RGB_S3TC_DXT1_Format),
-/* harmony export */   "RGFormat": () => (/* binding */ RGFormat),
-/* harmony export */   "RGIntegerFormat": () => (/* binding */ RGIntegerFormat),
-/* harmony export */   "RawShaderMaterial": () => (/* binding */ RawShaderMaterial),
-/* harmony export */   "Ray": () => (/* binding */ Ray),
-/* harmony export */   "Raycaster": () => (/* binding */ Raycaster),
-/* harmony export */   "RectAreaLight": () => (/* binding */ RectAreaLight),
-/* harmony export */   "RedFormat": () => (/* binding */ RedFormat),
-/* harmony export */   "RedIntegerFormat": () => (/* binding */ RedIntegerFormat),
-/* harmony export */   "ReinhardToneMapping": () => (/* binding */ ReinhardToneMapping),
-/* harmony export */   "RepeatWrapping": () => (/* binding */ RepeatWrapping),
-/* harmony export */   "ReplaceStencilOp": () => (/* binding */ ReplaceStencilOp),
-/* harmony export */   "ReverseSubtractEquation": () => (/* binding */ ReverseSubtractEquation),
-/* harmony export */   "RingBufferGeometry": () => (/* binding */ RingBufferGeometry),
-/* harmony export */   "RingGeometry": () => (/* binding */ RingGeometry),
-/* harmony export */   "SIGNED_RED_GREEN_RGTC2_Format": () => (/* binding */ SIGNED_RED_GREEN_RGTC2_Format),
-/* harmony export */   "SIGNED_RED_RGTC1_Format": () => (/* binding */ SIGNED_RED_RGTC1_Format),
-/* harmony export */   "SRGBColorSpace": () => (/* binding */ SRGBColorSpace),
-/* harmony export */   "Scene": () => (/* binding */ Scene),
-/* harmony export */   "ShaderChunk": () => (/* binding */ ShaderChunk),
-/* harmony export */   "ShaderLib": () => (/* binding */ ShaderLib),
-/* harmony export */   "ShaderMaterial": () => (/* binding */ ShaderMaterial),
-/* harmony export */   "ShadowMaterial": () => (/* binding */ ShadowMaterial),
-/* harmony export */   "Shape": () => (/* binding */ Shape),
-/* harmony export */   "ShapeBufferGeometry": () => (/* binding */ ShapeBufferGeometry),
-/* harmony export */   "ShapeGeometry": () => (/* binding */ ShapeGeometry),
-/* harmony export */   "ShapePath": () => (/* binding */ ShapePath),
-/* harmony export */   "ShapeUtils": () => (/* binding */ ShapeUtils),
-/* harmony export */   "ShortType": () => (/* binding */ ShortType),
-/* harmony export */   "Skeleton": () => (/* binding */ Skeleton),
-/* harmony export */   "SkeletonHelper": () => (/* binding */ SkeletonHelper),
-/* harmony export */   "SkinnedMesh": () => (/* binding */ SkinnedMesh),
-/* harmony export */   "Source": () => (/* binding */ Source),
-/* harmony export */   "Sphere": () => (/* binding */ Sphere),
-/* harmony export */   "SphereBufferGeometry": () => (/* binding */ SphereBufferGeometry),
-/* harmony export */   "SphereGeometry": () => (/* binding */ SphereGeometry),
-/* harmony export */   "Spherical": () => (/* binding */ Spherical),
-/* harmony export */   "SphericalHarmonics3": () => (/* binding */ SphericalHarmonics3),
-/* harmony export */   "SplineCurve": () => (/* binding */ SplineCurve),
-/* harmony export */   "SpotLight": () => (/* binding */ SpotLight),
-/* harmony export */   "SpotLightHelper": () => (/* binding */ SpotLightHelper),
-/* harmony export */   "Sprite": () => (/* binding */ Sprite),
-/* harmony export */   "SpriteMaterial": () => (/* binding */ SpriteMaterial),
-/* harmony export */   "SrcAlphaFactor": () => (/* binding */ SrcAlphaFactor),
-/* harmony export */   "SrcAlphaSaturateFactor": () => (/* binding */ SrcAlphaSaturateFactor),
-/* harmony export */   "SrcColorFactor": () => (/* binding */ SrcColorFactor),
-/* harmony export */   "StaticCopyUsage": () => (/* binding */ StaticCopyUsage),
-/* harmony export */   "StaticDrawUsage": () => (/* binding */ StaticDrawUsage),
-/* harmony export */   "StaticReadUsage": () => (/* binding */ StaticReadUsage),
-/* harmony export */   "StereoCamera": () => (/* binding */ StereoCamera),
-/* harmony export */   "StreamCopyUsage": () => (/* binding */ StreamCopyUsage),
-/* harmony export */   "StreamDrawUsage": () => (/* binding */ StreamDrawUsage),
-/* harmony export */   "StreamReadUsage": () => (/* binding */ StreamReadUsage),
-/* harmony export */   "StringKeyframeTrack": () => (/* binding */ StringKeyframeTrack),
-/* harmony export */   "SubtractEquation": () => (/* binding */ SubtractEquation),
-/* harmony export */   "SubtractiveBlending": () => (/* binding */ SubtractiveBlending),
-/* harmony export */   "TOUCH": () => (/* binding */ TOUCH),
-/* harmony export */   "TangentSpaceNormalMap": () => (/* binding */ TangentSpaceNormalMap),
-/* harmony export */   "TetrahedronBufferGeometry": () => (/* binding */ TetrahedronBufferGeometry),
-/* harmony export */   "TetrahedronGeometry": () => (/* binding */ TetrahedronGeometry),
-/* harmony export */   "Texture": () => (/* binding */ Texture),
-/* harmony export */   "TextureLoader": () => (/* binding */ TextureLoader),
-/* harmony export */   "TorusBufferGeometry": () => (/* binding */ TorusBufferGeometry),
-/* harmony export */   "TorusGeometry": () => (/* binding */ TorusGeometry),
-/* harmony export */   "TorusKnotBufferGeometry": () => (/* binding */ TorusKnotBufferGeometry),
-/* harmony export */   "TorusKnotGeometry": () => (/* binding */ TorusKnotGeometry),
-/* harmony export */   "Triangle": () => (/* binding */ Triangle),
-/* harmony export */   "TriangleFanDrawMode": () => (/* binding */ TriangleFanDrawMode),
-/* harmony export */   "TriangleStripDrawMode": () => (/* binding */ TriangleStripDrawMode),
-/* harmony export */   "TrianglesDrawMode": () => (/* binding */ TrianglesDrawMode),
-/* harmony export */   "TubeBufferGeometry": () => (/* binding */ TubeBufferGeometry),
-/* harmony export */   "TubeGeometry": () => (/* binding */ TubeGeometry),
-/* harmony export */   "TwoPassDoubleSide": () => (/* binding */ TwoPassDoubleSide),
-/* harmony export */   "UVMapping": () => (/* binding */ UVMapping),
-/* harmony export */   "Uint16BufferAttribute": () => (/* binding */ Uint16BufferAttribute),
-/* harmony export */   "Uint32BufferAttribute": () => (/* binding */ Uint32BufferAttribute),
-/* harmony export */   "Uint8BufferAttribute": () => (/* binding */ Uint8BufferAttribute),
-/* harmony export */   "Uint8ClampedBufferAttribute": () => (/* binding */ Uint8ClampedBufferAttribute),
-/* harmony export */   "Uniform": () => (/* binding */ Uniform),
-/* harmony export */   "UniformsGroup": () => (/* binding */ UniformsGroup),
-/* harmony export */   "UniformsLib": () => (/* binding */ UniformsLib),
-/* harmony export */   "UniformsUtils": () => (/* binding */ UniformsUtils),
-/* harmony export */   "UnsignedByteType": () => (/* binding */ UnsignedByteType),
-/* harmony export */   "UnsignedInt248Type": () => (/* binding */ UnsignedInt248Type),
-/* harmony export */   "UnsignedIntType": () => (/* binding */ UnsignedIntType),
-/* harmony export */   "UnsignedShort4444Type": () => (/* binding */ UnsignedShort4444Type),
-/* harmony export */   "UnsignedShort5551Type": () => (/* binding */ UnsignedShort5551Type),
-/* harmony export */   "UnsignedShortType": () => (/* binding */ UnsignedShortType),
-/* harmony export */   "VSMShadowMap": () => (/* binding */ VSMShadowMap),
-/* harmony export */   "Vector2": () => (/* binding */ Vector2),
-/* harmony export */   "Vector3": () => (/* binding */ Vector3),
-/* harmony export */   "Vector4": () => (/* binding */ Vector4),
-/* harmony export */   "VectorKeyframeTrack": () => (/* binding */ VectorKeyframeTrack),
-/* harmony export */   "VideoTexture": () => (/* binding */ VideoTexture),
-/* harmony export */   "WebGL1Renderer": () => (/* binding */ WebGL1Renderer),
-/* harmony export */   "WebGL3DRenderTarget": () => (/* binding */ WebGL3DRenderTarget),
-/* harmony export */   "WebGLArrayRenderTarget": () => (/* binding */ WebGLArrayRenderTarget),
-/* harmony export */   "WebGLCubeRenderTarget": () => (/* binding */ WebGLCubeRenderTarget),
-/* harmony export */   "WebGLMultipleRenderTargets": () => (/* binding */ WebGLMultipleRenderTargets),
-/* harmony export */   "WebGLRenderTarget": () => (/* binding */ WebGLRenderTarget),
-/* harmony export */   "WebGLRenderer": () => (/* binding */ WebGLRenderer),
-/* harmony export */   "WebGLUtils": () => (/* binding */ WebGLUtils),
-/* harmony export */   "WireframeGeometry": () => (/* binding */ WireframeGeometry),
-/* harmony export */   "WrapAroundEnding": () => (/* binding */ WrapAroundEnding),
-/* harmony export */   "ZeroCurvatureEnding": () => (/* binding */ ZeroCurvatureEnding),
-/* harmony export */   "ZeroFactor": () => (/* binding */ ZeroFactor),
-/* harmony export */   "ZeroSlopeEnding": () => (/* binding */ ZeroSlopeEnding),
-/* harmony export */   "ZeroStencilOp": () => (/* binding */ ZeroStencilOp),
-/* harmony export */   "_SRGBAFormat": () => (/* binding */ _SRGBAFormat),
-/* harmony export */   "sRGBEncoding": () => (/* binding */ sRGBEncoding)
+/* harmony export */   ACESFilmicToneMapping: () => (/* binding */ ACESFilmicToneMapping),
+/* harmony export */   AddEquation: () => (/* binding */ AddEquation),
+/* harmony export */   AddOperation: () => (/* binding */ AddOperation),
+/* harmony export */   AdditiveAnimationBlendMode: () => (/* binding */ AdditiveAnimationBlendMode),
+/* harmony export */   AdditiveBlending: () => (/* binding */ AdditiveBlending),
+/* harmony export */   AlphaFormat: () => (/* binding */ AlphaFormat),
+/* harmony export */   AlwaysDepth: () => (/* binding */ AlwaysDepth),
+/* harmony export */   AlwaysStencilFunc: () => (/* binding */ AlwaysStencilFunc),
+/* harmony export */   AmbientLight: () => (/* binding */ AmbientLight),
+/* harmony export */   AmbientLightProbe: () => (/* binding */ AmbientLightProbe),
+/* harmony export */   AnimationAction: () => (/* binding */ AnimationAction),
+/* harmony export */   AnimationClip: () => (/* binding */ AnimationClip),
+/* harmony export */   AnimationLoader: () => (/* binding */ AnimationLoader),
+/* harmony export */   AnimationMixer: () => (/* binding */ AnimationMixer),
+/* harmony export */   AnimationObjectGroup: () => (/* binding */ AnimationObjectGroup),
+/* harmony export */   AnimationUtils: () => (/* binding */ AnimationUtils),
+/* harmony export */   ArcCurve: () => (/* binding */ ArcCurve),
+/* harmony export */   ArrayCamera: () => (/* binding */ ArrayCamera),
+/* harmony export */   ArrowHelper: () => (/* binding */ ArrowHelper),
+/* harmony export */   Audio: () => (/* binding */ Audio),
+/* harmony export */   AudioAnalyser: () => (/* binding */ AudioAnalyser),
+/* harmony export */   AudioContext: () => (/* binding */ AudioContext),
+/* harmony export */   AudioListener: () => (/* binding */ AudioListener),
+/* harmony export */   AudioLoader: () => (/* binding */ AudioLoader),
+/* harmony export */   AxesHelper: () => (/* binding */ AxesHelper),
+/* harmony export */   BackSide: () => (/* binding */ BackSide),
+/* harmony export */   BasicDepthPacking: () => (/* binding */ BasicDepthPacking),
+/* harmony export */   BasicShadowMap: () => (/* binding */ BasicShadowMap),
+/* harmony export */   Bone: () => (/* binding */ Bone),
+/* harmony export */   BooleanKeyframeTrack: () => (/* binding */ BooleanKeyframeTrack),
+/* harmony export */   Box2: () => (/* binding */ Box2),
+/* harmony export */   Box3: () => (/* binding */ Box3),
+/* harmony export */   Box3Helper: () => (/* binding */ Box3Helper),
+/* harmony export */   BoxBufferGeometry: () => (/* binding */ BoxBufferGeometry),
+/* harmony export */   BoxGeometry: () => (/* binding */ BoxGeometry),
+/* harmony export */   BoxHelper: () => (/* binding */ BoxHelper),
+/* harmony export */   BufferAttribute: () => (/* binding */ BufferAttribute),
+/* harmony export */   BufferGeometry: () => (/* binding */ BufferGeometry),
+/* harmony export */   BufferGeometryLoader: () => (/* binding */ BufferGeometryLoader),
+/* harmony export */   ByteType: () => (/* binding */ ByteType),
+/* harmony export */   Cache: () => (/* binding */ Cache),
+/* harmony export */   Camera: () => (/* binding */ Camera),
+/* harmony export */   CameraHelper: () => (/* binding */ CameraHelper),
+/* harmony export */   CanvasTexture: () => (/* binding */ CanvasTexture),
+/* harmony export */   CapsuleBufferGeometry: () => (/* binding */ CapsuleBufferGeometry),
+/* harmony export */   CapsuleGeometry: () => (/* binding */ CapsuleGeometry),
+/* harmony export */   CatmullRomCurve3: () => (/* binding */ CatmullRomCurve3),
+/* harmony export */   CineonToneMapping: () => (/* binding */ CineonToneMapping),
+/* harmony export */   CircleBufferGeometry: () => (/* binding */ CircleBufferGeometry),
+/* harmony export */   CircleGeometry: () => (/* binding */ CircleGeometry),
+/* harmony export */   ClampToEdgeWrapping: () => (/* binding */ ClampToEdgeWrapping),
+/* harmony export */   Clock: () => (/* binding */ Clock),
+/* harmony export */   Color: () => (/* binding */ Color),
+/* harmony export */   ColorKeyframeTrack: () => (/* binding */ ColorKeyframeTrack),
+/* harmony export */   ColorManagement: () => (/* binding */ ColorManagement),
+/* harmony export */   CompressedArrayTexture: () => (/* binding */ CompressedArrayTexture),
+/* harmony export */   CompressedTexture: () => (/* binding */ CompressedTexture),
+/* harmony export */   CompressedTextureLoader: () => (/* binding */ CompressedTextureLoader),
+/* harmony export */   ConeBufferGeometry: () => (/* binding */ ConeBufferGeometry),
+/* harmony export */   ConeGeometry: () => (/* binding */ ConeGeometry),
+/* harmony export */   CubeCamera: () => (/* binding */ CubeCamera),
+/* harmony export */   CubeReflectionMapping: () => (/* binding */ CubeReflectionMapping),
+/* harmony export */   CubeRefractionMapping: () => (/* binding */ CubeRefractionMapping),
+/* harmony export */   CubeTexture: () => (/* binding */ CubeTexture),
+/* harmony export */   CubeTextureLoader: () => (/* binding */ CubeTextureLoader),
+/* harmony export */   CubeUVReflectionMapping: () => (/* binding */ CubeUVReflectionMapping),
+/* harmony export */   CubicBezierCurve: () => (/* binding */ CubicBezierCurve),
+/* harmony export */   CubicBezierCurve3: () => (/* binding */ CubicBezierCurve3),
+/* harmony export */   CubicInterpolant: () => (/* binding */ CubicInterpolant),
+/* harmony export */   CullFaceBack: () => (/* binding */ CullFaceBack),
+/* harmony export */   CullFaceFront: () => (/* binding */ CullFaceFront),
+/* harmony export */   CullFaceFrontBack: () => (/* binding */ CullFaceFrontBack),
+/* harmony export */   CullFaceNone: () => (/* binding */ CullFaceNone),
+/* harmony export */   Curve: () => (/* binding */ Curve),
+/* harmony export */   CurvePath: () => (/* binding */ CurvePath),
+/* harmony export */   CustomBlending: () => (/* binding */ CustomBlending),
+/* harmony export */   CustomToneMapping: () => (/* binding */ CustomToneMapping),
+/* harmony export */   CylinderBufferGeometry: () => (/* binding */ CylinderBufferGeometry),
+/* harmony export */   CylinderGeometry: () => (/* binding */ CylinderGeometry),
+/* harmony export */   Cylindrical: () => (/* binding */ Cylindrical),
+/* harmony export */   Data3DTexture: () => (/* binding */ Data3DTexture),
+/* harmony export */   DataArrayTexture: () => (/* binding */ DataArrayTexture),
+/* harmony export */   DataTexture: () => (/* binding */ DataTexture),
+/* harmony export */   DataTextureLoader: () => (/* binding */ DataTextureLoader),
+/* harmony export */   DataUtils: () => (/* binding */ DataUtils),
+/* harmony export */   DecrementStencilOp: () => (/* binding */ DecrementStencilOp),
+/* harmony export */   DecrementWrapStencilOp: () => (/* binding */ DecrementWrapStencilOp),
+/* harmony export */   DefaultLoadingManager: () => (/* binding */ DefaultLoadingManager),
+/* harmony export */   DepthFormat: () => (/* binding */ DepthFormat),
+/* harmony export */   DepthStencilFormat: () => (/* binding */ DepthStencilFormat),
+/* harmony export */   DepthTexture: () => (/* binding */ DepthTexture),
+/* harmony export */   DirectionalLight: () => (/* binding */ DirectionalLight),
+/* harmony export */   DirectionalLightHelper: () => (/* binding */ DirectionalLightHelper),
+/* harmony export */   DiscreteInterpolant: () => (/* binding */ DiscreteInterpolant),
+/* harmony export */   DisplayP3ColorSpace: () => (/* binding */ DisplayP3ColorSpace),
+/* harmony export */   DodecahedronBufferGeometry: () => (/* binding */ DodecahedronBufferGeometry),
+/* harmony export */   DodecahedronGeometry: () => (/* binding */ DodecahedronGeometry),
+/* harmony export */   DoubleSide: () => (/* binding */ DoubleSide),
+/* harmony export */   DstAlphaFactor: () => (/* binding */ DstAlphaFactor),
+/* harmony export */   DstColorFactor: () => (/* binding */ DstColorFactor),
+/* harmony export */   DynamicCopyUsage: () => (/* binding */ DynamicCopyUsage),
+/* harmony export */   DynamicDrawUsage: () => (/* binding */ DynamicDrawUsage),
+/* harmony export */   DynamicReadUsage: () => (/* binding */ DynamicReadUsage),
+/* harmony export */   EdgesGeometry: () => (/* binding */ EdgesGeometry),
+/* harmony export */   EllipseCurve: () => (/* binding */ EllipseCurve),
+/* harmony export */   EqualDepth: () => (/* binding */ EqualDepth),
+/* harmony export */   EqualStencilFunc: () => (/* binding */ EqualStencilFunc),
+/* harmony export */   EquirectangularReflectionMapping: () => (/* binding */ EquirectangularReflectionMapping),
+/* harmony export */   EquirectangularRefractionMapping: () => (/* binding */ EquirectangularRefractionMapping),
+/* harmony export */   Euler: () => (/* binding */ Euler),
+/* harmony export */   EventDispatcher: () => (/* binding */ EventDispatcher),
+/* harmony export */   ExtrudeBufferGeometry: () => (/* binding */ ExtrudeBufferGeometry),
+/* harmony export */   ExtrudeGeometry: () => (/* binding */ ExtrudeGeometry),
+/* harmony export */   FileLoader: () => (/* binding */ FileLoader),
+/* harmony export */   Float16BufferAttribute: () => (/* binding */ Float16BufferAttribute),
+/* harmony export */   Float32BufferAttribute: () => (/* binding */ Float32BufferAttribute),
+/* harmony export */   Float64BufferAttribute: () => (/* binding */ Float64BufferAttribute),
+/* harmony export */   FloatType: () => (/* binding */ FloatType),
+/* harmony export */   Fog: () => (/* binding */ Fog),
+/* harmony export */   FogExp2: () => (/* binding */ FogExp2),
+/* harmony export */   FramebufferTexture: () => (/* binding */ FramebufferTexture),
+/* harmony export */   FrontSide: () => (/* binding */ FrontSide),
+/* harmony export */   Frustum: () => (/* binding */ Frustum),
+/* harmony export */   GLBufferAttribute: () => (/* binding */ GLBufferAttribute),
+/* harmony export */   GLSL1: () => (/* binding */ GLSL1),
+/* harmony export */   GLSL3: () => (/* binding */ GLSL3),
+/* harmony export */   GreaterDepth: () => (/* binding */ GreaterDepth),
+/* harmony export */   GreaterEqualDepth: () => (/* binding */ GreaterEqualDepth),
+/* harmony export */   GreaterEqualStencilFunc: () => (/* binding */ GreaterEqualStencilFunc),
+/* harmony export */   GreaterStencilFunc: () => (/* binding */ GreaterStencilFunc),
+/* harmony export */   GridHelper: () => (/* binding */ GridHelper),
+/* harmony export */   Group: () => (/* binding */ Group),
+/* harmony export */   HalfFloatType: () => (/* binding */ HalfFloatType),
+/* harmony export */   HemisphereLight: () => (/* binding */ HemisphereLight),
+/* harmony export */   HemisphereLightHelper: () => (/* binding */ HemisphereLightHelper),
+/* harmony export */   HemisphereLightProbe: () => (/* binding */ HemisphereLightProbe),
+/* harmony export */   IcosahedronBufferGeometry: () => (/* binding */ IcosahedronBufferGeometry),
+/* harmony export */   IcosahedronGeometry: () => (/* binding */ IcosahedronGeometry),
+/* harmony export */   ImageBitmapLoader: () => (/* binding */ ImageBitmapLoader),
+/* harmony export */   ImageLoader: () => (/* binding */ ImageLoader),
+/* harmony export */   ImageUtils: () => (/* binding */ ImageUtils),
+/* harmony export */   IncrementStencilOp: () => (/* binding */ IncrementStencilOp),
+/* harmony export */   IncrementWrapStencilOp: () => (/* binding */ IncrementWrapStencilOp),
+/* harmony export */   InstancedBufferAttribute: () => (/* binding */ InstancedBufferAttribute),
+/* harmony export */   InstancedBufferGeometry: () => (/* binding */ InstancedBufferGeometry),
+/* harmony export */   InstancedInterleavedBuffer: () => (/* binding */ InstancedInterleavedBuffer),
+/* harmony export */   InstancedMesh: () => (/* binding */ InstancedMesh),
+/* harmony export */   Int16BufferAttribute: () => (/* binding */ Int16BufferAttribute),
+/* harmony export */   Int32BufferAttribute: () => (/* binding */ Int32BufferAttribute),
+/* harmony export */   Int8BufferAttribute: () => (/* binding */ Int8BufferAttribute),
+/* harmony export */   IntType: () => (/* binding */ IntType),
+/* harmony export */   InterleavedBuffer: () => (/* binding */ InterleavedBuffer),
+/* harmony export */   InterleavedBufferAttribute: () => (/* binding */ InterleavedBufferAttribute),
+/* harmony export */   Interpolant: () => (/* binding */ Interpolant),
+/* harmony export */   InterpolateDiscrete: () => (/* binding */ InterpolateDiscrete),
+/* harmony export */   InterpolateLinear: () => (/* binding */ InterpolateLinear),
+/* harmony export */   InterpolateSmooth: () => (/* binding */ InterpolateSmooth),
+/* harmony export */   InvertStencilOp: () => (/* binding */ InvertStencilOp),
+/* harmony export */   KeepStencilOp: () => (/* binding */ KeepStencilOp),
+/* harmony export */   KeyframeTrack: () => (/* binding */ KeyframeTrack),
+/* harmony export */   LOD: () => (/* binding */ LOD),
+/* harmony export */   LatheBufferGeometry: () => (/* binding */ LatheBufferGeometry),
+/* harmony export */   LatheGeometry: () => (/* binding */ LatheGeometry),
+/* harmony export */   Layers: () => (/* binding */ Layers),
+/* harmony export */   LessDepth: () => (/* binding */ LessDepth),
+/* harmony export */   LessEqualDepth: () => (/* binding */ LessEqualDepth),
+/* harmony export */   LessEqualStencilFunc: () => (/* binding */ LessEqualStencilFunc),
+/* harmony export */   LessStencilFunc: () => (/* binding */ LessStencilFunc),
+/* harmony export */   Light: () => (/* binding */ Light),
+/* harmony export */   LightProbe: () => (/* binding */ LightProbe),
+/* harmony export */   Line: () => (/* binding */ Line),
+/* harmony export */   Line3: () => (/* binding */ Line3),
+/* harmony export */   LineBasicMaterial: () => (/* binding */ LineBasicMaterial),
+/* harmony export */   LineCurve: () => (/* binding */ LineCurve),
+/* harmony export */   LineCurve3: () => (/* binding */ LineCurve3),
+/* harmony export */   LineDashedMaterial: () => (/* binding */ LineDashedMaterial),
+/* harmony export */   LineLoop: () => (/* binding */ LineLoop),
+/* harmony export */   LineSegments: () => (/* binding */ LineSegments),
+/* harmony export */   LinearEncoding: () => (/* binding */ LinearEncoding),
+/* harmony export */   LinearFilter: () => (/* binding */ LinearFilter),
+/* harmony export */   LinearInterpolant: () => (/* binding */ LinearInterpolant),
+/* harmony export */   LinearMipMapLinearFilter: () => (/* binding */ LinearMipMapLinearFilter),
+/* harmony export */   LinearMipMapNearestFilter: () => (/* binding */ LinearMipMapNearestFilter),
+/* harmony export */   LinearMipmapLinearFilter: () => (/* binding */ LinearMipmapLinearFilter),
+/* harmony export */   LinearMipmapNearestFilter: () => (/* binding */ LinearMipmapNearestFilter),
+/* harmony export */   LinearSRGBColorSpace: () => (/* binding */ LinearSRGBColorSpace),
+/* harmony export */   LinearToneMapping: () => (/* binding */ LinearToneMapping),
+/* harmony export */   Loader: () => (/* binding */ Loader),
+/* harmony export */   LoaderUtils: () => (/* binding */ LoaderUtils),
+/* harmony export */   LoadingManager: () => (/* binding */ LoadingManager),
+/* harmony export */   LoopOnce: () => (/* binding */ LoopOnce),
+/* harmony export */   LoopPingPong: () => (/* binding */ LoopPingPong),
+/* harmony export */   LoopRepeat: () => (/* binding */ LoopRepeat),
+/* harmony export */   LuminanceAlphaFormat: () => (/* binding */ LuminanceAlphaFormat),
+/* harmony export */   LuminanceFormat: () => (/* binding */ LuminanceFormat),
+/* harmony export */   MOUSE: () => (/* binding */ MOUSE),
+/* harmony export */   Material: () => (/* binding */ Material),
+/* harmony export */   MaterialLoader: () => (/* binding */ MaterialLoader),
+/* harmony export */   MathUtils: () => (/* binding */ MathUtils),
+/* harmony export */   Matrix3: () => (/* binding */ Matrix3),
+/* harmony export */   Matrix4: () => (/* binding */ Matrix4),
+/* harmony export */   MaxEquation: () => (/* binding */ MaxEquation),
+/* harmony export */   Mesh: () => (/* binding */ Mesh),
+/* harmony export */   MeshBasicMaterial: () => (/* binding */ MeshBasicMaterial),
+/* harmony export */   MeshDepthMaterial: () => (/* binding */ MeshDepthMaterial),
+/* harmony export */   MeshDistanceMaterial: () => (/* binding */ MeshDistanceMaterial),
+/* harmony export */   MeshLambertMaterial: () => (/* binding */ MeshLambertMaterial),
+/* harmony export */   MeshMatcapMaterial: () => (/* binding */ MeshMatcapMaterial),
+/* harmony export */   MeshNormalMaterial: () => (/* binding */ MeshNormalMaterial),
+/* harmony export */   MeshPhongMaterial: () => (/* binding */ MeshPhongMaterial),
+/* harmony export */   MeshPhysicalMaterial: () => (/* binding */ MeshPhysicalMaterial),
+/* harmony export */   MeshStandardMaterial: () => (/* binding */ MeshStandardMaterial),
+/* harmony export */   MeshToonMaterial: () => (/* binding */ MeshToonMaterial),
+/* harmony export */   MinEquation: () => (/* binding */ MinEquation),
+/* harmony export */   MirroredRepeatWrapping: () => (/* binding */ MirroredRepeatWrapping),
+/* harmony export */   MixOperation: () => (/* binding */ MixOperation),
+/* harmony export */   MultiplyBlending: () => (/* binding */ MultiplyBlending),
+/* harmony export */   MultiplyOperation: () => (/* binding */ MultiplyOperation),
+/* harmony export */   NearestFilter: () => (/* binding */ NearestFilter),
+/* harmony export */   NearestMipMapLinearFilter: () => (/* binding */ NearestMipMapLinearFilter),
+/* harmony export */   NearestMipMapNearestFilter: () => (/* binding */ NearestMipMapNearestFilter),
+/* harmony export */   NearestMipmapLinearFilter: () => (/* binding */ NearestMipmapLinearFilter),
+/* harmony export */   NearestMipmapNearestFilter: () => (/* binding */ NearestMipmapNearestFilter),
+/* harmony export */   NeverDepth: () => (/* binding */ NeverDepth),
+/* harmony export */   NeverStencilFunc: () => (/* binding */ NeverStencilFunc),
+/* harmony export */   NoBlending: () => (/* binding */ NoBlending),
+/* harmony export */   NoColorSpace: () => (/* binding */ NoColorSpace),
+/* harmony export */   NoToneMapping: () => (/* binding */ NoToneMapping),
+/* harmony export */   NormalAnimationBlendMode: () => (/* binding */ NormalAnimationBlendMode),
+/* harmony export */   NormalBlending: () => (/* binding */ NormalBlending),
+/* harmony export */   NotEqualDepth: () => (/* binding */ NotEqualDepth),
+/* harmony export */   NotEqualStencilFunc: () => (/* binding */ NotEqualStencilFunc),
+/* harmony export */   NumberKeyframeTrack: () => (/* binding */ NumberKeyframeTrack),
+/* harmony export */   Object3D: () => (/* binding */ Object3D),
+/* harmony export */   ObjectLoader: () => (/* binding */ ObjectLoader),
+/* harmony export */   ObjectSpaceNormalMap: () => (/* binding */ ObjectSpaceNormalMap),
+/* harmony export */   OctahedronBufferGeometry: () => (/* binding */ OctahedronBufferGeometry),
+/* harmony export */   OctahedronGeometry: () => (/* binding */ OctahedronGeometry),
+/* harmony export */   OneFactor: () => (/* binding */ OneFactor),
+/* harmony export */   OneMinusDstAlphaFactor: () => (/* binding */ OneMinusDstAlphaFactor),
+/* harmony export */   OneMinusDstColorFactor: () => (/* binding */ OneMinusDstColorFactor),
+/* harmony export */   OneMinusSrcAlphaFactor: () => (/* binding */ OneMinusSrcAlphaFactor),
+/* harmony export */   OneMinusSrcColorFactor: () => (/* binding */ OneMinusSrcColorFactor),
+/* harmony export */   OrthographicCamera: () => (/* binding */ OrthographicCamera),
+/* harmony export */   PCFShadowMap: () => (/* binding */ PCFShadowMap),
+/* harmony export */   PCFSoftShadowMap: () => (/* binding */ PCFSoftShadowMap),
+/* harmony export */   PMREMGenerator: () => (/* binding */ PMREMGenerator),
+/* harmony export */   Path: () => (/* binding */ Path),
+/* harmony export */   PerspectiveCamera: () => (/* binding */ PerspectiveCamera),
+/* harmony export */   Plane: () => (/* binding */ Plane),
+/* harmony export */   PlaneBufferGeometry: () => (/* binding */ PlaneBufferGeometry),
+/* harmony export */   PlaneGeometry: () => (/* binding */ PlaneGeometry),
+/* harmony export */   PlaneHelper: () => (/* binding */ PlaneHelper),
+/* harmony export */   PointLight: () => (/* binding */ PointLight),
+/* harmony export */   PointLightHelper: () => (/* binding */ PointLightHelper),
+/* harmony export */   Points: () => (/* binding */ Points),
+/* harmony export */   PointsMaterial: () => (/* binding */ PointsMaterial),
+/* harmony export */   PolarGridHelper: () => (/* binding */ PolarGridHelper),
+/* harmony export */   PolyhedronBufferGeometry: () => (/* binding */ PolyhedronBufferGeometry),
+/* harmony export */   PolyhedronGeometry: () => (/* binding */ PolyhedronGeometry),
+/* harmony export */   PositionalAudio: () => (/* binding */ PositionalAudio),
+/* harmony export */   PropertyBinding: () => (/* binding */ PropertyBinding),
+/* harmony export */   PropertyMixer: () => (/* binding */ PropertyMixer),
+/* harmony export */   QuadraticBezierCurve: () => (/* binding */ QuadraticBezierCurve),
+/* harmony export */   QuadraticBezierCurve3: () => (/* binding */ QuadraticBezierCurve3),
+/* harmony export */   Quaternion: () => (/* binding */ Quaternion),
+/* harmony export */   QuaternionKeyframeTrack: () => (/* binding */ QuaternionKeyframeTrack),
+/* harmony export */   QuaternionLinearInterpolant: () => (/* binding */ QuaternionLinearInterpolant),
+/* harmony export */   RED_GREEN_RGTC2_Format: () => (/* binding */ RED_GREEN_RGTC2_Format),
+/* harmony export */   RED_RGTC1_Format: () => (/* binding */ RED_RGTC1_Format),
+/* harmony export */   REVISION: () => (/* binding */ REVISION),
+/* harmony export */   RGBADepthPacking: () => (/* binding */ RGBADepthPacking),
+/* harmony export */   RGBAFormat: () => (/* binding */ RGBAFormat),
+/* harmony export */   RGBAIntegerFormat: () => (/* binding */ RGBAIntegerFormat),
+/* harmony export */   RGBA_ASTC_10x10_Format: () => (/* binding */ RGBA_ASTC_10x10_Format),
+/* harmony export */   RGBA_ASTC_10x5_Format: () => (/* binding */ RGBA_ASTC_10x5_Format),
+/* harmony export */   RGBA_ASTC_10x6_Format: () => (/* binding */ RGBA_ASTC_10x6_Format),
+/* harmony export */   RGBA_ASTC_10x8_Format: () => (/* binding */ RGBA_ASTC_10x8_Format),
+/* harmony export */   RGBA_ASTC_12x10_Format: () => (/* binding */ RGBA_ASTC_12x10_Format),
+/* harmony export */   RGBA_ASTC_12x12_Format: () => (/* binding */ RGBA_ASTC_12x12_Format),
+/* harmony export */   RGBA_ASTC_4x4_Format: () => (/* binding */ RGBA_ASTC_4x4_Format),
+/* harmony export */   RGBA_ASTC_5x4_Format: () => (/* binding */ RGBA_ASTC_5x4_Format),
+/* harmony export */   RGBA_ASTC_5x5_Format: () => (/* binding */ RGBA_ASTC_5x5_Format),
+/* harmony export */   RGBA_ASTC_6x5_Format: () => (/* binding */ RGBA_ASTC_6x5_Format),
+/* harmony export */   RGBA_ASTC_6x6_Format: () => (/* binding */ RGBA_ASTC_6x6_Format),
+/* harmony export */   RGBA_ASTC_8x5_Format: () => (/* binding */ RGBA_ASTC_8x5_Format),
+/* harmony export */   RGBA_ASTC_8x6_Format: () => (/* binding */ RGBA_ASTC_8x6_Format),
+/* harmony export */   RGBA_ASTC_8x8_Format: () => (/* binding */ RGBA_ASTC_8x8_Format),
+/* harmony export */   RGBA_BPTC_Format: () => (/* binding */ RGBA_BPTC_Format),
+/* harmony export */   RGBA_ETC2_EAC_Format: () => (/* binding */ RGBA_ETC2_EAC_Format),
+/* harmony export */   RGBA_PVRTC_2BPPV1_Format: () => (/* binding */ RGBA_PVRTC_2BPPV1_Format),
+/* harmony export */   RGBA_PVRTC_4BPPV1_Format: () => (/* binding */ RGBA_PVRTC_4BPPV1_Format),
+/* harmony export */   RGBA_S3TC_DXT1_Format: () => (/* binding */ RGBA_S3TC_DXT1_Format),
+/* harmony export */   RGBA_S3TC_DXT3_Format: () => (/* binding */ RGBA_S3TC_DXT3_Format),
+/* harmony export */   RGBA_S3TC_DXT5_Format: () => (/* binding */ RGBA_S3TC_DXT5_Format),
+/* harmony export */   RGB_ETC1_Format: () => (/* binding */ RGB_ETC1_Format),
+/* harmony export */   RGB_ETC2_Format: () => (/* binding */ RGB_ETC2_Format),
+/* harmony export */   RGB_PVRTC_2BPPV1_Format: () => (/* binding */ RGB_PVRTC_2BPPV1_Format),
+/* harmony export */   RGB_PVRTC_4BPPV1_Format: () => (/* binding */ RGB_PVRTC_4BPPV1_Format),
+/* harmony export */   RGB_S3TC_DXT1_Format: () => (/* binding */ RGB_S3TC_DXT1_Format),
+/* harmony export */   RGFormat: () => (/* binding */ RGFormat),
+/* harmony export */   RGIntegerFormat: () => (/* binding */ RGIntegerFormat),
+/* harmony export */   RawShaderMaterial: () => (/* binding */ RawShaderMaterial),
+/* harmony export */   Ray: () => (/* binding */ Ray),
+/* harmony export */   Raycaster: () => (/* binding */ Raycaster),
+/* harmony export */   RectAreaLight: () => (/* binding */ RectAreaLight),
+/* harmony export */   RedFormat: () => (/* binding */ RedFormat),
+/* harmony export */   RedIntegerFormat: () => (/* binding */ RedIntegerFormat),
+/* harmony export */   ReinhardToneMapping: () => (/* binding */ ReinhardToneMapping),
+/* harmony export */   RepeatWrapping: () => (/* binding */ RepeatWrapping),
+/* harmony export */   ReplaceStencilOp: () => (/* binding */ ReplaceStencilOp),
+/* harmony export */   ReverseSubtractEquation: () => (/* binding */ ReverseSubtractEquation),
+/* harmony export */   RingBufferGeometry: () => (/* binding */ RingBufferGeometry),
+/* harmony export */   RingGeometry: () => (/* binding */ RingGeometry),
+/* harmony export */   SIGNED_RED_GREEN_RGTC2_Format: () => (/* binding */ SIGNED_RED_GREEN_RGTC2_Format),
+/* harmony export */   SIGNED_RED_RGTC1_Format: () => (/* binding */ SIGNED_RED_RGTC1_Format),
+/* harmony export */   SRGBColorSpace: () => (/* binding */ SRGBColorSpace),
+/* harmony export */   Scene: () => (/* binding */ Scene),
+/* harmony export */   ShaderChunk: () => (/* binding */ ShaderChunk),
+/* harmony export */   ShaderLib: () => (/* binding */ ShaderLib),
+/* harmony export */   ShaderMaterial: () => (/* binding */ ShaderMaterial),
+/* harmony export */   ShadowMaterial: () => (/* binding */ ShadowMaterial),
+/* harmony export */   Shape: () => (/* binding */ Shape),
+/* harmony export */   ShapeBufferGeometry: () => (/* binding */ ShapeBufferGeometry),
+/* harmony export */   ShapeGeometry: () => (/* binding */ ShapeGeometry),
+/* harmony export */   ShapePath: () => (/* binding */ ShapePath),
+/* harmony export */   ShapeUtils: () => (/* binding */ ShapeUtils),
+/* harmony export */   ShortType: () => (/* binding */ ShortType),
+/* harmony export */   Skeleton: () => (/* binding */ Skeleton),
+/* harmony export */   SkeletonHelper: () => (/* binding */ SkeletonHelper),
+/* harmony export */   SkinnedMesh: () => (/* binding */ SkinnedMesh),
+/* harmony export */   Source: () => (/* binding */ Source),
+/* harmony export */   Sphere: () => (/* binding */ Sphere),
+/* harmony export */   SphereBufferGeometry: () => (/* binding */ SphereBufferGeometry),
+/* harmony export */   SphereGeometry: () => (/* binding */ SphereGeometry),
+/* harmony export */   Spherical: () => (/* binding */ Spherical),
+/* harmony export */   SphericalHarmonics3: () => (/* binding */ SphericalHarmonics3),
+/* harmony export */   SplineCurve: () => (/* binding */ SplineCurve),
+/* harmony export */   SpotLight: () => (/* binding */ SpotLight),
+/* harmony export */   SpotLightHelper: () => (/* binding */ SpotLightHelper),
+/* harmony export */   Sprite: () => (/* binding */ Sprite),
+/* harmony export */   SpriteMaterial: () => (/* binding */ SpriteMaterial),
+/* harmony export */   SrcAlphaFactor: () => (/* binding */ SrcAlphaFactor),
+/* harmony export */   SrcAlphaSaturateFactor: () => (/* binding */ SrcAlphaSaturateFactor),
+/* harmony export */   SrcColorFactor: () => (/* binding */ SrcColorFactor),
+/* harmony export */   StaticCopyUsage: () => (/* binding */ StaticCopyUsage),
+/* harmony export */   StaticDrawUsage: () => (/* binding */ StaticDrawUsage),
+/* harmony export */   StaticReadUsage: () => (/* binding */ StaticReadUsage),
+/* harmony export */   StereoCamera: () => (/* binding */ StereoCamera),
+/* harmony export */   StreamCopyUsage: () => (/* binding */ StreamCopyUsage),
+/* harmony export */   StreamDrawUsage: () => (/* binding */ StreamDrawUsage),
+/* harmony export */   StreamReadUsage: () => (/* binding */ StreamReadUsage),
+/* harmony export */   StringKeyframeTrack: () => (/* binding */ StringKeyframeTrack),
+/* harmony export */   SubtractEquation: () => (/* binding */ SubtractEquation),
+/* harmony export */   SubtractiveBlending: () => (/* binding */ SubtractiveBlending),
+/* harmony export */   TOUCH: () => (/* binding */ TOUCH),
+/* harmony export */   TangentSpaceNormalMap: () => (/* binding */ TangentSpaceNormalMap),
+/* harmony export */   TetrahedronBufferGeometry: () => (/* binding */ TetrahedronBufferGeometry),
+/* harmony export */   TetrahedronGeometry: () => (/* binding */ TetrahedronGeometry),
+/* harmony export */   Texture: () => (/* binding */ Texture),
+/* harmony export */   TextureLoader: () => (/* binding */ TextureLoader),
+/* harmony export */   TorusBufferGeometry: () => (/* binding */ TorusBufferGeometry),
+/* harmony export */   TorusGeometry: () => (/* binding */ TorusGeometry),
+/* harmony export */   TorusKnotBufferGeometry: () => (/* binding */ TorusKnotBufferGeometry),
+/* harmony export */   TorusKnotGeometry: () => (/* binding */ TorusKnotGeometry),
+/* harmony export */   Triangle: () => (/* binding */ Triangle),
+/* harmony export */   TriangleFanDrawMode: () => (/* binding */ TriangleFanDrawMode),
+/* harmony export */   TriangleStripDrawMode: () => (/* binding */ TriangleStripDrawMode),
+/* harmony export */   TrianglesDrawMode: () => (/* binding */ TrianglesDrawMode),
+/* harmony export */   TubeBufferGeometry: () => (/* binding */ TubeBufferGeometry),
+/* harmony export */   TubeGeometry: () => (/* binding */ TubeGeometry),
+/* harmony export */   TwoPassDoubleSide: () => (/* binding */ TwoPassDoubleSide),
+/* harmony export */   UVMapping: () => (/* binding */ UVMapping),
+/* harmony export */   Uint16BufferAttribute: () => (/* binding */ Uint16BufferAttribute),
+/* harmony export */   Uint32BufferAttribute: () => (/* binding */ Uint32BufferAttribute),
+/* harmony export */   Uint8BufferAttribute: () => (/* binding */ Uint8BufferAttribute),
+/* harmony export */   Uint8ClampedBufferAttribute: () => (/* binding */ Uint8ClampedBufferAttribute),
+/* harmony export */   Uniform: () => (/* binding */ Uniform),
+/* harmony export */   UniformsGroup: () => (/* binding */ UniformsGroup),
+/* harmony export */   UniformsLib: () => (/* binding */ UniformsLib),
+/* harmony export */   UniformsUtils: () => (/* binding */ UniformsUtils),
+/* harmony export */   UnsignedByteType: () => (/* binding */ UnsignedByteType),
+/* harmony export */   UnsignedInt248Type: () => (/* binding */ UnsignedInt248Type),
+/* harmony export */   UnsignedIntType: () => (/* binding */ UnsignedIntType),
+/* harmony export */   UnsignedShort4444Type: () => (/* binding */ UnsignedShort4444Type),
+/* harmony export */   UnsignedShort5551Type: () => (/* binding */ UnsignedShort5551Type),
+/* harmony export */   UnsignedShortType: () => (/* binding */ UnsignedShortType),
+/* harmony export */   VSMShadowMap: () => (/* binding */ VSMShadowMap),
+/* harmony export */   Vector2: () => (/* binding */ Vector2),
+/* harmony export */   Vector3: () => (/* binding */ Vector3),
+/* harmony export */   Vector4: () => (/* binding */ Vector4),
+/* harmony export */   VectorKeyframeTrack: () => (/* binding */ VectorKeyframeTrack),
+/* harmony export */   VideoTexture: () => (/* binding */ VideoTexture),
+/* harmony export */   WebGL1Renderer: () => (/* binding */ WebGL1Renderer),
+/* harmony export */   WebGL3DRenderTarget: () => (/* binding */ WebGL3DRenderTarget),
+/* harmony export */   WebGLArrayRenderTarget: () => (/* binding */ WebGLArrayRenderTarget),
+/* harmony export */   WebGLCubeRenderTarget: () => (/* binding */ WebGLCubeRenderTarget),
+/* harmony export */   WebGLMultipleRenderTargets: () => (/* binding */ WebGLMultipleRenderTargets),
+/* harmony export */   WebGLRenderTarget: () => (/* binding */ WebGLRenderTarget),
+/* harmony export */   WebGLRenderer: () => (/* binding */ WebGLRenderer),
+/* harmony export */   WebGLUtils: () => (/* binding */ WebGLUtils),
+/* harmony export */   WireframeGeometry: () => (/* binding */ WireframeGeometry),
+/* harmony export */   WrapAroundEnding: () => (/* binding */ WrapAroundEnding),
+/* harmony export */   ZeroCurvatureEnding: () => (/* binding */ ZeroCurvatureEnding),
+/* harmony export */   ZeroFactor: () => (/* binding */ ZeroFactor),
+/* harmony export */   ZeroSlopeEnding: () => (/* binding */ ZeroSlopeEnding),
+/* harmony export */   ZeroStencilOp: () => (/* binding */ ZeroStencilOp),
+/* harmony export */   _SRGBAFormat: () => (/* binding */ _SRGBAFormat),
+/* harmony export */   sRGBEncoding: () => (/* binding */ sRGBEncoding)
 /* harmony export */ });
 /**
  * @license
@@ -57700,75 +57204,14 @@ if ( typeof window !== 'undefined' ) {
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
-/*!******************************!*\
-  !*** ./examples/apps/app.ts ***!
-  \******************************/
+/*!**********************!*\
+  !*** ./src/index.ts ***!
+  \**********************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "app": () => (/* binding */ app)
-/* harmony export */ });
-/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "./node_modules/bitecs/dist/index.mjs");
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
-/* harmony import */ var _src_app__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../src/app */ "./src/app.ts");
-/* harmony import */ var _src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../src/components/entity_object3d */ "./src/components/entity_object3d.ts");
-/* harmony import */ var _src_components_keyboard__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../src/components/keyboard */ "./src/components/keyboard.ts");
-/* harmony import */ var _src_components_mouse__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../src/components/mouse */ "./src/components/mouse.ts");
-/* harmony import */ var _src_components_network__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../src/components/network */ "./src/components/network.ts");
-/* harmony import */ var _src_components_scene__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../src/components/scene */ "./src/components/scene.ts");
-/* harmony import */ var _src_common__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../src/common */ "./src/common.ts");
-/* harmony import */ var _src_utils_network__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../src/utils/network */ "./src/utils/network.ts");
-/* harmony import */ var _components_user_event_handler__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../components/user_event_handler */ "./examples/components/user_event_handler.ts");
-/* harmony import */ var _prefabs_avatar__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../prefabs/avatar */ "./examples/prefabs/avatar.ts");
-/* harmony import */ var _prefabs_cube__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../prefabs/cube */ "./examples/prefabs/cube.ts");
-/* harmony import */ var _systems_color__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../systems/color */ "./examples/systems/color.ts");
-/* harmony import */ var _systems_selected_object__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../systems/selected_object */ "./examples/systems/selected_object.ts");
-/* harmony import */ var _systems_user__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../systems/user */ "./examples/systems/user.ts");
-/* harmony import */ var _ui_side_bar__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../ui/side_bar */ "./examples/ui/side_bar.ts");
+/* harmony import */ var _app__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./app */ "./src/app.ts");
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-const app = new _src_app__WEBPACK_IMPORTED_MODULE_1__.App();
-document.body.appendChild(app.getCanvas());
-app.registerSystem(_ui_side_bar__WEBPACK_IMPORTED_MODULE_15__.updateSidebarSystem, _src_common__WEBPACK_IMPORTED_MODULE_7__.SystemOrder.BeforeMatricesUpdate);
-app.registerSystem(_systems_color__WEBPACK_IMPORTED_MODULE_12__.colorSystem, _src_common__WEBPACK_IMPORTED_MODULE_7__.SystemOrder.Render - 1);
-app.registerSystem(_systems_selected_object__WEBPACK_IMPORTED_MODULE_13__.selectedObjectSystem, _src_common__WEBPACK_IMPORTED_MODULE_7__.SystemOrder.Render - 1);
-app.registerSystem(_systems_user__WEBPACK_IMPORTED_MODULE_14__.userEventSystem, _src_common__WEBPACK_IMPORTED_MODULE_7__.SystemOrder.Render - 1);
-app.registerPrefab('avatar', _prefabs_avatar__WEBPACK_IMPORTED_MODULE_10__.AvatarPrefab);
-app.registerPrefab('cube', _prefabs_cube__WEBPACK_IMPORTED_MODULE_11__.CubePrefab);
-const world = app.getWorld();
-const gridEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
-(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_scene__WEBPACK_IMPORTED_MODULE_6__.InScene, gridEid);
-_src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__.EntityObject3DProxy.get(gridEid).addObject3D(world, new three__WEBPACK_IMPORTED_MODULE_16__.GridHelper());
-// TODO: Separately calling prefab function and passing a corresponding
-//       prefab name to setupNetworkedEntity() sounds like duplicated. Fix me.
-const avatarEid = (0,_prefabs_avatar__WEBPACK_IMPORTED_MODULE_10__.AvatarPrefab)(world);
-_src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__.EntityObject3DProxy.get(avatarEid).root.position.set(0.0, 0.25, 2.0);
-(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_keyboard__WEBPACK_IMPORTED_MODULE_3__.KeyEventListener, avatarEid);
-(0,_src_utils_network__WEBPACK_IMPORTED_MODULE_8__.setupNetworkedEntity)(world, avatarEid, 'avatar', _src_components_network__WEBPACK_IMPORTED_MODULE_5__.NetworkedType.Local);
-const mouseButtonEventEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
-(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_mouse__WEBPACK_IMPORTED_MODULE_4__.MouseButtonEventListener, mouseButtonEventEid);
-const userEventHandlerEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
-(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_user_event_handler__WEBPACK_IMPORTED_MODULE_9__.UserEventHandler, userEventHandlerEid);
-(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _src_components_network__WEBPACK_IMPORTED_MODULE_5__.UserNetworkEventListener, userEventHandlerEid);
-const cubeEid = (0,_prefabs_cube__WEBPACK_IMPORTED_MODULE_11__.CubePrefab)(world);
-_src_components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__.EntityObject3DProxy.get(cubeEid).root.position.set((Math.random() - 0.5) * 10.0, 0.25, (Math.random() - 0.5) * 10.0);
-(0,_src_utils_network__WEBPACK_IMPORTED_MODULE_8__.setupNetworkedEntity)(world, cubeEid, 'cube', _src_components_network__WEBPACK_IMPORTED_MODULE_5__.NetworkedType.Shared);
+const app = new _app__WEBPACK_IMPORTED_MODULE_0__.App();
 app.start();
-
 
 })();
 

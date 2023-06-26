@@ -7,10 +7,10 @@ import { type Mesh, type MeshBasicMaterial } from "three";
 import {
   EntityObject3D,
   EntityObject3DProxy
-} from "../../src/components/entity_object3d";
-import { Grabbed } from "../../src/components/grab";
-import { Raycastable, Raycasted } from "../../src/components/raycast";
-import { Selected } from "../../src/components/select";
+} from "@tiny-web-metaverse/client/src/components/entity_object3d";
+import { Grabbed } from "@tiny-web-metaverse/client/src/components/grab";
+import { Raycastable, Raycasted } from "@tiny-web-metaverse/client/src/components/raycast";
+import { Selected } from "@tiny-web-metaverse/client/src/components/select";
 
 const query = defineQuery([EntityObject3D, Raycastable]);
 const grabbedQuery = defineQuery([Grabbed]);

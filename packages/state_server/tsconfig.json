@@ -12,7 +12,15 @@
       "./node_modules/@types"
     ]
   },
+  "include": [
+    "src/**/*",
+    "examples/**/*",
+    "webrtc_server/src/**/*"
+  ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "examples/dist/*",
+    "webrtc_server/node_modules",
+    "webrtc_server/dist"
   ]
 }
