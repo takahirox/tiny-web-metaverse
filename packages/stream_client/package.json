@@ -4,27 +4,24 @@
     "url": "https://github.com/takahirox/tiny-web-metaverse/issues"
   },
   "dependencies": {
-    "express": "^4.18.2",
-    "mediasoup": "^3.12.4",
-    "socket.io": "^4.7.1"
+    "mediasoup-client": "^3.6.91",
+    "socket.io-client": "^4.7.1"
   },
   "description": "Tiny Web metaverse stream server",
   "devDependencies": {
-    "@types/express": "^4.17.17",
-    "@types/node": "^20.3.1",
-    "cross-env": "^7.0.3"
+    "servez": "^1.14.2"
   },
   "homepage": "https://github.com/takahirox/tiny-web-metaverse#readme",
   "license": "MIT",
-  "name": "@tiny-web-metaverse/stream_server",
+  "name": "@tiny-web-metaverse/stream_client",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/takahirox/tiny-web-metaverse.git"
   },
   "scripts": {
     "build": "webpack",
+    "server": "servez -p 8080",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "npm run build && cross-env MEDIASOUP_WORKER_BIN=../../node_modules/mediasoup/worker/out/Release/mediasoup-worker node ./dist/stream_server.bundle.js",
     "watch": "webpack --watch"
   },
   "version": "0.0.1"

@@ -14583,6 +14583,859 @@ module.exports = {
 
 /***/ }),
 
+/***/ "./src/configure.ts":
+/*!**************************!*\
+  !*** ./src/configure.ts ***!
+  \**************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   LISTEN_IP: () => (/* binding */ LISTEN_IP),
+/* harmony export */   LISTEN_PORT: () => (/* binding */ LISTEN_PORT),
+/* harmony export */   LOG_LEVEL: () => (/* binding */ LOG_LEVEL),
+/* harmony export */   MEDIA_CODECS: () => (/* binding */ MEDIA_CODECS)
+/* harmony export */ });
+const LISTEN_PORT = 3000;
+const LISTEN_IP = '127.0.0.1';
+const LOG_LEVEL = 'debug';
+const MEDIA_CODECS = [
+    {
+        kind: 'audio',
+        mimeType: 'audio/opus',
+        clockRate: 48000,
+        channels: 2
+    },
+    {
+        kind: 'video',
+        mimeType: 'video/VP8',
+        clockRate: 90000,
+        parameters: {
+            'x-google-start-bitrate': 1000
+        }
+    }
+];
+
+
+/***/ }),
+
+/***/ "./src/logger.ts":
+/*!***********************!*\
+  !*** ./src/logger.ts ***!
+  \***********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   LogLevel: () => (/* binding */ LogLevel),
+/* harmony export */   Logger: () => (/* binding */ Logger)
+/* harmony export */ });
+var LogLevel;
+(function (LogLevel) {
+    LogLevel[LogLevel["debug"] = 0] = "debug";
+    LogLevel[LogLevel["info"] = 1] = "info";
+    LogLevel[LogLevel["log"] = 2] = "log";
+    LogLevel[LogLevel["warn"] = 3] = "warn";
+    LogLevel[LogLevel["error"] = 4] = "error";
+    LogLevel[LogLevel["none"] = 5] = "none";
+})(LogLevel || (LogLevel = {}));
+;
+const timestamp = () => {
+    return (performance.now() * 1000).toFixed(0);
+};
+class Logger {
+    static setLevel(level) {
+        Logger.level = level;
+    }
+    static debug(message) {
+        if (LogLevel.debug >= Logger.level) {
+            console.debug(`[debug:${timestamp()}] ${message}`);
+        }
+    }
+    static info(message) {
+        if (LogLevel.info >= Logger.level) {
+            console.info(`[info:${timestamp()}] ${message}`);
+        }
+    }
+    static log(message) {
+        if (LogLevel.log >= Logger.level) {
+            console.log(`[log:${timestamp()}] ${message}`);
+        }
+    }
+    static warn(message) {
+        if (LogLevel.warn >= Logger.level) {
+            console.warn(`[warn:${timestamp()}] ${message}`);
+        }
+    }
+    static error(message) {
+        if (LogLevel.error >= Logger.level) {
+            console.error(`[error:${timestamp()}]`, message);
+        }
+    }
+}
+Logger.level = LogLevel.debug;
+
+
+/***/ }),
+
+/***/ "./src/message.ts":
+/*!************************!*\
+  !*** ./src/message.ts ***!
+  \************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   getConsumerParams: () => (/* binding */ getConsumerParams),
+/* harmony export */   getTransportParams: () => (/* binding */ getTransportParams)
+/* harmony export */ });
+const getTransportParams = (transport) => {
+    return {
+        id: transport.id,
+        iceParameters: transport.iceParameters,
+        iceCandidates: transport.iceCandidates,
+        dtlsParameters: transport.dtlsParameters
+    };
+};
+const getConsumerParams = (producerId, consumer) => {
+    return {
+        producerId,
+        id: consumer.id,
+        kind: consumer.kind,
+        rtpParameters: consumer.rtpParameters,
+        type: consumer.type,
+        producerPaused: consumer.producerPaused
+    };
+};
+
+
+/***/ }),
+
+/***/ "./src/peer.ts":
+/*!*********************!*\
+  !*** ./src/peer.ts ***!
+  \*********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Peer: () => (/* binding */ Peer)
+/* harmony export */ });
+class Peer {
+    constructor(id) {
+        this.id = id;
+        this._rtpCapabilities = null;
+        this._joined = false;
+        this.consumerIds = new Set();
+        this._consumerTransportId = null;
+        this._producerIds = new Set();
+        this._producerTransportId = null;
+    }
+    get joined() {
+        return this._joined;
+    }
+    get producerTransportId() {
+        return this._producerTransportId;
+    }
+    get consumerTransportId() {
+        return this._consumerTransportId;
+    }
+    // This getter must be called after join
+    get rtpCapabilities() {
+        return this._rtpCapabilities;
+    }
+    get producerIds() {
+        const ids = [];
+        for (const id of this._producerIds.values()) {
+            ids.push(id);
+        }
+        return ids;
+    }
+    join(rtpCapabilities) {
+        if (this.joined === true) {
+            throw new Error(`Peer ${this.id} has already joined.`);
+        }
+        this._joined = true;
+        this._rtpCapabilities = rtpCapabilities;
+    }
+    leave() {
+        if (this.joined === false) {
+            throw new Error(`Peer ${this.id} has not joined.`);
+        }
+        this._joined = false;
+        this._rtpCapabilities = null;
+    }
+    dispose() {
+        // TODO: Implement
+    }
+    setConsumerTransportId(id) {
+        if (this._consumerTransportId !== null) {
+            throw new Error(`Consumer transport is already set.`);
+        }
+        this._consumerTransportId = id;
+    }
+    setProducerTransportId(id) {
+        if (this.producerTransportId !== null) {
+            throw new Error(`Producer transport is already set.`);
+        }
+        this._producerTransportId = id;
+    }
+    addConsumerId(id) {
+        if (this.consumerIds.has(id)) {
+            throw new Error(`Consumer ${id} is already registered.`);
+        }
+        this.consumerIds.add(id);
+    }
+    addProducerId(id) {
+        if (this._producerIds.has(id)) {
+            throw new Error(`Producer ${id} is already registered.`);
+        }
+        this._producerIds.add(id);
+    }
+}
+
+
+/***/ }),
+
+/***/ "./src/room.ts":
+/*!*********************!*\
+  !*** ./src/room.ts ***!
+  \*********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Room: () => (/* binding */ Room)
+/* harmony export */ });
+/* harmony import */ var _configure__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./configure */ "./src/configure.ts");
+/* harmony import */ var _message__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./message */ "./src/message.ts");
+/* harmony import */ var _peer__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./peer */ "./src/peer.ts");
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+
+
+
+class Room {
+    static create(id, worker) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const router = yield worker.createRouter({
+                mediaCodecs: _configure__WEBPACK_IMPORTED_MODULE_0__.MEDIA_CODECS
+            });
+            return new Room(id, router);
+        });
+    }
+    constructor(id, router) {
+        this.id = id;
+        this.router = router;
+        this.consumers = new Map();
+        this.consumerTransports = new Map();
+        this.peers = new Map();
+        this.producers = new Map();
+        this.producerTransports = new Map();
+    }
+    get rtpCapabilities() {
+        return this.router.rtpCapabilities;
+    }
+    get joinnedPeerIds() {
+        const ids = [];
+        for (const p of this.peers.values()) {
+            if (p.joined) {
+                ids.push(p.id);
+            }
+        }
+        return ids;
+    }
+    close() {
+        // TODO: Implement
+    }
+    hasPeer(peerId) {
+        return this.peers.has(peerId);
+    }
+    getPeer(peerId) {
+        return this.peers.get(peerId);
+    }
+    mustBeInRoom(peerId) {
+        if (!this.peers.has(peerId)) {
+            throw new Error(`Peer ${peerId} is not found in the Room ${this.id}.`);
+        }
+    }
+    mustNotBeInRoom(peerId) {
+        if (this.peers.has(peerId)) {
+            throw new Error(`Peer ${peerId} is already in the Room ${this.id}.`);
+        }
+    }
+    enter(peerId) {
+        this.mustNotBeInRoom(peerId);
+        this.peers.set(peerId, new _peer__WEBPACK_IMPORTED_MODULE_2__.Peer(peerId));
+    }
+    exit(peerId) {
+        this.mustBeInRoom(peerId);
+        this.peers.get(peerId).dispose();
+        this.peers.delete(peerId);
+    }
+    join(peerId, rtpCapabilities) {
+        this.mustBeInRoom(peerId);
+        this.peers.get(peerId).join(rtpCapabilities);
+    }
+    leave(peerId) {
+        this.mustBeInRoom(peerId);
+        this.peers.get(peerId).leave();
+        this.peers.delete(peerId);
+    }
+    empty() {
+        return this.peers.size === 0;
+    }
+    createWebRtcTransport() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.router.createWebRtcTransport({
+                listenIps: [_configure__WEBPACK_IMPORTED_MODULE_0__.LISTEN_IP],
+                // TODO: Configurable
+                enableUdp: true,
+                enableTcp: true,
+                preferUdp: true
+            });
+        });
+    }
+    createProducerTransport(peerId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.mustBeInRoom(peerId);
+            const transport = yield this.createWebRtcTransport();
+            // TODO: What if the peer has already left the room?
+            this.producerTransports.set(transport.id, transport);
+            this.peers.get(peerId).setProducerTransportId(transport.id);
+            return (0,_message__WEBPACK_IMPORTED_MODULE_1__.getTransportParams)(transport);
+        });
+    }
+    createConsumerTransport(peerId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.mustBeInRoom(peerId);
+            const transport = yield this.createWebRtcTransport();
+            // TODO: What if the peer has already left the room?
+            this.consumerTransports.set(transport.id, transport);
+            this.peers.get(peerId).setConsumerTransportId(transport.id);
+            return (0,_message__WEBPACK_IMPORTED_MODULE_1__.getTransportParams)(transport);
+        });
+    }
+    connectProducerTransport(peerId, dtlsParameters) {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.mustBeInRoom(peerId);
+            const transportId = this.peers.get(peerId).producerTransportId;
+            if (transportId === null) {
+                throw new Error(`Peer ${peerId} doesn't have producer transport.`);
+            }
+            if (!this.producerTransports.has(transportId)) {
+                throw new Error(`Producer transport ${transportId} of Peer ${peerId} is not found.`);
+            }
+            yield this.producerTransports.get(transportId).connect({ dtlsParameters });
+        });
+    }
+    connectConsumerTransport(peerId, dtlsParameters) {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.mustBeInRoom(peerId);
+            const transportId = this.peers.get(peerId).consumerTransportId;
+            if (transportId === null) {
+                throw new Error(`Peer ${peerId} doesn't have consumer transport.`);
+            }
+            if (!this.consumerTransports.has(transportId)) {
+                throw new Error(`Consumer transport ${transportId} of Peer ${peerId} is not found.`);
+            }
+            yield this.consumerTransports.get(transportId).connect({ dtlsParameters });
+        });
+    }
+    produce(peerId, kind, rtpParameters) {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.mustBeInRoom(peerId);
+            const peer = this.peers.get(peerId);
+            const transportId = peer.producerTransportId;
+            if (transportId === null) {
+                throw new Error(`Peer ${peerId} doesn't have consumer transport yet.`);
+            }
+            if (!this.producerTransports.has(transportId)) {
+                throw new Error(`Producer transport ${transportId} is not found.`);
+            }
+            const producer = yield this.producerTransports.get(transportId).produce({
+                kind,
+                rtpParameters
+            });
+            // TODO: What if the peer has already left the room?
+            this.producers.set(producer.id, producer);
+            peer.addProducerId(producer.id);
+            return producer.id;
+        });
+    }
+    consume(peerId, producerId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.mustBeInRoom(peerId);
+            if (!this.producers.has(producerId)) {
+                throw new Error(`Producer ${producerId} is not found.`);
+            }
+            const consumerPeer = this.peers.get(peerId);
+            const transportId = consumerPeer.consumerTransportId;
+            if (transportId === null) {
+                throw new Error(`Consumer peer ${peerId} doesn't have consumer transport yet.`);
+            }
+            if (!this.consumerTransports.has(transportId)) {
+                throw new Error(`Consumer transport ${transportId} is not found.`);
+            }
+            const consumer = yield this.consumerTransports.get(transportId).consume({
+                producerId: producerId,
+                rtpCapabilities: consumerPeer.rtpCapabilities,
+                paused: false
+            });
+            // TODO: What if the peer, transport, or room is already closed?
+            this.consumers.set(consumer.id, consumer);
+            consumerPeer.addConsumerId(consumer.id);
+            return (0,_message__WEBPACK_IMPORTED_MODULE_1__.getConsumerParams)(peerId, consumer);
+        });
+    }
+}
+
+
+/***/ }),
+
+/***/ "./src/server.ts":
+/*!***********************!*\
+  !*** ./src/server.ts ***!
+  \***********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Server: () => (/* binding */ Server)
+/* harmony export */ });
+/* harmony import */ var express__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! express */ "express");
+/* harmony import */ var express__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(express__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! http */ "http");
+/* harmony import */ var http__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(http__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var mediasoup__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! mediasoup */ "../../node_modules/mediasoup/node/lib/index.js");
+/* harmony import */ var socket_io__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! socket.io */ "../../node_modules/socket.io/wrapper.mjs");
+/* harmony import */ var _configure__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./configure */ "./src/configure.ts");
+/* harmony import */ var _logger__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./logger */ "./src/logger.ts");
+/* harmony import */ var _room__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./room */ "./src/room.ts");
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+
+
+
+
+
+
+
+class Server {
+    static create() {
+        return __awaiter(this, void 0, void 0, function* () {
+            _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.info('Create servers.');
+            // WebServer
+            const app = express__WEBPACK_IMPORTED_MODULE_0___default()();
+            app.use(express__WEBPACK_IMPORTED_MODULE_0___default()["static"](__dirname));
+            const webServer = http__WEBPACK_IMPORTED_MODULE_1___default().createServer(app);
+            // SocketServer
+            const socketServer = new socket_io__WEBPACK_IMPORTED_MODULE_3__.Server(webServer, {
+                // TODO: Proper configuration
+                cors: {
+                    origin: '*'
+                }
+            });
+            // Mediasoup Worker
+            const worker = yield mediasoup__WEBPACK_IMPORTED_MODULE_2__.createWorker({
+                logLevel: _configure__WEBPACK_IMPORTED_MODULE_4__.LOG_LEVEL
+            });
+            const server = new Server(webServer, socketServer, worker);
+            yield server.initWebServer();
+            server.initSocketServer();
+            return server;
+        });
+    }
+    constructor(webServer, socketServer, worker) {
+        this.worker = worker;
+        this.webServer = webServer;
+        this.socketServer = socketServer;
+        this.peerIdToSocket = new Map();
+        this.socketInfos = new Map();
+        this.rooms = new Map();
+    }
+    close() {
+        _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.info('Close servers.');
+        // TODO: Implement properly
+        this.worker.close();
+        this.webServer.close();
+        this.socketServer.close();
+        for (const room of this.rooms.values()) {
+            room.close();
+        }
+        this.rooms.clear();
+    }
+    initWebServer() {
+        return __awaiter(this, void 0, void 0, function* () {
+            _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.info('Initialize Web server.');
+            const server = this.webServer;
+            server.on('error', (error) => {
+                // TODO: Proper error handling
+                _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.error(error);
+            });
+            yield new Promise((resolve) => {
+                server.listen(_configure__WEBPACK_IMPORTED_MODULE_4__.LISTEN_PORT, _configure__WEBPACK_IMPORTED_MODULE_4__.LISTEN_IP, () => {
+                    _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.info(`Web server is running at http://${_configure__WEBPACK_IMPORTED_MODULE_4__.LISTEN_IP}:${_configure__WEBPACK_IMPORTED_MODULE_4__.LISTEN_PORT}.`);
+                    resolve(undefined);
+                });
+            });
+        });
+    }
+    initSocketServer() {
+        _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.info('Initialize Socket server.');
+        const rooms = this.rooms;
+        const server = this.socketServer;
+        const worker = this.worker;
+        // TODO: Add types for parameters and callbacks
+        server.on('connection', (socket) => {
+            _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.debug(`Socket ${socket.id} is connected.`);
+            // Helpers
+            // TODO: Avoid any
+            const callErrorCallback = (errorback, error) => {
+                _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.error(error);
+                errorback({ error: error.message });
+            };
+            const socketMustHaveEntered = (errorback) => {
+                if (!this.socketInfos.has(socket)) {
+                    // TODO: Handle properly
+                    callErrorCallback(errorback, new Error(`Socket ${socket.id} has not entered any Room.`));
+                    return false;
+                }
+                return true;
+            };
+            const socketMustNotHaveEntered = (errorback) => {
+                if (this.socketInfos.has(socket)) {
+                    // TODO: Handle properly
+                    const { peerId, roomId } = this.socketInfos.get(socket);
+                    callErrorCallback(errorback, new Error(`Socket ${socket.id} has alerady entered Room ${roomId} as Peer ${peerId}.`));
+                    return false;
+                }
+                return true;
+            };
+            const roomMustExist = (roomId, errorback) => {
+                if (!rooms.has(roomId)) {
+                    // TODO: Proper error handling
+                    callErrorCallback(errorback, new Error(`Unknown Room ${roomId}.`));
+                    return false;
+                }
+                return true;
+            };
+            const peerMustBeInRoom = (roomId, peerId, errorback) => {
+                // Room existence must be checked beforehand
+                if (!rooms.get(roomId).hasPeer(peerId)) {
+                    callErrorCallback(errorback, new Error(`Peer ${peerId} already exists in Room ${roomId}.`));
+                    return false;
+                }
+                return true;
+            };
+            const peerMustNotBeInRoom = (roomId, peerId, errorback) => {
+                // Room existence must be checked beforehand
+                if (rooms.get(roomId).hasPeer(peerId)) {
+                    callErrorCallback(errorback, new Error(`Peer ${peerId} is not in Room ${roomId}.`));
+                    return false;
+                }
+                return true;
+            };
+            const exitRoom = (roomId, peerId) => {
+                if (rooms.has(roomId)) {
+                    const room = rooms.get(roomId);
+                    if (room.hasPeer(peerId)) {
+                        room.exit(peerId);
+                        if (room.empty()) {
+                            _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.debug(`Room ${roomId} became empty then closing it.`);
+                            room.close();
+                            rooms.delete(roomId);
+                        }
+                    }
+                    else {
+                        // Should not happen
+                        _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.error(new Error(`Peer ${peerId} doesn't exist in Room ${roomId}.`));
+                        return;
+                    }
+                }
+                else {
+                    // Should not happen
+                    _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.error(new Error(`Room ${roomId} doesn't exist`));
+                    return;
+                }
+                if (this.socketInfos.has(socket)) {
+                    this.socketInfos.delete(socket);
+                    this.peerIdToSocket.delete(peerId);
+                }
+                else {
+                    // Should not happen
+                    _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.error(new Error(`SocketInfo is not found ${socket.id}.`));
+                    return;
+                }
+            };
+            // Event handlers
+            socket.on('disconnect', () => __awaiter(this, void 0, void 0, function* () {
+                _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.debug(`Socket disconnect event: ${socket.id}`);
+                // TODO: Check whether it is guaranteed that disconnect event
+                //       is fired when disconnected.
+                // TODO: Proper handling
+                _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.debug(`Socket ${socket.id} is dicsonnected.`);
+                if (!this.socketInfos.has(socket)) {
+                    return;
+                }
+                const { peerId, roomId } = this.socketInfos.get(socket);
+                exitRoom(roomId, peerId);
+            }));
+            socket.on('enter', (data, callback) => __awaiter(this, void 0, void 0, function* () {
+                _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.debug(`Socket enter_room event: ${socket.id}`);
+                if (!socketMustNotHaveEntered(callback)) {
+                    return;
+                }
+                const { peerId, roomId } = data;
+                // TODO: Validate input data
+                _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.debug(`Peer ${peerId} attempts to enter Room ${roomId}.`);
+                // TODO: Consider to save peerId and roomId to socket.
+                //       Clients no longer need to send peerId and roomId
+                //       in the following requests.
+                if (!rooms.has(roomId)) {
+                    _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.debug(`Room ${roomId} is not found then creating it.`);
+                    rooms.set(roomId, yield _room__WEBPACK_IMPORTED_MODULE_6__.Room.create(roomId, worker));
+                }
+                if (!peerMustNotBeInRoom(roomId, peerId, callback)) {
+                    return;
+                }
+                rooms.get(roomId).enter(peerId);
+                this.socketInfos.set(socket, { peerId, roomId });
+                this.peerIdToSocket.set(peerId, socket);
+                callback(true);
+            }));
+            socket.on('exit', (_data, callback) => {
+                _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.debug(`Socket exitRoom event: ${socket.id}`);
+                if (!socketMustHaveEntered(callback)) {
+                    return;
+                }
+                const { peerId, roomId } = this.socketInfos.get(socket);
+                _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.debug(`Peer ${peerId} attempts to exit Room ${roomId}.`);
+                if (!roomMustExist(roomId, callback) || !peerMustBeInRoom(roomId, peerId, callback)) {
+                    return;
+                }
+                exitRoom(roomId, peerId);
+                callback(true);
+            });
+            socket.on('getRouterRtpCapabilities', (_data, callback) => {
+                _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.debug(`Socket getRouterRtpCapabilities event: ${socket.id}`);
+                if (!socketMustHaveEntered(callback)) {
+                    return;
+                }
+                const { peerId, roomId } = this.socketInfos.get(socket);
+                _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.debug(`Peer ${peerId} attempts to get routerRtpCapabilities of Room ${roomId}.`);
+                if (!roomMustExist(roomId, callback)) {
+                    return;
+                }
+                callback(rooms.get(roomId).rtpCapabilities);
+            });
+            socket.on('join', (data, callback) => __awaiter(this, void 0, void 0, function* () {
+                _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.debug(`Socket join event: ${socket.id}`);
+                if (!socketMustHaveEntered(callback)) {
+                    return;
+                }
+                const { rtpCapabilities } = data;
+                // TODO: Validate input data
+                const { peerId, roomId } = this.socketInfos.get(socket);
+                _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.debug(`Peer ${peerId} attempts to join Room ${roomId}.`);
+                if (!roomMustExist(roomId, callback) || !peerMustBeInRoom(roomId, peerId, callback)) {
+                    return;
+                }
+                try {
+                    rooms.get(roomId).join(peerId, rtpCapabilities);
+                }
+                catch (error) {
+                    callErrorCallback(callback, error);
+                    return;
+                }
+                // TODO: Return with authorized token?
+                callback(true);
+            }));
+            socket.on('leave', (_data, callback) => __awaiter(this, void 0, void 0, function* () {
+                _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.debug(`Socket leave event: ${socket.id}`);
+                if (!socketMustHaveEntered(callback)) {
+                    return;
+                }
+                const { peerId, roomId } = this.socketInfos.get(socket);
+                _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.debug(`Peer ${peerId} attempts to leave Room ${roomId}.`);
+                if (!roomMustExist(roomId, callback) || !peerMustBeInRoom(roomId, peerId, callback)) {
+                    return;
+                }
+                try {
+                    rooms.get(roomId).leave(peerId);
+                }
+                catch (error) {
+                    callErrorCallback(callback, error);
+                    return;
+                }
+                callback(true);
+            }));
+            socket.on('createProducerTransport', (_data, callback) => __awaiter(this, void 0, void 0, function* () {
+                _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.debug(`Socket createProduceTransport event: ${socket.id}`);
+                if (!socketMustHaveEntered(callback)) {
+                    return;
+                }
+                const { peerId, roomId } = this.socketInfos.get(socket);
+                _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.debug(`Peer ${peerId} attempts to create transport for producer in Room ${roomId}.`);
+                if (!roomMustExist(roomId, callback) || !peerMustBeInRoom(roomId, peerId, callback)) {
+                    return;
+                }
+                try {
+                    callback(yield rooms.get(roomId).createProducerTransport(peerId));
+                }
+                catch (error) {
+                    callErrorCallback(callback, error);
+                    return;
+                }
+            }));
+            socket.on('createConsumerTransport', (_data, callback) => __awaiter(this, void 0, void 0, function* () {
+                _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.debug(`Socket createConsumerTransport event: ${socket.id}`);
+                if (!socketMustHaveEntered(callback)) {
+                    return;
+                }
+                const { peerId, roomId } = this.socketInfos.get(socket);
+                _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.debug(`Peer ${peerId} attempts to create transport for consumer in Room ${roomId}.`);
+                if (!roomMustExist(roomId, callback) || !peerMustBeInRoom(roomId, peerId, callback)) {
+                    return;
+                }
+                const room = rooms.get(roomId);
+                try {
+                    callback(yield room.createConsumerTransport(peerId));
+                }
+                catch (error) {
+                    callErrorCallback(callback, error);
+                    return;
+                }
+                // Consume every producers in a room except for mine
+                for (const producerPeerId of room.joinnedPeerIds) {
+                    if (producerPeerId === peerId) {
+                        continue;
+                    }
+                    for (const producerId of room.getPeer(producerPeerId).producerIds) {
+                        _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.debug(`Peer ${peerId} attempts to consume Producer ${producerId} of Peer ${producerPeerId}.`);
+                        room.consume(peerId, producerId).then((params) => {
+                            if (room.hasPeer(peerId) && room.getPeer(peerId).joined &&
+                                room.hasPeer(producerPeerId) && room.getPeer(producerPeerId).joined) {
+                                _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.debug(`Peer ${peerId} attempts to emit newConsumer to client for Producer ${producerId}.`);
+                                socket.emit('newConsumer', params);
+                            }
+                            else {
+                                // TODO: Close the consumer?
+                            }
+                        }).catch(_logger__WEBPACK_IMPORTED_MODULE_5__.Logger.error);
+                    }
+                }
+            }));
+            socket.on('connectProducerTransport', (data, callback) => __awaiter(this, void 0, void 0, function* () {
+                _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.debug(`Socket connectProducerTransport event: ${socket.id}`);
+                if (!socketMustHaveEntered(callback)) {
+                    return;
+                }
+                const { dtlsParameters } = data;
+                // TODO: Validate input data
+                const { peerId, roomId } = this.socketInfos.get(socket);
+                _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.debug(`Peer ${peerId} attempts to connect Producer transport in Room ${roomId}.`);
+                if (!roomMustExist(roomId, callback) || !peerMustBeInRoom(roomId, peerId, callback)) {
+                    return;
+                }
+                try {
+                    yield rooms.get(roomId).connectProducerTransport(peerId, dtlsParameters);
+                    callback(true);
+                }
+                catch (error) {
+                    callErrorCallback(callback, error);
+                }
+            }));
+            socket.on('connectConsumerTransport', (data, callback) => __awaiter(this, void 0, void 0, function* () {
+                _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.debug(`Socket connectConsumerTransport event: ${socket.id}`);
+                if (!socketMustHaveEntered(callback)) {
+                    return;
+                }
+                const { dtlsParameters } = data;
+                // TODO: Validate input data
+                const { peerId, roomId } = this.socketInfos.get(socket);
+                _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.debug(`Peer ${peerId} attempts to connect Consumer transport in Room ${roomId}.`);
+                if (!roomMustExist(roomId, callback) || !peerMustBeInRoom(roomId, peerId, callback)) {
+                    return;
+                }
+                try {
+                    yield rooms.get(roomId).connectConsumerTransport(peerId, dtlsParameters);
+                    callback(true);
+                }
+                catch (error) {
+                    callErrorCallback(callback, error);
+                }
+            }));
+            socket.on('produce', (data, callback) => __awaiter(this, void 0, void 0, function* () {
+                _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.debug(`Socket produce event: ${socket.id}`);
+                if (!socketMustHaveEntered(callback)) {
+                    return;
+                }
+                const { kind, rtpParameters } = data;
+                // TODO: Validate input data
+                const { peerId, roomId } = this.socketInfos.get(socket);
+                _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.debug(`Peer ${peerId} attempts to produce in Room ${roomId}.`);
+                if (!roomMustExist(roomId, callback) && !peerMustBeInRoom(roomId, peerId, callback)) {
+                    return;
+                }
+                const room = rooms.get(roomId);
+                let producerId;
+                try {
+                    producerId = yield room.produce(peerId, kind, rtpParameters);
+                    callback({ id: producerId });
+                }
+                catch (error) {
+                    callErrorCallback(callback, error);
+                    return;
+                }
+                // Let remote peers consume this producer
+                for (const remotePeerId of room.joinnedPeerIds) {
+                    if (remotePeerId === peerId) {
+                        continue;
+                    }
+                    if (room.getPeer(remotePeerId).consumerTransportId === null) {
+                        continue;
+                    }
+                    _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.debug(`Peer ${remotePeerId} attempts to consume Producer ${producerId} of Peer ${peerId}.`);
+                    room.consume(remotePeerId, producerId).then((params) => {
+                        if (room.hasPeer(remotePeerId) && room.getPeer(remotePeerId).joined &&
+                            room.hasPeer(peerId) && room.getPeer(peerId).joined) {
+                            _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.debug(`Peer ${remotePeerId} attempts to emit newConsumer to client.`);
+                            this.peerIdToSocket.get(remotePeerId).emit('newConsumer', params);
+                        }
+                        else {
+                            // TODO: Close the consumer?
+                        }
+                    }).catch(_logger__WEBPACK_IMPORTED_MODULE_5__.Logger.error);
+                }
+            }));
+        });
+    }
+}
+
+
+/***/ }),
+
 /***/ "../../node_modules/uuid/dist/esm-node/index.js":
 /*!******************************************************!*\
   !*** ../../node_modules/uuid/dist/esm-node/index.js ***!
@@ -28462,7 +29315,7 @@ module.exports = JSON.parse('{"application/1d-interleaved-parityfec":{"source":"
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('{"name":"socket.io","version":"4.7.0","description":"node.js realtime framework server","keywords":["realtime","framework","websocket","tcp","events","socket","io"],"files":["dist/","client-dist/","wrapper.mjs","!**/*.tsbuildinfo"],"directories":{"doc":"docs/","example":"example/","lib":"lib/","test":"test/"},"type":"commonjs","main":"./dist/index.js","exports":{"types":"./dist/index.d.ts","import":"./wrapper.mjs","require":"./dist/index.js"},"types":"./dist/index.d.ts","license":"MIT","repository":{"type":"git","url":"git://github.com/socketio/socket.io"},"scripts":{"compile":"rimraf ./dist && tsc","test":"npm run format:check && npm run compile && npm run test:types && npm run test:unit","test:types":"tsd","test:unit":"nyc mocha --require ts-node/register --reporter spec --slow 200 --bail --timeout 10000 test/index.ts","format:check":"prettier --check \\"lib/**/*.ts\\" \\"test/**/*.ts\\"","format:fix":"prettier --write \\"lib/**/*.ts\\" \\"test/**/*.ts\\"","prepack":"npm run compile"},"dependencies":{"accepts":"~1.3.4","base64id":"~2.0.0","cors":"~2.8.5","debug":"~4.3.2","engine.io":"~6.5.0","socket.io-adapter":"~2.5.2","socket.io-parser":"~4.2.4"},"devDependencies":{"@types/mocha":"^9.0.0","expect.js":"0.3.1","mocha":"^10.0.0","nyc":"^15.1.0","prettier":"^2.3.2","rimraf":"^3.0.2","socket.io-client":"4.7.0","socket.io-client-v2":"npm:socket.io-client@^2.4.0","superagent":"^8.0.0","supertest":"^6.1.6","ts-node":"^10.2.1","tsd":"^0.21.0","typescript":"^4.4.2","uWebSockets.js":"github:uNetworking/uWebSockets.js#v20.30.0"},"contributors":[{"name":"Guillermo Rauch","email":"rauchg@gmail.com"},{"name":"Arnout Kazemier","email":"info@3rd-eden.com"},{"name":"Vladimir Dronnikov","email":"dronnikov@gmail.com"},{"name":"Einar Otto Stangvik","email":"einaros@gmail.com"}],"engines":{"node":">=10.0.0"},"tsd":{"directory":"test"}}');
+module.exports = JSON.parse('{"name":"socket.io","version":"4.7.1","description":"node.js realtime framework server","keywords":["realtime","framework","websocket","tcp","events","socket","io"],"files":["dist/","client-dist/","wrapper.mjs","!**/*.tsbuildinfo"],"directories":{"doc":"docs/","example":"example/","lib":"lib/","test":"test/"},"type":"commonjs","main":"./dist/index.js","exports":{"types":"./dist/index.d.ts","import":"./wrapper.mjs","require":"./dist/index.js"},"types":"./dist/index.d.ts","license":"MIT","repository":{"type":"git","url":"git://github.com/socketio/socket.io"},"scripts":{"compile":"rimraf ./dist && tsc","test":"npm run format:check && npm run compile && npm run test:types && npm run test:unit","test:types":"tsd","test:unit":"nyc mocha --require ts-node/register --reporter spec --slow 200 --bail --timeout 10000 test/index.ts","format:check":"prettier --check \\"lib/**/*.ts\\" \\"test/**/*.ts\\"","format:fix":"prettier --write \\"lib/**/*.ts\\" \\"test/**/*.ts\\"","prepack":"npm run compile"},"dependencies":{"accepts":"~1.3.4","base64id":"~2.0.0","cors":"~2.8.5","debug":"~4.3.2","engine.io":"~6.5.0","socket.io-adapter":"~2.5.2","socket.io-parser":"~4.2.4"},"devDependencies":{"@types/mocha":"^9.0.0","expect.js":"0.3.1","mocha":"^10.0.0","nyc":"^15.1.0","prettier":"^2.3.2","rimraf":"^3.0.2","socket.io-client":"4.7.1","socket.io-client-v2":"npm:socket.io-client@^2.4.0","superagent":"^8.0.0","supertest":"^6.1.6","ts-node":"^10.2.1","tsd":"^0.21.0","typescript":"^4.4.2","uWebSockets.js":"github:uNetworking/uWebSockets.js#v20.30.0"},"contributors":[{"name":"Guillermo Rauch","email":"rauchg@gmail.com"},{"name":"Arnout Kazemier","email":"info@3rd-eden.com"},{"name":"Vladimir Dronnikov","email":"dronnikov@gmail.com"},{"name":"Einar Otto Stangvik","email":"einaros@gmail.com"}],"engines":{"node":">=10.0.0"},"tsd":{"directory":"test"}}');
 
 /***/ })
 
@@ -28542,12 +29395,7 @@ var __webpack_exports__ = {};
   !*** ./src/index.ts ***!
   \**********************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var express__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! express */ "express");
-/* harmony import */ var express__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(express__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! http */ "http");
-/* harmony import */ var http__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(http__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var mediasoup__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! mediasoup */ "../../node_modules/mediasoup/node/lib/index.js");
-/* harmony import */ var socket_io__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! socket.io */ "../../node_modules/socket.io/wrapper.mjs");
+/* harmony import */ var _server__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./server */ "./src/server.ts");
 var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -28558,67 +29406,8 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
     });
 };
 
-
-
-
-const LISTEN_PORT = 3000;
-const LISTEN_IP = '127.0.0.1';
-let webServer;
-let socketServer;
-let worker;
-let router;
-const runWebServer = () => __awaiter(void 0, void 0, void 0, function* () {
-    const app = express__WEBPACK_IMPORTED_MODULE_0___default()();
-    app.use(express__WEBPACK_IMPORTED_MODULE_0___default()["static"](__dirname));
-    // TODO: Use https
-    webServer = http__WEBPACK_IMPORTED_MODULE_1___default().createServer(app);
-    webServer.on('error', (error) => {
-        // TODO: Proper error handling
-        console.error(error);
-    });
-    yield new Promise((resolve) => {
-        webServer.listen(LISTEN_PORT, LISTEN_IP, () => {
-            console.log('Web server is running.');
-            console.log(`Open http://${LISTEN_IP}:${LISTEN_PORT} in your web browser.`);
-            resolve(undefined);
-        });
-    });
-});
-const runSocketServer = () => __awaiter(void 0, void 0, void 0, function* () {
-    socketServer = new socket_io__WEBPACK_IMPORTED_MODULE_3__.Server(webServer);
-    socketServer.on('connection', (socket) => {
-        socket.on('getRouterRtpCapabilities', (_data, callback) => {
-            callback(router.rtpCapabilities);
-        });
-    });
-});
-const createMediasoupWorker = () => __awaiter(void 0, void 0, void 0, function* () {
-    worker = yield mediasoup__WEBPACK_IMPORTED_MODULE_2__.createWorker({
-        logLevel: 'debug'
-    });
-});
-const createMediasoupRouter = () => __awaiter(void 0, void 0, void 0, function* () {
-    router = yield worker.createRouter({
-        mediaCodecs: [{
-                kind: 'audio',
-                mimeType: 'audio/opus',
-                clockRate: 48000,
-                channels: 2
-            }, {
-                kind: 'video',
-                mimeType: 'video/VP8',
-                clockRate: 90000,
-                parameters: {
-                    'x-google-start-bitrate': 1000
-                }
-            }]
-    });
-});
 const run = () => __awaiter(void 0, void 0, void 0, function* () {
-    yield runWebServer();
-    yield runSocketServer();
-    yield createMediasoupWorker();
-    yield createMediasoupRouter();
+    yield _server__WEBPACK_IMPORTED_MODULE_0__.Server.create();
 });
 run();
 
