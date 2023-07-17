@@ -8,8 +8,10 @@ export type TransportParams = {
 };
 
 export type ConsumerParams = {
-  producerId: string;
   id: string;
+  consumerPeerId: string;
+  producerPeerId: string;
+  producerId: string;
   kind: mediasoup.types.MediaKind;
   rtpParameters: mediasoup.types.RtpParameters;
   type: mediasoup.types.ConsumerType;
@@ -32,12 +34,16 @@ export const getTransportParams = (
 };
 
 export const getConsumerParams = (
+  consumerPeerId: string,
+  producerPeerId: string,
   producerId: string,
   consumer: mediasoup.types.Consumer
 ): ConsumerParams => {
   return {
-    producerId,
     id: consumer.id,
+    consumerPeerId,
+    producerPeerId,
+    producerId,
     kind: consumer.kind,
     rtpParameters: consumer.rtpParameters,
     type: consumer.type,

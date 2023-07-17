@@ -14700,10 +14700,12 @@ const getTransportParams = (transport) => {
         dtlsParameters: transport.dtlsParameters
     };
 };
-const getConsumerParams = (producerId, consumer) => {
+const getConsumerParams = (consumerPeerId, producerPeerId, producerId, consumer) => {
     return {
-        producerId,
         id: consumer.id,
+        consumerPeerId,
+        producerPeerId,
+        producerId,
         kind: consumer.kind,
         rtpParameters: consumer.rtpParameters,
         type: consumer.type,
@@ -14848,6 +14850,13 @@ class Room {
     get rtpCapabilities() {
         return this.router.rtpCapabilities;
     }
+    get peerIds() {
+        const ids = [];
+        for (const p of this.peers.values()) {
+            ids.push(p.id);
+        }
+        return ids;
+    }
     get joinnedPeerIds() {
         const ids = [];
         for (const p of this.peers.values()) {
@@ -14975,16 +14984,17 @@ class Room {
             return producer.id;
         });
     }
-    consume(peerId, producerId) {
+    consume(consumerPeerId, producerPeerId, producerId) {
         return __awaiter(this, void 0, void 0, function* () {
-            this.mustBeInRoom(peerId);
+            this.mustBeInRoom(consumerPeerId);
+            this.mustBeInRoom(producerPeerId);
             if (!this.producers.has(producerId)) {
                 throw new Error(`Producer ${producerId} is not found.`);
             }
-            const consumerPeer = this.peers.get(peerId);
+            const consumerPeer = this.peers.get(consumerPeerId);
             const transportId = consumerPeer.consumerTransportId;
             if (transportId === null) {
-                throw new Error(`Consumer peer ${peerId} doesn't have consumer transport yet.`);
+                throw new Error(`Consumer peer ${consumerPeerId} doesn't have consumer transport yet.`);
             }
             if (!this.consumerTransports.has(transportId)) {
                 throw new Error(`Consumer transport ${transportId} is not found.`);
@@ -14992,12 +15002,20 @@ class Room {
             const consumer = yield this.consumerTransports.get(transportId).consume({
                 producerId: producerId,
                 rtpCapabilities: consumerPeer.rtpCapabilities,
-                paused: false
+                paused: true
             });
             // TODO: What if the peer, transport, or room is already closed?
             this.consumers.set(consumer.id, consumer);
             consumerPeer.addConsumerId(consumer.id);
-            return (0,_message__WEBPACK_IMPORTED_MODULE_1__.getConsumerParams)(peerId, consumer);
+            return (0,_message__WEBPACK_IMPORTED_MODULE_1__.getConsumerParams)(consumerPeerId, producerPeerId, producerId, consumer);
+        });
+    }
+    resumeConsumer(consumerId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!this.consumers.has(consumerId)) {
+                throw new Error(`Consumer ${consumerId} is not found.`);
+            }
+            yield this.consumers.get(consumerId).resume();
         });
     }
 }
@@ -15041,6 +15059,7 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
 
 
 
+// TODO: Avoid race conditions when multiple threads are used.
 class Server {
     static create() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -15166,6 +15185,10 @@ class Server {
                             room.close();
                             rooms.delete(roomId);
                         }
+                        for (const remotePeerId of room.peerIds) {
+                            _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.debug(`Peer ${peerId} attempts to notify exited Peer to Peer ${remotePeerId}.`);
+                            this.peerIdToSocket.get(remotePeerId).emit('exitedPeer', { id: peerId });
+                        }
                     }
                     else {
                         // Should not happen
@@ -15202,7 +15225,7 @@ class Server {
                 exitRoom(roomId, peerId);
             }));
             socket.on('enter', (data, callback) => __awaiter(this, void 0, void 0, function* () {
-                _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.debug(`Socket enter_room event: ${socket.id}`);
+                _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.debug(`Socket enter event: ${socket.id}`);
                 if (!socketMustNotHaveEntered(callback)) {
                     return;
                 }
@@ -15219,13 +15242,26 @@ class Server {
                 if (!peerMustNotBeInRoom(roomId, peerId, callback)) {
                     return;
                 }
-                rooms.get(roomId).enter(peerId);
+                const room = rooms.get(roomId);
+                room.enter(peerId);
                 this.socketInfos.set(socket, { peerId, roomId });
                 this.peerIdToSocket.set(peerId, socket);
-                callback(true);
+                const remotePeerIds = [];
+                for (const remotePeerId of room.peerIds) {
+                    if (peerId === remotePeerId) {
+                        continue;
+                    }
+                    remotePeerIds.push({
+                        id: remotePeerId,
+                        joined: room.getPeer(remotePeerId).joined
+                    });
+                    _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.debug(`Peer ${peerId} attempts to notify new Peer entrance to Peer ${remotePeerId}.`);
+                    this.peerIdToSocket.get(remotePeerId).emit('newPeer', { id: peerId });
+                }
+                callback(remotePeerIds);
             }));
             socket.on('exit', (_data, callback) => {
-                _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.debug(`Socket exitRoom event: ${socket.id}`);
+                _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.debug(`Socket exit event: ${socket.id}`);
                 if (!socketMustHaveEntered(callback)) {
                     return;
                 }
@@ -15261,12 +15297,20 @@ class Server {
                 if (!roomMustExist(roomId, callback) || !peerMustBeInRoom(roomId, peerId, callback)) {
                     return;
                 }
+                const room = rooms.get(roomId);
                 try {
-                    rooms.get(roomId).join(peerId, rtpCapabilities);
+                    room.join(peerId, rtpCapabilities);
                 }
                 catch (error) {
                     callErrorCallback(callback, error);
                     return;
+                }
+                for (const remotePeerId of room.peerIds) {
+                    if (peerId === remotePeerId) {
+                        continue;
+                    }
+                    _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.debug(`Peer ${peerId} attempts to notify joined Peer to Peer ${remotePeerId}.`);
+                    this.peerIdToSocket.get(remotePeerId).emit('joinedPeer', { id: peerId });
                 }
                 // TODO: Return with authorized token?
                 callback(true);
@@ -15281,12 +15325,20 @@ class Server {
                 if (!roomMustExist(roomId, callback) || !peerMustBeInRoom(roomId, peerId, callback)) {
                     return;
                 }
+                const room = rooms.get(roomId);
                 try {
-                    rooms.get(roomId).leave(peerId);
+                    room.leave(peerId);
                 }
                 catch (error) {
                     callErrorCallback(callback, error);
                     return;
+                }
+                for (const remotePeerId of room.peerIds) {
+                    if (peerId === remotePeerId) {
+                        continue;
+                    }
+                    _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.debug(`Peer ${peerId} attempts to notify left Peer to Peer ${remotePeerId}.`);
+                    this.peerIdToSocket.get(remotePeerId).emit('leftPeer', { id: peerId });
                 }
                 callback(true);
             }));
@@ -15333,7 +15385,7 @@ class Server {
                     }
                     for (const producerId of room.getPeer(producerPeerId).producerIds) {
                         _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.debug(`Peer ${peerId} attempts to consume Producer ${producerId} of Peer ${producerPeerId}.`);
-                        room.consume(peerId, producerId).then((params) => {
+                        room.consume(peerId, producerPeerId, producerId).then((params) => {
                             if (room.hasPeer(peerId) && room.getPeer(peerId).joined &&
                                 room.hasPeer(producerPeerId) && room.getPeer(producerPeerId).joined) {
                                 _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.debug(`Peer ${peerId} attempts to emit newConsumer to client for Producer ${producerId}.`);
@@ -15417,7 +15469,7 @@ class Server {
                         continue;
                     }
                     _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.debug(`Peer ${remotePeerId} attempts to consume Producer ${producerId} of Peer ${peerId}.`);
-                    room.consume(remotePeerId, producerId).then((params) => {
+                    room.consume(remotePeerId, peerId, producerId).then((params) => {
                         if (room.hasPeer(remotePeerId) && room.getPeer(remotePeerId).joined &&
                             room.hasPeer(peerId) && room.getPeer(peerId).joined) {
                             _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.debug(`Peer ${remotePeerId} attempts to emit newConsumer to client.`);
@@ -15427,6 +15479,28 @@ class Server {
                             // TODO: Close the consumer?
                         }
                     }).catch(_logger__WEBPACK_IMPORTED_MODULE_5__.Logger.error);
+                }
+            }));
+            socket.on('resumeConsumer', (data, callback) => __awaiter(this, void 0, void 0, function* () {
+                _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.debug(`Socket resumeConsumer event: ${socket.id}`);
+                if (!socketMustHaveEntered(callback)) {
+                    return;
+                }
+                const { consumerId } = data;
+                // TODO: Validate input data
+                const { peerId, roomId } = this.socketInfos.get(socket);
+                if (!roomMustExist(roomId, callback)) {
+                    return;
+                }
+                const room = rooms.get(roomId);
+                _logger__WEBPACK_IMPORTED_MODULE_5__.Logger.debug(`Peer ${peerId} attempts to resume consumer ${consumerId}.`);
+                try {
+                    yield room.resumeConsumer(consumerId);
+                    callback();
+                }
+                catch (error) {
+                    callErrorCallback(callback, error);
+                    return;
                 }
             }));
         });

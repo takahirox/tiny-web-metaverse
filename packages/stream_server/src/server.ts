@@ -15,6 +15,8 @@ type SocketInfo = {
   roomId: string;
 };
 
+// TODO: Avoid race conditions when multiple threads are used.
+
 export class Server {
   // Bound while a socket is in a room as a peer
   private socketInfos: Map<socketIO.Socket, SocketInfo>;
@@ -178,6 +180,12 @@ export class Server {
               room.close();
               rooms.delete(roomId);
             }
+
+            for (const remotePeerId of room.peerIds) {
+              Logger.debug(`Peer ${peerId} attempts to notify exited Peer to Peer ${remotePeerId}.`);
+
+              this.peerIdToSocket.get(remotePeerId)!.emit('exitedPeer', { id: peerId });
+            }
           } else {
             // Should not happen
             Logger.error(new Error(`Peer ${peerId} doesn't exist in Room ${roomId}.`));
@@ -220,7 +228,7 @@ export class Server {
       });
 
       socket.on('enter', async (data, callback) => {
-        Logger.debug(`Socket enter_room event: ${socket.id}`);
+        Logger.debug(`Socket enter event: ${socket.id}`);
 
         if (!socketMustNotHaveEntered(callback)) {
           return;
@@ -245,16 +253,34 @@ export class Server {
           return;
         }
 
-        rooms.get(roomId)!.enter(peerId);
+        const room = rooms.get(roomId)!;
+        room.enter(peerId);
 
         this.socketInfos.set(socket, { peerId, roomId });
         this.peerIdToSocket.set(peerId, socket);
 
-        callback(true);
+        const remotePeerIds = [];
+
+        for (const remotePeerId of room.peerIds) {
+          if (peerId === remotePeerId) {
+            continue;
+          }
+
+          remotePeerIds.push({
+            id: remotePeerId,
+            joined: room.getPeer(remotePeerId).joined
+          });
+
+          Logger.debug(`Peer ${peerId} attempts to notify new Peer entrance to Peer ${remotePeerId}.`);
+
+          this.peerIdToSocket.get(remotePeerId)!.emit('newPeer', { id: peerId });
+        }
+
+        callback(remotePeerIds);
       });
 
       socket.on('exit', (_data, callback) => {
-        Logger.debug(`Socket exitRoom event: ${socket.id}`);
+        Logger.debug(`Socket exit event: ${socket.id}`);
 
         if (!socketMustHaveEntered(callback)) {
           return;
@@ -310,11 +336,23 @@ export class Server {
           return;
         }
 
+        const room = rooms.get(roomId)!;
+
         try {
-          rooms.get(roomId)!.join(peerId, rtpCapabilities);
+          room.join(peerId, rtpCapabilities);
         } catch (error) {
           callErrorCallback(callback, error);
           return;
+        }
+
+        for (const remotePeerId of room.peerIds) {
+          if (peerId === remotePeerId) {
+            continue;
+          }
+
+          Logger.debug(`Peer ${peerId} attempts to notify joined Peer to Peer ${remotePeerId}.`);
+
+          this.peerIdToSocket.get(remotePeerId)!.emit('joinedPeer', { id: peerId });
         }
 
         // TODO: Return with authorized token?
@@ -336,11 +374,23 @@ export class Server {
           return;
         }
 
+        const room = rooms.get(roomId)!;
+
         try {
-          rooms.get(roomId)!.leave(peerId);
+          room.leave(peerId);
         } catch (error) {
           callErrorCallback(callback, error);
           return;
+        }
+
+        for (const remotePeerId of room.peerIds) {
+          if (peerId === remotePeerId) {
+            continue;
+          }
+
+          Logger.debug(`Peer ${peerId} attempts to notify left Peer to Peer ${remotePeerId}.`);
+
+          this.peerIdToSocket.get(remotePeerId)!.emit('leftPeer', { id: peerId });
         }
 
         callback(true);
@@ -403,7 +453,7 @@ export class Server {
           for (const producerId of room.getPeer(producerPeerId).producerIds) {
             Logger.debug(`Peer ${peerId} attempts to consume Producer ${producerId} of Peer ${producerPeerId}.`);
 
-            room.consume(peerId, producerId).then((params) => {
+            room.consume(peerId, producerPeerId, producerId).then((params) => {
               if (room.hasPeer(peerId) && room.getPeer(peerId).joined &&
                 room.hasPeer(producerPeerId) && room.getPeer(producerPeerId).joined) {
 
@@ -516,7 +566,7 @@ export class Server {
 
           Logger.debug(`Peer ${remotePeerId} attempts to consume Producer ${producerId} of Peer ${peerId}.`);
 
-          room.consume(remotePeerId, producerId).then((params) => {
+          room.consume(remotePeerId, peerId, producerId).then((params) => {
             if (room.hasPeer(remotePeerId) && room.getPeer(remotePeerId).joined &&
               room.hasPeer(peerId) && room.getPeer(peerId).joined) {
               Logger.debug(`Peer ${remotePeerId} attempts to emit newConsumer to client.`);
@@ -526,6 +576,36 @@ export class Server {
               // TODO: Close the consumer?
             }
           }).catch(Logger.error);
+        }
+      });
+
+      socket.on('resumeConsumer', async (data, callback) => {
+        Logger.debug(`Socket resumeConsumer event: ${socket.id}`);
+
+        if (!socketMustHaveEntered(callback)) {
+          return;
+        }
+
+        const { consumerId } = data;
+
+        // TODO: Validate input data
+
+        const { peerId, roomId } = this.socketInfos.get(socket)!;
+
+        if (!roomMustExist(roomId, callback)) {
+          return;
+        }
+
+        const room = rooms.get(roomId)!;
+
+        Logger.debug(`Peer ${peerId} attempts to resume consumer ${consumerId}.`);
+
+        try {
+          await room.resumeConsumer(consumerId);
+          callback();
+		} catch (error) {
+          callErrorCallback(callback, error);
+          return;
         }
       });
     });

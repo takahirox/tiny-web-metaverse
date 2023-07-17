@@ -39,6 +39,14 @@ export class Room {
     return this.router.rtpCapabilities;
   }
 
+  get peerIds(): string[] {
+    const ids = [];
+    for (const p of this.peers.values()) {
+      ids.push(p.id);
+    }
+    return ids;    
+  }
+
   get joinnedPeerIds(): string[] {
     const ids = [];
     for (const p of this.peers.values()) {
@@ -206,20 +214,22 @@ export class Room {
   }
 
   async consume(
-    peerId: string,
+    consumerPeerId: string,
+    producerPeerId: string,
     producerId: string
   ): Promise<ConsumerParams> {
-    this.mustBeInRoom(peerId);
+    this.mustBeInRoom(consumerPeerId);
+    this.mustBeInRoom(producerPeerId);
 
     if (!this.producers.has(producerId)) {
       throw new Error(`Producer ${producerId} is not found.`);
     }
 
-    const consumerPeer = this.peers.get(peerId);
+    const consumerPeer = this.peers.get(consumerPeerId);
     const transportId = consumerPeer.consumerTransportId;
 
     if (transportId === null) {
-      throw new Error(`Consumer peer ${peerId} doesn't have consumer transport yet.`);
+      throw new Error(`Consumer peer ${consumerPeerId} doesn't have consumer transport yet.`);
     }
 
     if (!this.consumerTransports.has(transportId)) {
@@ -229,13 +239,20 @@ export class Room {
     const consumer = await this.consumerTransports.get(transportId)!.consume({
       producerId: producerId,
       rtpCapabilities: consumerPeer.rtpCapabilities,
-      paused: false
+      paused: true
     });
 
     // TODO: What if the peer, transport, or room is already closed?
 
     this.consumers.set(consumer.id, consumer);
     consumerPeer.addConsumerId(consumer.id);
-    return getConsumerParams(peerId, consumer);
+    return getConsumerParams(consumerPeerId, producerPeerId, producerId, consumer);
+  }
+
+  async resumeConsumer(consumerId: string): Promise<void> {
+    if (!this.consumers.has(consumerId)) {
+      throw new Error(`Consumer ${consumerId} is not found.`);
+    }
+    await this.consumers.get(consumerId).resume();
   }
 }

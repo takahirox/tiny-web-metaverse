@@ -1,229 +1,393 @@
 import * as mediasoup from "mediasoup-client";
 import * as socketIO from "socket.io-client";
+import { Logger } from "./logger";
 import { asyncEmit } from "./socket_utils";
+
+// Helper
+
+const throwError = (error: Error): void => {
+  Logger.error(error);
+  throw error;
+};
+
+// TODO: Proper error handling
 
 export class Adapter {
   private device: mediasoup.types.Device;
   private socket: socketIO.Socket;
-  private peerId: string;
-  private roomId: string;
+
+  private connected: boolean;
+  private joined: boolean;
+
   private recvTransport: null | mediasoup.types.Transport;
   private sendTransport: null | mediasoup.types.Transport;
 
-  static async connect(
-    serverUrl: string,
-    roomId: string,
-    peerId: string
-  ): Promise<Adapter> {
-    console.log(`Room: ${roomId}, Peer: ${peerId}.`);
+  private newPeerEventListener: null | ((peerInfo: { id: string }) => void);
+  private joinedPeerEventListener: null | ((peerInfo: { id: string }) => void);
+  private leftPeerEventListener: null | ((peerInfo: { id: string }) => void);
+  private exitedPeerEventListener: null | ((peerInfo: { id: string }) => void);
+  // TODO: Avoid any
+  private newConsumerEventListener: null | ((consumerInfo: any) => void);
 
-    return new Promise((resolve, reject) => {
-      const socket = socketIO.io(serverUrl);
+  // Holds consumerInfo until recvTransport is ready.
+  // TODO: Avoid any
+  private consumerInfoQueue: any[];
 
-      socket.on('connect', async () => {
-        const success = await asyncEmit(socket, 'enter', {
-          peerId: peerId,
-          roomId: roomId
-        });
+  constructor(serverUrl: string) {
+    Logger.info(`Server URL: ${serverUrl}.`);
 
-        if (!success) {
-          // TODO: Proper error handling
-          reject(new Error('Failed to connect Room.'));
-          return;
-        }
+    this.socket = socketIO.io(serverUrl, { autoConnect: false });
 
-        console.log('Succeeded with connecting Room');
-
-        resolve(new Adapter(socket, new mediasoup.Device(), roomId, peerId));
-      });
-
-      socket.on('disconnect', async () => {
-        // TODO: Proper handling
-        console.log('Disconnected from Room.');
-	  });
-    });
-  }
-
-  private constructor(
-    socket: socketIO.Socket,
-    device: mediasoup.types.Device,
-    roomId: string,
-    peerId: string
-  ) {
-    this.socket = socket;
-    this.device = device;
-    this.roomId = roomId;
-    this.peerId = peerId;
+    this.device = new mediasoup.Device();
+    this.connected = false;
+    this.joined = false;
 
     // Created when joinning
     this.sendTransport = null;
     this.recvTransport = null;
+
+    this.newPeerEventListener = null;
+    this.joinedPeerEventListener = null;
+    this.leftPeerEventListener = null;
+    this.exitedPeerEventListener = null;
+    this.newConsumerEventListener = null;
+
+    this.consumerInfoQueue = [];
   }
 
-  async disconnect(): Promise<void> {
-    const success = await asyncEmit(this.socket, 'disconnect_room', {
-      peerId: this.peerId,
-      roomId: this.roomId
-    });
+  connect(roomId: string, peerId: string): Promise<{ id: string, joined: boolean }[]> {
+    Logger.info(`Connect Room ${roomId} as Peer ${peerId}.`);
 
-    if (!success) {
-      // TODO: Proper error handling
-      throw new Error('Failed to disconnect from Room.');
+    if (this.connected) {
+      throwError(new Error('Already connected.'));
     }
 
-    console.log('Succeeded with disconnecting from Room.');
+    const socket = this.socket;
+    socket.connect();
+
+    return new Promise((resolve, reject) => {
+      socket.on('connect', async () => {
+        Logger.debug('Connect event on Socket.');
+
+        let remotePeers;
+
+        try {
+          remotePeers = await asyncEmit(socket, 'enter', { roomId, peerId });
+        } catch (error) {
+          Logger.error(error);
+          reject(error);
+          return;
+        }
+
+        Logger.info(`Succeeded with connecting Room ${roomId} as Peer ${peerId}`);
+        Logger.debug(`Remote peers`, remotePeers);
+
+        this.connected = true;
+
+        resolve(remotePeers);
+      });
+
+      socket.on('disconnect', async () => {
+        Logger.debug('Disconnect event on Socket.');
+
+        // TODO: Proper handling
+        Logger.info(`Disconnected from Room ${roomId}.`);
+
+        this.connected = false;
+	  });
+
+      socket.on('newPeer', async (peerInfo) => {
+        Logger.debug(`newPeer event on Socket`, peerInfo);
+
+        if (this.newPeerEventListener !== null) {
+           this.newPeerEventListener(peerInfo);
+        }
+      });
+
+      socket.on('joinedPeer', async (peerInfo) => {
+        Logger.debug(`joinedPeer event on Socket`, peerInfo);
+
+        if (this.joinedPeerEventListener !== null) {
+           this.joinedPeerEventListener(peerInfo);
+        }
+      });
+
+      socket.on('leftPeer', async (peerInfo) => {
+        Logger.debug(`leftPeer event on Socket`, peerInfo);
+
+        if (this.leftPeerEventListener !== null) {
+           this.leftPeerEventListener(peerInfo);
+        }
+      });
+
+      socket.on('exitedPeer', async (peerInfo) => {
+        Logger.debug(`exitedPeer event on Socket`, peerInfo);
+
+        if (this.exitedPeerEventListener !== null) {
+           this.exitedPeerEventListener(peerInfo);
+        }
+      });
+
+      socket.on('newConsumer', async (consumerInfo) => {
+        Logger.debug('newConsumer event on Socket.', consumerInfo);
+
+        this.consumerInfoQueue.push(consumerInfo);
+        this.handleConsumerInfos();
+      });
+    });
+  }
+
+  // TODO: Avoid any if possible
+  on(eventName: string, callback: (...args: any[]) => void): void {
+    switch (eventName) {
+      case 'newPeer':
+        this.newPeerEventListener = callback;
+        return;
+      case 'joinedPeer':
+        this.joinedPeerEventListener = callback;
+        return;
+      case 'leftPeer':
+        this.leftPeerEventListener = callback;
+        return;
+      case 'exitedPeer':
+        this.exitedPeerEventListener = callback;
+        return;
+      case 'newConsumer':
+        this.newConsumerEventListener = callback;
+        return;
+      default:
+        throw new Error(`Unknown event name ${eventName}.`);
+    }
+  }
+
+  private handleConsumerInfos(): void {
+    if (this.recvTransport === null) {
+      return;
+    }
+
+    for (const consumerInfo of this.consumerInfoQueue) {
+      Logger.debug(`Consume`, consumerInfo);
+
+      this.recvTransport.consume({
+        ...consumerInfo,
+        codecOptions: {}
+      }).then(async (consumer) => {
+        Logger.debug(`Consumer created`, consumer);
+
+        // Consumer is paused when created so resume here
+        await asyncEmit(this.socket, 'resumeConsumer', {
+          consumerId: consumer.id
+        });
+        await consumer.resume();
+
+        Logger.debug(`Consumer resumed`, consumer);
+
+        if (this.newConsumerEventListener !== null) {
+          this.newConsumerEventListener({ track: consumer.track, peerId: consumerInfo.producerPeerId });
+        }
+      // TODO: Proper error handling
+      }).catch(Logger.error);
+    }
+
+    this.consumerInfoQueue.length = 0;
+  }
+
+  async exit(): Promise<void> {
+    Logger.debug(`Attempt to exit from Room.`);
+
+    if (this.connected) {
+      throwError(new Error('Not connected.'));
+    }
+
+    try {
+      await asyncEmit(this.socket, 'exit');
+    } catch (error) {
+      throwError(error);
+    }
+
+    Logger.info(`Succeeded with disconnecting from Room.`);
   }
 
   async join(): Promise<void> {
-    const routerRtpCapabilities = await asyncEmit(this.socket, 'getRouterRtpCapabilities', {
-      roomId: this.roomId
-    });
-    console.log(routerRtpCapabilities);
+    Logger.debug(`Attempt to get routerRtpCapabilities of Room.`);
+
+    if (!this.connected) {
+      throwError(new Error('Not connected.'));
+    }
+
+    let routerRtpCapabilities;
+
+    try {
+      routerRtpCapabilities = await asyncEmit(this.socket, 'getRouterRtpCapabilities');
+    } catch (error) {
+      throwError(error);
+    }
+
+    Logger.debug(`Received routerRtpCapabilities.`, routerRtpCapabilities);
 
     await this.device.load({ routerRtpCapabilities });
 
-    const success = await asyncEmit(this.socket, 'join', {
-      peerId: this.peerId,
-      roomId: this.roomId,
-      rtpCapabilities: routerRtpCapabilities
-    });
+    Logger.debug(`Attempt to join Room.`);
 
-    if (!success) {
-      throw new Error('Failed to join Room.');
+    try {
+      await asyncEmit(this.socket, 'join', {
+        rtpCapabilities: routerRtpCapabilities
+      });
+    } catch (error) {
+      throwError(error);
     }
 
-    console.log('Succeeded with joining Room');
+    Logger.debug(`Succeeded with joining Room.`);
 
-    this.sendTransport = await this.createSendTransport();
-    this.recvTransport = await this.createRecvTransport();
+    this.joined = true;
+
+    // TODO: Leave room if failed to create transports?
+
+    const pending = [];
+
+    pending.push(this.createSendTransport().then((transport) => {
+      this.sendTransport = transport;
+    }));
+
+    pending.push(this.createRecvTransport().then((transport) => {
+      this.recvTransport = transport;
+      //
+      this.handleConsumerInfos();
+    }));
+
+    await Promise.all(pending);
   }
 
-  leave(): void {
+  async leave(): Promise<void> {
+    Logger.debug(`Attempt to leave Room.`);
+
+    if (!this.connected) {
+      throwError(new Error('Not connected.'));
+    }
+
+    if (!this.joined) {
+      throwError(new Error(`Not joined Room.`));
+    }
+
     if (this.sendTransport) {
       this.sendTransport.close();
       this.sendTransport = null;
     }
+
     if (this.recvTransport) {
       this.recvTransport.close();
       this.recvTransport = null;
     }
+
+    try {
+      await asyncEmit(this.socket, 'leave');
+    } catch (error) {
+      throwError(error);
+    }
   }
 
   private async createSendTransport(): Promise<mediasoup.types.Transport> {
-    console.log('create sentTransport');
+    Logger.debug(`Attempt to create Send Transport.`);
 
-    const transportInfo = await asyncEmit(this.socket, 'createProducerTransport');
+    let transportInfo;
 
-    console.log(transportInfo);
+    try {
+      transportInfo = await asyncEmit(this.socket, 'createProducerTransport');
+    } catch (error) {
+      throwError(error);
+    }
+
+    Logger.debug(`Received Send TransportInfo.`, transportInfo);
 
     const transport = this.device.createSendTransport(transportInfo);
 
-    console.log(transport);
+    Logger.debug(`Created Send Transport`, transport);
 
     transport.on('connect', async ({ dtlsParameters }, callback, errback) => {
-      console.log('Send transport connect');
+      Logger.debug(`Connect event on Send Transport.`, dtlsParameters);
 
       try {
-        await asyncEmit(this.socket, 'connectProducerTransport', {
-          transportId: transport.id,
-          dtlsParameters
-        });
-        console.log('Send connectWebRtcTransport.');
+        await asyncEmit(this.socket, 'connectProducerTransport', { dtlsParameters });
         callback();
       } catch (error) {
-        // TODO: Proper error handling
-        console.error(error);
+        Logger.error(error);
         errback(error);
       }
     });
 
     transport.on('produce', async ({ kind, rtpParameters }, callback, errback) => {
-      console.log('Send transport produce');
+      Logger.debug(`Produce event on Send Transport.`, rtpParameters);
 
       try {
         const { id } = await asyncEmit(this.socket, 'produce', {
-          transportId: transport.id,
           kind,
           rtpParameters
         });
-
         callback({ id });
       } catch (error) {
-        // TODO: Proper error handling
-        console.error(error);
+        Logger.error(error);
         errback(error);
       }
     });
-
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    const track = stream.getAudioTracks()[0];
-    const producer = await transport.produce({ track });
-
-    console.log(producer);
 
     return transport;
   }
 
   private async createRecvTransport(): Promise<mediasoup.types.Transport> {
-    console.log('create recvTransport');
+    Logger.debug(`Attempt to create Recv Transport.`);
 
-    const transportInfo = await asyncEmit(this.socket, 'createConsumerTransport', {
-      peerId: this.peerId,
-      roomId: this.roomId
-    });
+    let transportInfo;
 
-    console.log(transportInfo);
+    try {
+      transportInfo = await asyncEmit(this.socket, 'createConsumerTransport');
+    } catch (error) {
+      throwError(error);
+    }
+
+    Logger.debug(`Received Recv TransportInfo.`, transportInfo);
 
     const transport = this.device.createRecvTransport(transportInfo);
 
-    console.log(transport);
+    Logger.debug(`Created Recv Transport`, transport);
 
     transport.on('connect', async ({ dtlsParameters }, callback, errback) => {
-      console.log('Recv transport connect');
+      Logger.debug(`Connect event on Recv Transport.`, dtlsParameters);
 
       try {
-        await asyncEmit(this.socket, 'connectConsumerTransport', {
-          transportId: transport.id,
-          dtlsParameters
-        });
-        console.log('Recv connectWebRtcTransport.');
+        await asyncEmit(this.socket, 'connectConsumerTransport', { dtlsParameters });
         callback();
       } catch (error) {
-        // TODO: Proper error handling
-        console.error(error);
+        Logger.error(error);
         errback(error);
       }
     });
 
-    this.socket.on('newConsumer', async (params) => {
-      const consumer = await transport.consume({
-        ...params,
-        codecOptions: {}
-      });
-      const stream = new MediaStream();
-      stream.addTrack(consumer.track);
+    transport.on('connectionstatechange', async (state) => {
+      Logger.debug(`ConnectionStateChange event on Recv Transport.`, state);
 
-      transport.on('connectionstatechange', async (state) => {
-        console.log(state);
-        switch (state) {
-          case 'connected':
-            const video = document.createElement('video');
-            video.srcObject = stream;
-            video.autoplay = true;
-            video.controls = true;
-            video.playsInline = true;
-            //await socketRequest(socket, 'resume');
-            document.body.appendChild(video);
-            break;
-        }
-      });
+      // TODO: Implement
     });
 
     return transport;
   }
-/*
-  private async produce(): Promise<void> {
 
+  async produce(track: MediaStreamTrack): Promise<void> {
+    Logger.debug(`Attempt to produce.`, track);
+
+    if (!this.connected) {
+      throwError(new Error('Not connected.'));
+    }
+
+    if (!this.joined) {
+      throwError(new Error(`Not joined Room.`));
+    }
+
+    if (this.sendTransport === null) {
+      throwError(new Error('Send Transport is not initialized yet.'));
+    }
+
+    const producer = await this.sendTransport.produce({ track });
+
+    Logger.debug(`Received ProducerInfo`, producer);
   }
-*/
 }

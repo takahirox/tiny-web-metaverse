@@ -16133,7 +16133,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var mediasoup_client__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! mediasoup-client */ "../../node_modules/mediasoup-client/lib/index.js");
 /* harmony import */ var mediasoup_client__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(mediasoup_client__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var socket_io_client__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! socket.io-client */ "../../node_modules/socket.io-client/build/esm/index.js");
-/* harmony import */ var _socket_utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./socket_utils */ "./src/socket_utils.ts");
+/* harmony import */ var _logger__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./logger */ "./src/logger.ts");
+/* harmony import */ var _socket_utils__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./socket_utils */ "./src/socket_utils.ts");
 var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -16146,179 +16147,363 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
 
 
 
+
+// Helper
+const throwError = (error) => {
+    _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.error(error);
+    throw error;
+};
+// TODO: Proper error handling
 class Adapter {
-    static connect(serverUrl, roomId, peerId) {
-        return __awaiter(this, void 0, void 0, function* () {
-            console.log(`Room: ${roomId}, Peer: ${peerId}.`);
-            return new Promise((resolve, reject) => {
-                const socket = socket_io_client__WEBPACK_IMPORTED_MODULE_1__.io(serverUrl);
-                socket.on('connect', () => __awaiter(this, void 0, void 0, function* () {
-                    const success = yield (0,_socket_utils__WEBPACK_IMPORTED_MODULE_2__.asyncEmit)(socket, 'enter', {
-                        peerId: peerId,
-                        roomId: roomId
-                    });
-                    if (!success) {
-                        // TODO: Proper error handling
-                        reject(new Error('Failed to connect Room.'));
-                        return;
-                    }
-                    console.log('Succeeded with connecting Room');
-                    resolve(new Adapter(socket, new mediasoup_client__WEBPACK_IMPORTED_MODULE_0__.Device(), roomId, peerId));
-                }));
-                socket.on('disconnect', () => __awaiter(this, void 0, void 0, function* () {
-                    // TODO: Proper handling
-                    console.log('Disconnected from Room.');
-                }));
-            });
-        });
-    }
-    constructor(socket, device, roomId, peerId) {
-        this.socket = socket;
-        this.device = device;
-        this.roomId = roomId;
-        this.peerId = peerId;
+    constructor(serverUrl) {
+        _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.info(`Server URL: ${serverUrl}.`);
+        this.socket = socket_io_client__WEBPACK_IMPORTED_MODULE_1__.io(serverUrl, { autoConnect: false });
+        this.device = new mediasoup_client__WEBPACK_IMPORTED_MODULE_0__.Device();
+        this.connected = false;
+        this.joined = false;
         // Created when joinning
         this.sendTransport = null;
         this.recvTransport = null;
+        this.newPeerEventListener = null;
+        this.joinedPeerEventListener = null;
+        this.leftPeerEventListener = null;
+        this.exitedPeerEventListener = null;
+        this.newConsumerEventListener = null;
+        this.consumerInfoQueue = [];
     }
-    disconnect() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const success = yield (0,_socket_utils__WEBPACK_IMPORTED_MODULE_2__.asyncEmit)(this.socket, 'disconnect_room', {
-                peerId: this.peerId,
-                roomId: this.roomId
-            });
-            if (!success) {
+    connect(roomId, peerId) {
+        _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.info(`Connect Room ${roomId} as Peer ${peerId}.`);
+        if (this.connected) {
+            throwError(new Error('Already connected.'));
+        }
+        const socket = this.socket;
+        socket.connect();
+        return new Promise((resolve, reject) => {
+            socket.on('connect', () => __awaiter(this, void 0, void 0, function* () {
+                _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.debug('Connect event on Socket.');
+                let remotePeers;
+                try {
+                    remotePeers = yield (0,_socket_utils__WEBPACK_IMPORTED_MODULE_3__.asyncEmit)(socket, 'enter', { roomId, peerId });
+                }
+                catch (error) {
+                    _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.error(error);
+                    reject(error);
+                    return;
+                }
+                _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.info(`Succeeded with connecting Room ${roomId} as Peer ${peerId}`);
+                _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.debug(`Remote peers`, remotePeers);
+                this.connected = true;
+                resolve(remotePeers);
+            }));
+            socket.on('disconnect', () => __awaiter(this, void 0, void 0, function* () {
+                _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.debug('Disconnect event on Socket.');
+                // TODO: Proper handling
+                _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.info(`Disconnected from Room ${roomId}.`);
+                this.connected = false;
+            }));
+            socket.on('newPeer', (peerInfo) => __awaiter(this, void 0, void 0, function* () {
+                _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.debug(`newPeer event on Socket`, peerInfo);
+                if (this.newPeerEventListener !== null) {
+                    this.newPeerEventListener(peerInfo);
+                }
+            }));
+            socket.on('joinedPeer', (peerInfo) => __awaiter(this, void 0, void 0, function* () {
+                _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.debug(`joinedPeer event on Socket`, peerInfo);
+                if (this.joinedPeerEventListener !== null) {
+                    this.joinedPeerEventListener(peerInfo);
+                }
+            }));
+            socket.on('leftPeer', (peerInfo) => __awaiter(this, void 0, void 0, function* () {
+                _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.debug(`leftPeer event on Socket`, peerInfo);
+                if (this.leftPeerEventListener !== null) {
+                    this.leftPeerEventListener(peerInfo);
+                }
+            }));
+            socket.on('exitedPeer', (peerInfo) => __awaiter(this, void 0, void 0, function* () {
+                _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.debug(`exitedPeer event on Socket`, peerInfo);
+                if (this.exitedPeerEventListener !== null) {
+                    this.exitedPeerEventListener(peerInfo);
+                }
+            }));
+            socket.on('newConsumer', (consumerInfo) => __awaiter(this, void 0, void 0, function* () {
+                _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.debug('newConsumer event on Socket.', consumerInfo);
+                this.consumerInfoQueue.push(consumerInfo);
+                this.handleConsumerInfos();
+            }));
+        });
+    }
+    // TODO: Avoid any if possible
+    on(eventName, callback) {
+        switch (eventName) {
+            case 'newPeer':
+                this.newPeerEventListener = callback;
+                return;
+            case 'joinedPeer':
+                this.joinedPeerEventListener = callback;
+                return;
+            case 'leftPeer':
+                this.leftPeerEventListener = callback;
+                return;
+            case 'exitedPeer':
+                this.exitedPeerEventListener = callback;
+                return;
+            case 'newConsumer':
+                this.newConsumerEventListener = callback;
+                return;
+            default:
+                throw new Error(`Unknown event name ${eventName}.`);
+        }
+    }
+    handleConsumerInfos() {
+        if (this.recvTransport === null) {
+            return;
+        }
+        for (const consumerInfo of this.consumerInfoQueue) {
+            _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.debug(`Consume`, consumerInfo);
+            this.recvTransport.consume(Object.assign(Object.assign({}, consumerInfo), { codecOptions: {} })).then((consumer) => __awaiter(this, void 0, void 0, function* () {
+                _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.debug(`Consumer created`, consumer);
+                // Consumer is paused when created so resume here
+                yield (0,_socket_utils__WEBPACK_IMPORTED_MODULE_3__.asyncEmit)(this.socket, 'resumeConsumer', {
+                    consumerId: consumer.id
+                });
+                yield consumer.resume();
+                _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.debug(`Consumer resumed`, consumer);
+                if (this.newConsumerEventListener !== null) {
+                    this.newConsumerEventListener({ track: consumer.track, peerId: consumerInfo.producerPeerId });
+                }
                 // TODO: Proper error handling
-                throw new Error('Failed to disconnect from Room.');
+            })).catch(_logger__WEBPACK_IMPORTED_MODULE_2__.Logger.error);
+        }
+        this.consumerInfoQueue.length = 0;
+    }
+    exit() {
+        return __awaiter(this, void 0, void 0, function* () {
+            _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.debug(`Attempt to exit from Room.`);
+            if (this.connected) {
+                throwError(new Error('Not connected.'));
             }
-            console.log('Succeeded with disconnecting from Room.');
+            try {
+                yield (0,_socket_utils__WEBPACK_IMPORTED_MODULE_3__.asyncEmit)(this.socket, 'exit');
+            }
+            catch (error) {
+                throwError(error);
+            }
+            _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.info(`Succeeded with disconnecting from Room.`);
         });
     }
     join() {
         return __awaiter(this, void 0, void 0, function* () {
-            const routerRtpCapabilities = yield (0,_socket_utils__WEBPACK_IMPORTED_MODULE_2__.asyncEmit)(this.socket, 'getRouterRtpCapabilities', {
-                roomId: this.roomId
-            });
-            console.log(routerRtpCapabilities);
-            yield this.device.load({ routerRtpCapabilities });
-            const success = yield (0,_socket_utils__WEBPACK_IMPORTED_MODULE_2__.asyncEmit)(this.socket, 'join', {
-                peerId: this.peerId,
-                roomId: this.roomId,
-                rtpCapabilities: routerRtpCapabilities
-            });
-            if (!success) {
-                throw new Error('Failed to join Room.');
+            _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.debug(`Attempt to get routerRtpCapabilities of Room.`);
+            if (!this.connected) {
+                throwError(new Error('Not connected.'));
             }
-            console.log('Succeeded with joining Room');
-            this.sendTransport = yield this.createSendTransport();
-            this.recvTransport = yield this.createRecvTransport();
+            let routerRtpCapabilities;
+            try {
+                routerRtpCapabilities = yield (0,_socket_utils__WEBPACK_IMPORTED_MODULE_3__.asyncEmit)(this.socket, 'getRouterRtpCapabilities');
+            }
+            catch (error) {
+                throwError(error);
+            }
+            _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.debug(`Received routerRtpCapabilities.`, routerRtpCapabilities);
+            yield this.device.load({ routerRtpCapabilities });
+            _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.debug(`Attempt to join Room.`);
+            try {
+                yield (0,_socket_utils__WEBPACK_IMPORTED_MODULE_3__.asyncEmit)(this.socket, 'join', {
+                    rtpCapabilities: routerRtpCapabilities
+                });
+            }
+            catch (error) {
+                throwError(error);
+            }
+            _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.debug(`Succeeded with joining Room.`);
+            this.joined = true;
+            // TODO: Leave room if failed to create transports?
+            const pending = [];
+            pending.push(this.createSendTransport().then((transport) => {
+                this.sendTransport = transport;
+            }));
+            pending.push(this.createRecvTransport().then((transport) => {
+                this.recvTransport = transport;
+                //
+                this.handleConsumerInfos();
+            }));
+            yield Promise.all(pending);
         });
     }
     leave() {
-        if (this.sendTransport) {
-            this.sendTransport.close();
-            this.sendTransport = null;
-        }
-        if (this.recvTransport) {
-            this.recvTransport.close();
-            this.recvTransport = null;
-        }
+        return __awaiter(this, void 0, void 0, function* () {
+            _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.debug(`Attempt to leave Room.`);
+            if (!this.connected) {
+                throwError(new Error('Not connected.'));
+            }
+            if (!this.joined) {
+                throwError(new Error(`Not joined Room.`));
+            }
+            if (this.sendTransport) {
+                this.sendTransport.close();
+                this.sendTransport = null;
+            }
+            if (this.recvTransport) {
+                this.recvTransport.close();
+                this.recvTransport = null;
+            }
+            try {
+                yield (0,_socket_utils__WEBPACK_IMPORTED_MODULE_3__.asyncEmit)(this.socket, 'leave');
+            }
+            catch (error) {
+                throwError(error);
+            }
+        });
     }
     createSendTransport() {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log('create sentTransport');
-            const transportInfo = yield (0,_socket_utils__WEBPACK_IMPORTED_MODULE_2__.asyncEmit)(this.socket, 'createProducerTransport');
-            console.log(transportInfo);
+            _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.debug(`Attempt to create Send Transport.`);
+            let transportInfo;
+            try {
+                transportInfo = yield (0,_socket_utils__WEBPACK_IMPORTED_MODULE_3__.asyncEmit)(this.socket, 'createProducerTransport');
+            }
+            catch (error) {
+                throwError(error);
+            }
+            _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.debug(`Received Send TransportInfo.`, transportInfo);
             const transport = this.device.createSendTransport(transportInfo);
-            console.log(transport);
+            _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.debug(`Created Send Transport`, transport);
             transport.on('connect', ({ dtlsParameters }, callback, errback) => __awaiter(this, void 0, void 0, function* () {
-                console.log('Send transport connect');
+                _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.debug(`Connect event on Send Transport.`, dtlsParameters);
                 try {
-                    yield (0,_socket_utils__WEBPACK_IMPORTED_MODULE_2__.asyncEmit)(this.socket, 'connectProducerTransport', {
-                        transportId: transport.id,
-                        dtlsParameters
-                    });
-                    console.log('Send connectWebRtcTransport.');
+                    yield (0,_socket_utils__WEBPACK_IMPORTED_MODULE_3__.asyncEmit)(this.socket, 'connectProducerTransport', { dtlsParameters });
                     callback();
                 }
                 catch (error) {
-                    // TODO: Proper error handling
-                    console.error(error);
+                    _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.error(error);
                     errback(error);
                 }
             }));
             transport.on('produce', ({ kind, rtpParameters }, callback, errback) => __awaiter(this, void 0, void 0, function* () {
-                console.log('Send transport produce');
+                _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.debug(`Produce event on Send Transport.`, rtpParameters);
                 try {
-                    const { id } = yield (0,_socket_utils__WEBPACK_IMPORTED_MODULE_2__.asyncEmit)(this.socket, 'produce', {
-                        transportId: transport.id,
+                    const { id } = yield (0,_socket_utils__WEBPACK_IMPORTED_MODULE_3__.asyncEmit)(this.socket, 'produce', {
                         kind,
                         rtpParameters
                     });
                     callback({ id });
                 }
                 catch (error) {
-                    // TODO: Proper error handling
-                    console.error(error);
+                    _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.error(error);
                     errback(error);
                 }
             }));
-            const stream = yield navigator.mediaDevices.getUserMedia({ audio: true });
-            const track = stream.getAudioTracks()[0];
-            const producer = yield transport.produce({ track });
-            console.log(producer);
             return transport;
         });
     }
     createRecvTransport() {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log('create recvTransport');
-            const transportInfo = yield (0,_socket_utils__WEBPACK_IMPORTED_MODULE_2__.asyncEmit)(this.socket, 'createConsumerTransport', {
-                peerId: this.peerId,
-                roomId: this.roomId
-            });
-            console.log(transportInfo);
+            _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.debug(`Attempt to create Recv Transport.`);
+            let transportInfo;
+            try {
+                transportInfo = yield (0,_socket_utils__WEBPACK_IMPORTED_MODULE_3__.asyncEmit)(this.socket, 'createConsumerTransport');
+            }
+            catch (error) {
+                throwError(error);
+            }
+            _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.debug(`Received Recv TransportInfo.`, transportInfo);
             const transport = this.device.createRecvTransport(transportInfo);
-            console.log(transport);
+            _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.debug(`Created Recv Transport`, transport);
             transport.on('connect', ({ dtlsParameters }, callback, errback) => __awaiter(this, void 0, void 0, function* () {
-                console.log('Recv transport connect');
+                _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.debug(`Connect event on Recv Transport.`, dtlsParameters);
                 try {
-                    yield (0,_socket_utils__WEBPACK_IMPORTED_MODULE_2__.asyncEmit)(this.socket, 'connectConsumerTransport', {
-                        transportId: transport.id,
-                        dtlsParameters
-                    });
-                    console.log('Recv connectWebRtcTransport.');
+                    yield (0,_socket_utils__WEBPACK_IMPORTED_MODULE_3__.asyncEmit)(this.socket, 'connectConsumerTransport', { dtlsParameters });
                     callback();
                 }
                 catch (error) {
-                    // TODO: Proper error handling
-                    console.error(error);
+                    _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.error(error);
                     errback(error);
                 }
             }));
-            this.socket.on('newConsumer', (params) => __awaiter(this, void 0, void 0, function* () {
-                const consumer = yield transport.consume(Object.assign(Object.assign({}, params), { codecOptions: {} }));
-                const stream = new MediaStream();
-                stream.addTrack(consumer.track);
-                transport.on('connectionstatechange', (state) => __awaiter(this, void 0, void 0, function* () {
-                    console.log(state);
-                    switch (state) {
-                        case 'connected':
-                            const video = document.createElement('video');
-                            video.srcObject = stream;
-                            video.autoplay = true;
-                            video.controls = true;
-                            video.playsInline = true;
-                            //await socketRequest(socket, 'resume');
-                            document.body.appendChild(video);
-                            break;
-                    }
-                }));
+            transport.on('connectionstatechange', (state) => __awaiter(this, void 0, void 0, function* () {
+                _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.debug(`ConnectionStateChange event on Recv Transport.`, state);
+                // TODO: Implement
             }));
             return transport;
         });
     }
+    produce(track) {
+        return __awaiter(this, void 0, void 0, function* () {
+            _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.debug(`Attempt to produce.`, track);
+            if (!this.connected) {
+                throwError(new Error('Not connected.'));
+            }
+            if (!this.joined) {
+                throwError(new Error(`Not joined Room.`));
+            }
+            if (this.sendTransport === null) {
+                throwError(new Error('Send Transport is not initialized yet.'));
+            }
+            const producer = yield this.sendTransport.produce({ track });
+            _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.debug(`Received ProducerInfo`, producer);
+        });
+    }
 }
+
+
+/***/ }),
+
+/***/ "./src/logger.ts":
+/*!***********************!*\
+  !*** ./src/logger.ts ***!
+  \***********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   LogLevel: () => (/* binding */ LogLevel),
+/* harmony export */   Logger: () => (/* binding */ Logger)
+/* harmony export */ });
+var LogLevel;
+(function (LogLevel) {
+    LogLevel[LogLevel["debug"] = 0] = "debug";
+    LogLevel[LogLevel["info"] = 1] = "info";
+    LogLevel[LogLevel["log"] = 2] = "log";
+    LogLevel[LogLevel["warn"] = 3] = "warn";
+    LogLevel[LogLevel["error"] = 4] = "error";
+    LogLevel[LogLevel["none"] = 5] = "none";
+})(LogLevel || (LogLevel = {}));
+;
+const timestamp = () => {
+    return (performance.now() * 1000).toFixed(0);
+};
+class Logger {
+    static setLevel(level) {
+        Logger.level = level;
+    }
+    static debug(message, ...others) {
+        if (LogLevel.debug >= Logger.level) {
+            console.debug(`[debug:${timestamp()}]`, message, others);
+        }
+    }
+    static info(message, ...others) {
+        if (LogLevel.info >= Logger.level) {
+            console.info(`[info:${timestamp()}]`, message, others);
+        }
+    }
+    static log(message, ...others) {
+        if (LogLevel.log >= Logger.level) {
+            console.log(`[log:${timestamp()}]`, message, others);
+        }
+    }
+    static warn(message, ...others) {
+        if (LogLevel.warn >= Logger.level) {
+            console.warn(`[warn:${timestamp()}]`, message, others);
+        }
+    }
+    static error(message, ...others) {
+        if (LogLevel.error >= Logger.level) {
+            console.error(`[error:${timestamp()}]`, message, others);
+        }
+    }
+}
+Logger.level = LogLevel.debug;
 
 
 /***/ }),
@@ -16334,12 +16519,24 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   asyncEmit: () => (/* binding */ asyncEmit)
 /* harmony export */ });
-// TODO: Avoid any if possible
-const asyncEmit = (socket, eventName, data = {}) => {
-    return new Promise((resolve) => {
-        socket.emit(eventName, data, resolve);
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+const TIMEOUT = 5000;
+// TODO: Avoid any if possible
+const asyncEmit = (socket, eventName, data = {}) => __awaiter(void 0, void 0, void 0, function* () {
+    const response = yield socket.timeout(TIMEOUT).emitWithAck(eventName, data);
+    if (response && response.error) {
+        throw new Error(response.error);
+    }
+    return response;
+});
 
 
 /***/ }),
