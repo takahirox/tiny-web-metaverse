@@ -17,9 +17,9 @@ module.exports = [
         }
       ]
     },
-    name: "main",
+    name: "state_client",
     output: {
-      filename: 'tiny-web-metaverse-client.bundle.js',
+      filename: 'state_client.bundle.js',
       path: path.resolve(__dirname, 'dist')
     },
     resolve: {
@@ -41,7 +41,7 @@ module.exports = [
       }
     },
     devtool: false,
-    entry: './examples/apps/app.ts',
+    entry: './examples/index.ts',
     mode: mode,
     module: {
       rules: [
@@ -54,8 +54,8 @@ module.exports = [
     },
     name: "examples",
     output: {
-      filename: 'example.bundle.js',
-      path: path.resolve(__dirname, 'examples', 'dist')
+      filename: 'app.bundle.js',
+      path: path.resolve(__dirname, 'examples', 'build')
     },
     resolve: {
       extensions: [
@@ -63,40 +63,6 @@ module.exports = [
         '.ts',
         '.tsx'
       ]
-    }
-  },
-  {
-    devtool: false,
-    entry: './webrtc_server/src/index.ts',
-    mode: mode,
-    module: {
-      rules: [
-        {
-          test: /\.tsx?$/,
-          use: 'ts-loader',
-          exclude: /node_modules/
-        }
-      ]
-    },
-    name: "webrtc_server",
-    output: {
-      filename: 'webrtc_server.bundle.js',
-      path: path.resolve(__dirname, 'webrtc_server', 'dist')
-    },
-    plugins: [
-      new NodePolyfillPlugin()
-    ],
-    resolve: {
-      extensions: [
-        '.js',
-        '.ts',
-        '.tsx'
-      ],
-      fallback: {
-        async_hooks: false,
-        fs: false,
-        net: false
-      }
     }
   }
 ];

@@ -1,0 +1,29 @@
+{
+  "author": "Takahiro <hogehoge@gachapin.jp>",
+  "bugs": {
+    "url": "https://github.com/takahirox/tiny-web-metaverse/issues"
+  },
+  "dependencies": {
+  },
+  "description": "Tiny Web metaverse State client",
+  "devDependencies": {
+    "@types/phoenix": "^1.5.6",
+    "phoenix": "^1.7.2",
+    "webpack-dev-server": "^4.13.3"
+  },
+  "homepage": "https://github.com/takahirox/tiny-web-metaverse#readme",
+  "license": "MIT",
+  "name": "@tiny-web-metaverse/state_client",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/takahirox/tiny-web-metaverse.git"
+  },
+  "scripts": {
+    "build": "webpack",
+    "server": "webpack serve --config-name examples",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "webpack --watch"
+  },
+  "version": "0.0.1"
+}

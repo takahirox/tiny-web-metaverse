@@ -14,13 +14,10 @@
   },
   "include": [
     "src/**/*",
-    "examples/**/*",
-    "webrtc_server/src/**/*"
+    "examples/**/*"
   ],
   "exclude": [
     "node_modules",
-    "examples/dist/*",
-    "webrtc_server/node_modules",
-    "webrtc_server/dist"
+    "examples/dist/*"
   ]
 }
