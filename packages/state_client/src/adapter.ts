@@ -3,7 +3,7 @@ import { Channel, Socket } from "phoenix";
 // TODO: Avoid any
 type Callback = (payload?: any) => void;
 
-export class PhoenixAdapter {	
+export class Adapter {	
   private channel: Channel;
   // Expects one listener per one event
   private eventListenerMap: Map<string, number>;
@@ -25,11 +25,11 @@ export class PhoenixAdapter {
     this.channel = socket.channel(topic, {user_id: this.userId});
     this.channel.join()
       .receive('ok', res => {
-        console.log('PhoenixAdapter: Joined successfully', res);
+        console.log('Adapter: Joined successfully', res);
       })
       .receive('error', res => {
         // TODO: Proper error handling
-        console.error('PhoenixAdapter: Unable to join', res);
+        console.error('Adapter: Unable to join', res);
       })
 
     this.eventListenerMap = new Map();

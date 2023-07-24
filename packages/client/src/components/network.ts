@@ -5,7 +5,7 @@ import {
   IWorld,
   removeComponent
 } from "bitecs";
-import { PhoenixAdapter } from "../utils/phoenix_adapter";
+import { Adapter } from "@tiny-web-metaverse/state_client/src/index";
 import { NULL_EID } from "../common";
 
 export enum NetworkMessageType {
@@ -195,7 +195,7 @@ export const NetworkEvent = defineComponent();
 const NetworkEventMap = new Map<number, NetworkEventValue[]>();
 
 // TODO: Allow other network adapter type
-type NetworkAdapterValue = PhoenixAdapter;
+type NetworkAdapterValue = Adapter;
 
 export const NetworkAdapter = defineComponent();
 const NetworkAdapterMap = new Map<number, NetworkAdapterValue>;

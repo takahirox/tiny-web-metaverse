@@ -1,6 +1,61 @@
-/******/ (() => { // webpackBootstrap
-/******/ 	"use strict";
-/******/ 	var __webpack_modules__ = ({
+/******/ var __webpack_modules__ = ({
+
+/***/ "./src/adapter.ts":
+/*!************************!*\
+  !*** ./src/adapter.ts ***!
+  \************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Adapter: () => (/* binding */ Adapter)
+/* harmony export */ });
+/* harmony import */ var phoenix__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! phoenix */ "../../node_modules/phoenix/priv/static/phoenix.mjs");
+
+class Adapter {
+    constructor(params) {
+        const url = params.url || 'ws://localhost:4000/socket';
+        const topic = params.topic || 'room:lobby';
+        this.userId = params.userId;
+        const socket = new phoenix__WEBPACK_IMPORTED_MODULE_0__.Socket(url, {});
+        socket.connect();
+        // TODO: Resolve user id conflicts. Generate UUID in server side?
+        this.channel = socket.channel(topic, { user_id: this.userId });
+        this.channel.join()
+            .receive('ok', res => {
+            console.log('Adapter: Joined successfully', res);
+        })
+            .receive('error', res => {
+            // TODO: Proper error handling
+            console.error('Adapter: Unable to join', res);
+        });
+        this.eventListenerMap = new Map();
+    }
+    addEventListener(name, callback) {
+        if (this.eventListenerMap.has(name)) {
+            // TODO: Error handling
+            return;
+        }
+        const ref = this.channel.on(name, callback);
+        this.eventListenerMap.set(name, ref);
+    }
+    removeEventListener(name) {
+        if (!this.eventListenerMap.has(name)) {
+            // TODO: Error handling
+            return;
+        }
+        const ref = this.eventListenerMap.get(name);
+        this.channel.off(name, ref);
+        this.eventListenerMap.delete(name);
+    }
+    // TODO: Avoid any
+    push(name, data) {
+        this.channel.push(name, data);
+    }
+}
+
+
+/***/ }),
 
 /***/ "../../node_modules/phoenix/priv/static/phoenix.mjs":
 /*!**********************************************************!*\
@@ -1168,61 +1223,61 @@ var Socket = class {
 
 /***/ })
 
-/******/ 	});
+/******/ });
 /************************************************************************/
-/******/ 	// The module cache
-/******/ 	var __webpack_module_cache__ = {};
-/******/ 	
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/ 		// Check if module is in cache
-/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
-/******/ 		if (cachedModule !== undefined) {
-/******/ 			return cachedModule.exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			// no module.id needed
-/******/ 			// no module.loaded needed
-/******/ 			exports: {}
-/******/ 		};
-/******/ 	
-/******/ 		// Execute the module function
-/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/ 	
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
+/******/ // The module cache
+/******/ var __webpack_module_cache__ = {};
+/******/ 
+/******/ // The require function
+/******/ function __webpack_require__(moduleId) {
+/******/ 	// Check if module is in cache
+/******/ 	var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 	if (cachedModule !== undefined) {
+/******/ 		return cachedModule.exports;
 /******/ 	}
-/******/ 	
+/******/ 	// Create a new module (and put it into the cache)
+/******/ 	var module = __webpack_module_cache__[moduleId] = {
+/******/ 		// no module.id needed
+/******/ 		// no module.loaded needed
+/******/ 		exports: {}
+/******/ 	};
+/******/ 
+/******/ 	// Execute the module function
+/******/ 	__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 
+/******/ 	// Return the exports of the module
+/******/ 	return module.exports;
+/******/ }
+/******/ 
 /************************************************************************/
-/******/ 	/* webpack/runtime/define property getters */
-/******/ 	(() => {
-/******/ 		// define getter functions for harmony exports
-/******/ 		__webpack_require__.d = (exports, definition) => {
-/******/ 			for(var key in definition) {
-/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
+/******/ /* webpack/runtime/define property getters */
+/******/ (() => {
+/******/ 	// define getter functions for harmony exports
+/******/ 	__webpack_require__.d = (exports, definition) => {
+/******/ 		for(var key in definition) {
+/******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
 /******/ 			}
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/make namespace object */
-/******/ 	(() => {
-/******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 			}
-/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 		};
-/******/ 	})();
-/******/ 	
+/******/ 		}
+/******/ 	};
+/******/ })();
+/******/ 
+/******/ /* webpack/runtime/hasOwnProperty shorthand */
+/******/ (() => {
+/******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ })();
+/******/ 
+/******/ /* webpack/runtime/make namespace object */
+/******/ (() => {
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = (exports) => {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/ })();
+/******/ 
 /************************************************************************/
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
@@ -1232,67 +1287,12 @@ var __webpack_exports__ = {};
   \**********************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   Adapter: () => (/* binding */ Adapter),
-/* harmony export */   MessageType: () => (/* binding */ MessageType)
+/* harmony export */   Adapter: () => (/* reexport safe */ _adapter__WEBPACK_IMPORTED_MODULE_0__.Adapter)
 /* harmony export */ });
-/* harmony import */ var phoenix__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! phoenix */ "../../node_modules/phoenix/priv/static/phoenix.mjs");
+/* harmony import */ var _adapter__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./adapter */ "./src/adapter.ts");
 
-var MessageType;
-(function (MessageType) {
-    MessageType["AddComponent"] = "add_component";
-    MessageType["CreateEntity"] = "create_entity";
-    MessageType["RemoveEntity"] = "remove_entity";
-    MessageType["RemoveComponent"] = "remove_component";
-    MessageType["TextMessage"] = "text_message";
-    MessageType["UpdateComponent"] = "update_component";
-    MessageType["UserJoined"] = "user_joined";
-    MessageType["UserLeft"] = "user_left";
-    MessageType["UserList"] = "user_list";
-})(MessageType || (MessageType = {}));
-;
-class Adapter {
-    constructor(params) {
-        const url = params.url || 'ws://localhost:4000/socket';
-        const topic = params.topic || 'room:lobby';
-        this.userId = params.userId;
-        const socket = new phoenix__WEBPACK_IMPORTED_MODULE_0__.Socket(url, {});
-        socket.connect();
-        // TODO: Resolve user id conflicts. Generate UUID in server side?
-        this.channel = socket.channel(topic, { user_id: this.userId });
-        this.channel.join()
-            .receive('ok', res => {
-            console.log('Adapter: Joined successfully', res);
-        })
-            .receive('error', res => {
-            // TODO: Proper error handling
-            console.error('Adapter: Unable to join', res);
-        });
-        this.eventListenerMap = new Map();
-    }
-    addEventListener(name, callback) {
-        if (this.eventListenerMap.has(name)) {
-            // TODO: Error handling
-            return;
-        }
-        const ref = this.channel.on(name, callback);
-        this.eventListenerMap.set(name, ref);
-    }
-    removeEventListener(name) {
-        if (!this.eventListenerMap.has(name)) {
-            // TODO: Error handling
-            return;
-        }
-        const ref = this.eventListenerMap.get(name);
-        this.channel.off(name, ref);
-        this.eventListenerMap.delete(name);
-    }
-    // TODO: Avoid any
-    push(name, data) {
-        this.channel.push(name, data);
-    }
-}
 
 })();
 
-/******/ })()
-;
+var __webpack_exports__Adapter = __webpack_exports__.Adapter;
+export { __webpack_exports__Adapter as Adapter };

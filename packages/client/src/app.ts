@@ -6,6 +6,7 @@ import {
   IWorld
 } from "bitecs";
 import { MathUtils, Raycaster } from "three";
+import { Adapter as PhoenixAdapter } from "@tiny-web-metaverse/state_client";
 import {
   Prefab,
   PrefabMap,
@@ -96,7 +97,6 @@ import {
   windowResizeEventHandleSystem,
   windowResizeEventClearSystem
 } from "./systems/window_resize_event";
-import { PhoenixAdapter } from "./utils/phoenix_adapter";
 
 type RegisteredSystem = {
   system: System;

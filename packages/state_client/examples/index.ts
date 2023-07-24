@@ -1,4 +1,4 @@
-import { Adapter, MessageType } from "../src/index";
+import { Adapter } from "../src/adapter";
 
 const SERVER_URL = 'ws://localhost:4000/socket';
 
@@ -11,6 +11,6 @@ const adapter = new Adapter({
   userId: createPeerId()
 });
 
-adapter.addEventListener(MessageType.UserJoined, (payload) => {
+adapter.addEventListener('user_joined', (payload) => {
   console.log(payload);	
 });

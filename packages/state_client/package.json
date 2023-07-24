@@ -13,6 +13,7 @@
   },
   "homepage": "https://github.com/takahirox/tiny-web-metaverse#readme",
   "license": "MIT",
+  "module": "./dist/state_client.bundle.js",
   "name": "@tiny-web-metaverse/state_client",
   "private": true,
   "repository": {
@@ -25,5 +26,6 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "webpack --watch"
   },
+  "types": "./dist/state_client.bundle.d.ts",
   "version": "0.0.1"
 }
