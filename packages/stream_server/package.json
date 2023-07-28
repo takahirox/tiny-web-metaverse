@@ -23,9 +23,11 @@
   },
   "scripts": {
     "build": "webpack",
-    "test": "echo \"Error: no test specified\" && exit 1",
     "server": "npm run build && cross-env MEDIASOUP_WORKER_BIN=../../node_modules/mediasoup/worker/out/Release/mediasoup-worker node ./dist/stream_server.bundle.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "type": "dts-bundle-generator -o ./dist/stream_server.bundle.d.ts ./src/index.ts",
     "watch": "webpack --watch"
   },
+  "types": "./dist/stream_server.bundle.d.ts",
   "version": "0.0.1"
 }

@@ -1,5 +1,4 @@
 /******/ (() => { // webpackBootstrap
-/******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
 /***/ "./src/app.ts":
@@ -8,6 +7,7 @@
   \********************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   App: () => (/* binding */ App)
@@ -15,6 +15,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var three__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! three */ "../../node_modules/three/build/three.module.js");
 /* harmony import */ var _tiny_web_metaverse_state_client__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @tiny-web-metaverse/state_client */ "../state_client/dist/state_client.bundle.js");
+/* harmony import */ var _tiny_web_metaverse_state_client__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_tiny_web_metaverse_state_client__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./common */ "./src/common.ts");
 /* harmony import */ var _components_avatar_mouse_controls__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/avatar_mouse_controls */ "./src/components/avatar_mouse_controls.ts");
 /* harmony import */ var _components_entity_object3d__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/entity_object3d */ "./src/components/entity_object3d.ts");
@@ -284,6 +285,7 @@ class App {
   \***********************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   F32_EPSILON: () => (/* binding */ F32_EPSILON),
@@ -321,6 +323,7 @@ const F32_EPSILON = 0.00001;
   \**********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Avatar: () => (/* binding */ Avatar)
@@ -338,6 +341,7 @@ const Avatar = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
   \*************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   AvatarMouseControls: () => (/* binding */ AvatarMouseControls),
@@ -383,6 +387,7 @@ AvatarMouseControlsProxy.instance = new AvatarMouseControlsProxy();
   \**********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   FpsCamera: () => (/* binding */ FpsCamera),
@@ -470,6 +475,7 @@ PerspectiveCameraProxy.instance = new PerspectiveCameraProxy();
   \*******************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   EntityObject3D: () => (/* binding */ EntityObject3D),
@@ -600,6 +606,7 @@ EntityObject3DProxy.instance = new EntityObject3DProxy();
   \********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Grabbable: () => (/* binding */ Grabbable),
@@ -622,6 +629,7 @@ const Grabbed = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({
   \************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   KeyEvent: () => (/* binding */ KeyEvent),
@@ -713,6 +721,7 @@ KeyEventProxy.instance = new KeyEventProxy();
   \***************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   LinearMoveBackward: () => (/* binding */ LinearMoveBackward),
@@ -736,6 +745,7 @@ const LinearMoveRight = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)(
   \********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   LinearRotate: () => (/* binding */ LinearRotate),
@@ -773,6 +783,7 @@ const LinearScale = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({
   \*********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   MouseButtonEvent: () => (/* binding */ MouseButtonEvent),
@@ -1054,6 +1065,7 @@ PreviousMousePositionProxy.instance = new PreviousMousePositionProxy();
   \***********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   ComponentNetworkEventListener: () => (/* binding */ ComponentNetworkEventListener),
@@ -1353,6 +1365,7 @@ NetworkedEntityManagerProxy.instance = new NetworkedEntityManagerProxy();
   \***********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Raycastable: () => (/* binding */ Raycastable),
@@ -1401,6 +1414,7 @@ RaycasterProxy.instance = new RaycasterProxy();
   \************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Renderer: () => (/* binding */ Renderer),
@@ -1484,6 +1498,7 @@ RendererProxy.instance = new RendererProxy();
   \*********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   InScene: () => (/* binding */ InScene),
@@ -1555,6 +1570,7 @@ SceneProxy.instance = new SceneProxy();
   \**********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Selectable: () => (/* binding */ Selectable),
@@ -1574,6 +1590,7 @@ const Selected = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
   \********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Time: () => (/* binding */ Time),
@@ -1636,6 +1653,7 @@ TimeProxy.instance = new TimeProxy();
   \*************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   TransformUpdated: () => (/* binding */ TransformUpdated)
@@ -1653,6 +1671,7 @@ const TransformUpdated = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)
   \*****************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   WindowResizeEvent: () => (/* binding */ WindowResizeEvent),
@@ -1706,6 +1725,7 @@ WindowResizeEventHandlerProxy.instance = new WindowResizeEventHandlerProxy();
   \*****************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   positionSerializers: () => (/* binding */ positionSerializers),
@@ -1892,6 +1912,7 @@ const scaleSerializers = {
   \********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   avatarKeyControlsSystem: () => (/* binding */ avatarKeyControlsSystem)
@@ -1967,6 +1988,7 @@ const avatarKeyControlsSystem = (world) => {
   \**********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   avatarMouseControlsSystem: () => (/* binding */ avatarMouseControlsSystem)
@@ -2059,6 +2081,7 @@ const avatarMouseControlsSystem = (world) => {
   \***********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   fpsCameraSystem: () => (/* binding */ fpsCameraSystem)
@@ -2102,6 +2125,7 @@ const fpsCameraSystem = (world) => {
   \*****************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   grabSystem: () => (/* binding */ grabSystem)
@@ -2144,6 +2168,7 @@ const grabSystem = (world) => {
   \*****************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   grabbedObjectsMouseTrackSystem: () => (/* binding */ grabbedObjectsMouseTrackSystem)
@@ -2198,6 +2223,7 @@ const grabbedObjectsMouseTrackSystem = (world) => {
   \***************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   keyEventClearSystem: () => (/* binding */ keyEventClearSystem),
@@ -2251,6 +2277,7 @@ const keyEventClearSystem = (world) => {
   \************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   linearMoveSystem: () => (/* binding */ linearMoveSystem)
@@ -2309,6 +2336,7 @@ const linearMoveSystem = (world) => {
   \*****************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   linearTransformSystem: () => (/* binding */ linearTransformSystem)
@@ -2397,6 +2425,7 @@ const linearTransformSystem = (world) => {
   \*******************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   mouseButtonEventClearSystem: () => (/* binding */ mouseButtonEventClearSystem),
@@ -2468,6 +2497,7 @@ const mouseButtonEventClearSystem = (world) => {
   \*****************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   mouseMoveEventClearSystem: () => (/* binding */ mouseMoveEventClearSystem),
@@ -2517,6 +2547,7 @@ const mouseMoveEventClearSystem = (world) => {
   \*********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   mousePositionTrackSystem: () => (/* binding */ mousePositionTrackSystem)
@@ -2548,6 +2579,7 @@ const mousePositionTrackSystem = (world) => {
   \**************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   mouseRaycastSystem: () => (/* binding */ mouseRaycastSystem)
@@ -2623,6 +2655,7 @@ const mouseRaycastSystem = (world) => {
   \*************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   mouseSelectSystem: () => (/* binding */ mouseSelectSystem)
@@ -2663,6 +2696,7 @@ const mouseSelectSystem = (world) => {
   \**************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   networkEventClearSystem: () => (/* binding */ networkEventClearSystem),
@@ -2754,6 +2788,7 @@ const networkEventClearSystem = (world) => {
   \*************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   networkSendSystem: () => (/* binding */ networkSendSystem)
@@ -2871,6 +2906,7 @@ const networkSendSystem = (world, { serializerKeys, serializers }) => {
   \**********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   networkedSystem: () => (/* binding */ networkedSystem)
@@ -2920,6 +2956,7 @@ const networkedSystem = (world) => {
   \*****************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   networkedEntitySystem: () => (/* binding */ networkedEntitySystem)
@@ -3046,6 +3083,7 @@ const networkedEntitySystem = (world, { prefabs, serializers }) => {
   \*******************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   perspectiveCameraSystem: () => (/* binding */ perspectiveCameraSystem)
@@ -3098,6 +3136,7 @@ const perspectiveCameraSystem = (world) => {
   \********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   clearRaycastedSystem: () => (/* binding */ clearRaycastedSystem)
@@ -3122,6 +3161,7 @@ const clearRaycastedSystem = (world) => {
   \*******************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   renderSystem: () => (/* binding */ renderSystem)
@@ -3162,6 +3202,7 @@ const renderSystem = (world) => {
   \*********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   rendererSystem: () => (/* binding */ rendererSystem)
@@ -3213,6 +3254,7 @@ const rendererSystem = (world) => {
   \******************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   sceneSystem: () => (/* binding */ sceneSystem)
@@ -3261,6 +3303,7 @@ const sceneSystem = (world) => {
   \*****************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   timeSystem: () => (/* binding */ timeSystem)
@@ -3296,6 +3339,7 @@ const timeSystem = (world) => {
   \**********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   clearTransformUpdatedSystem: () => (/* binding */ clearTransformUpdatedSystem)
@@ -3320,6 +3364,7 @@ const clearTransformUpdatedSystem = (world) => {
   \****************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   updateMatricesSystem: () => (/* binding */ updateMatricesSystem)
@@ -3345,6 +3390,7 @@ const updateMatricesSystem = (world) => {
   \********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   windowResizeEventClearSystem: () => (/* binding */ windowResizeEventClearSystem),
@@ -3389,25 +3435,23 @@ const windowResizeEventClearSystem = (world) => {
 /*!***************************************************!*\
   !*** ../state_client/dist/state_client.bundle.js ***!
   \***************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/***/ (() => {
 
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   Adapter: () => (/* binding */ __webpack_exports__Adapter)
-/* harmony export */ });
-/******/ var __webpack_modules__ = ({
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+/******/ 	var __webpack_modules__ = ({
 
 /***/ "./src/adapter.ts":
 /*!************************!*\
   !*** ./src/adapter.ts ***!
   \************************/
-/***/ ((__unused_webpack_module, __nested_webpack_exports__, __nested_webpack_require_208__) => {
+/***/ ((__unused_webpack_module, __nested_webpack_exports__, __nested_webpack_require_271__) => {
 
-__nested_webpack_require_208__.r(__nested_webpack_exports__);
-/* harmony export */ __nested_webpack_require_208__.d(__nested_webpack_exports__, {
+__nested_webpack_require_271__.r(__nested_webpack_exports__);
+/* harmony export */ __nested_webpack_require_271__.d(__nested_webpack_exports__, {
 /* harmony export */   Adapter: () => (/* binding */ Adapter)
 /* harmony export */ });
-/* harmony import */ var phoenix__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_208__(/*! phoenix */ "../../node_modules/phoenix/priv/static/phoenix.mjs");
+/* harmony import */ var phoenix__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_271__(/*! phoenix */ "../../node_modules/phoenix/priv/static/phoenix.mjs");
 
 class Adapter {
     constructor(params) {
@@ -3458,10 +3502,10 @@ class Adapter {
 /*!**********************************************************!*\
   !*** ../../node_modules/phoenix/priv/static/phoenix.mjs ***!
   \**********************************************************/
-/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_2382__) => {
+/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_2445__) => {
 
-__nested_webpack_require_2382__.r(__nested_webpack_exports__);
-/* harmony export */ __nested_webpack_require_2382__.d(__nested_webpack_exports__, {
+__nested_webpack_require_2445__.r(__nested_webpack_exports__);
+/* harmony export */ __nested_webpack_require_2445__.d(__nested_webpack_exports__, {
 /* harmony export */   Channel: () => (/* binding */ Channel),
 /* harmony export */   LongPoll: () => (/* binding */ LongPoll),
 /* harmony export */   Presence: () => (/* binding */ Presence),
@@ -4620,61 +4664,61 @@ var Socket = class {
 
 /***/ })
 
-/******/ });
+/******/ 	});
 /************************************************************************/
-/******/ // The module cache
-/******/ var __webpack_module_cache__ = {};
-/******/ 
-/******/ // The require function
-/******/ function __nested_webpack_require_38807__(moduleId) {
-/******/ 	// Check if module is in cache
-/******/ 	var cachedModule = __webpack_module_cache__[moduleId];
-/******/ 	if (cachedModule !== undefined) {
-/******/ 		return cachedModule.exports;
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __nested_webpack_require_38876__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __nested_webpack_require_38876__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
 /******/ 	}
-/******/ 	// Create a new module (and put it into the cache)
-/******/ 	var module = __webpack_module_cache__[moduleId] = {
-/******/ 		// no module.id needed
-/******/ 		// no module.loaded needed
-/******/ 		exports: {}
-/******/ 	};
-/******/ 
-/******/ 	// Execute the module function
-/******/ 	__webpack_modules__[moduleId](module, module.exports, __nested_webpack_require_38807__);
-/******/ 
-/******/ 	// Return the exports of the module
-/******/ 	return module.exports;
-/******/ }
-/******/ 
+/******/ 	
 /************************************************************************/
-/******/ /* webpack/runtime/define property getters */
-/******/ (() => {
-/******/ 	// define getter functions for harmony exports
-/******/ 	__nested_webpack_require_38807__.d = (exports, definition) => {
-/******/ 		for(var key in definition) {
-/******/ 			if(__nested_webpack_require_38807__.o(definition, key) && !__nested_webpack_require_38807__.o(exports, key)) {
-/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__nested_webpack_require_38876__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__nested_webpack_require_38876__.o(definition, key) && !__nested_webpack_require_38876__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
 /******/ 			}
-/******/ 		}
-/******/ 	};
-/******/ })();
-/******/ 
-/******/ /* webpack/runtime/hasOwnProperty shorthand */
-/******/ (() => {
-/******/ 	__nested_webpack_require_38807__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ })();
-/******/ 
-/******/ /* webpack/runtime/make namespace object */
-/******/ (() => {
-/******/ 	// define __esModule on exports
-/******/ 	__nested_webpack_require_38807__.r = (exports) => {
-/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 	};
-/******/ })();
-/******/ 
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__nested_webpack_require_38876__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__nested_webpack_require_38876__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /************************************************************************/
 var __nested_webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
@@ -4682,18 +4726,17 @@ var __nested_webpack_exports__ = {};
 /*!**********************!*\
   !*** ./src/index.ts ***!
   \**********************/
-__nested_webpack_require_38807__.r(__nested_webpack_exports__);
-/* harmony export */ __nested_webpack_require_38807__.d(__nested_webpack_exports__, {
+__nested_webpack_require_38876__.r(__nested_webpack_exports__);
+/* harmony export */ __nested_webpack_require_38876__.d(__nested_webpack_exports__, {
 /* harmony export */   Adapter: () => (/* reexport safe */ _adapter__WEBPACK_IMPORTED_MODULE_0__.Adapter)
 /* harmony export */ });
-/* harmony import */ var _adapter__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_38807__(/*! ./adapter */ "./src/adapter.ts");
+/* harmony import */ var _adapter__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_38876__(/*! ./adapter */ "./src/adapter.ts");
 
 
 })();
 
-var __webpack_exports__Adapter = __nested_webpack_exports__.Adapter;
-
-
+/******/ })()
+;
 
 /***/ }),
 
@@ -4703,6 +4746,7 @@ var __webpack_exports__Adapter = __nested_webpack_exports__.Adapter;
   \************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Changed: () => (/* binding */ Changed),
@@ -5782,6 +5826,7 @@ var Types = TYPES_ENUM;
   \******************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   ACESFilmicToneMapping: () => (/* binding */ ACESFilmicToneMapping),
@@ -57261,6 +57306,18 @@ if ( typeof window !== 'undefined' ) {
 /******/ 	}
 /******/ 	
 /************************************************************************/
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__webpack_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
+/******/ 			__webpack_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
@@ -57291,16 +57348,18 @@ if ( typeof window !== 'undefined' ) {
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+// This entry need to be wrapped in an IIFE because it need to be in strict mode.
 (() => {
+"use strict";
 /*!**********************!*\
   !*** ./src/index.ts ***!
   \**********************/
 __webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   App: () => (/* reexport safe */ _app__WEBPACK_IMPORTED_MODULE_0__.App)
+/* harmony export */ });
 /* harmony import */ var _app__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./app */ "./src/app.ts");
 
-const app = new _app__WEBPACK_IMPORTED_MODULE_0__.App();
-app.start();
 
 })();
 

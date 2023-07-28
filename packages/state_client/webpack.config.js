@@ -6,9 +6,6 @@ module.exports = [
   {
     devtool: false,
     entry: './src/index.ts',
-    experiments: {
-      outputModule: true,
-    },
     mode: mode,
     module: {
       rules: [
@@ -22,9 +19,6 @@ module.exports = [
     name: "state_client",
     output: {
       filename: 'state_client.bundle.js',
-      library: {
-        type: "module"
-      },
       path: path.resolve(__dirname, 'dist')
     },
     resolve: {

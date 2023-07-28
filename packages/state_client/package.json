@@ -4,11 +4,11 @@
     "url": "https://github.com/takahirox/tiny-web-metaverse/issues"
   },
   "dependencies": {
+    "phoenix": "^1.7.2"
   },
   "description": "Tiny Web metaverse State client",
   "devDependencies": {
     "@types/phoenix": "^1.5.6",
-    "phoenix": "^1.7.2",
     "webpack-dev-server": "^4.13.3"
   },
   "homepage": "https://github.com/takahirox/tiny-web-metaverse#readme",
@@ -24,6 +24,7 @@
     "build": "webpack",
     "server": "webpack serve --config-name examples",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "type": "dts-bundle-generator -o ./dist/state_client.bundle.d.ts ./src/index.ts",
     "watch": "webpack --watch"
   },
   "types": "./dist/state_client.bundle.d.ts",

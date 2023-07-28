@@ -5,7 +5,7 @@ import {
   IWorld,
   removeComponent
 } from "bitecs";
-import { Adapter } from "@tiny-web-metaverse/state_client/src/index";
+import { Adapter } from "@tiny-web-metaverse/state_client";
 import { NULL_EID } from "../common";
 
 export enum NetworkMessageType {
