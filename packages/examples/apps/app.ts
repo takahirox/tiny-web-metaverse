@@ -3,17 +3,17 @@ import {
   addEntity
 } from "bitecs";
 import { GridHelper } from "three";
-import { App } from "@tiny-web-metaverse/client/src/app";
-import { EntityObject3DProxy } from "@tiny-web-metaverse/client/src/components/entity_object3d";
-import { KeyEventListener } from "@tiny-web-metaverse/client/src/components/keyboard";
-import { MouseButtonEventListener } from "@tiny-web-metaverse/client/src/components/mouse";
 import {
+  App,
+  EntityObject3DProxy,
+  InScene,
+  KeyEventListener,
+  MouseButtonEventListener,
   NetworkedType,
+  setupNetworkedEntity,
+  SystemOrder,
   UserNetworkEventListener
-} from "@tiny-web-metaverse/client/src/components/network";
-import { InScene } from "@tiny-web-metaverse/client/src/components/scene";
-import { SystemOrder } from "@tiny-web-metaverse/client/src/common";
-import { setupNetworkedEntity } from "@tiny-web-metaverse/client/src/utils/network";
+} from "@tiny-web-metaverse/client";
 import { UserEventHandler } from "../components/user_event_handler";
 import { AvatarPrefab } from "../prefabs/avatar";
 import { CubePrefab } from "../prefabs/cube";

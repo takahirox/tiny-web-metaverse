@@ -1719,6 +1719,30 @@ WindowResizeEventHandlerProxy.instance = new WindowResizeEventHandlerProxy();
 
 /***/ }),
 
+/***/ "./src/message.ts":
+/*!************************!*\
+  !*** ./src/message.ts ***!
+  \************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Messages: () => (/* binding */ Messages),
+/* harmony export */   to2DMessageQueue: () => (/* binding */ to2DMessageQueue),
+/* harmony export */   to3DMessageQueue: () => (/* binding */ to3DMessageQueue)
+/* harmony export */ });
+const Messages = Object.freeze({
+    ObjectDeselected: 'object_deselected',
+    ObjectSelected: 'object_selected'
+});
+// TODO: Avoid any
+const to2DMessageQueue = [];
+const to3DMessageQueue = [];
+
+
+/***/ }),
+
 /***/ "./src/serializations/transform.ts":
 /*!*****************************************!*\
   !*** ./src/serializations/transform.ts ***!
@@ -3426,6 +3450,44 @@ const windowResizeEventClearSystem = (world) => {
     eventQuery(world).forEach(eid => {
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_window_resize__WEBPACK_IMPORTED_MODULE_1__.WindowResizeEvent, eid);
     });
+};
+
+
+/***/ }),
+
+/***/ "./src/utils/network.ts":
+/*!******************************!*\
+  !*** ./src/utils/network.ts ***!
+  \******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   setupNetworkedEntity: () => (/* binding */ setupNetworkedEntity)
+/* harmony export */ });
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "../../node_modules/three/build/three.module.js");
+/* harmony import */ var _components_network__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/network */ "./src/components/network.ts");
+
+
+
+const generateUUID = () => {
+    return three__WEBPACK_IMPORTED_MODULE_2__.MathUtils.generateUUID();
+};
+// For creating local or shared networked entity from local client.
+// Networked entity created by remote clients are set up in networked entity system.
+const setupNetworkedEntity = (world, eid, prefabName, type) => {
+    _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkedInitProxy.get(eid).allocate(world, generateUUID(), prefabName);
+    if (type === _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkedType.Local) {
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_1__.Local, eid);
+    }
+    else if (type === _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkedType.Shared) {
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_1__.Shared, eid);
+    }
+    else {
+        throw new Error(`Invalid networked type ${type}`);
+    }
 };
 
 
@@ -57356,9 +57418,246 @@ var __webpack_exports__ = {};
   \**********************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   App: () => (/* reexport safe */ _app__WEBPACK_IMPORTED_MODULE_0__.App)
+/* harmony export */   App: () => (/* reexport safe */ _app__WEBPACK_IMPORTED_MODULE_0__.App),
+/* harmony export */   Avatar: () => (/* reexport safe */ _components_avatar__WEBPACK_IMPORTED_MODULE_3__.Avatar),
+/* harmony export */   AvatarMouseControls: () => (/* reexport safe */ _components_avatar_mouse_controls__WEBPACK_IMPORTED_MODULE_4__.AvatarMouseControls),
+/* harmony export */   AvatarMouseControlsProxy: () => (/* reexport safe */ _components_avatar_mouse_controls__WEBPACK_IMPORTED_MODULE_4__.AvatarMouseControlsProxy),
+/* harmony export */   ComponentNetworkEventListener: () => (/* reexport safe */ _components_network__WEBPACK_IMPORTED_MODULE_11__.ComponentNetworkEventListener),
+/* harmony export */   EntityNetworkEventListener: () => (/* reexport safe */ _components_network__WEBPACK_IMPORTED_MODULE_11__.EntityNetworkEventListener),
+/* harmony export */   EntityObject3D: () => (/* reexport safe */ _components_entity_object3d__WEBPACK_IMPORTED_MODULE_5__.EntityObject3D),
+/* harmony export */   EntityObject3DProxy: () => (/* reexport safe */ _components_entity_object3d__WEBPACK_IMPORTED_MODULE_5__.EntityObject3DProxy),
+/* harmony export */   EntityRootGroup: () => (/* reexport safe */ _components_entity_object3d__WEBPACK_IMPORTED_MODULE_5__.EntityRootGroup),
+/* harmony export */   F32_EPSILON: () => (/* reexport safe */ _common__WEBPACK_IMPORTED_MODULE_1__.F32_EPSILON),
+/* harmony export */   Grabbable: () => (/* reexport safe */ _components_grab__WEBPACK_IMPORTED_MODULE_6__.Grabbable),
+/* harmony export */   Grabbed: () => (/* reexport safe */ _components_grab__WEBPACK_IMPORTED_MODULE_6__.Grabbed),
+/* harmony export */   INITIAL_VERSION: () => (/* reexport safe */ _common__WEBPACK_IMPORTED_MODULE_1__.INITIAL_VERSION),
+/* harmony export */   InScene: () => (/* reexport safe */ _components_scene__WEBPACK_IMPORTED_MODULE_14__.InScene),
+/* harmony export */   KeyEvent: () => (/* reexport safe */ _components_keyboard__WEBPACK_IMPORTED_MODULE_7__.KeyEvent),
+/* harmony export */   KeyEventHandler: () => (/* reexport safe */ _components_keyboard__WEBPACK_IMPORTED_MODULE_7__.KeyEventHandler),
+/* harmony export */   KeyEventHandlerDestroy: () => (/* reexport safe */ _components_keyboard__WEBPACK_IMPORTED_MODULE_7__.KeyEventHandlerDestroy),
+/* harmony export */   KeyEventHandlerInit: () => (/* reexport safe */ _components_keyboard__WEBPACK_IMPORTED_MODULE_7__.KeyEventHandlerInit),
+/* harmony export */   KeyEventHandlerProxy: () => (/* reexport safe */ _components_keyboard__WEBPACK_IMPORTED_MODULE_7__.KeyEventHandlerProxy),
+/* harmony export */   KeyEventListener: () => (/* reexport safe */ _components_keyboard__WEBPACK_IMPORTED_MODULE_7__.KeyEventListener),
+/* harmony export */   KeyEventProxy: () => (/* reexport safe */ _components_keyboard__WEBPACK_IMPORTED_MODULE_7__.KeyEventProxy),
+/* harmony export */   KeyEventType: () => (/* reexport safe */ _components_keyboard__WEBPACK_IMPORTED_MODULE_7__.KeyEventType),
+/* harmony export */   KeyHold: () => (/* reexport safe */ _components_keyboard__WEBPACK_IMPORTED_MODULE_7__.KeyHold),
+/* harmony export */   LinearMoveBackward: () => (/* reexport safe */ _components_linear_move__WEBPACK_IMPORTED_MODULE_8__.LinearMoveBackward),
+/* harmony export */   LinearMoveForward: () => (/* reexport safe */ _components_linear_move__WEBPACK_IMPORTED_MODULE_8__.LinearMoveForward),
+/* harmony export */   LinearMoveLeft: () => (/* reexport safe */ _components_linear_move__WEBPACK_IMPORTED_MODULE_8__.LinearMoveLeft),
+/* harmony export */   LinearMoveRight: () => (/* reexport safe */ _components_linear_move__WEBPACK_IMPORTED_MODULE_8__.LinearMoveRight),
+/* harmony export */   LinearRotate: () => (/* reexport safe */ _components_linear_transform__WEBPACK_IMPORTED_MODULE_9__.LinearRotate),
+/* harmony export */   LinearScale: () => (/* reexport safe */ _components_linear_transform__WEBPACK_IMPORTED_MODULE_9__.LinearScale),
+/* harmony export */   LinearTranslate: () => (/* reexport safe */ _components_linear_transform__WEBPACK_IMPORTED_MODULE_9__.LinearTranslate),
+/* harmony export */   Local: () => (/* reexport safe */ _components_network__WEBPACK_IMPORTED_MODULE_11__.Local),
+/* harmony export */   Messages: () => (/* reexport safe */ _message__WEBPACK_IMPORTED_MODULE_2__.Messages),
+/* harmony export */   MouseButtonEvent: () => (/* reexport safe */ _components_mouse__WEBPACK_IMPORTED_MODULE_10__.MouseButtonEvent),
+/* harmony export */   MouseButtonEventHandler: () => (/* reexport safe */ _components_mouse__WEBPACK_IMPORTED_MODULE_10__.MouseButtonEventHandler),
+/* harmony export */   MouseButtonEventHandlerDestroy: () => (/* reexport safe */ _components_mouse__WEBPACK_IMPORTED_MODULE_10__.MouseButtonEventHandlerDestroy),
+/* harmony export */   MouseButtonEventHandlerInit: () => (/* reexport safe */ _components_mouse__WEBPACK_IMPORTED_MODULE_10__.MouseButtonEventHandlerInit),
+/* harmony export */   MouseButtonEventHandlerInitProxy: () => (/* reexport safe */ _components_mouse__WEBPACK_IMPORTED_MODULE_10__.MouseButtonEventHandlerInitProxy),
+/* harmony export */   MouseButtonEventHandlerProxy: () => (/* reexport safe */ _components_mouse__WEBPACK_IMPORTED_MODULE_10__.MouseButtonEventHandlerProxy),
+/* harmony export */   MouseButtonEventListener: () => (/* reexport safe */ _components_mouse__WEBPACK_IMPORTED_MODULE_10__.MouseButtonEventListener),
+/* harmony export */   MouseButtonEventProxy: () => (/* reexport safe */ _components_mouse__WEBPACK_IMPORTED_MODULE_10__.MouseButtonEventProxy),
+/* harmony export */   MouseButtonEventType: () => (/* reexport safe */ _components_mouse__WEBPACK_IMPORTED_MODULE_10__.MouseButtonEventType),
+/* harmony export */   MouseButtonHold: () => (/* reexport safe */ _components_mouse__WEBPACK_IMPORTED_MODULE_10__.MouseButtonHold),
+/* harmony export */   MouseButtonType: () => (/* reexport safe */ _components_mouse__WEBPACK_IMPORTED_MODULE_10__.MouseButtonType),
+/* harmony export */   MouseMoveEvent: () => (/* reexport safe */ _components_mouse__WEBPACK_IMPORTED_MODULE_10__.MouseMoveEvent),
+/* harmony export */   MouseMoveEventHandler: () => (/* reexport safe */ _components_mouse__WEBPACK_IMPORTED_MODULE_10__.MouseMoveEventHandler),
+/* harmony export */   MouseMoveEventHandlerDestroy: () => (/* reexport safe */ _components_mouse__WEBPACK_IMPORTED_MODULE_10__.MouseMoveEventHandlerDestroy),
+/* harmony export */   MouseMoveEventHandlerInit: () => (/* reexport safe */ _components_mouse__WEBPACK_IMPORTED_MODULE_10__.MouseMoveEventHandlerInit),
+/* harmony export */   MouseMoveEventHandlerInitProxy: () => (/* reexport safe */ _components_mouse__WEBPACK_IMPORTED_MODULE_10__.MouseMoveEventHandlerInitProxy),
+/* harmony export */   MouseMoveEventHandlerProxy: () => (/* reexport safe */ _components_mouse__WEBPACK_IMPORTED_MODULE_10__.MouseMoveEventHandlerProxy),
+/* harmony export */   MouseMoveEventListener: () => (/* reexport safe */ _components_mouse__WEBPACK_IMPORTED_MODULE_10__.MouseMoveEventListener),
+/* harmony export */   MouseMoveEventProxy: () => (/* reexport safe */ _components_mouse__WEBPACK_IMPORTED_MODULE_10__.MouseMoveEventProxy),
+/* harmony export */   MousePosition: () => (/* reexport safe */ _components_mouse__WEBPACK_IMPORTED_MODULE_10__.MousePosition),
+/* harmony export */   MousePositionProxy: () => (/* reexport safe */ _components_mouse__WEBPACK_IMPORTED_MODULE_10__.MousePositionProxy),
+/* harmony export */   NETWORK_INTERVAL: () => (/* reexport safe */ _common__WEBPACK_IMPORTED_MODULE_1__.NETWORK_INTERVAL),
+/* harmony export */   NULL_EID: () => (/* reexport safe */ _common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID),
+/* harmony export */   NetworkAdapter: () => (/* reexport safe */ _components_network__WEBPACK_IMPORTED_MODULE_11__.NetworkAdapter),
+/* harmony export */   NetworkAdapterProxy: () => (/* reexport safe */ _components_network__WEBPACK_IMPORTED_MODULE_11__.NetworkAdapterProxy),
+/* harmony export */   NetworkEvent: () => (/* reexport safe */ _components_network__WEBPACK_IMPORTED_MODULE_11__.NetworkEvent),
+/* harmony export */   NetworkEventProxy: () => (/* reexport safe */ _components_network__WEBPACK_IMPORTED_MODULE_11__.NetworkEventProxy),
+/* harmony export */   NetworkEventReceiver: () => (/* reexport safe */ _components_network__WEBPACK_IMPORTED_MODULE_11__.NetworkEventReceiver),
+/* harmony export */   NetworkEventReceiverDestroy: () => (/* reexport safe */ _components_network__WEBPACK_IMPORTED_MODULE_11__.NetworkEventReceiverDestroy),
+/* harmony export */   NetworkEventReceiverInit: () => (/* reexport safe */ _components_network__WEBPACK_IMPORTED_MODULE_11__.NetworkEventReceiverInit),
+/* harmony export */   NetworkEventSender: () => (/* reexport safe */ _components_network__WEBPACK_IMPORTED_MODULE_11__.NetworkEventSender),
+/* harmony export */   NetworkEventSenderProxy: () => (/* reexport safe */ _components_network__WEBPACK_IMPORTED_MODULE_11__.NetworkEventSenderProxy),
+/* harmony export */   NetworkMessageType: () => (/* reexport safe */ _components_network__WEBPACK_IMPORTED_MODULE_11__.NetworkMessageType),
+/* harmony export */   Networked: () => (/* reexport safe */ _components_network__WEBPACK_IMPORTED_MODULE_11__.Networked),
+/* harmony export */   NetworkedEntityManager: () => (/* reexport safe */ _components_network__WEBPACK_IMPORTED_MODULE_11__.NetworkedEntityManager),
+/* harmony export */   NetworkedEntityManagerProxy: () => (/* reexport safe */ _components_network__WEBPACK_IMPORTED_MODULE_11__.NetworkedEntityManagerProxy),
+/* harmony export */   NetworkedInit: () => (/* reexport safe */ _components_network__WEBPACK_IMPORTED_MODULE_11__.NetworkedInit),
+/* harmony export */   NetworkedInitProxy: () => (/* reexport safe */ _components_network__WEBPACK_IMPORTED_MODULE_11__.NetworkedInitProxy),
+/* harmony export */   NetworkedPosition: () => (/* reexport safe */ _components_network__WEBPACK_IMPORTED_MODULE_11__.NetworkedPosition),
+/* harmony export */   NetworkedProxy: () => (/* reexport safe */ _components_network__WEBPACK_IMPORTED_MODULE_11__.NetworkedProxy),
+/* harmony export */   NetworkedQuaternion: () => (/* reexport safe */ _components_network__WEBPACK_IMPORTED_MODULE_11__.NetworkedQuaternion),
+/* harmony export */   NetworkedScale: () => (/* reexport safe */ _components_network__WEBPACK_IMPORTED_MODULE_11__.NetworkedScale),
+/* harmony export */   NetworkedType: () => (/* reexport safe */ _components_network__WEBPACK_IMPORTED_MODULE_11__.NetworkedType),
+/* harmony export */   PreviousMousePosition: () => (/* reexport safe */ _components_mouse__WEBPACK_IMPORTED_MODULE_10__.PreviousMousePosition),
+/* harmony export */   PreviousMousePositionProxy: () => (/* reexport safe */ _components_mouse__WEBPACK_IMPORTED_MODULE_10__.PreviousMousePositionProxy),
+/* harmony export */   Raycastable: () => (/* reexport safe */ _components_raycast__WEBPACK_IMPORTED_MODULE_12__.Raycastable),
+/* harmony export */   Raycasted: () => (/* reexport safe */ _components_raycast__WEBPACK_IMPORTED_MODULE_12__.Raycasted),
+/* harmony export */   RaycasterProxy: () => (/* reexport safe */ _components_raycast__WEBPACK_IMPORTED_MODULE_12__.RaycasterProxy),
+/* harmony export */   RaycasterTag: () => (/* reexport safe */ _components_raycast__WEBPACK_IMPORTED_MODULE_12__.RaycasterTag),
+/* harmony export */   Remote: () => (/* reexport safe */ _components_network__WEBPACK_IMPORTED_MODULE_11__.Remote),
+/* harmony export */   Renderer: () => (/* reexport safe */ _components_renderer__WEBPACK_IMPORTED_MODULE_13__.Renderer),
+/* harmony export */   RendererDestroy: () => (/* reexport safe */ _components_renderer__WEBPACK_IMPORTED_MODULE_13__.RendererDestroy),
+/* harmony export */   RendererInit: () => (/* reexport safe */ _components_renderer__WEBPACK_IMPORTED_MODULE_13__.RendererInit),
+/* harmony export */   RendererInitProxy: () => (/* reexport safe */ _components_renderer__WEBPACK_IMPORTED_MODULE_13__.RendererInitProxy),
+/* harmony export */   RendererProxy: () => (/* reexport safe */ _components_renderer__WEBPACK_IMPORTED_MODULE_13__.RendererProxy),
+/* harmony export */   SceneInit: () => (/* reexport safe */ _components_scene__WEBPACK_IMPORTED_MODULE_14__.SceneInit),
+/* harmony export */   SceneInitProxy: () => (/* reexport safe */ _components_scene__WEBPACK_IMPORTED_MODULE_14__.SceneInitProxy),
+/* harmony export */   SceneProxy: () => (/* reexport safe */ _components_scene__WEBPACK_IMPORTED_MODULE_14__.SceneProxy),
+/* harmony export */   SceneTag: () => (/* reexport safe */ _components_scene__WEBPACK_IMPORTED_MODULE_14__.SceneTag),
+/* harmony export */   Selectable: () => (/* reexport safe */ _components_select__WEBPACK_IMPORTED_MODULE_15__.Selectable),
+/* harmony export */   Selected: () => (/* reexport safe */ _components_select__WEBPACK_IMPORTED_MODULE_15__.Selected),
+/* harmony export */   Shared: () => (/* reexport safe */ _components_network__WEBPACK_IMPORTED_MODULE_11__.Shared),
+/* harmony export */   SystemOrder: () => (/* reexport safe */ _common__WEBPACK_IMPORTED_MODULE_1__.SystemOrder),
+/* harmony export */   TextMessageNetworkEventListener: () => (/* reexport safe */ _components_network__WEBPACK_IMPORTED_MODULE_11__.TextMessageNetworkEventListener),
+/* harmony export */   Time: () => (/* reexport safe */ _components_time__WEBPACK_IMPORTED_MODULE_16__.Time),
+/* harmony export */   TimeInit: () => (/* reexport safe */ _components_time__WEBPACK_IMPORTED_MODULE_16__.TimeInit),
+/* harmony export */   TimeProxy: () => (/* reexport safe */ _components_time__WEBPACK_IMPORTED_MODULE_16__.TimeProxy),
+/* harmony export */   TransformUpdated: () => (/* reexport safe */ _components_transform__WEBPACK_IMPORTED_MODULE_17__.TransformUpdated),
+/* harmony export */   UserNetworkEventListener: () => (/* reexport safe */ _components_network__WEBPACK_IMPORTED_MODULE_11__.UserNetworkEventListener),
+/* harmony export */   WindowResizeEvent: () => (/* reexport safe */ _components_window_resize__WEBPACK_IMPORTED_MODULE_18__.WindowResizeEvent),
+/* harmony export */   WindowResizeEventHandler: () => (/* reexport safe */ _components_window_resize__WEBPACK_IMPORTED_MODULE_18__.WindowResizeEventHandler),
+/* harmony export */   WindowResizeEventHandlerDestroy: () => (/* reexport safe */ _components_window_resize__WEBPACK_IMPORTED_MODULE_18__.WindowResizeEventHandlerDestroy),
+/* harmony export */   WindowResizeEventHandlerInit: () => (/* reexport safe */ _components_window_resize__WEBPACK_IMPORTED_MODULE_18__.WindowResizeEventHandlerInit),
+/* harmony export */   WindowResizeEventHandlerProxy: () => (/* reexport safe */ _components_window_resize__WEBPACK_IMPORTED_MODULE_18__.WindowResizeEventHandlerProxy),
+/* harmony export */   WindowResizeEventListener: () => (/* reexport safe */ _components_window_resize__WEBPACK_IMPORTED_MODULE_18__.WindowResizeEventListener),
+/* harmony export */   WindowSize: () => (/* reexport safe */ _components_window_resize__WEBPACK_IMPORTED_MODULE_18__.WindowSize),
+/* harmony export */   avatarKeyControlsSystem: () => (/* reexport safe */ _systems_avatar_key_controls__WEBPACK_IMPORTED_MODULE_20__.avatarKeyControlsSystem),
+/* harmony export */   avatarMouseControlsSystem: () => (/* reexport safe */ _systems_avatar_mouse_controls__WEBPACK_IMPORTED_MODULE_21__.avatarMouseControlsSystem),
+/* harmony export */   clearRaycastedSystem: () => (/* reexport safe */ _systems_raycast__WEBPACK_IMPORTED_MODULE_38__.clearRaycastedSystem),
+/* harmony export */   clearTransformUpdatedSystem: () => (/* reexport safe */ _systems_transform__WEBPACK_IMPORTED_MODULE_43__.clearTransformUpdatedSystem),
+/* harmony export */   fpsCameraSystem: () => (/* reexport safe */ _systems_fps_camera__WEBPACK_IMPORTED_MODULE_22__.fpsCameraSystem),
+/* harmony export */   grabSystem: () => (/* reexport safe */ _systems_grab__WEBPACK_IMPORTED_MODULE_23__.grabSystem),
+/* harmony export */   grabbedObjectsMouseTrackSystem: () => (/* reexport safe */ _systems_grab_mouse_track__WEBPACK_IMPORTED_MODULE_24__.grabbedObjectsMouseTrackSystem),
+/* harmony export */   keyEventClearSystem: () => (/* reexport safe */ _systems_keyboard_event__WEBPACK_IMPORTED_MODULE_25__.keyEventClearSystem),
+/* harmony export */   keyEventHandleSystem: () => (/* reexport safe */ _systems_keyboard_event__WEBPACK_IMPORTED_MODULE_25__.keyEventHandleSystem),
+/* harmony export */   linearMoveSystem: () => (/* reexport safe */ _systems_linear_move__WEBPACK_IMPORTED_MODULE_26__.linearMoveSystem),
+/* harmony export */   linearTransformSystem: () => (/* reexport safe */ _systems_linear_transform__WEBPACK_IMPORTED_MODULE_27__.linearTransformSystem),
+/* harmony export */   mouseButtonEventClearSystem: () => (/* reexport safe */ _systems_mouse_button_event__WEBPACK_IMPORTED_MODULE_28__.mouseButtonEventClearSystem),
+/* harmony export */   mouseButtonEventHandleSystem: () => (/* reexport safe */ _systems_mouse_button_event__WEBPACK_IMPORTED_MODULE_28__.mouseButtonEventHandleSystem),
+/* harmony export */   mouseMoveEventClearSystem: () => (/* reexport safe */ _systems_mouse_move_event__WEBPACK_IMPORTED_MODULE_29__.mouseMoveEventClearSystem),
+/* harmony export */   mouseMoveEventHandleSystem: () => (/* reexport safe */ _systems_mouse_move_event__WEBPACK_IMPORTED_MODULE_29__.mouseMoveEventHandleSystem),
+/* harmony export */   mousePositionTrackSystem: () => (/* reexport safe */ _systems_mouse_position_track__WEBPACK_IMPORTED_MODULE_30__.mousePositionTrackSystem),
+/* harmony export */   mouseRaycastSystem: () => (/* reexport safe */ _systems_mouse_raycast__WEBPACK_IMPORTED_MODULE_31__.mouseRaycastSystem),
+/* harmony export */   mouseSelectSystem: () => (/* reexport safe */ _systems_mouse_select__WEBPACK_IMPORTED_MODULE_32__.mouseSelectSystem),
+/* harmony export */   networkEventClearSystem: () => (/* reexport safe */ _systems_network_event__WEBPACK_IMPORTED_MODULE_35__.networkEventClearSystem),
+/* harmony export */   networkEventHandleSystem: () => (/* reexport safe */ _systems_network_event__WEBPACK_IMPORTED_MODULE_35__.networkEventHandleSystem),
+/* harmony export */   networkSendSystem: () => (/* reexport safe */ _systems_network_send__WEBPACK_IMPORTED_MODULE_36__.networkSendSystem),
+/* harmony export */   networkedEntitySystem: () => (/* reexport safe */ _systems_networked_entity__WEBPACK_IMPORTED_MODULE_34__.networkedEntitySystem),
+/* harmony export */   networkedSystem: () => (/* reexport safe */ _systems_networked__WEBPACK_IMPORTED_MODULE_33__.networkedSystem),
+/* harmony export */   perspectiveCameraSystem: () => (/* reexport safe */ _systems_perspective_camera__WEBPACK_IMPORTED_MODULE_37__.perspectiveCameraSystem),
+/* harmony export */   positionSerializers: () => (/* reexport safe */ _serializations_transform__WEBPACK_IMPORTED_MODULE_19__.positionSerializers),
+/* harmony export */   quaternionSerializers: () => (/* reexport safe */ _serializations_transform__WEBPACK_IMPORTED_MODULE_19__.quaternionSerializers),
+/* harmony export */   renderSystem: () => (/* reexport safe */ _systems_render__WEBPACK_IMPORTED_MODULE_39__.renderSystem),
+/* harmony export */   rendererSystem: () => (/* reexport safe */ _systems_renderer__WEBPACK_IMPORTED_MODULE_40__.rendererSystem),
+/* harmony export */   scaleSerializers: () => (/* reexport safe */ _serializations_transform__WEBPACK_IMPORTED_MODULE_19__.scaleSerializers),
+/* harmony export */   sceneSystem: () => (/* reexport safe */ _systems_scene__WEBPACK_IMPORTED_MODULE_41__.sceneSystem),
+/* harmony export */   setupNetworkedEntity: () => (/* reexport safe */ _utils_network__WEBPACK_IMPORTED_MODULE_46__.setupNetworkedEntity),
+/* harmony export */   timeSystem: () => (/* reexport safe */ _systems_time__WEBPACK_IMPORTED_MODULE_42__.timeSystem),
+/* harmony export */   to2DMessageQueue: () => (/* reexport safe */ _message__WEBPACK_IMPORTED_MODULE_2__.to2DMessageQueue),
+/* harmony export */   to3DMessageQueue: () => (/* reexport safe */ _message__WEBPACK_IMPORTED_MODULE_2__.to3DMessageQueue),
+/* harmony export */   updateMatricesSystem: () => (/* reexport safe */ _systems_update_matrices__WEBPACK_IMPORTED_MODULE_44__.updateMatricesSystem),
+/* harmony export */   windowResizeEventClearSystem: () => (/* reexport safe */ _systems_window_resize_event__WEBPACK_IMPORTED_MODULE_45__.windowResizeEventClearSystem),
+/* harmony export */   windowResizeEventHandleSystem: () => (/* reexport safe */ _systems_window_resize_event__WEBPACK_IMPORTED_MODULE_45__.windowResizeEventHandleSystem)
 /* harmony export */ });
 /* harmony import */ var _app__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./app */ "./src/app.ts");
+/* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./common */ "./src/common.ts");
+/* harmony import */ var _message__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./message */ "./src/message.ts");
+/* harmony import */ var _components_avatar__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/avatar */ "./src/components/avatar.ts");
+/* harmony import */ var _components_avatar_mouse_controls__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/avatar_mouse_controls */ "./src/components/avatar_mouse_controls.ts");
+/* harmony import */ var _components_entity_object3d__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/entity_object3d */ "./src/components/entity_object3d.ts");
+/* harmony import */ var _components_grab__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/grab */ "./src/components/grab.ts");
+/* harmony import */ var _components_keyboard__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/keyboard */ "./src/components/keyboard.ts");
+/* harmony import */ var _components_linear_move__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/linear_move */ "./src/components/linear_move.ts");
+/* harmony import */ var _components_linear_transform__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./components/linear_transform */ "./src/components/linear_transform.ts");
+/* harmony import */ var _components_mouse__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./components/mouse */ "./src/components/mouse.ts");
+/* harmony import */ var _components_network__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./components/network */ "./src/components/network.ts");
+/* harmony import */ var _components_raycast__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./components/raycast */ "./src/components/raycast.ts");
+/* harmony import */ var _components_renderer__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./components/renderer */ "./src/components/renderer.ts");
+/* harmony import */ var _components_scene__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./components/scene */ "./src/components/scene.ts");
+/* harmony import */ var _components_select__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./components/select */ "./src/components/select.ts");
+/* harmony import */ var _components_time__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./components/time */ "./src/components/time.ts");
+/* harmony import */ var _components_transform__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./components/transform */ "./src/components/transform.ts");
+/* harmony import */ var _components_window_resize__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./components/window_resize */ "./src/components/window_resize.ts");
+/* harmony import */ var _serializations_transform__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./serializations/transform */ "./src/serializations/transform.ts");
+/* harmony import */ var _systems_avatar_key_controls__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./systems/avatar_key_controls */ "./src/systems/avatar_key_controls.ts");
+/* harmony import */ var _systems_avatar_mouse_controls__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./systems/avatar_mouse_controls */ "./src/systems/avatar_mouse_controls.ts");
+/* harmony import */ var _systems_fps_camera__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./systems/fps_camera */ "./src/systems/fps_camera.ts");
+/* harmony import */ var _systems_grab__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./systems/grab */ "./src/systems/grab.ts");
+/* harmony import */ var _systems_grab_mouse_track__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./systems/grab_mouse_track */ "./src/systems/grab_mouse_track.ts");
+/* harmony import */ var _systems_keyboard_event__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./systems/keyboard_event */ "./src/systems/keyboard_event.ts");
+/* harmony import */ var _systems_linear_move__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./systems/linear_move */ "./src/systems/linear_move.ts");
+/* harmony import */ var _systems_linear_transform__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./systems/linear_transform */ "./src/systems/linear_transform.ts");
+/* harmony import */ var _systems_mouse_button_event__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./systems/mouse_button_event */ "./src/systems/mouse_button_event.ts");
+/* harmony import */ var _systems_mouse_move_event__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./systems/mouse_move_event */ "./src/systems/mouse_move_event.ts");
+/* harmony import */ var _systems_mouse_position_track__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./systems/mouse_position_track */ "./src/systems/mouse_position_track.ts");
+/* harmony import */ var _systems_mouse_raycast__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./systems/mouse_raycast */ "./src/systems/mouse_raycast.ts");
+/* harmony import */ var _systems_mouse_select__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./systems/mouse_select */ "./src/systems/mouse_select.ts");
+/* harmony import */ var _systems_networked__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./systems/networked */ "./src/systems/networked.ts");
+/* harmony import */ var _systems_networked_entity__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./systems/networked_entity */ "./src/systems/networked_entity.ts");
+/* harmony import */ var _systems_network_event__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./systems/network_event */ "./src/systems/network_event.ts");
+/* harmony import */ var _systems_network_send__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ./systems/network_send */ "./src/systems/network_send.ts");
+/* harmony import */ var _systems_perspective_camera__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./systems/perspective_camera */ "./src/systems/perspective_camera.ts");
+/* harmony import */ var _systems_raycast__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! ./systems/raycast */ "./src/systems/raycast.ts");
+/* harmony import */ var _systems_render__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! ./systems/render */ "./src/systems/render.ts");
+/* harmony import */ var _systems_renderer__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! ./systems/renderer */ "./src/systems/renderer.ts");
+/* harmony import */ var _systems_scene__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! ./systems/scene */ "./src/systems/scene.ts");
+/* harmony import */ var _systems_time__WEBPACK_IMPORTED_MODULE_42__ = __webpack_require__(/*! ./systems/time */ "./src/systems/time.ts");
+/* harmony import */ var _systems_transform__WEBPACK_IMPORTED_MODULE_43__ = __webpack_require__(/*! ./systems/transform */ "./src/systems/transform.ts");
+/* harmony import */ var _systems_update_matrices__WEBPACK_IMPORTED_MODULE_44__ = __webpack_require__(/*! ./systems/update_matrices */ "./src/systems/update_matrices.ts");
+/* harmony import */ var _systems_window_resize_event__WEBPACK_IMPORTED_MODULE_45__ = __webpack_require__(/*! ./systems/window_resize_event */ "./src/systems/window_resize_event.ts");
+/* harmony import */ var _utils_network__WEBPACK_IMPORTED_MODULE_46__ = __webpack_require__(/*! ./utils/network */ "./src/utils/network.ts");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 })();

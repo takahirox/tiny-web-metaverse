@@ -7,11 +7,6 @@
     "@tiny-web-metaverse/client": "../client"
   },
   "description": "Tiny Web metaverse examples",
-  "devDependencies": {
-    "css-loader": "^6.7.3",
-    "style-loader": "^3.3.2",
-    "webpack-dev-server": "^4.13.3"
-  },
   "homepage": "https://github.com/takahirox/tiny-web-metaverse#readme",
   "license": "MIT",
   "name": "@tiny-web-metaverse/examples",
