@@ -4,17 +4,17 @@ import {
   IWorld
 } from "bitecs";
 import { BoxGeometry, Mesh, MeshBasicMaterial } from "three";
-import { EntityObject3DProxy } from "@tiny-web-metaverse/client/src/components/entity_object3d";
-import { Grabbable } from "@tiny-web-metaverse/client/src/components/grab";
-import { MouseButtonEventListener } from "@tiny-web-metaverse/client/src/components/mouse";
 import {
+  EntityObject3DProxy,
+  InScene,
+  Grabbable,
+  MouseButtonEventListener,
   NetworkedPosition,
   NetworkedQuaternion,
-  NetworkedScale
-} from "@tiny-web-metaverse/client/src/components/network";
-import { Raycastable } from "@tiny-web-metaverse/client/src/components/raycast";
-import { InScene } from "@tiny-web-metaverse/client/src/components/scene";
-import { Selectable } from "@tiny-web-metaverse/client/src/components/select";
+  NetworkedScale,
+  Raycastable,
+  Selectable
+} from "@tiny-web-metaverse/client";
 
 export const CubePrefab = (world: IWorld): number => {
   const eid = addEntity(world);

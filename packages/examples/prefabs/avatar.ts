@@ -4,14 +4,14 @@ import {
   IWorld
 } from "bitecs";
 import { SphereGeometry, Mesh, MeshBasicMaterial } from "three";
-import { Avatar } from "@tiny-web-metaverse/client/src/components/avatar";
-import { EntityObject3DProxy } from "@tiny-web-metaverse/client/src/components/entity_object3d";
 import {
+  Avatar,
+  EntityObject3DProxy,
+  InScene,
   NetworkedPosition,
   NetworkedQuaternion,
-  NetworkedScale
-} from "@tiny-web-metaverse/client/src/components/network";
-import { InScene } from "@tiny-web-metaverse/client/src/components/scene";
+  NetworkedScale  
+} from "@tiny-web-metaverse/client";
 
 export const AvatarPrefab = (world: IWorld): number => {
   const eid = addEntity(world);

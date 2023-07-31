@@ -4,7 +4,7 @@ import {
   NetworkEventProxy,
   NetworkMessageType,
   UserNetworkEventListener
-} from "@tiny-web-metaverse/client/src/components/network";
+} from "@tiny-web-metaverse/client";
 import { UserEventHandler } from "../components/user_event_handler";
 
 const eventEnterQuery = 

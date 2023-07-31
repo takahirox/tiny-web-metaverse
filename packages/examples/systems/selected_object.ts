@@ -4,8 +4,10 @@ import {
   exitQuery,
   IWorld
 } from "bitecs";
-import { NULL_EID } from "@tiny-web-metaverse/client/src/common";
-import { Selected } from "@tiny-web-metaverse/client/src/components/select"
+import {
+  NULL_EID,
+  Selected
+} from "@tiny-web-metaverse/client";
 import { notifyEid } from "../ui/side_bar";
 
 const selectedQuery = defineQuery([Selected]);
