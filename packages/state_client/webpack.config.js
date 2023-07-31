@@ -16,7 +16,7 @@ module.exports = [
         }
       ]
     },
-    name: "state_client",
+    name: "@tiny-web-metaverse/state_client",
     output: {
       filename: 'state_client.bundle.js',
       path: path.resolve(__dirname, 'dist')
@@ -51,7 +51,7 @@ module.exports = [
         }
       ]
     },
-    name: "examples",
+    name: "@tiny-web-metaverse/state_client_examples",
     output: {
       filename: 'app.bundle.js',
       path: path.resolve(__dirname, 'examples', 'build')

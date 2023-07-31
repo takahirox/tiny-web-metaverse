@@ -16,7 +16,7 @@ module.exports = [
         }
       ]
     },
-    name: "stream_client",
+    name: "@tiny-web-metaverse/stream_client",
     output: {
       filename: 'stream_client.bundle.js',
       path: path.resolve(__dirname, 'dist')
@@ -30,6 +30,15 @@ module.exports = [
     }
   },
   {
+    devServer: {
+      client: {
+        progress: true
+      },
+      port: 8080,
+      static: {
+        directory: path.join(__dirname, 'examples'),
+      }
+    },
     devtool: false,
     entry: './examples/index.ts',
     mode: mode,
@@ -42,7 +51,7 @@ module.exports = [
         }
       ]
     },
-    name: "stream_client_examples",
+    name: "@tiny-web-metaverse/stream_client_examples",
     output: {
       filename: 'app.bundle.js',
       path: path.resolve(__dirname, 'examples', 'build')
