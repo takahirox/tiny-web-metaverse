@@ -17,7 +17,7 @@ __webpack_require__.r(__webpack_exports__);
 class Adapter {
     constructor(params) {
         const url = params.url || 'ws://localhost:4000/socket';
-        const topic = params.topic || 'room:lobby';
+        const topic = `room:${params.roomId}`;
         this.userId = params.userId;
         const socket = new phoenix__WEBPACK_IMPORTED_MODULE_0__.Socket(url, {});
         socket.connect();
@@ -1289,12 +1289,15 @@ var __webpack_exports__ = {};
   \***************************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _src_adapter__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../src/adapter */ "./src/adapter.ts");
+// TODO: Test more
 
 const SERVER_URL = 'ws://localhost:4000/socket';
+const ROOM_ID = '1234';
 const createPeerId = () => {
     return Date.now().toString(36) + Math.random().toString(36).substring(2);
 };
 const adapter = new _src_adapter__WEBPACK_IMPORTED_MODULE_0__.Adapter({
+    roomId: ROOM_ID,
     url: SERVER_URL,
     userId: createPeerId()
 });

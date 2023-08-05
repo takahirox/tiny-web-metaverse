@@ -10,12 +10,12 @@ export class Adapter {
   readonly userId: string;
 
   constructor(params: {
-    topic?: string,
+    roomId: string,
     url?: string,
     userId: string
   }) {
     const url = params.url || 'ws://localhost:4000/socket';
-    const topic = params.topic || 'room:lobby';
+    const topic = `room:${params.roomId}`;
     this.userId = params.userId;
 
     const socket = new Socket(url, {});

@@ -1,4 +1,7 @@
 # TODO: Validation
+# TODO: Transaction with Multi
+# TODO: Lock if needed
+# TODO: Proper error handling
 
 defmodule ServerWeb.RoomChannel do
   use Phoenix.Channel
@@ -6,63 +9,65 @@ defmodule ServerWeb.RoomChannel do
   # A user has joined a room.
   # Adds a new row to users table and sends an :after_join process message to
   # self for remained joinning processing.
-  # @params payload:
-  #   - user_id: string
-  def join("room:lobby", payload, socket) do
-    case Server.Repo.insert(
-      %Server.User{user_id: payload["user_id"]},
-      on_conflict: :raise
-	) do
-      {:ok, _res} ->
-        send(self(), :after_join)
-        {:ok, assign(socket, :user_id, payload["user_id"])}
-      # TODO: Proper error handling
-      {:error, _changeset} ->
-        {:error, %{reason: "Failed to join"}}
-    end
-  end
-
-  # TODO: Support per room processing
-  def join("room:" <> _private_room_id, _payload, _socket) do
-    {:error, %{reason: "unauthorized"}}
+  def join("room:" <> room_id, %{"user_id" => user_id}, socket) do
+    %Server.User{
+      room_id: room_id,
+      user_id: user_id
+    }
+      |> Server.Repo.insert(on_conflict: :raise)
+      |> case do
+           {:ok, _res} ->
+             send(self(), :after_join)
+             {:ok,
+               socket
+                 |> assign(:room_id, room_id)
+                 |> assign(:user_id, user_id)
+             }
+           {:error, _changeset} ->
+             {:error, %{reason: "Failed to insert a user"}}
+         end
   end
 
   # A user has been left.
   # Removes its user row from users table, removes entity and associated
   # component rows whose creators are the left user from entities and component
-  # tables, and broadcasts user_left message. Remove_entity and remove_component
+  # tables, and broadcasts user_left message. remove_entity and remove_component
   # messages are not needed to be broadcast because the clients know that
   # associated entities and components removal happens from user_left message.
   # TODO: Properer user left detection?
   def terminate(_reason, socket) do
-    # Removes a user and broadcasts user_left message
+    # Removes a user
     # TODO: Error handling
     # TODO: Is lock needed even for deletion?
     import Ecto.Query, only: [from: 2]
     from(
       u in Server.User,
-      where: u.user_id == ^socket.assigns.user_id
+      where: u.user_id == ^socket.assigns.user_id and
+             u.room_id == ^socket.assigns.room_id
     )
       |> Server.Repo.delete_all([])
-
-    # TODO: Is version needed even for deletion?
-    broadcast!(socket, "user_left", %{
-      data: socket.assigns.user_id
-    })
 
     # Removes entities the user created and associated components
     # TODO: Error handling
     from(
       e in Server.Entity, 
-      where: e.creator == ^socket.assigns.user_id
+      where: e.creator == ^socket.assigns.user_id and
+             e.room_id == ^socket.assigns.room_id
     )
       |> Server.Repo.delete_all([])
 
     from(
       c in Server.Component,
-      where: c.creator == ^socket.assigns.user_id
+      where: c.creator == ^socket.assigns.user_id and
+             c.room_id == ^socket.assigns.room_id
     )
       |> Server.Repo.delete_all([])
+
+    # Broadcasts user_left message
+    # TODO: Is version needed even for deletion?
+    broadcast!(socket, "user_left", %{
+      data: socket.assigns.user_id
+    })
   end
 
   # A user has joined and a new row to users table has been added.
@@ -75,39 +80,56 @@ defmodule ServerWeb.RoomChannel do
       data: socket.assigns.user_id
     })
 
-    # Sends existing networked entities' info to the the new user's client.
-    # TODO: Merge rows and push once
+    # Sends existing networked entities' info to the new user's client.
+    # TODO: Using join would be more efficient?
     import Ecto.Query, only: [from: 2]
     from(e in Server.Entity,
-      select: [e.creator, e.network_id, e.prefab, e.prefab_params, e.shared, e.version]
+      select: map(e, [
+        :creator,
+        :network_id,
+        :prefab,
+        :prefab_params,
+        :shared,
+        :version
+      ]),
+      where: e.room_id == ^socket.assigns.room_id
     )
-     |> Server.Repo.all
+     |> Server.Repo.all()
      |> Enum.each(fn res ->
-          components = 
-            from(c in Server.Component,
-              select: [c.component_name, c.creator, c.data, c.network_id, c.owner, c.version]
-            )
-              |> Server.Repo.all
-              |> Enum.map(fn res ->
-                   %{
-                     component_name: Enum.at(res, 0),
-                     creator: Enum.at(res, 1),
-                     data: Enum.at(res, 2),
-                     network_id: Enum.at(res, 3),
-                     owner: Enum.at(res, 4),
-                     version: Enum.at(res, 5)
-                   }
-                 end)
+          network_id = res[:network_id]
+
+          components = from(c in Server.Component,
+            select: map(c, [
+              :component_name,
+              :creator,
+              :data,
+              :owner,
+              :version
+            ]),
+            where: c.room_id == ^socket.assigns.room_id and
+                   c.network_id == ^network_id
+          )
+            |> Server.Repo.all()
+            |> Enum.map(fn res ->
+                 %{
+                   component_name: res[:component_name],
+                   creator: res[:creator],
+                   data: res[:data],
+                   network_id: network_id,
+                   owner: res[:owner],
+                   version: res[:version]
+                 }
+               end)
 
           push(socket, "create_entity", %{
             data: %{
               components: components,
-              creator: Enum.at(res, 0),
-              network_id: Enum.at(res, 1),
-              prefab: Enum.at(res, 2),
-              prefab_params: Enum.at(res, 3),
-              shared: Enum.at(res, 4),
-              version: Enum.at(res, 5)
+              creator: res[:creator],
+              network_id: res[:network_id],
+              prefab: res[:prefab],
+              prefab_params: res[:prefab_params],
+              shared: res[:shared],
+              version: res[:version]
             }
           })
         end)
@@ -118,123 +140,138 @@ defmodule ServerWeb.RoomChannel do
   # Received create_entity message.
   # Adds a new row to entities table, adds associated component rows to
   # components table, and broadcasts create_entity message.
-  # @params payload: {
-  #   components: {
-  #     data: string,
-  #     name: string,
-  #   }[]
-  #   network_id: string,
-  #   prefab: string,
-  #   prefab_params: string,
-  #   shared: boolean
-  # }
-  def handle_in("create_entity", payload, socket) do
+  def handle_in("create_entity", %{
+    #   components: {
+    #     data: string,
+    #     name: string
+    #   }[]
+    "components" => components,
+    "network_id" => network_id,
+    "prefab" => prefab,
+    "prefab_params" => prefab_params,
+    "shared" => shared
+  }, socket) do
     # Adds a new row to entities table
-    case Server.Repo.insert(
-      %Server.Entity{
-        creator: socket.assigns.user_id,
-        network_id: payload["network_id"],
-        prefab: payload["prefab"],
-        prefab_params: payload["prefab_params"],
-        shared: payload["shared"]
-      },
-      on_conflict: :raise
-	) do
-      {:ok, res} ->
-        # Adds new component rows to components table
-        components = Enum.map(payload["components"], fn c ->
-          case Server.Repo.insert(
-            %Server.Component{
-              component_name: c["name"],
-              creator: socket.assigns.user_id,
-              data: c["data"],
-              network_id: payload["network_id"],
-              owner: socket.assigns.user_id
-            },
-            on_conflict: :raise
-          ) do
-            {:ok, res} ->
-              %{
-                component_name: res.component_name,
-                creator: res.creator,
-                data: res.data,
-                network_id: res.network_id,
-                owner: res.owner,
-                version: res.version
-              }
-            # TODO: Proper error handling
-            {:error, _changeset} -> IO.puts("error")
-          end
-		end)
+    entity = %Server.Entity{
+      creator: socket.assigns.user_id,
+      network_id: network_id,
+      prefab: prefab,
+      prefab_params: prefab_params,
+      room_id: socket.assigns.room_id,
+      shared: shared
+    }
+      |> Server.Repo.insert(on_conflict: :raise)
+      |> case do
+           {:ok, res} -> res
+           {:error, _changeset} -> IO.puts("Failed to insert an entity")
+         end
 
-        # Broadcasts create_entity message
-        broadcast!(socket, "create_entity", %{
-          data: %{
-            components: components,
-            creator: res.creator,
-            network_id: res.network_id,
-            prefab: res.prefab,
-            prefab_params: res.prefab_params,
-            shared: res.shared,
-            version: res.version
-          }
-        })
-      # TODO: Proper error handling
-      {:error, _changeset} -> IO.puts("error")
-    end
+    # Adds new component rows to components table
+    components = components
+      |> Enum.map(fn c ->
+           %Server.Component{
+             component_name: c["name"],
+             creator: socket.assigns.user_id,
+             data: c["data"],
+             network_id: network_id,
+             owner: socket.assigns.user_id,
+             room_id: socket.assigns.room_id
+           }
+             |> Server.Repo.insert(on_conflict: :raise)
+             |> case do
+                  {:ok, res} ->
+                    %{
+                      component_name: res.component_name,
+                      creator: res.creator,
+                      data: res.data,
+                      network_id: res.network_id,
+                      owner: res.owner,
+                      version: res.version
+                    }
+                  {:error, _changeset} ->
+                    IO.puts("Failed to insert a component")
+                end
+         end)
+
+    # Broadcasts create_entity message
+    broadcast!(socket, "create_entity", %{
+      data: %{
+        components: components,
+        creator: entity.creator,
+        network_id: entity.network_id,
+        prefab: entity.prefab,
+        prefab_params: entity.prefab_params,
+        shared: entity.shared,
+        version: entity.version
+      }
+    })
 
     {:noreply, socket}
   end
 
   # Received update_component message.
   # Updates component info and broadcasts them.
-  # @params payload: {
-  #   components: {
-  #     data: string,
-  #     name: string,
-  #   }[],
-  #   network_id: string
-  # }
-  def handle_in("update_component", payload, socket) do
-    # TODO: Lock?
-    components = Enum.map(payload["components"], fn c ->
-      # Updates component info
-      # TODO: Error handling
-      # TODO: Update updated_at?
-      import Ecto.Query, only: [from: 2]
-      from(
-        c in Server.Component,
-        where: c.component_name == ^c["name"] and
-               c.network_id == ^payload["network_id"],
-        update: [set: [data: ^c["data"], owner: ^socket.assigns.user_id], inc: [version: 1]]
-      )
-        |> Server.Repo.update_all([])
+  def handle_in("update_component", %{
+    #   components: {
+    #     data: string,
+    #     name: string
+    #   }[]
+    "components" => components,
+    "network_id" => network_id
+  }, socket) do
+    components = components
+      |> Enum.map(fn c ->
+           # Updates component info
+           # TODO: Update updated_at?
+           import Ecto.Query, only: [from: 2]
+           from(
+             c in Server.Component,
+             where: c.component_name == ^c["name"] and
+                    c.network_id == ^network_id and
+                    c.room_id == ^socket.assigns.room_id,
+             update: [
+               set: [
+                 data: ^c["data"],
+                 owner: ^socket.assigns.user_id
+               ],
+               inc: [version: 1]
+             ]
+           )
+             |> Server.Repo.update_all([])
 
-      # Broadcasts updated component info
-      # TODO: Error handling
-      res = from(
-        c in Server.Component,
-        where: c.component_name == ^c["name"] and
-               c.network_id == ^payload["network_id"],
-        select: [c.component_name, c.creator, c.data, c.network_id, c.owner, c.version]
-      )
-        |> Server.Repo.one!
+           # Load the updated component info
+           component = from(
+             c in Server.Component,
+             where: c.component_name == ^c["name"] and
+                    c.network_id == ^network_id and
+                    c.room_id == ^socket.assigns.room_id,
+             select: map(c, [
+               :component_name,
+               :creator,
+               :data,
+               :network_id,
+               :owner,
+               :version
+             ])
+           )
+             |> Server.Repo.one!()
 
-      %{
-        component_name: Enum.at(res, 0),
-        creator: Enum.at(res, 1),
-        data: Enum.at(res, 2),
-        network_id: Enum.at(res, 3),
-        owner: Enum.at(res, 4),
-        version: Enum.at(res, 5)
-      }
-    end)
+           %{
+             component_name: component[:component_name],
+             creator: component[:creator],
+             data: component[:data],
+             network_id: component[:network_id],
+             owner: component[:owner],
+             version: component[:version]
+           }
+         end)
 
+    # Broadcasts the updated components info
     broadcast!(socket, "update_component", %{
       data: %{
         components: components,
         owner: socket.assigns.user_id,
-        network_id: payload["network_id"]
+        network_id: network_id
       }
     })
 
@@ -243,29 +280,34 @@ defmodule ServerWeb.RoomChannel do
 
   # Received remove_entity message.
   # Removes an entity and associated component rows from entities and component
-  # tables, and broadcasts remove_entity message. Remove_component
+  # tables, and broadcasts remove_entity message. remove_component
   # messages are not needed to be broadcast because the clients know that
   # associated components removal happens from remove_entity message.
-  # @params payload: {
-  #   network_id: string
-  # }
-  def handle_in("remove_entity", payload, socket) do
+  def handle_in("remove_entity", %{"network_id" => network_id}, socket) do
     # Removes an entity row from entities table
-    # TODO: Error handling
-    # TODO: Is lock needed even for deletion?
     # TODO: Is version needed even for deletion?
     import Ecto.Query, only: [from: 2]
     from(
       e in Server.Entity, 
-      where: e.network_id == ^payload["network_id"]
+      where: e.network_id == ^network_id and
+             e.room_id == ^socket.assigns.room_id
     )
       |> Server.Repo.delete_all([])
 
+    # Removes associated components
     from(
       c in Server.Component,
-      where: c.network_id == ^payload["network_id"]
+      where: c.network_id == ^network_id and
+             c.room_id == ^socket.assigns.room_id
     )
       |> Server.Repo.delete_all([])
+
+    # Broadcasts remove_entity message
+    broadcast!(socket, "remove_entity", %{
+      data: %{
+        network_id: network_id
+      }
+    })
 
     {:noreply, socket}
   end

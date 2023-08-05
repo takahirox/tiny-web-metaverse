@@ -8,6 +8,7 @@ defmodule Server.Component do
     field :data, :string
     field :network_id, :string
     field :owner, :string
+    field :room_id, :string
     field :version, :integer, default: 1
     # TODO: Add component_id (UUID)?
 
@@ -17,8 +18,8 @@ defmodule Server.Component do
   @doc false
   def changeset(component, attrs) do
     component
-    |> cast(attrs, [:component_name, :creator, :owner, :network_id, :data])
-    |> validate_required([:component_name, :creator, :owner, :network_id, :data])
+    |> cast(attrs, [:component_name, :creator, :owner, :network_id, :room_id, :data])
+    |> validate_required([:component_name, :creator, :owner, :network_id, :room_id, :data])
     |> unique_constraint([:component_name, :network_id])
   end
 end

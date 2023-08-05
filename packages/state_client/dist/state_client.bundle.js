@@ -17,7 +17,7 @@ __webpack_require__.r(__webpack_exports__);
 class Adapter {
     constructor(params) {
         const url = params.url || 'ws://localhost:4000/socket';
-        const topic = params.topic || 'room:lobby';
+        const topic = `room:${params.roomId}`;
         this.userId = params.userId;
         const socket = new phoenix__WEBPACK_IMPORTED_MODULE_0__.Socket(url, {});
         socket.connect();

@@ -5,8 +5,9 @@ defmodule Server.Repo.Migrations.CreateComponents do
     create table(:components) do
       add :component_name, :string
       add :creator, :string
-      add :owner, :string
       add :network_id, :string
+      add :owner, :string
+      add :room_id, :string
       add :data, :text
       add :version, :integer, default: 1
 

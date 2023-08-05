@@ -8,6 +8,7 @@ defmodule Server.Repo.Migrations.CreateEntities do
       add :shared, :boolean, default: false, null: false
       add :prefab, :string
       add :prefab_params, :text
+      add :room_id, :string
       add :version, :integer, default: 1
 
       timestamps()
