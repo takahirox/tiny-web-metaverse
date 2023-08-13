@@ -28,7 +28,7 @@
   },
   "sideEffects": false,
   "scripts": {
-    "build": "webpack",
+    "build": "webpack && npm run type",
     "server": "webpack serve --config-name @tiny-web-metaverse/state_client_examples",
     "test": "echo \"Error: no test specified\" && exit 1",
     "type": "dts-bundle-generator -o ./dist/state_client.bundle.d.ts ./src/index.ts",

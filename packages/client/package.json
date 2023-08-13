@@ -24,7 +24,7 @@
   },
   "sideEffects": false,
   "scripts": {
-    "build": "webpack",
+    "build": "webpack && npm run type",
     "test": "echo \"Error: no test specified\" && exit 1",
     "type": "dts-bundle-generator -o ./dist/client.bundle.d.ts ./src/index.ts",
     "watch": "webpack --watch"

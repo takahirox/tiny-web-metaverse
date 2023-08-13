@@ -22,39 +22,58 @@ import { selectedObjectSystem } from "./systems/selected_object";
 import { userEventSystem } from "./systems/user";
 import { updateSidebarSystem } from "./ui/side_bar";
 
-const app = new App({roomId: '1234'});
-document.body.appendChild(app.getCanvas());
+const url = new URL(location.href);
 
-app.registerSystem(updateSidebarSystem, SystemOrder.BeforeMatricesUpdate);
-app.registerSystem(colorSystem, SystemOrder.Render - 1);
-app.registerSystem(selectedObjectSystem, SystemOrder.Render - 1);
-app.registerSystem(userEventSystem, SystemOrder.Render - 1);
+const reloadWithRoomIdIfNeeded = async (): Promise<void> => {
+  if (!url.searchParams.has('room_id')) {
+    url.searchParams.set('room_id', (Math.random() * 1000).toFixed(0));
+    location.href = url.href;
+    // Never return
+    await new Promise(() => {});
+  }
+};
 
-app.registerPrefab('avatar', AvatarPrefab);
-app.registerPrefab('cube', CubePrefab);
+const run = async (): Promise<void> => {
+  await reloadWithRoomIdIfNeeded();
 
-const world = app.getWorld();
+  const roomId = url.searchParams.get('room_id');
 
-const gridEid = addEntity(world);
-addComponent(world, InScene, gridEid);
-EntityObject3DProxy.get(gridEid).addObject3D(world, new GridHelper());
+  const app = new App({roomId});
+  document.body.appendChild(app.getCanvas());
 
-const avatarEid = createNetworkedEntity(world, app, NetworkedType.Local, 'avatar');
-EntityObject3DProxy.get(avatarEid).root.position.set(0.0, 0.25, 2.0);
-addComponent(world, KeyEventListener, avatarEid);
+  app.registerSystem(updateSidebarSystem, SystemOrder.BeforeMatricesUpdate);
+  app.registerSystem(colorSystem, SystemOrder.Render - 1);
+  app.registerSystem(selectedObjectSystem, SystemOrder.Render - 1);
+  app.registerSystem(userEventSystem, SystemOrder.Render - 1);
 
-const mouseButtonEventEid = addEntity(world);
-addComponent(world, MouseButtonEventListener, mouseButtonEventEid);
+  app.registerPrefab('avatar', AvatarPrefab);
+  app.registerPrefab('cube', CubePrefab);
 
-const userEventHandlerEid = addEntity(world);
-addComponent(world, UserEventHandler, userEventHandlerEid);
-addComponent(world, UserNetworkEventListener, userEventHandlerEid);
+  const world = app.getWorld();
 
-const cubeEid = createNetworkedEntity(world, app, NetworkedType.Shared, 'cube');
-EntityObject3DProxy.get(cubeEid).root.position.set(
-  (Math.random() - 0.5) * 10.0,
-  0.25,
-  (Math.random() - 0.5) * 10.0
-);
+  const gridEid = addEntity(world);
+  addComponent(world, InScene, gridEid);
+  EntityObject3DProxy.get(gridEid).addObject3D(world, new GridHelper());
 
-app.start();
+  const avatarEid = createNetworkedEntity(world, app, NetworkedType.Local, 'avatar');
+  EntityObject3DProxy.get(avatarEid).root.position.set(0.0, 0.25, 2.0);
+  addComponent(world, KeyEventListener, avatarEid);
+
+  const mouseButtonEventEid = addEntity(world);
+  addComponent(world, MouseButtonEventListener, mouseButtonEventEid);
+
+  const userEventHandlerEid = addEntity(world);
+  addComponent(world, UserEventHandler, userEventHandlerEid);
+  addComponent(world, UserNetworkEventListener, userEventHandlerEid);
+
+  const cubeEid = createNetworkedEntity(world, app, NetworkedType.Shared, 'cube');
+  EntityObject3DProxy.get(cubeEid).root.position.set(
+    (Math.random() - 0.5) * 10.0,
+    0.25,
+    (Math.random() - 0.5) * 10.0
+  );
+
+  app.start();
+};
+
+run();

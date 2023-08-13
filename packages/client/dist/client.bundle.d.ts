@@ -59,6 +59,7 @@ export declare class App {
 	deregisterSystem(system: System): void;
 	getSystemOrderPriority(system: System): number;
 	registerPrefab(key: string, prefab: Prefab): void;
+	getPrefab(key: string): Prefab;
 	registerSerializers(key: string, component: Component | null, serializers: Serializers): void;
 	tick(): void;
 	start(): void;
@@ -332,7 +333,7 @@ export declare class NetworkedProxy {
 	private map;
 	private constructor();
 	static get(eid: number): NetworkedProxy;
-	allocate(world: IWorld, networkId: string, type: NetworkedType, creator: string, prefabName: string): void;
+	allocate(world: IWorld, networkId: string, type: NetworkedType, creator: string, prefabName: string, prefabParams: any): void;
 	free(world: IWorld): void;
 	hasNetworkedComponent(key: string): boolean;
 	initNetworkedComponent(key: string, cache: CacheData, owner: string, version: number): void;
@@ -342,6 +343,7 @@ export declare class NetworkedProxy {
 	get creator(): string;
 	get networkId(): string;
 	get prefabName(): string;
+	get prefabParams(): any;
 	get type(): NetworkedType;
 }
 export declare const NetworkedInit: import("bitecs").ComponentType<import("bitecs").ISchema>;
@@ -351,10 +353,11 @@ export declare class NetworkedInitProxy {
 	private map;
 	private constructor();
 	static get(eid: number): NetworkedInitProxy;
-	allocate(world: IWorld, networkId: string, prefabName: string): void;
+	allocate(world: IWorld, networkId: string, prefabName: string, prefabParams: any): void;
 	free(world: IWorld): void;
 	get networkId(): string;
 	get prefabName(): string;
+	get prefabParams(): string;
 }
 export declare const Local: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare const Remote: import("bitecs").ComponentType<import("bitecs").ISchema>;
@@ -591,6 +594,6 @@ export declare const clearTransformUpdatedSystem: (world: IWorld) => void;
 export declare const updateMatricesSystem: (world: IWorld) => void;
 export declare const windowResizeEventHandleSystem: (world: IWorld) => void;
 export declare const windowResizeEventClearSystem: (world: IWorld) => void;
-export declare const setupNetworkedEntity: (world: IWorld, eid: number, prefabName: string, type: NetworkedType.Local | NetworkedType.Shared) => void;
+export declare const createNetworkedEntity: (world: IWorld, app: App, type: NetworkedType.Local | NetworkedType.Shared, prefabName: string, prefabParams?: any) => number;
 
 export {};

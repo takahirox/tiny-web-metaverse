@@ -6,7 +6,7 @@ import {
   IWorld
 } from "bitecs";
 import { MathUtils, Raycaster } from "three";
-import { Adapter as PhoenixAdapter } from "@tiny-web-metaverse/state_client/src";
+import { Adapter as PhoenixAdapter } from "@tiny-web-metaverse/state_client";
 import {
   Prefab,
   PrefabMap,
