@@ -244,6 +244,12 @@ class App {
         }
         this.prefabs.set(key, prefab);
     }
+    getPrefab(key) {
+        if (!this.prefabs.has(key)) {
+            throw new Error(`Unknown prefab key ${key}`);
+        }
+        return this.prefabs.get(key);
+    }
     registerSerializers(key, component, serializers) {
         if (this.serializers.has(key)) {
             throw new Error(`serializer key ${key} is already used.`);
@@ -1117,13 +1123,15 @@ class NetworkedProxy {
         NetworkedProxy.instance.eid = eid;
         return NetworkedProxy.instance;
     }
-    allocate(world, networkId, type, creator, prefabName) {
+    // TODO: Avoid any
+    allocate(world, networkId, type, creator, prefabName, prefabParams) {
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, Networked, this.eid);
         this.map.set(this.eid, {
             components: new Map(),
             creator,
             networkId,
             prefabName,
+            prefabParams,
             type
         });
     }
@@ -1162,6 +1170,9 @@ class NetworkedProxy {
     get prefabName() {
         return this.map.get(this.eid).prefabName;
     }
+    get prefabParams() {
+        return this.map.get(this.eid).prefabParams;
+    }
     get type() {
         return this.map.get(this.eid).type;
     }
@@ -1177,9 +1188,10 @@ class NetworkedInitProxy {
         NetworkedInitProxy.instance.eid = eid;
         return NetworkedInitProxy.instance;
     }
-    allocate(world, networkId, prefabName) {
+    // TODO: Avoid any
+    allocate(world, networkId, prefabName, prefabParams) {
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, NetworkedInit, this.eid);
-        this.map.set(this.eid, { networkId, prefabName });
+        this.map.set(this.eid, { networkId, prefabName, prefabParams });
     }
     free(world) {
         this.map.delete(this.eid);
@@ -1190,6 +1202,9 @@ class NetworkedInitProxy {
     }
     get prefabName() {
         return this.map.get(this.eid).prefabName;
+    }
+    get prefabParams() {
+        return this.map.get(this.eid).prefabParams;
     }
 }
 NetworkedInitProxy.instance = new NetworkedInitProxy();
@@ -2726,6 +2741,7 @@ const networkEventHandleSystem = (world) => {
     // Assumes that adapter entity is not added after receiver initialization
     initQuery(world).forEach(eid => {
         let initialized = false;
+        // TODO: Validate network data?
         adapterQuery(world).forEach(adapterEid => {
             const adapter = _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkAdapterProxy.get(adapterEid).adapter;
             adapter.addEventListener(_components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkMessageType.UserJoined, (payload) => {
@@ -2838,6 +2854,8 @@ const networkSendSystem = (world, { serializerKeys, serializers }) => {
                             components,
                             network_id: networkId,
                             prefab: networkedProxy.prefabName,
+                            // TODO: Fix me
+                            prefab_params: JSON.stringify(networkedProxy.prefabParams),
                             shared: networkedProxy.type === _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkedType.Shared
                         });
                         _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkedEntityManagerProxy
@@ -2924,7 +2942,7 @@ const networkedSystem = (world) => {
             else {
                 throw new Error(`Invalid networked type ${type}`);
             }
-            _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkedProxy.get(eid).allocate(world, proxy.networkId, type, userId, proxy.prefabName);
+            _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkedProxy.get(eid).allocate(world, proxy.networkId, type, userId, proxy.prefabName, proxy.prefabParams);
             initialized = true;
         });
         if (initialized) {
@@ -2980,9 +2998,7 @@ const networkedEntitySystem = (world, { prefabs, serializers }) => {
                 if (e.type === _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkMessageType.CreateEntity) {
                     if (e.data.creator !== userId) {
                         const prefab = prefabs.get(e.data.prefab);
-                        // TODO: Fix me
-                        const params = e.data.prefab_params !== undefined
-                            ? JSON.parse(e.data.prefab_params) : undefined;
+                        const params = JSON.parse(e.data.prefab_params || '{}');
                         const eid = prefab(world, params);
                         managerProxy.add(eid, e.data.network_id, e.data.creator);
                         let type;
@@ -2995,7 +3011,7 @@ const networkedEntitySystem = (world, { prefabs, serializers }) => {
                             type = _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkedType.Remote;
                         }
                         const networkedProxy = _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkedProxy.get(eid);
-                        networkedProxy.allocate(world, e.data.network_id, type, e.data.creator, e.data.prefab);
+                        networkedProxy.allocate(world, e.data.network_id, type, e.data.creator, e.data.prefab, e.data.prefab_params);
                         for (const c of e.data.components) {
                             if (serializers.has(c.component_name)) {
                                 const data = JSON.parse(c.data);
@@ -3415,7 +3431,7 @@ const windowResizeEventClearSystem = (world) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   setupNetworkedEntity: () => (/* binding */ setupNetworkedEntity)
+/* harmony export */   createNetworkedEntity: () => (/* binding */ createNetworkedEntity)
 /* harmony export */ });
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "../../node_modules/three/build/three.module.js");
@@ -3428,8 +3444,13 @@ const generateUUID = () => {
 };
 // For creating local or shared networked entity from local client.
 // Networked entity created by remote clients are set up in networked entity system.
-const setupNetworkedEntity = (world, eid, prefabName, type) => {
-    _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedInitProxy.get(eid).allocate(world, generateUUID(), prefabName);
+const createNetworkedEntity = (world, 
+// TODO: Remove dependency with App?
+app, type, prefabName, 
+// TODO: Avoid any
+prefabParams = {}) => {
+    const prefab = app.getPrefab(prefabName);
+    const eid = prefab(world, prefabParams);
     if (type === _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedType.Local) {
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_2__.Local, eid);
     }
@@ -3439,6 +3460,8 @@ const setupNetworkedEntity = (world, eid, prefabName, type) => {
     else {
         throw new Error(`Invalid networked type ${type}`);
     }
+    _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedInitProxy.get(eid).allocate(world, generateUUID(), prefabName, prefabParams);
+    return eid;
 };
 
 
@@ -57380,6 +57403,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   avatarMouseControlsSystem: () => (/* reexport safe */ _systems_avatar_mouse_controls__WEBPACK_IMPORTED_MODULE_21__.avatarMouseControlsSystem),
 /* harmony export */   clearRaycastedSystem: () => (/* reexport safe */ _systems_raycast__WEBPACK_IMPORTED_MODULE_38__.clearRaycastedSystem),
 /* harmony export */   clearTransformUpdatedSystem: () => (/* reexport safe */ _systems_transform__WEBPACK_IMPORTED_MODULE_43__.clearTransformUpdatedSystem),
+/* harmony export */   createNetworkedEntity: () => (/* reexport safe */ _utils_network__WEBPACK_IMPORTED_MODULE_46__.createNetworkedEntity),
 /* harmony export */   fpsCameraSystem: () => (/* reexport safe */ _systems_fps_camera__WEBPACK_IMPORTED_MODULE_22__.fpsCameraSystem),
 /* harmony export */   grabSystem: () => (/* reexport safe */ _systems_grab__WEBPACK_IMPORTED_MODULE_23__.grabSystem),
 /* harmony export */   grabbedObjectsMouseTrackSystem: () => (/* reexport safe */ _systems_grab_mouse_track__WEBPACK_IMPORTED_MODULE_24__.grabbedObjectsMouseTrackSystem),
@@ -57406,7 +57430,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   rendererSystem: () => (/* reexport safe */ _systems_renderer__WEBPACK_IMPORTED_MODULE_40__.rendererSystem),
 /* harmony export */   scaleSerializers: () => (/* reexport safe */ _serializations_transform__WEBPACK_IMPORTED_MODULE_19__.scaleSerializers),
 /* harmony export */   sceneSystem: () => (/* reexport safe */ _systems_scene__WEBPACK_IMPORTED_MODULE_41__.sceneSystem),
-/* harmony export */   setupNetworkedEntity: () => (/* reexport safe */ _utils_network__WEBPACK_IMPORTED_MODULE_46__.setupNetworkedEntity),
 /* harmony export */   timeSystem: () => (/* reexport safe */ _systems_time__WEBPACK_IMPORTED_MODULE_42__.timeSystem),
 /* harmony export */   to2DMessageQueue: () => (/* reexport safe */ _message__WEBPACK_IMPORTED_MODULE_2__.to2DMessageQueue),
 /* harmony export */   to3DMessageQueue: () => (/* reexport safe */ _message__WEBPACK_IMPORTED_MODULE_2__.to3DMessageQueue),
@@ -57624,6 +57647,7 @@ var __webpack_exports__avatarKeyControlsSystem = __webpack_exports__.avatarKeyCo
 var __webpack_exports__avatarMouseControlsSystem = __webpack_exports__.avatarMouseControlsSystem;
 var __webpack_exports__clearRaycastedSystem = __webpack_exports__.clearRaycastedSystem;
 var __webpack_exports__clearTransformUpdatedSystem = __webpack_exports__.clearTransformUpdatedSystem;
+var __webpack_exports__createNetworkedEntity = __webpack_exports__.createNetworkedEntity;
 var __webpack_exports__fpsCameraSystem = __webpack_exports__.fpsCameraSystem;
 var __webpack_exports__grabSystem = __webpack_exports__.grabSystem;
 var __webpack_exports__grabbedObjectsMouseTrackSystem = __webpack_exports__.grabbedObjectsMouseTrackSystem;
@@ -57650,13 +57674,12 @@ var __webpack_exports__renderSystem = __webpack_exports__.renderSystem;
 var __webpack_exports__rendererSystem = __webpack_exports__.rendererSystem;
 var __webpack_exports__scaleSerializers = __webpack_exports__.scaleSerializers;
 var __webpack_exports__sceneSystem = __webpack_exports__.sceneSystem;
-var __webpack_exports__setupNetworkedEntity = __webpack_exports__.setupNetworkedEntity;
 var __webpack_exports__timeSystem = __webpack_exports__.timeSystem;
 var __webpack_exports__to2DMessageQueue = __webpack_exports__.to2DMessageQueue;
 var __webpack_exports__to3DMessageQueue = __webpack_exports__.to3DMessageQueue;
 var __webpack_exports__updateMatricesSystem = __webpack_exports__.updateMatricesSystem;
 var __webpack_exports__windowResizeEventClearSystem = __webpack_exports__.windowResizeEventClearSystem;
 var __webpack_exports__windowResizeEventHandleSystem = __webpack_exports__.windowResizeEventHandleSystem;
-export { __webpack_exports__App as App, __webpack_exports__Avatar as Avatar, __webpack_exports__AvatarMouseControls as AvatarMouseControls, __webpack_exports__AvatarMouseControlsProxy as AvatarMouseControlsProxy, __webpack_exports__ComponentNetworkEventListener as ComponentNetworkEventListener, __webpack_exports__EntityNetworkEventListener as EntityNetworkEventListener, __webpack_exports__EntityObject3D as EntityObject3D, __webpack_exports__EntityObject3DProxy as EntityObject3DProxy, __webpack_exports__EntityRootGroup as EntityRootGroup, __webpack_exports__F32_EPSILON as F32_EPSILON, __webpack_exports__Grabbable as Grabbable, __webpack_exports__Grabbed as Grabbed, __webpack_exports__INITIAL_VERSION as INITIAL_VERSION, __webpack_exports__InScene as InScene, __webpack_exports__KeyEvent as KeyEvent, __webpack_exports__KeyEventHandler as KeyEventHandler, __webpack_exports__KeyEventHandlerDestroy as KeyEventHandlerDestroy, __webpack_exports__KeyEventHandlerInit as KeyEventHandlerInit, __webpack_exports__KeyEventHandlerProxy as KeyEventHandlerProxy, __webpack_exports__KeyEventListener as KeyEventListener, __webpack_exports__KeyEventProxy as KeyEventProxy, __webpack_exports__KeyEventType as KeyEventType, __webpack_exports__KeyHold as KeyHold, __webpack_exports__LinearMoveBackward as LinearMoveBackward, __webpack_exports__LinearMoveForward as LinearMoveForward, __webpack_exports__LinearMoveLeft as LinearMoveLeft, __webpack_exports__LinearMoveRight as LinearMoveRight, __webpack_exports__LinearRotate as LinearRotate, __webpack_exports__LinearScale as LinearScale, __webpack_exports__LinearTranslate as LinearTranslate, __webpack_exports__Local as Local, __webpack_exports__Messages as Messages, __webpack_exports__MouseButtonEvent as MouseButtonEvent, __webpack_exports__MouseButtonEventHandler as MouseButtonEventHandler, __webpack_exports__MouseButtonEventHandlerDestroy as MouseButtonEventHandlerDestroy, __webpack_exports__MouseButtonEventHandlerInit as MouseButtonEventHandlerInit, __webpack_exports__MouseButtonEventHandlerInitProxy as MouseButtonEventHandlerInitProxy, __webpack_exports__MouseButtonEventHandlerProxy as MouseButtonEventHandlerProxy, __webpack_exports__MouseButtonEventListener as MouseButtonEventListener, __webpack_exports__MouseButtonEventProxy as MouseButtonEventProxy, __webpack_exports__MouseButtonEventType as MouseButtonEventType, __webpack_exports__MouseButtonHold as MouseButtonHold, __webpack_exports__MouseButtonType as MouseButtonType, __webpack_exports__MouseMoveEvent as MouseMoveEvent, __webpack_exports__MouseMoveEventHandler as MouseMoveEventHandler, __webpack_exports__MouseMoveEventHandlerDestroy as MouseMoveEventHandlerDestroy, __webpack_exports__MouseMoveEventHandlerInit as MouseMoveEventHandlerInit, __webpack_exports__MouseMoveEventHandlerInitProxy as MouseMoveEventHandlerInitProxy, __webpack_exports__MouseMoveEventHandlerProxy as MouseMoveEventHandlerProxy, __webpack_exports__MouseMoveEventListener as MouseMoveEventListener, __webpack_exports__MouseMoveEventProxy as MouseMoveEventProxy, __webpack_exports__MousePosition as MousePosition, __webpack_exports__MousePositionProxy as MousePositionProxy, __webpack_exports__NETWORK_INTERVAL as NETWORK_INTERVAL, __webpack_exports__NULL_EID as NULL_EID, __webpack_exports__NetworkAdapter as NetworkAdapter, __webpack_exports__NetworkAdapterProxy as NetworkAdapterProxy, __webpack_exports__NetworkEvent as NetworkEvent, __webpack_exports__NetworkEventProxy as NetworkEventProxy, __webpack_exports__NetworkEventReceiver as NetworkEventReceiver, __webpack_exports__NetworkEventReceiverDestroy as NetworkEventReceiverDestroy, __webpack_exports__NetworkEventReceiverInit as NetworkEventReceiverInit, __webpack_exports__NetworkEventSender as NetworkEventSender, __webpack_exports__NetworkEventSenderProxy as NetworkEventSenderProxy, __webpack_exports__NetworkMessageType as NetworkMessageType, __webpack_exports__Networked as Networked, __webpack_exports__NetworkedEntityManager as NetworkedEntityManager, __webpack_exports__NetworkedEntityManagerProxy as NetworkedEntityManagerProxy, __webpack_exports__NetworkedInit as NetworkedInit, __webpack_exports__NetworkedInitProxy as NetworkedInitProxy, __webpack_exports__NetworkedPosition as NetworkedPosition, __webpack_exports__NetworkedProxy as NetworkedProxy, __webpack_exports__NetworkedQuaternion as NetworkedQuaternion, __webpack_exports__NetworkedScale as NetworkedScale, __webpack_exports__NetworkedType as NetworkedType, __webpack_exports__PreviousMousePosition as PreviousMousePosition, __webpack_exports__PreviousMousePositionProxy as PreviousMousePositionProxy, __webpack_exports__Raycastable as Raycastable, __webpack_exports__Raycasted as Raycasted, __webpack_exports__RaycasterProxy as RaycasterProxy, __webpack_exports__RaycasterTag as RaycasterTag, __webpack_exports__Remote as Remote, __webpack_exports__Renderer as Renderer, __webpack_exports__RendererDestroy as RendererDestroy, __webpack_exports__RendererInit as RendererInit, __webpack_exports__RendererInitProxy as RendererInitProxy, __webpack_exports__RendererProxy as RendererProxy, __webpack_exports__SceneInit as SceneInit, __webpack_exports__SceneInitProxy as SceneInitProxy, __webpack_exports__SceneProxy as SceneProxy, __webpack_exports__SceneTag as SceneTag, __webpack_exports__Selectable as Selectable, __webpack_exports__Selected as Selected, __webpack_exports__Shared as Shared, __webpack_exports__SystemOrder as SystemOrder, __webpack_exports__TextMessageNetworkEventListener as TextMessageNetworkEventListener, __webpack_exports__Time as Time, __webpack_exports__TimeInit as TimeInit, __webpack_exports__TimeProxy as TimeProxy, __webpack_exports__TransformUpdated as TransformUpdated, __webpack_exports__UserNetworkEventListener as UserNetworkEventListener, __webpack_exports__WindowResizeEvent as WindowResizeEvent, __webpack_exports__WindowResizeEventHandler as WindowResizeEventHandler, __webpack_exports__WindowResizeEventHandlerDestroy as WindowResizeEventHandlerDestroy, __webpack_exports__WindowResizeEventHandlerInit as WindowResizeEventHandlerInit, __webpack_exports__WindowResizeEventHandlerProxy as WindowResizeEventHandlerProxy, __webpack_exports__WindowResizeEventListener as WindowResizeEventListener, __webpack_exports__WindowSize as WindowSize, __webpack_exports__avatarKeyControlsSystem as avatarKeyControlsSystem, __webpack_exports__avatarMouseControlsSystem as avatarMouseControlsSystem, __webpack_exports__clearRaycastedSystem as clearRaycastedSystem, __webpack_exports__clearTransformUpdatedSystem as clearTransformUpdatedSystem, __webpack_exports__fpsCameraSystem as fpsCameraSystem, __webpack_exports__grabSystem as grabSystem, __webpack_exports__grabbedObjectsMouseTrackSystem as grabbedObjectsMouseTrackSystem, __webpack_exports__keyEventClearSystem as keyEventClearSystem, __webpack_exports__keyEventHandleSystem as keyEventHandleSystem, __webpack_exports__linearMoveSystem as linearMoveSystem, __webpack_exports__linearTransformSystem as linearTransformSystem, __webpack_exports__mouseButtonEventClearSystem as mouseButtonEventClearSystem, __webpack_exports__mouseButtonEventHandleSystem as mouseButtonEventHandleSystem, __webpack_exports__mouseMoveEventClearSystem as mouseMoveEventClearSystem, __webpack_exports__mouseMoveEventHandleSystem as mouseMoveEventHandleSystem, __webpack_exports__mousePositionTrackSystem as mousePositionTrackSystem, __webpack_exports__mouseRaycastSystem as mouseRaycastSystem, __webpack_exports__mouseSelectSystem as mouseSelectSystem, __webpack_exports__networkEventClearSystem as networkEventClearSystem, __webpack_exports__networkEventHandleSystem as networkEventHandleSystem, __webpack_exports__networkSendSystem as networkSendSystem, __webpack_exports__networkedEntitySystem as networkedEntitySystem, __webpack_exports__networkedSystem as networkedSystem, __webpack_exports__perspectiveCameraSystem as perspectiveCameraSystem, __webpack_exports__positionSerializers as positionSerializers, __webpack_exports__quaternionSerializers as quaternionSerializers, __webpack_exports__renderSystem as renderSystem, __webpack_exports__rendererSystem as rendererSystem, __webpack_exports__scaleSerializers as scaleSerializers, __webpack_exports__sceneSystem as sceneSystem, __webpack_exports__setupNetworkedEntity as setupNetworkedEntity, __webpack_exports__timeSystem as timeSystem, __webpack_exports__to2DMessageQueue as to2DMessageQueue, __webpack_exports__to3DMessageQueue as to3DMessageQueue, __webpack_exports__updateMatricesSystem as updateMatricesSystem, __webpack_exports__windowResizeEventClearSystem as windowResizeEventClearSystem, __webpack_exports__windowResizeEventHandleSystem as windowResizeEventHandleSystem };
+export { __webpack_exports__App as App, __webpack_exports__Avatar as Avatar, __webpack_exports__AvatarMouseControls as AvatarMouseControls, __webpack_exports__AvatarMouseControlsProxy as AvatarMouseControlsProxy, __webpack_exports__ComponentNetworkEventListener as ComponentNetworkEventListener, __webpack_exports__EntityNetworkEventListener as EntityNetworkEventListener, __webpack_exports__EntityObject3D as EntityObject3D, __webpack_exports__EntityObject3DProxy as EntityObject3DProxy, __webpack_exports__EntityRootGroup as EntityRootGroup, __webpack_exports__F32_EPSILON as F32_EPSILON, __webpack_exports__Grabbable as Grabbable, __webpack_exports__Grabbed as Grabbed, __webpack_exports__INITIAL_VERSION as INITIAL_VERSION, __webpack_exports__InScene as InScene, __webpack_exports__KeyEvent as KeyEvent, __webpack_exports__KeyEventHandler as KeyEventHandler, __webpack_exports__KeyEventHandlerDestroy as KeyEventHandlerDestroy, __webpack_exports__KeyEventHandlerInit as KeyEventHandlerInit, __webpack_exports__KeyEventHandlerProxy as KeyEventHandlerProxy, __webpack_exports__KeyEventListener as KeyEventListener, __webpack_exports__KeyEventProxy as KeyEventProxy, __webpack_exports__KeyEventType as KeyEventType, __webpack_exports__KeyHold as KeyHold, __webpack_exports__LinearMoveBackward as LinearMoveBackward, __webpack_exports__LinearMoveForward as LinearMoveForward, __webpack_exports__LinearMoveLeft as LinearMoveLeft, __webpack_exports__LinearMoveRight as LinearMoveRight, __webpack_exports__LinearRotate as LinearRotate, __webpack_exports__LinearScale as LinearScale, __webpack_exports__LinearTranslate as LinearTranslate, __webpack_exports__Local as Local, __webpack_exports__Messages as Messages, __webpack_exports__MouseButtonEvent as MouseButtonEvent, __webpack_exports__MouseButtonEventHandler as MouseButtonEventHandler, __webpack_exports__MouseButtonEventHandlerDestroy as MouseButtonEventHandlerDestroy, __webpack_exports__MouseButtonEventHandlerInit as MouseButtonEventHandlerInit, __webpack_exports__MouseButtonEventHandlerInitProxy as MouseButtonEventHandlerInitProxy, __webpack_exports__MouseButtonEventHandlerProxy as MouseButtonEventHandlerProxy, __webpack_exports__MouseButtonEventListener as MouseButtonEventListener, __webpack_exports__MouseButtonEventProxy as MouseButtonEventProxy, __webpack_exports__MouseButtonEventType as MouseButtonEventType, __webpack_exports__MouseButtonHold as MouseButtonHold, __webpack_exports__MouseButtonType as MouseButtonType, __webpack_exports__MouseMoveEvent as MouseMoveEvent, __webpack_exports__MouseMoveEventHandler as MouseMoveEventHandler, __webpack_exports__MouseMoveEventHandlerDestroy as MouseMoveEventHandlerDestroy, __webpack_exports__MouseMoveEventHandlerInit as MouseMoveEventHandlerInit, __webpack_exports__MouseMoveEventHandlerInitProxy as MouseMoveEventHandlerInitProxy, __webpack_exports__MouseMoveEventHandlerProxy as MouseMoveEventHandlerProxy, __webpack_exports__MouseMoveEventListener as MouseMoveEventListener, __webpack_exports__MouseMoveEventProxy as MouseMoveEventProxy, __webpack_exports__MousePosition as MousePosition, __webpack_exports__MousePositionProxy as MousePositionProxy, __webpack_exports__NETWORK_INTERVAL as NETWORK_INTERVAL, __webpack_exports__NULL_EID as NULL_EID, __webpack_exports__NetworkAdapter as NetworkAdapter, __webpack_exports__NetworkAdapterProxy as NetworkAdapterProxy, __webpack_exports__NetworkEvent as NetworkEvent, __webpack_exports__NetworkEventProxy as NetworkEventProxy, __webpack_exports__NetworkEventReceiver as NetworkEventReceiver, __webpack_exports__NetworkEventReceiverDestroy as NetworkEventReceiverDestroy, __webpack_exports__NetworkEventReceiverInit as NetworkEventReceiverInit, __webpack_exports__NetworkEventSender as NetworkEventSender, __webpack_exports__NetworkEventSenderProxy as NetworkEventSenderProxy, __webpack_exports__NetworkMessageType as NetworkMessageType, __webpack_exports__Networked as Networked, __webpack_exports__NetworkedEntityManager as NetworkedEntityManager, __webpack_exports__NetworkedEntityManagerProxy as NetworkedEntityManagerProxy, __webpack_exports__NetworkedInit as NetworkedInit, __webpack_exports__NetworkedInitProxy as NetworkedInitProxy, __webpack_exports__NetworkedPosition as NetworkedPosition, __webpack_exports__NetworkedProxy as NetworkedProxy, __webpack_exports__NetworkedQuaternion as NetworkedQuaternion, __webpack_exports__NetworkedScale as NetworkedScale, __webpack_exports__NetworkedType as NetworkedType, __webpack_exports__PreviousMousePosition as PreviousMousePosition, __webpack_exports__PreviousMousePositionProxy as PreviousMousePositionProxy, __webpack_exports__Raycastable as Raycastable, __webpack_exports__Raycasted as Raycasted, __webpack_exports__RaycasterProxy as RaycasterProxy, __webpack_exports__RaycasterTag as RaycasterTag, __webpack_exports__Remote as Remote, __webpack_exports__Renderer as Renderer, __webpack_exports__RendererDestroy as RendererDestroy, __webpack_exports__RendererInit as RendererInit, __webpack_exports__RendererInitProxy as RendererInitProxy, __webpack_exports__RendererProxy as RendererProxy, __webpack_exports__SceneInit as SceneInit, __webpack_exports__SceneInitProxy as SceneInitProxy, __webpack_exports__SceneProxy as SceneProxy, __webpack_exports__SceneTag as SceneTag, __webpack_exports__Selectable as Selectable, __webpack_exports__Selected as Selected, __webpack_exports__Shared as Shared, __webpack_exports__SystemOrder as SystemOrder, __webpack_exports__TextMessageNetworkEventListener as TextMessageNetworkEventListener, __webpack_exports__Time as Time, __webpack_exports__TimeInit as TimeInit, __webpack_exports__TimeProxy as TimeProxy, __webpack_exports__TransformUpdated as TransformUpdated, __webpack_exports__UserNetworkEventListener as UserNetworkEventListener, __webpack_exports__WindowResizeEvent as WindowResizeEvent, __webpack_exports__WindowResizeEventHandler as WindowResizeEventHandler, __webpack_exports__WindowResizeEventHandlerDestroy as WindowResizeEventHandlerDestroy, __webpack_exports__WindowResizeEventHandlerInit as WindowResizeEventHandlerInit, __webpack_exports__WindowResizeEventHandlerProxy as WindowResizeEventHandlerProxy, __webpack_exports__WindowResizeEventListener as WindowResizeEventListener, __webpack_exports__WindowSize as WindowSize, __webpack_exports__avatarKeyControlsSystem as avatarKeyControlsSystem, __webpack_exports__avatarMouseControlsSystem as avatarMouseControlsSystem, __webpack_exports__clearRaycastedSystem as clearRaycastedSystem, __webpack_exports__clearTransformUpdatedSystem as clearTransformUpdatedSystem, __webpack_exports__createNetworkedEntity as createNetworkedEntity, __webpack_exports__fpsCameraSystem as fpsCameraSystem, __webpack_exports__grabSystem as grabSystem, __webpack_exports__grabbedObjectsMouseTrackSystem as grabbedObjectsMouseTrackSystem, __webpack_exports__keyEventClearSystem as keyEventClearSystem, __webpack_exports__keyEventHandleSystem as keyEventHandleSystem, __webpack_exports__linearMoveSystem as linearMoveSystem, __webpack_exports__linearTransformSystem as linearTransformSystem, __webpack_exports__mouseButtonEventClearSystem as mouseButtonEventClearSystem, __webpack_exports__mouseButtonEventHandleSystem as mouseButtonEventHandleSystem, __webpack_exports__mouseMoveEventClearSystem as mouseMoveEventClearSystem, __webpack_exports__mouseMoveEventHandleSystem as mouseMoveEventHandleSystem, __webpack_exports__mousePositionTrackSystem as mousePositionTrackSystem, __webpack_exports__mouseRaycastSystem as mouseRaycastSystem, __webpack_exports__mouseSelectSystem as mouseSelectSystem, __webpack_exports__networkEventClearSystem as networkEventClearSystem, __webpack_exports__networkEventHandleSystem as networkEventHandleSystem, __webpack_exports__networkSendSystem as networkSendSystem, __webpack_exports__networkedEntitySystem as networkedEntitySystem, __webpack_exports__networkedSystem as networkedSystem, __webpack_exports__perspectiveCameraSystem as perspectiveCameraSystem, __webpack_exports__positionSerializers as positionSerializers, __webpack_exports__quaternionSerializers as quaternionSerializers, __webpack_exports__renderSystem as renderSystem, __webpack_exports__rendererSystem as rendererSystem, __webpack_exports__scaleSerializers as scaleSerializers, __webpack_exports__sceneSystem as sceneSystem, __webpack_exports__timeSystem as timeSystem, __webpack_exports__to2DMessageQueue as to2DMessageQueue, __webpack_exports__to3DMessageQueue as to3DMessageQueue, __webpack_exports__updateMatricesSystem as updateMatricesSystem, __webpack_exports__windowResizeEventClearSystem as windowResizeEventClearSystem, __webpack_exports__windowResizeEventHandleSystem as windowResizeEventHandleSystem };
 
 //# sourceMappingURL=client.bundle.js.map
