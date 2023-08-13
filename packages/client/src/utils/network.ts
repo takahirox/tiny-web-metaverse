@@ -1,5 +1,6 @@
 import { addComponent, IWorld } from "bitecs";
 import { MathUtils } from "three";
+import { App } from "../app";
 import {
   Local,
   NetworkedInitProxy,
@@ -13,13 +14,18 @@ const generateUUID = (): string => {
 
 // For creating local or shared networked entity from local client.
 // Networked entity created by remote clients are set up in networked entity system.
-export const setupNetworkedEntity = (
+export const createNetworkedEntity = (
   world: IWorld,
-  eid: number,
+  // TODO: Remove dependency with App?
+  app: App,
+  type: NetworkedType.Local | NetworkedType.Shared,
   prefabName: string,
-  type: NetworkedType.Local | NetworkedType.Shared
-): void => {
-  NetworkedInitProxy.get(eid).allocate(world, generateUUID(), prefabName);
+  // TODO: Avoid any
+  prefabParams: any = {}
+): number => {
+  const prefab = app.getPrefab(prefabName);
+  const eid = prefab(world, prefabParams);
+
   if (type === NetworkedType.Local) {
     addComponent(world, Local, eid);
   } else if (type === NetworkedType.Shared) {
@@ -27,4 +33,8 @@ export const setupNetworkedEntity = (
   } else {
     throw new Error(`Invalid networked type ${type}`);
   }
+
+  NetworkedInitProxy.get(eid).allocate(world, generateUUID(), prefabName, prefabParams);
+
+  return eid;
 };

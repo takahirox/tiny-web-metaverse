@@ -6,7 +6,7 @@ import {
   IWorld
 } from "bitecs";
 import { MathUtils, Raycaster } from "three";
-import { Adapter as PhoenixAdapter } from "@tiny-web-metaverse/state_client";
+import { Adapter as PhoenixAdapter } from "@tiny-web-metaverse/state_client/src";
 import {
   Prefab,
   PrefabMap,
@@ -122,9 +122,11 @@ export class App {
 
   constructor(params: {
     canvas?: HTMLCanvasElement,
+    roomId: string,
     userId?: string
-  } = {}) {
+  }) {
     const canvas = params.canvas || createCanvas();
+    const roomId = params.roomId;
     const userId = params.userId || MathUtils.generateUUID();
 
     this.canvas = canvas;
@@ -138,7 +140,7 @@ export class App {
       serializers: this.serializers
     };
     this.world = createWorld();
-    this.adapter = new PhoenixAdapter({userId});
+    this.adapter = new PhoenixAdapter({ roomId, userId });
     this.init();
   }
 
@@ -300,6 +302,13 @@ export class App {
       throw new Error(`prefab key ${key} is already used.`);
     }
     this.prefabs.set(key, prefab);
+  }
+
+  getPrefab(key: string): Prefab {
+    if (!this.prefabs.has(key)) {
+      throw new Error(`Unknown prefab key ${key}`);
+    }
+    return this.prefabs.get(key);
   }
 
   registerSerializers(key: string, component: Component | null, serializers: Serializers): void {

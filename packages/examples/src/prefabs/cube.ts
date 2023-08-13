@@ -14,7 +14,7 @@ import {
   NetworkedScale,
   Raycastable,
   Selectable
-} from "@tiny-web-metaverse/client";
+} from "@tiny-web-metaverse/client/src";
 
 export const CubePrefab = (world: IWorld): number => {
   const eid = addEntity(world);

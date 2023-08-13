@@ -2,10 +2,10 @@ import { addComponent, hasComponent, IWorld } from "bitecs";
 import { Euler, Vector3 } from "three";
 import {
   EntityObject3D,
-  EntityObject3DProxy
-} from "@tiny-web-metaverse/client/src/components/entity_object3d";
-import { TransformUpdated } from "@tiny-web-metaverse/client/src/components/transform";
-import { NULL_EID } from "@tiny-web-metaverse/client/src/common";
+  EntityObject3DProxy,
+  NULL_EID,
+  TransformUpdated
+} from "@tiny-web-metaverse/client/src";
 
 const vector3Keys = ['x', 'y', 'z'] as const;
 let eid = NULL_EID;

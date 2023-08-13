@@ -4,11 +4,12 @@
     "url": "https://github.com/takahirox/tiny-web-metaverse/issues"
   },
   "dependencies": {
-    "@tiny-web-metaverse/client": "../client"
+    "@tiny-web-metaverse/client": "^0.0.1"
   },
   "description": "Tiny Web metaverse examples",
   "homepage": "https://github.com/takahirox/tiny-web-metaverse#readme",
   "license": "MIT",
+  "main": "./dist/example.bundle.js",
   "name": "@tiny-web-metaverse/examples",
   "repository": {
     "type": "git",

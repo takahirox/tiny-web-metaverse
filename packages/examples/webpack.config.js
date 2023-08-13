@@ -13,8 +13,8 @@ module.exports = [
         directory: path.join(__dirname),
       }
     },
-    devtool: false,
-    entry: './apps/app.ts',
+    devtool: 'source-map',
+    entry: './src/index.ts',
     mode: mode,
     module: {
       rules: [

@@ -66,6 +66,8 @@ export const networkEventHandleSystem = (world: IWorld) => {
   initQuery(world).forEach(eid => {
     let initialized = false;
 
+    // TODO: Validate network data?
+
     adapterQuery(world).forEach(adapterEid => {
       const adapter = NetworkAdapterProxy.get(adapterEid).adapter;
 

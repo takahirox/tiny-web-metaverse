@@ -38,7 +38,7 @@ export const networkedSystem = (world: IWorld) => {
       }
 
       NetworkedProxy.get(eid).allocate(
-        world, proxy.networkId, type, userId, proxy.prefabName);
+        world, proxy.networkId, type, userId, proxy.prefabName, proxy.prefabParams);
       initialized = true;
     });
 

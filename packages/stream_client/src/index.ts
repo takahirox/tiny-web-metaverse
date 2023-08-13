@@ -1,1 +1,1 @@
-export { Adapter } from "./adapter";
+export * from "./adapter";

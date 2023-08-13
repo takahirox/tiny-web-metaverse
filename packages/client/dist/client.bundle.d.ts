@@ -49,8 +49,9 @@ export declare class App {
 	private world;
 	private adapter;
 	readonly userId: string;
-	constructor(params?: {
+	constructor(params: {
 		canvas?: HTMLCanvasElement;
+		roomId: string;
 		userId?: string;
 	});
 	private init;
@@ -294,7 +295,7 @@ declare class Adapter {
 	private eventListenerMap;
 	readonly userId: string;
 	constructor(params: {
-		topic?: string;
+		roomId: string;
 		url?: string;
 		userId: string;
 	});

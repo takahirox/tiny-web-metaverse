@@ -5,24 +5,24 @@ import {
 import { GridHelper } from "three";
 import {
   App,
+  createNetworkedEntity,
   EntityObject3DProxy,
   InScene,
   KeyEventListener,
   MouseButtonEventListener,
   NetworkedType,
-  setupNetworkedEntity,
   SystemOrder,
   UserNetworkEventListener
-} from "@tiny-web-metaverse/client";
-import { UserEventHandler } from "../components/user_event_handler";
-import { AvatarPrefab } from "../prefabs/avatar";
-import { CubePrefab } from "../prefabs/cube";
-import { colorSystem } from "../systems/color";
-import { selectedObjectSystem } from "../systems/selected_object";
-import { userEventSystem } from "../systems/user";
-import { updateSidebarSystem } from "../ui/side_bar";
+} from "@tiny-web-metaverse/client/src";
+import { UserEventHandler } from "./components/user_event_handler";
+import { AvatarPrefab } from "./prefabs/avatar";
+import { CubePrefab } from "./prefabs/cube";
+import { colorSystem } from "./systems/color";
+import { selectedObjectSystem } from "./systems/selected_object";
+import { userEventSystem } from "./systems/user";
+import { updateSidebarSystem } from "./ui/side_bar";
 
-const app = new App();
+const app = new App({roomId: '1234'});
 document.body.appendChild(app.getCanvas());
 
 app.registerSystem(updateSidebarSystem, SystemOrder.BeforeMatricesUpdate);
@@ -39,12 +39,9 @@ const gridEid = addEntity(world);
 addComponent(world, InScene, gridEid);
 EntityObject3DProxy.get(gridEid).addObject3D(world, new GridHelper());
 
-// TODO: Separately calling prefab function and passing a corresponding
-//       prefab name to setupNetworkedEntity() sounds like duplicated. Fix me.
-const avatarEid = AvatarPrefab(world);
+const avatarEid = createNetworkedEntity(world, app, NetworkedType.Local, 'avatar');
 EntityObject3DProxy.get(avatarEid).root.position.set(0.0, 0.25, 2.0);
 addComponent(world, KeyEventListener, avatarEid);
-setupNetworkedEntity(world, avatarEid, 'avatar', NetworkedType.Local);
 
 const mouseButtonEventEid = addEntity(world);
 addComponent(world, MouseButtonEventListener, mouseButtonEventEid);
@@ -53,14 +50,11 @@ const userEventHandlerEid = addEntity(world);
 addComponent(world, UserEventHandler, userEventHandlerEid);
 addComponent(world, UserNetworkEventListener, userEventHandlerEid);
 
-const cubeEid = CubePrefab(world);
+const cubeEid = createNetworkedEntity(world, app, NetworkedType.Shared, 'cube');
 EntityObject3DProxy.get(cubeEid).root.position.set(
   (Math.random() - 0.5) * 10.0,
   0.25,
   (Math.random() - 0.5) * 10.0
 );
-setupNetworkedEntity(world, cubeEid, 'cube', NetworkedType.Shared);
 
 app.start();
-
-export { app };

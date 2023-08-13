@@ -39,7 +39,7 @@ module.exports = [
         directory: path.join(__dirname, 'examples'),
       }
     },
-    devtool: false,
+    devtool: 'source-map',
     entry: './examples/index.ts',
     mode: mode,
     module: {

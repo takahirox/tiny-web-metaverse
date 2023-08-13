@@ -7,7 +7,7 @@ import {
 import {
   NULL_EID,
   Selected
-} from "@tiny-web-metaverse/client";
+} from "@tiny-web-metaverse/client/src";
 import { notifyEid } from "../ui/side_bar";
 
 const selectedQuery = defineQuery([Selected]);

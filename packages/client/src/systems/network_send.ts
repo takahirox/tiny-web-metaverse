@@ -93,6 +93,8 @@ export const networkSendSystem = (world: IWorld, {serializerKeys, serializers}: 
                 components,
                 network_id: networkId,
                 prefab: networkedProxy.prefabName,
+                // TODO: Fix me
+                prefab_params: JSON.stringify(networkedProxy.prefabParams),
                 shared: networkedProxy.type === NetworkedType.Shared
               }
             );

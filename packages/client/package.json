@@ -4,28 +4,32 @@
     "url": "https://github.com/takahirox/tiny-web-metaverse/issues"
   },
   "dependencies": {
-    "@tiny-web-metaverse/state_client": "../state_client",
-    "bitecs": "^0.3.38",
-    "three": "^0.152.2"
+    "@tiny-web-metaverse/state_client": "^0.0.1"
   },
   "description": "Tiny Web metaverse client",
-  "devDependencies": {
-    "@types/three": "^0.151.0"
+  "exports": {
+    ".": {
+      "import": "./dist/client.bundle.js"
+    },
+    "./src": "./src/index.ts",
+    "./src/*": "./src/*"
   },
   "homepage": "https://github.com/takahirox/tiny-web-metaverse#readme",
   "license": "MIT",
-  "main": "dist/client.bundle.js",
+  "module": "./dist/client.bundle.js",
   "name": "@tiny-web-metaverse/client",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/takahirox/tiny-web-metaverse.git"
   },
+  "sideEffects": false,
   "scripts": {
     "build": "webpack",
     "test": "echo \"Error: no test specified\" && exit 1",
     "type": "dts-bundle-generator -o ./dist/client.bundle.d.ts ./src/index.ts",
     "watch": "webpack --watch"
   },
+  "type": "module",
   "types": "./dist/client.bundle.d.ts",
   "version": "0.0.1"
 }

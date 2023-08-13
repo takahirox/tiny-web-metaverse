@@ -6,7 +6,7 @@ export declare class Adapter {
 	private eventListenerMap;
 	readonly userId: string;
 	constructor(params: {
-		topic?: string;
+		roomId: string;
 		url?: string;
 		userId: string;
 	});

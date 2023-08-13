@@ -11,7 +11,7 @@ import {
   Raycastable,
   Raycasted,
   Selected
-} from "@tiny-web-metaverse/client";
+} from "@tiny-web-metaverse/client/src";
 
 const query = defineQuery([EntityObject3D, Raycastable]);
 const grabbedQuery = defineQuery([Grabbed]);

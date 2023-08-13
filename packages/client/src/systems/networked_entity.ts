@@ -55,9 +55,7 @@ export const networkedEntitySystem = (world: IWorld, {prefabs, serializers}: Sys
         if (e.type === NetworkMessageType.CreateEntity) {
           if (e.data.creator !== userId) {
             const prefab = prefabs.get(e.data.prefab);
-            // TODO: Fix me
-            const params = e.data.prefab_params !== undefined
-              ? JSON.parse(e.data.prefab_params) : undefined;
+            const params = JSON.parse(e.data.prefab_params || '{}');
             const eid = prefab(world, params);
             managerProxy.add(eid, e.data.network_id, e.data.creator);
             let type: NetworkedType;
@@ -74,7 +72,8 @@ export const networkedEntitySystem = (world: IWorld, {prefabs, serializers}: Sys
               e.data.network_id,
               type,
               e.data.creator,
-              e.data.prefab
+              e.data.prefab,
+              e.data.prefab_params
             );
             for (const c of e.data.components) {
               if (serializers.has(c.component_name)) {

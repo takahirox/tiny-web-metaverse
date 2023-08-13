@@ -3,7 +3,7 @@ import {
   addEntity,
   IWorld
 } from "bitecs";
-import { SphereGeometry, Mesh, MeshBasicMaterial } from "three";
+import { Mesh, MeshBasicMaterial, SphereGeometry } from "three";
 import {
   Avatar,
   EntityObject3DProxy,
@@ -11,7 +11,7 @@ import {
   NetworkedPosition,
   NetworkedQuaternion,
   NetworkedScale  
-} from "@tiny-web-metaverse/client";
+} from "@tiny-web-metaverse/client/src";
 
 export const AvatarPrefab = (world: IWorld): number => {
   const eid = addEntity(world);

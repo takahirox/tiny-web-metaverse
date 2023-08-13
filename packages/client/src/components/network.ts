@@ -5,7 +5,7 @@ import {
   IWorld,
   removeComponent
 } from "bitecs";
-import { Adapter } from "@tiny-web-metaverse/state_client";
+import { Adapter } from "@tiny-web-metaverse/state_client/src";
 import { NULL_EID } from "../common";
 
 export enum NetworkMessageType {
@@ -37,11 +37,13 @@ type NetworkedComponent = {
 
 export const Networked = defineComponent();
 
+// TODO: Avoid any
 type NetworkedValue = {
   components: Map<string, NetworkedComponent>;
   creator: string;
   networkId: string;
   prefabName: string;
+  prefabParams: any;
   type: NetworkedType;
 };
 
@@ -60,12 +62,14 @@ export class NetworkedProxy {
     return NetworkedProxy.instance;
   }
 
+  // TODO: Avoid any
   allocate(
     world: IWorld,
     networkId: string,
     type: NetworkedType,
     creator: string,
-    prefabName: string
+    prefabName: string,
+    prefabParams: any
   ): void {
     addComponent(world, Networked, this.eid);
     this.map.set(this.eid, {
@@ -73,6 +77,7 @@ export class NetworkedProxy {
       creator,
       networkId,
       prefabName,
+      prefabParams,
       type
     });
   }
@@ -131,6 +136,10 @@ export class NetworkedProxy {
     return this.map.get(this.eid)!.prefabName;
   }
 
+  get prefabParams(): any {
+    return this.map.get(this.eid)!.prefabParams;
+  }
+
   get type(): NetworkedType {
     return this.map.get(this.eid)!.type;
   }
@@ -141,6 +150,8 @@ export const NetworkedInit = defineComponent();
 type NetworkedInitValue = {
   networkId: string;
   prefabName: string;
+  // TODO: Avoid any
+  prefabParams: any;
 };
 
 export class NetworkedInitProxy {
@@ -158,9 +169,15 @@ export class NetworkedInitProxy {
     return NetworkedInitProxy.instance;
   }
 
-  allocate(world: IWorld, networkId: string, prefabName: string): void {
+  // TODO: Avoid any
+  allocate(
+    world: IWorld,
+    networkId: string,
+    prefabName: string,
+    prefabParams: any
+  ): void {
     addComponent(world, NetworkedInit, this.eid);
-    this.map.set(this.eid, {networkId, prefabName});
+    this.map.set(this.eid, {networkId, prefabName, prefabParams});
   }
 
   free(world: IWorld): void {
@@ -174,6 +191,10 @@ export class NetworkedInitProxy {
 
   get prefabName(): string {
     return this.map.get(this.eid)!.prefabName;
+  }
+
+  get prefabParams(): string {
+    return this.map.get(this.eid)!.prefabParams;
   }
 }
 

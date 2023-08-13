@@ -1,11 +1,17 @@
-const path = require('path');
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const mode = 'development';
 
-module.exports = [
+export default [
   {
-    devtool: false,
+    devtool: 'source-map',
     entry: './src/index.ts',
+    experiments: {
+      outputModule: true,
+    },
     mode: mode,
     module: {
       rules: [
@@ -16,9 +22,12 @@ module.exports = [
         }
       ]
     },
-    name: "main",
+    name: "@tiny-web-metaverse/client",
     output: {
       filename: 'client.bundle.js',
+      library: {
+        type: "module",
+      },
       path: path.resolve(__dirname, 'dist')
     },
     resolve: {

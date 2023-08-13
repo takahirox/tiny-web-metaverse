@@ -11,15 +11,22 @@
     "@types/phoenix": "^1.5.6",
     "webpack-dev-server": "^4.13.3"
   },
+  "exports": {
+    ".": {
+      "import": "./dist/state_client.bundle.js"
+    },
+    "./src": "./src/index.ts",
+    "./src/*": "./src/*"
+  },
   "homepage": "https://github.com/takahirox/tiny-web-metaverse#readme",
   "license": "MIT",
   "module": "./dist/state_client.bundle.js",
   "name": "@tiny-web-metaverse/state_client",
-  "private": true,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/takahirox/tiny-web-metaverse.git"
   },
+  "sideEffects": false,
   "scripts": {
     "build": "webpack",
     "server": "webpack serve --config-name @tiny-web-metaverse/state_client_examples",
@@ -27,6 +34,7 @@
     "type": "dts-bundle-generator -o ./dist/state_client.bundle.d.ts ./src/index.ts",
     "watch": "webpack --watch"
   },
+  "type": "module",
   "types": "./dist/state_client.bundle.d.ts",
   "version": "0.0.1"
 }
