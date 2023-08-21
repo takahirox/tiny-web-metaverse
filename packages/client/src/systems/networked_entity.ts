@@ -24,6 +24,7 @@ import {
   StateClientProxy
 } from "../components/network";
 import { InScene } from "../components/scene";
+import { getPrefab } from "../utils/prefab";
 
 const adapterQuery = defineQuery([StateClient]);
 const managerQuery = defineQuery([NetworkedEntityManager, NetworkEvent]);
@@ -45,7 +46,7 @@ const removeComponentsAndEntity = (world: IWorld, eid: number): void => {
   removeEntity(world, eid);
 };
 
-export const networkedEntitySystem = (world: IWorld, {prefabs, serializers}: SystemParams) => {
+export const networkedEntitySystem = (world: IWorld, {serializers}: SystemParams) => {
   adapterQuery(world).forEach(adapterEid => {
     const userId = StateClientProxy.get(adapterEid).adapter.userId;
     managerQuery(world).forEach(managerEid => {
@@ -54,7 +55,7 @@ export const networkedEntitySystem = (world: IWorld, {prefabs, serializers}: Sys
         //console.log(e);
         if (e.type === NetworkMessageType.CreateEntity) {
           if (e.data.creator !== userId) {
-            const prefab = prefabs.get(e.data.prefab);
+            const prefab = getPrefab(world, e.data.prefab);
             const params = JSON.parse(e.data.prefab_params || '{}');
             const eid = prefab(world, params);
             managerProxy.add(eid, e.data.network_id, e.data.creator);

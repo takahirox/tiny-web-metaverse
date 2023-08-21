@@ -13,6 +13,7 @@ import {
   KeyEventListener,
   MouseButtonEventListener,
   NetworkedType,
+  registerPrefab,
   SystemOrder,
   UserNetworkEventListener
 } from "@tiny-web-metaverse/client/src";
@@ -52,16 +53,16 @@ const run = async (): Promise<void> => {
   app.registerSystem(selectedObjectSystem, SystemOrder.Render - 1);
   app.registerSystem(userEventSystem, SystemOrder.Render - 1);
 
-  app.registerPrefab('avatar', AvatarPrefab);
-  app.registerPrefab('cube', CubePrefab);
-
   const world = app.getWorld();
+
+  registerPrefab(world, 'avatar', AvatarPrefab);
+  registerPrefab(world, 'cube', CubePrefab);
 
   const gridEid = addEntity(world);
   addComponent(world, InScene, gridEid);
   EntityObject3DProxy.get(gridEid).addObject3D(world, new GridHelper());
 
-  const avatarEid = createNetworkedEntity(world, app, NetworkedType.Local, 'avatar');
+  const avatarEid = createNetworkedEntity(world, NetworkedType.Local, 'avatar');
   EntityObject3DProxy.get(avatarEid).root.position.set(0.0, 0.25, 2.0);
   addComponent(world, KeyEventListener, avatarEid);
 
@@ -77,7 +78,7 @@ const run = async (): Promise<void> => {
   addComponent(world, ConnectedStreamEventListener, joinDialogEid);
   addComponent(world, JoinedStreamEventListener, joinDialogEid);
 
-  const cubeEid = createNetworkedEntity(world, app, NetworkedType.Shared, 'cube');
+  const cubeEid = createNetworkedEntity(world, NetworkedType.Shared, 'cube');
   EntityObject3DProxy.get(cubeEid).root.position.set(
     (Math.random() - 0.5) * 10.0,
     0.25,

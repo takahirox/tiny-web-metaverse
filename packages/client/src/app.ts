@@ -9,8 +9,6 @@ import { MathUtils, Raycaster } from "three";
 import { StateAdapter } from "@tiny-web-metaverse/state_client";
 import { StreamAdapter } from "@tiny-web-metaverse/stream_client";
 import {
-  Prefab,
-  PrefabMap,
   SerializerKeyMap,
   SerializersMap,
   Serializers,
@@ -101,7 +99,6 @@ import { mouseRaycastSystem } from "./systems/mouse_raycast";
 import { mouseSelectSystem } from "./systems/mouse_select";
 import { networkEventClearSystem, networkEventHandleSystem } from "./systems/network_event";
 import { networkSendSystem } from "./systems/network_send";
-import { networkedSystem } from "./systems/networked";
 import { networkedEntitySystem } from "./systems/networked_entity";
 import { perspectiveCameraSystem } from "./systems/perspective_camera";
 import { clearRaycastedSystem } from "./systems/raycast";
@@ -133,7 +130,6 @@ const createCanvas = (): HTMLCanvasElement => {
 export class App {
   private systems: RegisteredSystem[];
   private systemParams: SystemParams;
-  private prefabs: PrefabMap;
   private serializers: SerializersMap;
   private serializerKeys: SerializerKeyMap;
   private canvas: HTMLCanvasElement;
@@ -157,11 +153,9 @@ export class App {
     this.streamAdapter = new StreamAdapter();
 
     this.systems = [];
-    this.prefabs = new Map();
     this.serializers = new Map();
     this.serializerKeys = new Map();
     this.systemParams = {
-      prefabs: this.prefabs,
       serializerKeys: this.serializerKeys,
       serializers: this.serializers
     };
@@ -190,7 +184,6 @@ export class App {
     this.registerSystem(rendererSystem, SystemOrder.Setup);
     this.registerSystem(sceneSystem, SystemOrder.Setup);
     this.registerSystem(perspectiveCameraSystem, SystemOrder.Setup);
-    this.registerSystem(networkedSystem, SystemOrder.Setup);
     this.registerSystem(networkedEntitySystem, SystemOrder.Setup);
 
     this.registerSystem(linearMoveSystem, SystemOrder.BeforeMatricesUpdate);
@@ -354,20 +347,6 @@ export class App {
       }
     }
     throw new Error(`${system.name} system is not registered.`);
-  }
-
-  registerPrefab(key: string, prefab: Prefab): void {
-    if (this.prefabs.has(key)) {
-      throw new Error(`prefab key ${key} is already used.`);
-    }
-    this.prefabs.set(key, prefab);
-  }
-
-  getPrefab(key: string): Prefab {
-    if (!this.prefabs.has(key)) {
-      throw new Error(`Unknown prefab key ${key}`);
-    }
-    return this.prefabs.get(key);
   }
 
   registerSerializers(key: string, component: Component | null, serializers: Serializers): void {

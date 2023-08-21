@@ -20,7 +20,6 @@ export const SystemOrder = Object.freeze({
 
 // TODO: Avoid object
 export type Prefab = (world: IWorld, params: object) => number;
-export type PrefabMap = Map<string, Prefab>;
 
 // TODO: Avoid any
 export type Serializer = (world: IWorld, eid: number) => any;
@@ -38,7 +37,6 @@ export type SerializerKeyMap = Map<Component, string>;
 
 // Ugh... Is passing prefabs good design?
 export type SystemParams = {
-  prefabs: PrefabMap,
   serializerKeys: SerializerKeyMap,
   serializers: SerializersMap
 };
