@@ -1,4 +1,4 @@
-import { Adapter } from "../src/adapter";
+import { StreamAdapter } from "../src/adapter";
 
 const SERVER_URL = 'ws://localhost:3000';
 const url = new URL(location.href);
@@ -26,7 +26,7 @@ const run = async (): Promise<void> => {
 
   const roomId = url.searchParams.get('room_id');
   const peerId = createPeerId();
-  const adapter = new Adapter(SERVER_URL);
+  const adapter = new StreamAdapter(SERVER_URL);
 
   adapter.on('newConsumer', (consumer: { track: MediaStreamTrack, peerId: string }) => {
     const stream = new MediaStream();

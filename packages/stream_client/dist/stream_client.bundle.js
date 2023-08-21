@@ -1,5 +1,4 @@
-/******/ (() => { // webpackBootstrap
-/******/ 	var __webpack_modules__ = ({
+/******/ var __webpack_modules__ = ({
 
 /***/ "../../node_modules/awaitqueue/lib/Logger.js":
 /*!***************************************************!*\
@@ -7,7 +6,6 @@
   \***************************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
-"use strict";
 
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -55,7 +53,6 @@ exports.Logger = Logger;
   \**************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
-"use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AwaitQueue = exports.AwaitQueueRemovedTaskError = exports.AwaitQueueStoppedError = void 0;
@@ -983,7 +980,6 @@ function plural(ms, msAbs, n, name) {
   \*******************************************/
 /***/ ((module) => {
 
-"use strict";
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -2689,7 +2685,6 @@ function plural(ms, msAbs, n, name) {
   \***********************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
-"use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Consumer = void 0;
@@ -2890,7 +2885,6 @@ exports.Consumer = Consumer;
   \***************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
-"use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.DataConsumer = void 0;
@@ -3063,7 +3057,6 @@ exports.DataConsumer = DataConsumer;
   \***************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
-"use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.DataProducer = void 0;
@@ -3254,7 +3247,6 @@ exports.DataProducer = DataProducer;
   \*********************************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
-"use strict";
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -3728,7 +3720,6 @@ exports.Device = Device;
   \***********************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
-"use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.EnhancedEventEmitter = void 0;
@@ -3809,7 +3800,6 @@ exports.EnhancedEventEmitter = EnhancedEventEmitter;
   \*********************************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
-"use strict";
 
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -3857,7 +3847,6 @@ exports.Logger = Logger;
   \***********************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
-"use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Producer = void 0;
@@ -4155,7 +4144,6 @@ exports.Producer = Producer;
   \****************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
-"use strict";
 
 /**
  * The RTP capabilities define what mediasoup or an endpoint can receive at
@@ -4172,7 +4160,6 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
   \*****************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
-"use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 
@@ -4185,7 +4172,6 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
   \************************************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
-"use strict";
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -5020,7 +5006,6 @@ exports.Transport = Transport;
   \*********************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
-"use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.InvalidStateError = exports.UnsupportedError = void 0;
@@ -5070,7 +5055,6 @@ exports.InvalidStateError = InvalidStateError;
   \*********************************************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
-"use strict";
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -5735,7 +5719,6 @@ exports.Chrome111 = Chrome111;
   \********************************************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
-"use strict";
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -6284,7 +6267,6 @@ exports.Chrome55 = Chrome55;
   \********************************************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
-"use strict";
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -6889,7 +6871,6 @@ exports.Chrome67 = Chrome67;
   \********************************************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
-"use strict";
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -7523,7 +7504,6 @@ exports.Chrome70 = Chrome70;
   \********************************************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
-"use strict";
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -8205,7 +8185,6 @@ exports.Chrome74 = Chrome74;
   \******************************************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
-"use strict";
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -8663,7 +8642,6 @@ exports.Edge11 = Edge11;
   \*********************************************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
-"use strict";
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -9355,7 +9333,6 @@ exports.Firefox60 = Firefox60;
   \****************************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
-"use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.HandlerInterface = void 0;
@@ -9376,7 +9353,6 @@ exports.HandlerInterface = HandlerInterface;
   \***********************************************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
-"use strict";
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -9941,7 +9917,6 @@ exports.ReactNative = ReactNative;
   \**********************************************************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
-"use strict";
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -10642,7 +10617,6 @@ exports.ReactNativeUnifiedPlan = ReactNativeUnifiedPlan;
   \********************************************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
-"use strict";
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -11241,7 +11215,6 @@ exports.Safari11 = Safari11;
   \********************************************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
-"use strict";
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -11896,7 +11869,6 @@ exports.Safari12 = Safari12;
   \**************************************************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
-"use strict";
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -11993,7 +11965,6 @@ exports.mangleRtpParameters = mangleRtpParameters;
   \**********************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
-"use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.addNackSuppportForOpus = void 0;
@@ -12023,7 +11994,6 @@ exports.addNackSuppportForOpus = addNackSuppportForOpus;
   \****************************************************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
-"use strict";
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -12622,7 +12592,6 @@ function getCodecName(codec) {
   \*************************************************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
-"use strict";
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -12936,7 +12905,6 @@ exports.RemoteSdp = RemoteSdp;
   \***************************************************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
-"use strict";
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -13171,7 +13139,6 @@ exports.applyCodecParameters = applyCodecParameters;
   \**************************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
-"use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.addLegacySimulcast = exports.getRtpEncodings = void 0;
@@ -13337,7 +13304,6 @@ exports.addLegacySimulcast = addLegacySimulcast;
   \********************************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
-"use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.addLegacySimulcast = exports.getRtpEncodings = void 0;
@@ -13479,7 +13445,6 @@ exports.addLegacySimulcast = addLegacySimulcast;
   \********************************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
-"use strict";
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -13535,7 +13500,6 @@ Object.defineProperty(exports, "parseScalabilityMode", ({ enumerable: true, get:
   \*******************************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
-"use strict";
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -14489,7 +14453,6 @@ function reduceRtcpFeedback(codecA, codecB) {
   \*******************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
-"use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.parse = void 0;
@@ -14520,7 +14483,6 @@ exports.parse = parse;
   \********************************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
-"use strict";
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -14557,7 +14519,6 @@ __exportStar(__webpack_require__(/*! ./errors */ "../../node_modules/mediasoup-c
   \********************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
-"use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.generateRandomNumber = exports.clone = void 0;
@@ -16125,10 +16086,9 @@ module.exports = function (session, opts) {
   \************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   Adapter: () => (/* binding */ Adapter)
+/* harmony export */   StreamAdapter: () => (/* binding */ StreamAdapter)
 /* harmony export */ });
 /* harmony import */ var mediasoup_client__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! mediasoup-client */ "../../node_modules/mediasoup-client/lib/index.js");
 /* harmony import */ var mediasoup_client__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(mediasoup_client__WEBPACK_IMPORTED_MODULE_0__);
@@ -16154,8 +16114,8 @@ const throwError = (error) => {
     throw error;
 };
 // TODO: Proper error handling
-class Adapter {
-    constructor(serverUrl) {
+class StreamAdapter {
+    constructor(serverUrl = 'ws://localhost:3000') {
         _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.info(`Server URL: ${serverUrl}.`);
         this.socket = socket_io_client__WEBPACK_IMPORTED_MODULE_1__.io(serverUrl, { autoConnect: false });
         this.device = new mediasoup_client__WEBPACK_IMPORTED_MODULE_0__.Device();
@@ -16164,6 +16124,9 @@ class Adapter {
         // Created when joinning
         this.sendTransport = null;
         this.recvTransport = null;
+        this.connectedEventListener = null;
+        this.joinedEventListener = null;
+        this.disconnectedEventListener = null;
         this.newPeerEventListener = null;
         this.joinedPeerEventListener = null;
         this.leftPeerEventListener = null;
@@ -16193,6 +16156,9 @@ class Adapter {
                 _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.info(`Succeeded with connecting Room ${roomId} as Peer ${peerId}`);
                 _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.debug(`Remote peers`, remotePeers);
                 this.connected = true;
+                if (this.connectedEventListener !== null) {
+                    this.connectedEventListener(remotePeers);
+                }
                 resolve(remotePeers);
             }));
             socket.on('disconnect', () => __awaiter(this, void 0, void 0, function* () {
@@ -16200,6 +16166,9 @@ class Adapter {
                 // TODO: Proper handling
                 _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.info(`Disconnected from Room ${roomId}.`);
                 this.connected = false;
+                if (this.disconnectedEventListener !== null) {
+                    this.disconnectedEventListener();
+                }
             }));
             socket.on('newPeer', (peerInfo) => __awaiter(this, void 0, void 0, function* () {
                 _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.debug(`newPeer event on Socket`, peerInfo);
@@ -16235,6 +16204,15 @@ class Adapter {
     // TODO: Avoid any if possible
     on(eventName, callback) {
         switch (eventName) {
+            case 'connected':
+                this.connectedEventListener = callback;
+                return;
+            case 'joined':
+                this.joinedEventListener = callback;
+                return;
+            case 'disconnected':
+                this.disconnectedEventListener = callback;
+                return;
             case 'newPeer':
                 this.newPeerEventListener = callback;
                 return;
@@ -16249,6 +16227,36 @@ class Adapter {
                 return;
             case 'newConsumer':
                 this.newConsumerEventListener = callback;
+                return;
+            default:
+                throw new Error(`Unknown event name ${eventName}.`);
+        }
+    }
+    off(eventName) {
+        switch (eventName) {
+            case 'connected':
+                this.connectedEventListener = null;
+                return;
+            case 'joined':
+                this.joinedEventListener = null;
+                return;
+            case 'disconnected':
+                this.disconnectedEventListener = null;
+                return;
+            case 'newPeer':
+                this.newPeerEventListener = null;
+                return;
+            case 'joinedPeer':
+                this.joinedPeerEventListener = null;
+                return;
+            case 'leftPeer':
+                this.leftPeerEventListener = null;
+                return;
+            case 'exitedPeer':
+                this.exitedPeerEventListener = null;
+                return;
+            case 'newConsumer':
+                this.newConsumerEventListener = null;
                 return;
             default:
                 throw new Error(`Unknown event name ${eventName}.`);
@@ -16328,6 +16336,9 @@ class Adapter {
                 this.handleConsumerInfos();
             }));
             yield Promise.all(pending);
+            if (this.joinedEventListener !== null) {
+                this.joinedEventListener();
+            }
         });
     }
     leave() {
@@ -16454,7 +16465,6 @@ class Adapter {
   \***********************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   LogLevel: () => (/* binding */ LogLevel),
@@ -16514,7 +16524,6 @@ Logger.level = LogLevel.debug;
   \*****************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   asyncEmit: () => (/* binding */ asyncEmit)
@@ -17490,7 +17499,6 @@ var __WEBPACK_AMD_DEFINE_RESULT__;//////////////////////////////////////////////
   \*****************************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Emitter: () => (/* binding */ Emitter)
@@ -17674,7 +17682,6 @@ Emitter.prototype.hasListeners = function(event){
   \*************************************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   hasCORS: () => (/* binding */ hasCORS)
@@ -17700,7 +17707,6 @@ const hasCORS = value;
   \************************************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   decode: () => (/* binding */ decode),
@@ -17750,7 +17756,6 @@ function decode(qs) {
   \*************************************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   parse: () => (/* binding */ parse)
@@ -17826,7 +17831,6 @@ function queryKey(uri, query) {
   \**********************************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   decode: () => (/* binding */ decode),
@@ -17893,7 +17897,6 @@ for (; i < length; i++)
   \***************************************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   globalThisShim: () => (/* binding */ globalThisShim)
@@ -17919,7 +17922,6 @@ const globalThisShim = (() => {
   \**************************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Socket: () => (/* reexport safe */ _socket_js__WEBPACK_IMPORTED_MODULE_0__.Socket),
@@ -17954,7 +17956,6 @@ const protocol = _socket_js__WEBPACK_IMPORTED_MODULE_0__.Socket.protocol;
   \***************************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Socket: () => (/* binding */ Socket)
@@ -18567,7 +18568,6 @@ Socket.protocol = engine_io_parser__WEBPACK_IMPORTED_MODULE_5__.protocol;
   \******************************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Transport: () => (/* binding */ Transport)
@@ -18727,7 +18727,6 @@ class Transport extends _socket_io_component_emitter__WEBPACK_IMPORTED_MODULE_1_
   \*************************************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   transports: () => (/* binding */ transports)
@@ -18753,7 +18752,6 @@ const transports = {
   \***************************************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Polling: () => (/* binding */ Polling),
@@ -19166,7 +19164,6 @@ function unloadHandler() {
   \*************************************************************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   WebSocket: () => (/* binding */ WebSocket),
@@ -19198,7 +19195,6 @@ const defaultBinaryType = "arraybuffer";
   \*****************************************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   WS: () => (/* binding */ WS)
@@ -19370,7 +19366,6 @@ class WS extends _transport_js__WEBPACK_IMPORTED_MODULE_0__.Transport {
   \********************************************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   WT: () => (/* binding */ WT)
@@ -19476,7 +19471,6 @@ class WT extends _transport_js__WEBPACK_IMPORTED_MODULE_0__.Transport {
   \******************************************************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   XHR: () => (/* binding */ XHR),
@@ -19514,7 +19508,6 @@ function createCookieJar() { }
   \*************************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   byteLength: () => (/* binding */ byteLength),
@@ -19584,7 +19577,6 @@ function utf8Length(str) {
   \****************************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   ERROR_PACKET: () => (/* binding */ ERROR_PACKET),
@@ -19615,7 +19607,6 @@ const ERROR_PACKET = { type: "error", data: "parser error" };
   \***********************************************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   decode: () => (/* binding */ decode),
@@ -19674,7 +19665,6 @@ const decode = (base64) => {
   \*****************************************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   decodePacket: () => (/* binding */ decodePacket)
@@ -19753,7 +19743,6 @@ const mapBinary = (data, binaryType) => {
   \*****************************************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   encodePacket: () => (/* binding */ encodePacket),
@@ -19841,7 +19830,6 @@ function encodePacketToBinary(packet, callback) {
   \**************************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   decodePacket: () => (/* reexport safe */ _decodePacket_js__WEBPACK_IMPORTED_MODULE_1__.decodePacket),
@@ -19907,7 +19895,6 @@ const protocol = 4;
   \***********************************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Backoff: () => (/* binding */ Backoff)
@@ -19988,7 +19975,6 @@ Backoff.prototype.setJitter = function (jitter) {
   \**************************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Manager: () => (/* reexport safe */ _manager_js__WEBPACK_IMPORTED_MODULE_1__.Manager),
@@ -20069,7 +20055,6 @@ Object.assign(lookup, {
   \****************************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Manager: () => (/* binding */ Manager)
@@ -20448,7 +20433,6 @@ class Manager extends _socket_io_component_emitter__WEBPACK_IMPORTED_MODULE_5__.
   \***********************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   on: () => (/* binding */ on)
@@ -20469,7 +20453,6 @@ function on(obj, ev, fn) {
   \***************************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Socket: () => (/* binding */ Socket)
@@ -21325,7 +21308,6 @@ class Socket extends _socket_io_component_emitter__WEBPACK_IMPORTED_MODULE_2__.E
   \************************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   url: () => (/* binding */ url)
@@ -21400,7 +21382,6 @@ function url(uri, path = "", loc) {
   \***************************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   deconstructPacket: () => (/* binding */ deconstructPacket),
@@ -21500,7 +21481,6 @@ function _reconstructPacket(data, buffers) {
   \**************************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Decoder: () => (/* binding */ Decoder),
@@ -21832,7 +21812,6 @@ class BinaryReconstructor {
   \******************************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   hasBinary: () => (/* binding */ hasBinary),
@@ -21892,106 +21871,105 @@ function hasBinary(obj, toJSON) {
 
 /***/ })
 
-/******/ 	});
+/******/ });
 /************************************************************************/
-/******/ 	// The module cache
-/******/ 	var __webpack_module_cache__ = {};
-/******/ 	
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/ 		// Check if module is in cache
-/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
-/******/ 		if (cachedModule !== undefined) {
-/******/ 			return cachedModule.exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			// no module.id needed
-/******/ 			// no module.loaded needed
-/******/ 			exports: {}
-/******/ 		};
-/******/ 	
-/******/ 		// Execute the module function
-/******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/ 	
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
+/******/ // The module cache
+/******/ var __webpack_module_cache__ = {};
+/******/ 
+/******/ // The require function
+/******/ function __webpack_require__(moduleId) {
+/******/ 	// Check if module is in cache
+/******/ 	var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 	if (cachedModule !== undefined) {
+/******/ 		return cachedModule.exports;
 /******/ 	}
-/******/ 	
+/******/ 	// Create a new module (and put it into the cache)
+/******/ 	var module = __webpack_module_cache__[moduleId] = {
+/******/ 		// no module.id needed
+/******/ 		// no module.loaded needed
+/******/ 		exports: {}
+/******/ 	};
+/******/ 
+/******/ 	// Execute the module function
+/******/ 	__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 
+/******/ 	// Return the exports of the module
+/******/ 	return module.exports;
+/******/ }
+/******/ 
 /************************************************************************/
-/******/ 	/* webpack/runtime/amd options */
-/******/ 	(() => {
-/******/ 		__webpack_require__.amdO = {};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/compat get default export */
-/******/ 	(() => {
-/******/ 		// getDefaultExport function for compatibility with non-harmony modules
-/******/ 		__webpack_require__.n = (module) => {
-/******/ 			var getter = module && module.__esModule ?
-/******/ 				() => (module['default']) :
-/******/ 				() => (module);
-/******/ 			__webpack_require__.d(getter, { a: getter });
-/******/ 			return getter;
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/define property getters */
-/******/ 	(() => {
-/******/ 		// define getter functions for harmony exports
-/******/ 		__webpack_require__.d = (exports, definition) => {
-/******/ 			for(var key in definition) {
-/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
+/******/ /* webpack/runtime/amd options */
+/******/ (() => {
+/******/ 	__webpack_require__.amdO = {};
+/******/ })();
+/******/ 
+/******/ /* webpack/runtime/compat get default export */
+/******/ (() => {
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = (module) => {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			() => (module['default']) :
+/******/ 			() => (module);
+/******/ 		__webpack_require__.d(getter, { a: getter });
+/******/ 		return getter;
+/******/ 	};
+/******/ })();
+/******/ 
+/******/ /* webpack/runtime/define property getters */
+/******/ (() => {
+/******/ 	// define getter functions for harmony exports
+/******/ 	__webpack_require__.d = (exports, definition) => {
+/******/ 		for(var key in definition) {
+/******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
 /******/ 			}
-/******/ 		};
+/******/ 		}
+/******/ 	};
+/******/ })();
+/******/ 
+/******/ /* webpack/runtime/global */
+/******/ (() => {
+/******/ 	__webpack_require__.g = (function() {
+/******/ 		if (typeof globalThis === 'object') return globalThis;
+/******/ 		try {
+/******/ 			return this || new Function('return this')();
+/******/ 		} catch (e) {
+/******/ 			if (typeof window === 'object') return window;
+/******/ 		}
 /******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/global */
-/******/ 	(() => {
-/******/ 		__webpack_require__.g = (function() {
-/******/ 			if (typeof globalThis === 'object') return globalThis;
-/******/ 			try {
-/******/ 				return this || new Function('return this')();
-/******/ 			} catch (e) {
-/******/ 				if (typeof window === 'object') return window;
-/******/ 			}
-/******/ 		})();
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/make namespace object */
-/******/ 	(() => {
-/******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 			}
-/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 		};
-/******/ 	})();
-/******/ 	
+/******/ })();
+/******/ 
+/******/ /* webpack/runtime/hasOwnProperty shorthand */
+/******/ (() => {
+/******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ })();
+/******/ 
+/******/ /* webpack/runtime/make namespace object */
+/******/ (() => {
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = (exports) => {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/ })();
+/******/ 
 /************************************************************************/
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be in strict mode.
+// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
-"use strict";
 /*!**********************!*\
   !*** ./src/index.ts ***!
   \**********************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   Adapter: () => (/* reexport safe */ _adapter__WEBPACK_IMPORTED_MODULE_0__.Adapter)
+/* harmony export */   StreamAdapter: () => (/* reexport safe */ _adapter__WEBPACK_IMPORTED_MODULE_0__.StreamAdapter)
 /* harmony export */ });
 /* harmony import */ var _adapter__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./adapter */ "./src/adapter.ts");
 
 
 })();
 
-/******/ })()
-;
+var __webpack_exports__StreamAdapter = __webpack_exports__.StreamAdapter;
+export { __webpack_exports__StreamAdapter as StreamAdapter };

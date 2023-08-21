@@ -12,7 +12,7 @@ const throwError = (error: Error): void => {
 
 // TODO: Proper error handling
 
-export class Adapter {
+export class StreamAdapter {
   private device: mediasoup.types.Device;
   private socket: socketIO.Socket;
 
@@ -22,6 +22,9 @@ export class Adapter {
   private recvTransport: null | mediasoup.types.Transport;
   private sendTransport: null | mediasoup.types.Transport;
 
+  private connectedEventListener: null | ((peerInfos: { id: string, joined: boolean }[]) => void);
+  private joinedEventListener: null | (() => void);
+  private disconnectedEventListener: null | (() => void);
   private newPeerEventListener: null | ((peerInfo: { id: string }) => void);
   private joinedPeerEventListener: null | ((peerInfo: { id: string }) => void);
   private leftPeerEventListener: null | ((peerInfo: { id: string }) => void);
@@ -33,7 +36,7 @@ export class Adapter {
   // TODO: Avoid any
   private consumerInfoQueue: any[];
 
-  constructor(serverUrl: string) {
+  constructor(serverUrl: string = 'ws://localhost:3000') {
     Logger.info(`Server URL: ${serverUrl}.`);
 
     this.socket = socketIO.io(serverUrl, { autoConnect: false });
@@ -46,6 +49,9 @@ export class Adapter {
     this.sendTransport = null;
     this.recvTransport = null;
 
+    this.connectedEventListener = null;
+    this.joinedEventListener = null;
+    this.disconnectedEventListener = null;
     this.newPeerEventListener = null;
     this.joinedPeerEventListener = null;
     this.leftPeerEventListener = null;
@@ -84,6 +90,10 @@ export class Adapter {
 
         this.connected = true;
 
+        if (this.connectedEventListener !== null) {
+           this.connectedEventListener(remotePeers);
+        }
+
         resolve(remotePeers);
       });
 
@@ -94,6 +104,10 @@ export class Adapter {
         Logger.info(`Disconnected from Room ${roomId}.`);
 
         this.connected = false;
+
+        if (this.disconnectedEventListener !== null) {
+           this.disconnectedEventListener();
+        }
 	  });
 
       socket.on('newPeer', async (peerInfo) => {
@@ -140,6 +154,15 @@ export class Adapter {
   // TODO: Avoid any if possible
   on(eventName: string, callback: (...args: any[]) => void): void {
     switch (eventName) {
+      case 'connected':
+        this.connectedEventListener = callback;
+        return;
+      case 'joined':
+        this.joinedEventListener = callback;
+        return;
+      case 'disconnected':
+        this.disconnectedEventListener = callback;
+        return;
       case 'newPeer':
         this.newPeerEventListener = callback;
         return;
@@ -154,6 +177,37 @@ export class Adapter {
         return;
       case 'newConsumer':
         this.newConsumerEventListener = callback;
+        return;
+      default:
+        throw new Error(`Unknown event name ${eventName}.`);
+    }
+  }
+
+  off(eventName: string): void {
+    switch (eventName) {
+      case 'connected':
+        this.connectedEventListener = null;
+        return;
+      case 'joined':
+        this.joinedEventListener = null;
+        return;
+      case 'disconnected':
+        this.disconnectedEventListener = null;
+        return;
+      case 'newPeer':
+        this.newPeerEventListener = null;
+        return;
+      case 'joinedPeer':
+        this.joinedPeerEventListener = null;
+        return;
+      case 'leftPeer':
+        this.leftPeerEventListener = null;
+        return;
+      case 'exitedPeer':
+        this.exitedPeerEventListener = null;
+        return;
+      case 'newConsumer':
+        this.newConsumerEventListener = null;
         return;
       default:
         throw new Error(`Unknown event name ${eventName}.`);
@@ -256,6 +310,10 @@ export class Adapter {
     }));
 
     await Promise.all(pending);
+
+    if (this.joinedEventListener !== null) {
+      this.joinedEventListener();
+    }
   }
 
   async leave(): Promise<void> {

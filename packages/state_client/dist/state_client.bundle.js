@@ -8,11 +8,11 @@
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   Adapter: () => (/* binding */ Adapter)
+/* harmony export */   StateAdapter: () => (/* binding */ StateAdapter)
 /* harmony export */ });
 /* harmony import */ var phoenix__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! phoenix */ "../../node_modules/phoenix/priv/static/phoenix.mjs");
 
-class Adapter {
+class StateAdapter {
     constructor(params) {
         const url = params.url || 'ws://localhost:4000/socket';
         const topic = `room:${params.roomId}`;
@@ -1287,14 +1287,14 @@ var __webpack_exports__ = {};
   \**********************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   Adapter: () => (/* reexport safe */ _adapter__WEBPACK_IMPORTED_MODULE_0__.Adapter)
+/* harmony export */   StateAdapter: () => (/* reexport safe */ _adapter__WEBPACK_IMPORTED_MODULE_0__.StateAdapter)
 /* harmony export */ });
 /* harmony import */ var _adapter__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./adapter */ "./src/adapter.ts");
 
 
 })();
 
-var __webpack_exports__Adapter = __webpack_exports__.Adapter;
-export { __webpack_exports__Adapter as Adapter };
+var __webpack_exports__StateAdapter = __webpack_exports__.StateAdapter;
+export { __webpack_exports__StateAdapter as StateAdapter };
 
 //# sourceMappingURL=state_client.bundle.js.map

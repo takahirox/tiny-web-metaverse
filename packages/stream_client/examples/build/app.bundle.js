@@ -16128,7 +16128,7 @@ module.exports = function (session, opts) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   Adapter: () => (/* binding */ Adapter)
+/* harmony export */   StreamAdapter: () => (/* binding */ StreamAdapter)
 /* harmony export */ });
 /* harmony import */ var mediasoup_client__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! mediasoup-client */ "../../node_modules/mediasoup-client/lib/index.js");
 /* harmony import */ var mediasoup_client__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(mediasoup_client__WEBPACK_IMPORTED_MODULE_0__);
@@ -16154,8 +16154,8 @@ const throwError = (error) => {
     throw error;
 };
 // TODO: Proper error handling
-class Adapter {
-    constructor(serverUrl) {
+class StreamAdapter {
+    constructor(serverUrl = 'ws://localhost:3000') {
         _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.info(`Server URL: ${serverUrl}.`);
         this.socket = socket_io_client__WEBPACK_IMPORTED_MODULE_1__.io(serverUrl, { autoConnect: false });
         this.device = new mediasoup_client__WEBPACK_IMPORTED_MODULE_0__.Device();
@@ -16164,6 +16164,9 @@ class Adapter {
         // Created when joinning
         this.sendTransport = null;
         this.recvTransport = null;
+        this.connectedEventListener = null;
+        this.joinedEventListener = null;
+        this.disconnectedEventListener = null;
         this.newPeerEventListener = null;
         this.joinedPeerEventListener = null;
         this.leftPeerEventListener = null;
@@ -16193,6 +16196,9 @@ class Adapter {
                 _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.info(`Succeeded with connecting Room ${roomId} as Peer ${peerId}`);
                 _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.debug(`Remote peers`, remotePeers);
                 this.connected = true;
+                if (this.connectedEventListener !== null) {
+                    this.connectedEventListener(remotePeers);
+                }
                 resolve(remotePeers);
             }));
             socket.on('disconnect', () => __awaiter(this, void 0, void 0, function* () {
@@ -16200,6 +16206,9 @@ class Adapter {
                 // TODO: Proper handling
                 _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.info(`Disconnected from Room ${roomId}.`);
                 this.connected = false;
+                if (this.disconnectedEventListener !== null) {
+                    this.disconnectedEventListener();
+                }
             }));
             socket.on('newPeer', (peerInfo) => __awaiter(this, void 0, void 0, function* () {
                 _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.debug(`newPeer event on Socket`, peerInfo);
@@ -16235,6 +16244,15 @@ class Adapter {
     // TODO: Avoid any if possible
     on(eventName, callback) {
         switch (eventName) {
+            case 'connected':
+                this.connectedEventListener = callback;
+                return;
+            case 'joined':
+                this.joinedEventListener = callback;
+                return;
+            case 'disconnected':
+                this.disconnectedEventListener = callback;
+                return;
             case 'newPeer':
                 this.newPeerEventListener = callback;
                 return;
@@ -16249,6 +16267,36 @@ class Adapter {
                 return;
             case 'newConsumer':
                 this.newConsumerEventListener = callback;
+                return;
+            default:
+                throw new Error(`Unknown event name ${eventName}.`);
+        }
+    }
+    off(eventName) {
+        switch (eventName) {
+            case 'connected':
+                this.connectedEventListener = null;
+                return;
+            case 'joined':
+                this.joinedEventListener = null;
+                return;
+            case 'disconnected':
+                this.disconnectedEventListener = null;
+                return;
+            case 'newPeer':
+                this.newPeerEventListener = null;
+                return;
+            case 'joinedPeer':
+                this.joinedPeerEventListener = null;
+                return;
+            case 'leftPeer':
+                this.leftPeerEventListener = null;
+                return;
+            case 'exitedPeer':
+                this.exitedPeerEventListener = null;
+                return;
+            case 'newConsumer':
+                this.newConsumerEventListener = null;
                 return;
             default:
                 throw new Error(`Unknown event name ${eventName}.`);
@@ -16328,6 +16376,9 @@ class Adapter {
                 this.handleConsumerInfos();
             }));
             yield Promise.all(pending);
+            if (this.joinedEventListener !== null) {
+                this.joinedEventListener();
+            }
         });
     }
     leave() {
@@ -22014,7 +22065,7 @@ const run = () => __awaiter(void 0, void 0, void 0, function* () {
     yield reloadWithRoomIdIfNeeded();
     const roomId = url.searchParams.get('room_id');
     const peerId = createPeerId();
-    const adapter = new _src_adapter__WEBPACK_IMPORTED_MODULE_0__.Adapter(SERVER_URL);
+    const adapter = new _src_adapter__WEBPACK_IMPORTED_MODULE_0__.StreamAdapter(SERVER_URL);
     adapter.on('newConsumer', (consumer) => {
         const stream = new MediaStream();
         stream.addTrack(consumer.track);

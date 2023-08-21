@@ -11,8 +11,6 @@ import {
   EntityObject3DProxy
 } from "../components/entity_object3d";
 import {
-  NetworkAdapter,
-  NetworkAdapterProxy,
   NetworkedEntityManager,
   NetworkedEntityManagerProxy,
   NetworkedProxy,
@@ -21,11 +19,13 @@ import {
   NetworkEventProxy,
   NetworkMessageType,
   Remote,
-  Shared
+  Shared,
+  StateClient,
+  StateClientProxy
 } from "../components/network";
 import { InScene } from "../components/scene";
 
-const adapterQuery = defineQuery([NetworkAdapter]);
+const adapterQuery = defineQuery([StateClient]);
 const managerQuery = defineQuery([NetworkedEntityManager, NetworkEvent]);
 
 // TODO: Implement properly
@@ -47,7 +47,7 @@ const removeComponentsAndEntity = (world: IWorld, eid: number): void => {
 
 export const networkedEntitySystem = (world: IWorld, {prefabs, serializers}: SystemParams) => {
   adapterQuery(world).forEach(adapterEid => {
-    const userId = NetworkAdapterProxy.get(adapterEid).adapter.userId;
+    const userId = StateClientProxy.get(adapterEid).adapter.userId;
     managerQuery(world).forEach(managerEid => {
       const managerProxy = NetworkedEntityManagerProxy.get(managerEid);
       for (const e of NetworkEventProxy.get(managerEid).events) {

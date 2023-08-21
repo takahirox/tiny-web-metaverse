@@ -274,6 +274,7 @@ div.appendChild(positionRootDiv);
 div.appendChild(rotationRootDiv);
 div.appendChild(scaleRootDiv);
 
+// Entity ID should be notified via a component?
 export const notifyEid = (newEid: number): void => {
   if (eid !== newEid) {
     eid = newEid;

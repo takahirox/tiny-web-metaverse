@@ -4,7 +4,8 @@
     "url": "https://github.com/takahirox/tiny-web-metaverse/issues"
   },
   "dependencies": {
-    "@tiny-web-metaverse/state_client": "^0.0.1"
+    "@tiny-web-metaverse/state_client": "^0.0.1",
+    "@tiny-web-metaverse/stream_client": "^0.0.1"
   },
   "description": "Tiny Web metaverse client",
   "exports": {

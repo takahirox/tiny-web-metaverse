@@ -11,8 +11,6 @@ import {
   SystemParams
 } from "../common";
 import {
-  NetworkAdapter,
-  NetworkAdapterProxy,
   Networked,
   NetworkedEntityManager,
   NetworkedEntityManagerProxy,
@@ -21,7 +19,9 @@ import {
   NetworkEventSender,
   NetworkEventSenderProxy,
   NetworkMessageType,
-  Remote
+  Remote,
+  StateClient,
+  StateClientProxy
 } from "../components/network";
 import { Time, TimeProxy } from "../components/time";
 
@@ -29,7 +29,7 @@ const senderQuery = defineQuery([NetworkEventSender]);
 const timeQuery = defineQuery([Time]);
 const networkedQuery = defineQuery([Networked]);
 const networkedEnterQuery = enterQuery(networkedQuery);
-const adapterQuery = defineQuery([NetworkAdapter]);
+const adapterQuery = defineQuery([StateClient]);
 const managerQuery = defineQuery([NetworkedEntityManager]);
 
 export const networkSendSystem = (world: IWorld, {serializerKeys, serializers}: SystemParams) => {
@@ -48,7 +48,7 @@ export const networkSendSystem = (world: IWorld, {serializerKeys, serializers}: 
       senderProxy.lastSendTime = timeProxy.elapsed;
 
       adapterQuery(world).forEach(adapterEid => {
-        const adapter = NetworkAdapterProxy.get(adapterEid).adapter;
+        const adapter = StateClientProxy.get(adapterEid).adapter;
         const myUserId = adapter.userId;
 
         managerQuery(world).forEach(managerEid => {

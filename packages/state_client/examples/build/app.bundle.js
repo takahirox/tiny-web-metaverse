@@ -10,11 +10,11 @@
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   Adapter: () => (/* binding */ Adapter)
+/* harmony export */   StateAdapter: () => (/* binding */ StateAdapter)
 /* harmony export */ });
 /* harmony import */ var phoenix__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! phoenix */ "../../node_modules/phoenix/priv/static/phoenix.mjs");
 
-class Adapter {
+class StateAdapter {
     constructor(params) {
         const url = params.url || 'ws://localhost:4000/socket';
         const topic = `room:${params.roomId}`;
@@ -1296,7 +1296,7 @@ const ROOM_ID = '1234';
 const createPeerId = () => {
     return Date.now().toString(36) + Math.random().toString(36).substring(2);
 };
-const adapter = new _src_adapter__WEBPACK_IMPORTED_MODULE_0__.Adapter({
+const adapter = new _src_adapter__WEBPACK_IMPORTED_MODULE_0__.StateAdapter({
     roomId: ROOM_ID,
     url: SERVER_URL,
     userId: createPeerId()

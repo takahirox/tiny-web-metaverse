@@ -6,6 +6,9 @@ module.exports = [
   {
     devtool: false,
     entry: './src/index.ts',
+    experiments: {
+      outputModule: true,
+    },
     mode: mode,
     module: {
       rules: [
@@ -19,6 +22,9 @@ module.exports = [
     name: "@tiny-web-metaverse/stream_client",
     output: {
       filename: 'stream_client.bundle.js',
+      library: {
+        type: "module"
+      },
       path: path.resolve(__dirname, 'dist')
     },
     resolve: {

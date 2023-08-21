@@ -3,7 +3,7 @@ import { Channel, Socket } from "phoenix";
 // TODO: Avoid any
 type Callback = (payload?: any) => void;
 
-export class Adapter {	
+export class StateAdapter {	
   private channel: Channel;
   // Expects one listener per one event
   private eventListenerMap: Map<string, number>;

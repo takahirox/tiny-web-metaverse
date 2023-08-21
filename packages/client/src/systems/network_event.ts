@@ -6,14 +6,14 @@ import {
 import {
   ComponentNetworkEventListener,
   EntityNetworkEventListener,
-  NetworkAdapter,
-  NetworkAdapterProxy,
   NetworkEvent,
   NetworkEventProxy,
   NetworkEventReceiver,
   NetworkEventReceiverDestroy,
   NetworkEventReceiverInit,
   NetworkMessageType,
+  StateClient,
+  StateClientProxy,
   UserNetworkEventListener
 } from "../components/network";
 
@@ -23,7 +23,7 @@ const userListenerQuery = defineQuery([UserNetworkEventListener]);
 const entityListenerQuery = defineQuery([EntityNetworkEventListener]);
 const componentListenerQuery = defineQuery([ComponentNetworkEventListener]);
 const eventQuery = defineQuery([NetworkEvent]);
-const adapterQuery = defineQuery([NetworkAdapter]);
+const adapterQuery = defineQuery([StateClient]);
 
 // TODO: Avoid any
 const addEvent = (
@@ -39,37 +39,43 @@ const addEvent = (
   );
 };
 
+// TODO: This system may be simpler if adapter is passed via system data
 export const networkEventHandleSystem = (world: IWorld) => {
   // Assumes that adapter entities are same as the ones that
   // receivers are initialized with
   destroyQuery(world).forEach(eid => {
-    let destroyed = false;
+    const adapterEids = adapterQuery(world);
 
-    adapterQuery(world).forEach(adapterEid => {
-      const adapter = NetworkAdapterProxy.get(adapterEid).adapter;
+    if (adapterEids.length === 0) {
+      return;
+    }
+
+    adapterEids.forEach(adapterEid => {
+      const adapter = StateClientProxy.get(adapterEid).adapter;
 
       adapter.removeEventListener(NetworkMessageType.UserJoined);
       adapter.removeEventListener(NetworkMessageType.UserLeft);
       adapter.removeEventListener(NetworkMessageType.CreateEntity);
       adapter.removeEventListener(NetworkMessageType.RemoveEntity);
       adapter.removeEventListener(NetworkMessageType.AddComponent);
-
-      destroyed = true;
     });
 
-    if (destroyed) {
-      removeComponent(world, NetworkEventReceiverDestroy, eid);
-    }
+    removeComponent(world, NetworkEventReceiverDestroy, eid);
+    removeComponent(world, NetworkEventReceiver, eid);
   });
 
   // Assumes that adapter entity is not added after receiver initialization
   initQuery(world).forEach(eid => {
-    let initialized = false;
+    const adapterEids = adapterQuery(world);
 
-    // TODO: Validate network data?
+    if (adapterEids.length === 0) {
+      return;
+    }
 
-    adapterQuery(world).forEach(adapterEid => {
-      const adapter = NetworkAdapterProxy.get(adapterEid).adapter;
+    adapterEids.forEach(adapterEid => {
+      const adapter = StateClientProxy.get(adapterEid).adapter;
+
+      // TODO: Validate network data?
 
       adapter.addEventListener(NetworkMessageType.UserJoined, (payload) => {
         // TODO: Check world is still alive?
@@ -101,13 +107,9 @@ export const networkEventHandleSystem = (world: IWorld) => {
           addEvent(world, eid, NetworkMessageType.UpdateComponent, payload);
         });
       });
-
-      initialized = true;
     });
 
-    if (initialized) {
-      removeComponent(world, NetworkEventReceiverInit, eid);
-    }
+    removeComponent(world, NetworkEventReceiverInit, eid);
   });
 };
 

@@ -6,7 +6,8 @@ import {
   IWorld
 } from "bitecs";
 import { MathUtils, Raycaster } from "three";
-import { Adapter as PhoenixAdapter } from "@tiny-web-metaverse/state_client";
+import { StateAdapter } from "@tiny-web-metaverse/state_client";
+import { StreamAdapter } from "@tiny-web-metaverse/stream_client";
 import {
   Prefab,
   PrefabMap,
@@ -18,6 +19,11 @@ import {
   SystemOrder
 } from "./common";
 import { AvatarMouseControlsProxy } from "./components/avatar_mouse_controls";
+import {
+  FpsCamera,
+  PerspectiveCameraInitProxy,
+  SceneCamera
+} from "./components/camera";
 import { EntityObject3DProxy } from "./components/entity_object3d";
 import {
   MouseButtonEventHandlerInitProxy,
@@ -28,26 +34,37 @@ import {
   PreviousMousePositionProxy
 } from "./components/mouse";
 import { KeyEventHandlerInit } from "./components/keyboard";
+import { MediaDeviceManager } from "./components/media_device";
 import {
   ComponentNetworkEventListener,
   EntityNetworkEventListener,
-  NetworkAdapterProxy,
   NetworkedEntityManagerProxy,
   NetworkedPosition,
   NetworkedQuaternion,
   NetworkedScale,
   NetworkEventReceiverInit,
   NetworkEventSenderProxy,
+  StateClientProxy,
   UserNetworkEventListener
 } from "./components/network";
+import { RaycasterProxy } from "./components/raycast";
 import { RendererInitProxy } from "./components/renderer";
+import { RoomIdProxy } from "./components/room_id";
+import { UserIdProxy } from "./components/user_id";
 import { InScene, SceneInitProxy } from "./components/scene";
 import {
-  FpsCamera,
-  PerspectiveCameraInitProxy,
-  SceneCamera
-} from "./components/camera";
-import { RaycasterProxy } from "./components/raycast";
+  ConnectedStreamEventListener,
+  ExitedPeerStreamEventListener,
+  JoinedPeerStreamEventListener,
+  LeftPeerStreamEventListener,
+  NewConsumerStreamEventListener,
+  NewPeerStreamEventListener,
+  StreamClientProxy,
+  StreamRemotePeerRegister,
+  StreamEventReceiverInit,
+  StreamNotConnected,
+  StreamRemotePeersProxy
+} from "./components/stream";
 import { TimeInit } from "./components/time";
 import {
   WindowResizeEventHandlerInit,
@@ -70,6 +87,7 @@ import {
 } from "./systems/keyboard_event";
 import { linearMoveSystem } from "./systems/linear_move";
 import { linearTransformSystem } from "./systems/linear_transform";
+import { micRequestSystem } from "./systems/media_device";
 import {
   mouseButtonEventClearSystem,
   mouseButtonEventHandleSystem
@@ -90,6 +108,9 @@ import { clearRaycastedSystem } from "./systems/raycast";
 import { renderSystem } from "./systems/render";
 import { rendererSystem } from "./systems/renderer";
 import { sceneSystem } from "./systems/scene";
+import { streamConnectionSystem } from "./systems/stream_connection";
+import { streamRemotePeerRegisterSystem } from "./systems/stream_remote_peers";
+import { streamEventClearSystem, streamEventHandleSystem } from "./systems/stream_event";
 import { timeSystem } from "./systems/time";
 import { clearTransformUpdatedSystem } from "./systems/transform";
 import { updateMatricesSystem } from "./systems/update_matrices";
@@ -117,7 +138,8 @@ export class App {
   private serializerKeys: SerializerKeyMap;
   private canvas: HTMLCanvasElement;
   private world: IWorld;
-  private adapter: PhoenixAdapter;
+  private networkAdapter: StateAdapter;
+  private streamAdapter: StreamAdapter;
   readonly userId: string;
 
   constructor(params: {
@@ -125,11 +147,15 @@ export class App {
     roomId: string,
     userId?: string
   }) {
-    const canvas = params.canvas || createCanvas();
     const roomId = params.roomId;
     const userId = params.userId || MathUtils.generateUUID();
 
-    this.canvas = canvas;
+    this.canvas = params.canvas || createCanvas();
+
+    // TODO: Custom server URL support
+    this.networkAdapter = new StateAdapter({ roomId, userId });
+    this.streamAdapter = new StreamAdapter();
+
     this.systems = [];
     this.prefabs = new Map();
     this.serializers = new Map();
@@ -140,20 +166,24 @@ export class App {
       serializers: this.serializers
     };
     this.world = createWorld();
-    this.adapter = new PhoenixAdapter({ roomId, userId });
-    this.init();
+
+    this.init(roomId, userId);
   }
 
-  private init(): void {
+  private init(roomId: string, userId: string): void {
     // Built-in systems and entities
 
     this.registerSystem(timeSystem, SystemOrder.Time);
 
+    this.registerSystem(micRequestSystem, SystemOrder.EventHandling);
     this.registerSystem(keyEventHandleSystem, SystemOrder.EventHandling);
     this.registerSystem(mouseMoveEventHandleSystem, SystemOrder.EventHandling);
     this.registerSystem(mouseButtonEventHandleSystem, SystemOrder.EventHandling);
     this.registerSystem(windowResizeEventHandleSystem, SystemOrder.EventHandling);
     this.registerSystem(networkEventHandleSystem, SystemOrder.EventHandling);
+    this.registerSystem(streamEventHandleSystem, SystemOrder.EventHandling);
+    this.registerSystem(streamConnectionSystem, SystemOrder.EventHandling);
+    this.registerSystem(streamRemotePeerRegisterSystem, SystemOrder.EventHandling);
 
     this.registerSystem(mousePositionTrackSystem, SystemOrder.EventHandling + 1);
 
@@ -184,6 +214,7 @@ export class App {
     this.registerSystem(mouseButtonEventClearSystem, SystemOrder.TearDown);
     this.registerSystem(windowResizeEventClearSystem, SystemOrder.TearDown);
     this.registerSystem(networkEventClearSystem, SystemOrder.TearDown);
+    this.registerSystem(streamEventClearSystem, SystemOrder.TearDown);
     this.registerSystem(clearRaycastedSystem, SystemOrder.TearDown);
     this.registerSystem(clearTransformUpdatedSystem, SystemOrder.TearDown);
 
@@ -197,6 +228,27 @@ export class App {
     const timeEid = addEntity(this.world);
     addComponent(this.world, TimeInit, timeEid);
 
+    const roomIdEid = addEntity(this.world);
+    RoomIdProxy.get(roomIdEid).allocate(this.world, roomId);
+
+    const userIdEid = addEntity(this.world);
+    UserIdProxy.get(userIdEid).allocate(this.world, userId);
+
+    const mediaDeviceManagerEid = addEntity(this.world);
+    addComponent(this.world, MediaDeviceManager, mediaDeviceManagerEid);
+
+    const streamRemotePeersEid = addEntity(this.world);
+    StreamRemotePeersProxy.get(streamRemotePeersEid).allocate(this.world);
+
+    const streamRemotePeerRegisterEid = addEntity(this.world);
+    addComponent(this.world, StreamRemotePeerRegister, streamRemotePeerRegisterEid);
+    addComponent(this.world, ConnectedStreamEventListener, streamRemotePeerRegisterEid);
+    addComponent(this.world, NewPeerStreamEventListener, streamRemotePeerRegisterEid);
+    addComponent(this.world, JoinedPeerStreamEventListener, streamRemotePeerRegisterEid);
+    addComponent(this.world, LeftPeerStreamEventListener, streamRemotePeerRegisterEid);
+    addComponent(this.world, ExitedPeerStreamEventListener, streamRemotePeerRegisterEid);
+    addComponent(this.world, NewConsumerStreamEventListener, streamRemotePeerRegisterEid);
+
     const keyEventHandlerEid = addEntity(this.world);
     addComponent(this.world, KeyEventHandlerInit, keyEventHandlerEid);
 
@@ -209,14 +261,21 @@ export class App {
     const resizeEventHandlerEid = addEntity(this.world);
     addComponent(this.world, WindowResizeEventHandlerInit, resizeEventHandlerEid);
 
-    const adapterEid = addEntity(this.world);
-    NetworkAdapterProxy.get(adapterEid).allocate(this.world, this.adapter);
+    const networkAdapterEid = addEntity(this.world);
+    StateClientProxy.get(networkAdapterEid).allocate(this.world, this.networkAdapter);
+
+    const streamClientEid = addEntity(this.world);
+    StreamClientProxy.get(streamClientEid).allocate(this.world, this.streamAdapter);
+    addComponent(this.world, StreamNotConnected, streamClientEid);
 
     const networkEventReceiverEid = addEntity(this.world);
     addComponent(this.world, NetworkEventReceiverInit, networkEventReceiverEid);
 
     const networkEventSenderEid = addEntity(this.world);
     NetworkEventSenderProxy.get(networkEventSenderEid).allocate(this.world);
+
+    const streamEventReceiverEid = addEntity(this.world);
+    addComponent(this.world, StreamEventReceiverInit, streamEventReceiverEid);
 
     const networkedEntityManagerEid = addEntity(this.world);
     NetworkedEntityManagerProxy.get(networkedEntityManagerEid).allocate(this.world);

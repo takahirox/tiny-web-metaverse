@@ -5,21 +5,25 @@ import {
 import { GridHelper } from "three";
 import {
   App,
+  ConnectedStreamEventListener,
   createNetworkedEntity,
   EntityObject3DProxy,
   InScene,
+  JoinedStreamEventListener,
   KeyEventListener,
   MouseButtonEventListener,
   NetworkedType,
   SystemOrder,
   UserNetworkEventListener
 } from "@tiny-web-metaverse/client/src";
+import { JoinDialog } from "./components/join_dialog";
 import { UserEventHandler } from "./components/user_event_handler";
 import { AvatarPrefab } from "./prefabs/avatar";
 import { CubePrefab } from "./prefabs/cube";
 import { colorSystem } from "./systems/color";
 import { selectedObjectSystem } from "./systems/selected_object";
 import { userEventSystem } from "./systems/user";
+import { updateJoinDialogSystem } from "./ui/join_dialog";
 import { updateSidebarSystem } from "./ui/side_bar";
 
 const url = new URL(location.href);
@@ -38,9 +42,11 @@ const run = async (): Promise<void> => {
 
   const roomId = url.searchParams.get('room_id');
 
-  const app = new App({roomId});
+  const app = new App({ roomId });
+
   document.body.appendChild(app.getCanvas());
 
+  app.registerSystem(updateJoinDialogSystem, SystemOrder.BeforeMatricesUpdate);
   app.registerSystem(updateSidebarSystem, SystemOrder.BeforeMatricesUpdate);
   app.registerSystem(colorSystem, SystemOrder.Render - 1);
   app.registerSystem(selectedObjectSystem, SystemOrder.Render - 1);
@@ -65,6 +71,11 @@ const run = async (): Promise<void> => {
   const userEventHandlerEid = addEntity(world);
   addComponent(world, UserEventHandler, userEventHandlerEid);
   addComponent(world, UserNetworkEventListener, userEventHandlerEid);
+
+  const joinDialogEid = addEntity(world);
+  addComponent(world, JoinDialog, joinDialogEid);
+  addComponent(world, ConnectedStreamEventListener, joinDialogEid);
+  addComponent(world, JoinedStreamEventListener, joinDialogEid);
 
   const cubeEid = createNetworkedEntity(world, app, NetworkedType.Shared, 'cube');
   EntityObject3DProxy.get(cubeEid).root.position.set(

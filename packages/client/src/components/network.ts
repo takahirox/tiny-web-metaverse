@@ -5,7 +5,7 @@ import {
   IWorld,
   removeComponent
 } from "bitecs";
-import { Adapter } from "@tiny-web-metaverse/state_client";
+import { StateAdapter } from "@tiny-web-metaverse/state_client";
 import { NULL_EID } from "../common";
 
 export enum NetworkMessageType {
@@ -216,10 +216,10 @@ export const NetworkEvent = defineComponent();
 const NetworkEventMap = new Map<number, NetworkEventValue[]>();
 
 // TODO: Allow other network adapter type
-type NetworkAdapterValue = Adapter;
+type StateClientValue = StateAdapter;
 
-export const NetworkAdapter = defineComponent();
-const NetworkAdapterMap = new Map<number, NetworkAdapterValue>;
+export const StateClient = defineComponent();
+const StateClientMap = new Map<number, StateClientValue>;
 
 export const NetworkEventReceiver = defineComponent();
 export const NetworkEventReceiverInit = defineComponent();
@@ -237,31 +237,31 @@ type NetworkEventSenderValue = {
 export const NetworkEventSender = defineComponent();
 const NetworkEventSenderMap = new Map<number, NetworkEventSenderValue>();
 
-export class NetworkAdapterProxy {
-  private static instance: NetworkAdapterProxy = new NetworkAdapterProxy();
+export class StateClientProxy {
+  private static instance: StateClientProxy = new StateClientProxy();
   private eid: number;
 
   private constructor() {
     this.eid = NULL_EID;
   }
 
-  static get(eid: number): NetworkAdapterProxy {
-    NetworkAdapterProxy.instance.eid = eid;
-    return NetworkAdapterProxy.instance;
+  static get(eid: number): StateClientProxy {
+    StateClientProxy.instance.eid = eid;
+    return StateClientProxy.instance;
   }
 
-  allocate(world: IWorld, adapter: NetworkAdapterValue): void {
-    addComponent(world, NetworkAdapter, this.eid);
-    NetworkAdapterMap.set(this.eid, adapter);
+  allocate(world: IWorld, adapter: StateClientValue): void {
+    addComponent(world, StateClient, this.eid);
+    StateClientMap.set(this.eid, adapter);
   }
 
   free(world: IWorld): void {
-    NetworkAdapterMap.delete(this.eid);
-    removeComponent(world, NetworkAdapter, this.eid);
+    StateClientMap.delete(this.eid);
+    removeComponent(world, StateClient, this.eid);
   }
 
-  get adapter(): NetworkAdapterValue {
-    return NetworkAdapterMap.get(this.eid)!;
+  get adapter(): StateClientValue {
+    return StateClientMap.get(this.eid)!;
   }
 }
 

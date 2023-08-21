@@ -1,16 +1,16 @@
 import { defineQuery, hasComponent, IWorld } from "bitecs";
 import {
   Local,
-  NetworkAdapter,
-  NetworkAdapterProxy,
   NetworkedInit,
   NetworkedInitProxy,
   NetworkedProxy,
   NetworkedType,
-  Shared
+  Shared,
+  StateClient,
+  StateClientProxy
 } from "../components/network";
 
-const adapterQuery = defineQuery([NetworkAdapter]);
+const adapterQuery = defineQuery([StateClient]);
 const initQuery = defineQuery([NetworkedInit]);
 
 // For creating local or shared networked entity from local client.
@@ -23,7 +23,7 @@ export const networkedSystem = (world: IWorld) => {
 
     // Assumes single adapter entity
     adapterQuery(world).forEach(adapterEid => {
-      const userId = NetworkAdapterProxy.get(adapterEid).adapter.userId;
+      const userId = StateClientProxy.get(adapterEid).adapter.userId;
 
       let type: NetworkedType;
 
