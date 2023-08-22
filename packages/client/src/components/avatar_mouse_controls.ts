@@ -8,14 +8,14 @@ import { NULL_EID } from "../common";
 
 export const AvatarMouseControls = defineComponent();
 
-const AvatarMouseControlsMap = new Map<number, boolean>();
-
 export class AvatarMouseControlsProxy {
   private static instance: AvatarMouseControlsProxy = new AvatarMouseControlsProxy();
   private eid: number;
+  private map: Map<number, boolean>;
 
   private constructor() {
     this.eid = NULL_EID;
+    this.map = new Map();
   }
 
   static get(eid: number): AvatarMouseControlsProxy {
@@ -25,19 +25,19 @@ export class AvatarMouseControlsProxy {
 
   allocate(world: IWorld): void {
     addComponent(world, AvatarMouseControls, this.eid);
-    AvatarMouseControlsMap.set(this.eid, false);
+    this.map.set(this.eid, false);
   }
 
   free(world: IWorld): void {
+    this.map.delete(this.eid);
     removeComponent(world, AvatarMouseControls, this.eid);
-    AvatarMouseControlsMap.delete(this.eid);
   }
 
   get enabled(): boolean {
-    return AvatarMouseControlsMap.get(this.eid)!;
+    return this.map.get(this.eid)!;
   }
 
   set enabled(value: boolean) {
-    AvatarMouseControlsMap.set(this.eid, value);
+    this.map.set(this.eid, value);
   }
 }

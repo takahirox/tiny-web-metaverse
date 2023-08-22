@@ -35,7 +35,7 @@ export type Serializers = {
 export type SerializersMap = Map<string, Serializers>;
 export type SerializerKeyMap = Map<Component, string>;
 
-// Ugh... Is passing prefabs good design?
+// TODO: Move to Components?
 export type SystemParams = {
   serializerKeys: SerializerKeyMap,
   serializers: SerializersMap
