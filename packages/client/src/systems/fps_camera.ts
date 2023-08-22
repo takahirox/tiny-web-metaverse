@@ -13,6 +13,7 @@ import { Local } from "../components/network";
 
 const avatarQuery = defineQuery([Avatar, EntityObject3D, Local]);
 const cameraQuery = defineQuery([FpsCamera, PerspectiveCameraTag]);
+
 export const fpsCameraSystem = (world: IWorld) => {
   const avatarEids = avatarQuery(world);
   const cameraEids = cameraQuery(world);

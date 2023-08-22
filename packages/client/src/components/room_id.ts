@@ -1,9 +1,4 @@
-import {
-  addComponent,
-  defineComponent,
-  IWorld,
-  removeComponent
-} from "bitecs";
+import { defineComponent } from "bitecs";
 import { NULL_EID } from "../common";
 
 export const RoomId = defineComponent();
@@ -23,14 +18,12 @@ export class RoomIdProxy {
     return RoomIdProxy.instance;
   }
 
-  allocate(world: IWorld, roomId: string): void {
-    addComponent(world, RoomId, this.eid);
+  allocate(roomId: string): void {
     this.map.set(this.eid, roomId);
   }
 
-  free(world: IWorld): void {
+  free(): void {
     this.map.delete(this.eid);
-    removeComponent(world, RoomId, this.eid);
   }
 
   get roomId(): string {

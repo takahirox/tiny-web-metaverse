@@ -5,7 +5,15 @@ import {
   createWorld,
   IWorld
 } from "bitecs";
-import { Clock, MathUtils, Raycaster, WebGLRenderer } from "three";
+import {
+  Clock,
+  Color,
+  MathUtils,
+  PerspectiveCamera,
+  Raycaster,
+  Scene,
+  WebGLRenderer
+} from "three";
 import { StateAdapter } from "@tiny-web-metaverse/state_client";
 import { StreamAdapter } from "@tiny-web-metaverse/stream_client";
 import {
@@ -20,7 +28,8 @@ import { AvatarMouseControlsProxy } from "./components/avatar_mouse_controls";
 import { Canvas, CanvasProxy } from "./components/canvas";
 import {
   FpsCamera,
-  PerspectiveCameraInitProxy,
+  PerspectiveCameraTag,
+  PerspectiveCameraProxy,
   SceneCamera
 } from "./components/camera";
 import { EntityObject3DProxy } from "./components/entity_object3d";
@@ -47,11 +56,11 @@ import {
   UserNetworkEventListener
 } from "./components/network";
 import { Prefabs, PrefabsProxy } from "./components/prefab";
-import { RaycasterProxy } from "./components/raycast";
+import { RaycasterTag, RaycasterProxy } from "./components/raycast";
 import { Renderer, RendererProxy } from "./components/renderer";
-import { RoomIdProxy } from "./components/room_id";
-import { UserIdProxy } from "./components/user_id";
-import { InScene, SceneInitProxy } from "./components/scene";
+import { RoomId, RoomIdProxy } from "./components/room_id";
+import { UserId, UserIdProxy } from "./components/user_id";
+import { InScene, SceneProxy, SceneTag } from "./components/scene";
 import {
   ConnectedStreamEventListener,
   ExitedPeerStreamEventListener,
@@ -106,6 +115,7 @@ import { networkedEntitySystem } from "./systems/networked_entity";
 import { perspectiveCameraSystem } from "./systems/perspective_camera";
 import { prefabsSystem } from "./systems/prefab";
 import { clearRaycastedSystem } from "./systems/raycast";
+import { raycasterSystem } from "./systems/raycaster";
 import { renderSystem } from "./systems/render";
 import { rendererSystem } from "./systems/renderer";
 import { sceneSystem } from "./systems/scene";
@@ -188,6 +198,7 @@ export class App {
 
     this.registerSystem(canvasSystem, SystemOrder.Setup);
     this.registerSystem(prefabsSystem, SystemOrder.Setup);
+    this.registerSystem(raycasterSystem, SystemOrder.Setup);
     this.registerSystem(rendererSystem, SystemOrder.Setup);
     this.registerSystem(sceneSystem, SystemOrder.Setup);
     this.registerSystem(perspectiveCameraSystem, SystemOrder.Setup);
@@ -234,10 +245,12 @@ export class App {
     PrefabsProxy.get(prefabsEid).allocate();
 
     const roomIdEid = addEntity(this.world);
-    RoomIdProxy.get(roomIdEid).allocate(this.world, roomId);
+    addComponent(this.world, RoomId, roomIdEid);
+    RoomIdProxy.get(roomIdEid).allocate(roomId);
 
     const userIdEid = addEntity(this.world);
-    UserIdProxy.get(userIdEid).allocate(this.world, userId);
+    addComponent(this.world, UserId, userIdEid);
+    UserIdProxy.get(userIdEid).allocate(userId);
 
     const mediaDeviceManagerEid = addEntity(this.world);
     addComponent(this.world, MediaDeviceManager, mediaDeviceManagerEid);
@@ -294,7 +307,8 @@ export class App {
     addComponent(this.world, MouseMoveEventListener, mousePositionEid);
 
     const raycasterEid = addEntity(this.world);
-    RaycasterProxy.get(raycasterEid).allocate(this.world, new Raycaster());
+    addComponent(this.world, RaycasterTag, raycasterEid);
+    RaycasterProxy.get(raycasterEid).allocate(new Raycaster());
 
     const avatarMouseControlsEid = addEntity(this.world);
     AvatarMouseControlsProxy.get(avatarMouseControlsEid).allocate(this.world);
@@ -311,16 +325,35 @@ export class App {
     addComponent(this.world, WindowResizeEventListener, rendererEid);
 
     const sceneEid = addEntity(this.world);
-    SceneInitProxy.get(sceneEid).allocate(this.world);
+    addComponent(this.world, SceneTag, sceneEid);
+
+    // TODO: Configurable Scene
+    const scene = new Scene();
+    // Matrices are updated in updateMatricesSystem.
+    scene.matrixWorldAutoUpdate = false;
+    scene.background = new Color(0xffffff);
+
+    SceneProxy.get(sceneEid).allocate(scene);
 
     const cameraEid = addEntity(this.world);
-    PerspectiveCameraInitProxy.get(cameraEid).allocate(this.world);
+
+    // TODO: Configurable
+    const camera = new PerspectiveCamera(
+      60,
+      window.innerWidth / window.innerHeight,
+      0.001,
+      2000.0
+    );
+
+    addComponent(this.world, PerspectiveCameraTag, cameraEid);
+    PerspectiveCameraProxy.get(cameraEid).allocate(camera);
+    EntityObject3DProxy.get(cameraEid).addObject3D(this.world, camera);
+
     addComponent(this.world, FpsCamera, cameraEid);
     addComponent(this.world, InScene, cameraEid);
     addComponent(this.world, SceneCamera, cameraEid);
     addComponent(this.world, WindowSize, cameraEid);
     addComponent(this.world, WindowResizeEventListener, cameraEid);
-    EntityObject3DProxy.get(cameraEid).allocate(this.world);
   }
 
   registerSystem(

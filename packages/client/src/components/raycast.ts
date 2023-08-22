@@ -1,27 +1,22 @@
-import {
-  addComponent,
-  defineComponent,
-  IWorld,
-  removeComponent,
-  Types
-} from "bitecs";
+import { defineComponent, Types } from "bitecs";
 import { Raycaster } from "three";
 import { NULL_EID } from "../common";
-
-export const RaycasterTag = defineComponent();
-const RaycasterMap = new Map<number, Raycaster>();
 
 export const Raycastable = defineComponent();
 export const Raycasted = defineComponent({
   distance: Types.f32
 });
 
+export const RaycasterTag = defineComponent();
+
 export class RaycasterProxy {
   private static instance: RaycasterProxy = new RaycasterProxy();
   private eid: number;
+  private map: Map<number, Raycaster>;
 
   private constructor() {
     this.eid = NULL_EID;
+    this.map = new Map();
   }
 
   static get(eid: number): RaycasterProxy {
@@ -29,17 +24,15 @@ export class RaycasterProxy {
     return RaycasterProxy.instance;
   }
 
-  allocate(world: IWorld, raycaster: Raycaster): void {
-    addComponent(world, RaycasterTag, this.eid);
-    RaycasterMap.set(this.eid, raycaster);
+  allocate(raycaster: Raycaster): void {
+    this.map.set(this.eid, raycaster);
   }
 
-  free(world: IWorld): void {
-    removeComponent(world, RaycasterTag, this.eid);
-    RaycasterMap.delete(this.eid);
+  free(): void {
+    this.map.delete(this.eid);
   }
 
   get raycaster(): Raycaster {
-    return RaycasterMap.get(this.eid)!;
+    return this.map.get(this.eid)!;
   }
 }
