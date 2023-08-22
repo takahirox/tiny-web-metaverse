@@ -256,6 +256,7 @@ export class NetworkEventSenderProxy {
 
   private constructor() {
     this.eid = NULL_EID;
+    this.map = new Map();
   }
 
   static get(eid: number): NetworkEventSenderProxy {

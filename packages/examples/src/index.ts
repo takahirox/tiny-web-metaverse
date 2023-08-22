@@ -38,14 +38,21 @@ const reloadWithRoomIdIfNeeded = async (): Promise<void> => {
   }
 };
 
+const createCanvas = (): HTMLCanvasElement => {
+  const canvas = document.createElement('canvas');
+  canvas.style.display = 'block';
+  return canvas;
+};
+
 const run = async (): Promise<void> => {
   await reloadWithRoomIdIfNeeded();
 
   const roomId = url.searchParams.get('room_id');
+  const canvas = createCanvas();
 
-  const app = new App({ roomId });
+  const app = new App({ canvas, roomId });
 
-  document.body.appendChild(app.getCanvas());
+  document.body.appendChild(canvas);
 
   app.registerSystem(updateJoinDialogSystem, SystemOrder.BeforeMatricesUpdate);
   app.registerSystem(updateSidebarSystem, SystemOrder.BeforeMatricesUpdate);

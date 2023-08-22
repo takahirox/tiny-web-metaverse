@@ -5,7 +5,7 @@ import {
   createWorld,
   IWorld
 } from "bitecs";
-import { MathUtils, Raycaster } from "three";
+import { Clock, MathUtils, Raycaster, WebGLRenderer } from "three";
 import { StateAdapter } from "@tiny-web-metaverse/state_client";
 import { StreamAdapter } from "@tiny-web-metaverse/stream_client";
 import {
@@ -17,6 +17,7 @@ import {
   SystemOrder
 } from "./common";
 import { AvatarMouseControlsProxy } from "./components/avatar_mouse_controls";
+import { Canvas, CanvasProxy } from "./components/canvas";
 import {
   FpsCamera,
   PerspectiveCameraInitProxy,
@@ -45,8 +46,9 @@ import {
   StateClientProxy,
   UserNetworkEventListener
 } from "./components/network";
+import { Prefabs, PrefabsProxy } from "./components/prefab";
 import { RaycasterProxy } from "./components/raycast";
-import { RendererInitProxy } from "./components/renderer";
+import { Renderer, RendererProxy } from "./components/renderer";
 import { RoomIdProxy } from "./components/room_id";
 import { UserIdProxy } from "./components/user_id";
 import { InScene, SceneInitProxy } from "./components/scene";
@@ -63,7 +65,7 @@ import {
   StreamNotConnected,
   StreamRemotePeersProxy
 } from "./components/stream";
-import { TimeInit } from "./components/time";
+import { Time, TimeProxy } from "./components/time";
 import {
   WindowResizeEventHandlerInit,
   WindowResizeEventListener,
@@ -76,6 +78,7 @@ import {
 } from "./serializations/transform";
 import { avatarKeyControlsSystem } from "./systems/avatar_key_controls";
 import { avatarMouseControlsSystem } from "./systems/avatar_mouse_controls";
+import { canvasSystem } from "./systems/canvas";
 import { fpsCameraSystem } from "./systems/fps_camera";
 import { grabSystem } from "./systems/grab";
 import { grabbedObjectsMouseTrackSystem } from "./systems/grab_mouse_track";
@@ -101,6 +104,7 @@ import { networkEventClearSystem, networkEventHandleSystem } from "./systems/net
 import { networkSendSystem } from "./systems/network_send";
 import { networkedEntitySystem } from "./systems/networked_entity";
 import { perspectiveCameraSystem } from "./systems/perspective_camera";
+import { prefabsSystem } from "./systems/prefab";
 import { clearRaycastedSystem } from "./systems/raycast";
 import { renderSystem } from "./systems/render";
 import { rendererSystem } from "./systems/renderer";
@@ -121,32 +125,24 @@ type RegisteredSystem = {
   orderPriority: number;
 };
 
-const createCanvas = (): HTMLCanvasElement => {
-  const canvas = document.createElement('canvas');
-  canvas.style.display = 'block';
-  return canvas;
-};
-
 export class App {
   private systems: RegisteredSystem[];
   private systemParams: SystemParams;
   private serializers: SerializersMap;
   private serializerKeys: SerializerKeyMap;
-  private canvas: HTMLCanvasElement;
   private world: IWorld;
   private networkAdapter: StateAdapter;
   private streamAdapter: StreamAdapter;
   readonly userId: string;
 
   constructor(params: {
-    canvas?: HTMLCanvasElement,
+    canvas: HTMLCanvasElement,
     roomId: string,
     userId?: string
   }) {
     const roomId = params.roomId;
     const userId = params.userId || MathUtils.generateUUID();
-
-    this.canvas = params.canvas || createCanvas();
+    const canvas = params.canvas;
 
     // TODO: Custom server URL support
     this.networkAdapter = new StateAdapter({ roomId, userId });
@@ -161,10 +157,19 @@ export class App {
     };
     this.world = createWorld();
 
-    this.init(roomId, userId);
+    this.init(canvas, roomId, userId);
   }
 
-  private init(roomId: string, userId: string): void {
+  private init(
+    canvas: HTMLCanvasElement,
+    roomId: string,
+    userId: string
+  ): void {
+    // TODO: Configurable renderer parameters
+    const renderer = new WebGLRenderer({ antialias: true, canvas });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+
     // Built-in systems and entities
 
     this.registerSystem(timeSystem, SystemOrder.Time);
@@ -181,6 +186,8 @@ export class App {
 
     this.registerSystem(mousePositionTrackSystem, SystemOrder.EventHandling + 1);
 
+    this.registerSystem(canvasSystem, SystemOrder.Setup);
+    this.registerSystem(prefabsSystem, SystemOrder.Setup);
     this.registerSystem(rendererSystem, SystemOrder.Setup);
     this.registerSystem(sceneSystem, SystemOrder.Setup);
     this.registerSystem(perspectiveCameraSystem, SystemOrder.Setup);
@@ -219,7 +226,12 @@ export class App {
     addEntity(this.world);
 
     const timeEid = addEntity(this.world);
-    addComponent(this.world, TimeInit, timeEid);
+    addComponent(this.world, Time, timeEid);
+    TimeProxy.get(timeEid).allocate(new Clock(), 0, 0);
+
+    const prefabsEid = addEntity(this.world);
+    addComponent(this.world, Prefabs, prefabsEid);
+    PrefabsProxy.get(prefabsEid).allocate();
 
     const roomIdEid = addEntity(this.world);
     RoomIdProxy.get(roomIdEid).allocate(this.world, roomId);
@@ -246,10 +258,10 @@ export class App {
     addComponent(this.world, KeyEventHandlerInit, keyEventHandlerEid);
 
     const mouseMoveEventHandlerEid = addEntity(this.world);
-    MouseMoveEventHandlerInitProxy.get(mouseMoveEventHandlerEid).allocate(this.world, this.canvas);
+    MouseMoveEventHandlerInitProxy.get(mouseMoveEventHandlerEid).allocate(this.world, canvas);
 
     const mouseButtonEventHandlerEid = addEntity(this.world);
-    MouseButtonEventHandlerInitProxy.get(mouseButtonEventHandlerEid).allocate(this.world, this.canvas);
+    MouseButtonEventHandlerInitProxy.get(mouseButtonEventHandlerEid).allocate(this.world, canvas);
 
     const resizeEventHandlerEid = addEntity(this.world);
     addComponent(this.world, WindowResizeEventHandlerInit, resizeEventHandlerEid);
@@ -288,8 +300,13 @@ export class App {
     AvatarMouseControlsProxy.get(avatarMouseControlsEid).allocate(this.world);
     addComponent(this.world, MouseButtonEventListener, avatarMouseControlsEid);
 
+    const canvasEid = addEntity(this.world);
+    addComponent(this.world, Canvas, canvasEid);
+    CanvasProxy.get(canvasEid).allocate(canvas);
+
     const rendererEid = addEntity(this.world);
-    RendererInitProxy.get(rendererEid).allocate(this.world, {canvas: this.canvas});
+    addComponent(this.world, Renderer, rendererEid);
+    RendererProxy.get(rendererEid).allocate(renderer);
     addComponent(this.world, WindowSize, rendererEid);
     addComponent(this.world, WindowResizeEventListener, rendererEid);
 
@@ -372,10 +389,6 @@ export class App {
       this.tick();
     };
     runTick();
-  }
-
-  getCanvas(): HTMLCanvasElement {
-    return this.canvas;
   }
 
   getWorld(): IWorld {

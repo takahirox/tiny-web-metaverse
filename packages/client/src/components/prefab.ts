@@ -1,9 +1,4 @@
-import {
-  addComponent,
-  defineComponent,
-  IWorld,
-  removeComponent
-} from "bitecs";
+import { defineComponent } from "bitecs";
 import { NULL_EID, Prefab } from "../common";
 
 export const Prefabs = defineComponent();
@@ -14,7 +9,7 @@ export class PrefabsProxy {
   private map: Map<number, Map<string, Prefab>>;
 
   private constructor() {
-    PrefabsProxy.instance.eid = NULL_EID;
+    this.eid = NULL_EID;
     this.map = new Map();
   }
 
@@ -23,14 +18,12 @@ export class PrefabsProxy {
     return PrefabsProxy.instance;
   }
 
-  allocate(world: IWorld): void {
-    addComponent(world, Prefabs, this.eid);
+  allocate(): void {
     this.map.set(this.eid, new Map());
   }
 
-  free(world: IWorld): void {
+  free(): void {
     this.map.delete(this.eid);
-    removeComponent(world, Prefabs, this.eid);
   }
 
   register(key: string, prefab: Prefab): void {

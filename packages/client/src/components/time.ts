@@ -1,27 +1,21 @@
-import {
-  addComponent,
-  defineComponent,
-  IWorld,
-  removeComponent,
-  Types
-} from "bitecs";
+import { defineComponent, Types } from "bitecs";
 import { Clock } from "three";
 import { NULL_EID } from "../common";
 
-export const TimeInit = defineComponent();
 // f32 types might cause precision problem??
 export const Time = defineComponent({
   delta: Types.f32,
   elapsed: Types.f32
 });
-const ClockMap = new Map<number, Clock>();
 
 export class TimeProxy {
   private static instance: TimeProxy = new TimeProxy();
   private eid: number;
+  private map: Map<number, Clock>;
 
-  constructor() {
+  private constructor() {
     this.eid = NULL_EID;
+    this.map = new Map();
   }
 
   static get(eid: number): TimeProxy {
@@ -30,24 +24,21 @@ export class TimeProxy {
   }
 
   allocate(
-    world: IWorld,
     clock: Clock,
     delta: number,
     elapsed: number
   ): void {
-    addComponent(world, Time, this.eid);
     Time.delta[this.eid] = delta;
     Time.elapsed[this.eid] = elapsed;
-    ClockMap.set(this.eid, clock);
+    this.map.set(this.eid, clock);
   }
 
-  free(world: IWorld): void {
-    removeComponent(world, Time, this.eid);
-    ClockMap.delete(this.eid);
+  free(): void {
+    this.map.delete(this.eid);
   }
 
   get clock(): Clock {
-    return ClockMap.get(this.eid)!;
+    return this.map.get(this.eid)!;
   }
 
   get delta(): number {

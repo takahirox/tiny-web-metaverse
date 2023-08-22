@@ -3,8 +3,8 @@ import {
   IWorld,
 } from "bitecs";
 import {
-  RendererProxy,
-  Renderer
+  Renderer,
+  RendererProxy
 } from "../components/renderer";
 import {
   SceneProxy,
