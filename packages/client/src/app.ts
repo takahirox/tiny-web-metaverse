@@ -24,7 +24,10 @@ import {
   SystemParams,
   SystemOrder
 } from "./common";
-import { AvatarMouseControlsProxy } from "./components/avatar_mouse_controls";
+import {
+  AvatarMouseControls,
+  AvatarMouseControlsProxy
+} from "./components/avatar_mouse_controls";
 import { Canvas, CanvasProxy } from "./components/canvas";
 import {
   FpsCamera,
@@ -41,7 +44,7 @@ import {
   MousePositionProxy,
   PreviousMousePositionProxy
 } from "./components/mouse";
-import { KeyEventHandlerInit } from "./components/keyboard";
+import { KeyEventHandler } from "./components/keyboard";
 import { MediaDeviceManager } from "./components/media_device";
 import {
   ComponentNetworkEventListener,
@@ -268,7 +271,7 @@ export class App {
     addComponent(this.world, NewConsumerStreamEventListener, streamRemotePeerRegisterEid);
 
     const keyEventHandlerEid = addEntity(this.world);
-    addComponent(this.world, KeyEventHandlerInit, keyEventHandlerEid);
+    addComponent(this.world, KeyEventHandler, keyEventHandlerEid);
 
     const mouseMoveEventHandlerEid = addEntity(this.world);
     MouseMoveEventHandlerInitProxy.get(mouseMoveEventHandlerEid).allocate(this.world, canvas);
@@ -311,7 +314,8 @@ export class App {
     RaycasterProxy.get(raycasterEid).allocate(new Raycaster());
 
     const avatarMouseControlsEid = addEntity(this.world);
-    AvatarMouseControlsProxy.get(avatarMouseControlsEid).allocate(this.world);
+    addComponent(this.world, AvatarMouseControls, avatarMouseControlsEid);
+    AvatarMouseControlsProxy.get(avatarMouseControlsEid).allocate();
     addComponent(this.world, MouseButtonEventListener, avatarMouseControlsEid);
 
     const canvasEid = addEntity(this.world);

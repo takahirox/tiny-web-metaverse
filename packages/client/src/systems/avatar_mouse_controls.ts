@@ -1,4 +1,10 @@
-import { addComponent, defineQuery, hasComponent, IWorld } from "bitecs";
+import {
+  addComponent,
+  defineQuery,
+  exitQuery,
+  hasComponent,
+  IWorld
+} from "bitecs";
 import { Euler } from "three";
 import { Avatar } from "../components/avatar";
 import {
@@ -27,6 +33,7 @@ import { TransformUpdated } from "../components/transform";
 const euler = new Euler(0, 0, 0, 'YXZ');
 
 const controlsQuery = defineQuery([AvatarMouseControls]);
+const controlsExitQuery = exitQuery(controlsQuery);
 const avatarQuery = defineQuery([Avatar, EntityObject3D, Local]);
 const mouseQuery = defineQuery([MousePosition, PreviousMousePosition]);
 const raycastedQuery = defineQuery([Raycasted]);
@@ -40,6 +47,10 @@ const MAX_POLAR_ANGLE = Math.PI; // radians
 const PI_2 = Math.PI / 2;
 
 export const avatarMouseControlsSystem = (world: IWorld) => {
+  controlsExitQuery(world).forEach(eid => {
+    AvatarMouseControlsProxy.get(eid).free(); 
+  });
+
   const raycastedExist = raycastedQuery(world).length > 0;
   const grabbedExist = grabbedQuery(world).length > 0;
   const avatarEids = avatarQuery(world);

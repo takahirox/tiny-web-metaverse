@@ -1,9 +1,4 @@
-import {
-  addComponent,
-  defineComponent,
-  IWorld,
-  removeComponent
-} from "bitecs";
+import { defineComponent } from "bitecs";
 import { NULL_EID } from "../common";
 
 export const AvatarMouseControls = defineComponent();
@@ -23,14 +18,12 @@ export class AvatarMouseControlsProxy {
     return AvatarMouseControlsProxy.instance;
   }
 
-  allocate(world: IWorld): void {
-    addComponent(world, AvatarMouseControls, this.eid);
+  allocate(): void {
     this.map.set(this.eid, false);
   }
 
-  free(world: IWorld): void {
+  free(): void {
     this.map.delete(this.eid);
-    removeComponent(world, AvatarMouseControls, this.eid);
   }
 
   get enabled(): boolean {

@@ -214,7 +214,7 @@ class App {
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_stream__WEBPACK_IMPORTED_MODULE_44__.ExitedPeerStreamEventListener, streamRemotePeerRegisterEid);
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_stream__WEBPACK_IMPORTED_MODULE_44__.NewConsumerStreamEventListener, streamRemotePeerRegisterEid);
         const keyEventHandlerEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_keyboard__WEBPACK_IMPORTED_MODULE_45__.KeyEventHandlerInit, keyEventHandlerEid);
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_keyboard__WEBPACK_IMPORTED_MODULE_45__.KeyEventHandler, keyEventHandlerEid);
         const mouseMoveEventHandlerEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
         _components_mouse__WEBPACK_IMPORTED_MODULE_46__.MouseMoveEventHandlerInitProxy.get(mouseMoveEventHandlerEid).allocate(this.world, canvas);
         const mouseButtonEventHandlerEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
@@ -245,7 +245,8 @@ class App {
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_raycast__WEBPACK_IMPORTED_MODULE_48__.RaycasterTag, raycasterEid);
         _components_raycast__WEBPACK_IMPORTED_MODULE_48__.RaycasterProxy.get(raycasterEid).allocate(new three__WEBPACK_IMPORTED_MODULE_2__.Raycaster());
         const avatarMouseControlsEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
-        _components_avatar_mouse_controls__WEBPACK_IMPORTED_MODULE_49__.AvatarMouseControlsProxy.get(avatarMouseControlsEid).allocate(this.world);
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_avatar_mouse_controls__WEBPACK_IMPORTED_MODULE_49__.AvatarMouseControls, avatarMouseControlsEid);
+        _components_avatar_mouse_controls__WEBPACK_IMPORTED_MODULE_49__.AvatarMouseControlsProxy.get(avatarMouseControlsEid).allocate();
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_mouse__WEBPACK_IMPORTED_MODULE_46__.MouseButtonEventListener, avatarMouseControlsEid);
         const canvasEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_canvas__WEBPACK_IMPORTED_MODULE_50__.Canvas, canvasEid);
@@ -421,13 +422,11 @@ class AvatarMouseControlsProxy {
         AvatarMouseControlsProxy.instance.eid = eid;
         return AvatarMouseControlsProxy.instance;
     }
-    allocate(world) {
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, AvatarMouseControls, this.eid);
+    allocate() {
         this.map.set(this.eid, false);
     }
-    free(world) {
+    free() {
         this.map.delete(this.eid);
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, AvatarMouseControls, this.eid);
     }
     get enabled() {
         return this.map.get(this.eid);
@@ -687,9 +686,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   KeyEvent: () => (/* binding */ KeyEvent),
 /* harmony export */   KeyEventHandler: () => (/* binding */ KeyEventHandler),
-/* harmony export */   KeyEventHandlerDestroy: () => (/* binding */ KeyEventHandlerDestroy),
-/* harmony export */   KeyEventHandlerInit: () => (/* binding */ KeyEventHandlerInit),
 /* harmony export */   KeyEventHandlerProxy: () => (/* binding */ KeyEventHandlerProxy),
+/* harmony export */   KeyEventHandlerReady: () => (/* binding */ KeyEventHandlerReady),
 /* harmony export */   KeyEventListener: () => (/* binding */ KeyEventListener),
 /* harmony export */   KeyEventProxy: () => (/* binding */ KeyEventProxy),
 /* harmony export */   KeyEventType: () => (/* binding */ KeyEventType),
@@ -705,65 +703,60 @@ var KeyEventType;
     KeyEventType[KeyEventType["Up"] = 1] = "Up";
 })(KeyEventType || (KeyEventType = {}));
 ;
-const KeyEventHandlerInit = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const KeyEventHandlerDestroy = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const KeyEventHandler = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const KeyEventHandlerMap = new Map();
 const KeyEvent = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const KeyEventMap = new Map();
-const KeyEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const KeyHold = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-class KeyEventHandlerProxy {
-    constructor() {
-        this.eid = _common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
-    }
-    static get(eid) {
-        KeyEventHandlerProxy.instance.eid = eid;
-        return KeyEventHandlerProxy.instance;
-    }
-    allocate(world, keydownListener, keyupListener) {
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, KeyEventHandler, this.eid);
-        KeyEventHandlerMap.set(this.eid, {
-            keydownListener,
-            keyupListener
-        });
-    }
-    free(world) {
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, KeyEventHandler, this.eid);
-        KeyEventHandlerMap.delete(this.eid);
-    }
-    get keydownListener() {
-        return KeyEventHandlerMap.get(this.eid).keydownListener;
-    }
-    get keyupListener() {
-        return KeyEventHandlerMap.get(this.eid).keyupListener;
-    }
-}
-KeyEventHandlerProxy.instance = new KeyEventHandlerProxy();
 class KeyEventProxy {
     constructor() {
         this.eid = _common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
+        this.map = new Map();
     }
     static get(eid) {
         KeyEventProxy.instance.eid = eid;
         return KeyEventProxy.instance;
     }
-    add(world, type, code) {
-        if (!(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, KeyEvent, this.eid)) {
-            (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, KeyEvent, this.eid);
-            KeyEventMap.set(this.eid, []);
-        }
-        KeyEventMap.get(this.eid).push({ type, code });
+    allocate() {
+        this.map.set(this.eid, []);
     }
-    free(world) {
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, KeyEvent, this.eid);
-        KeyEventMap.delete(this.eid);
+    add(type, code) {
+        this.map.get(this.eid).push({ type, code });
+    }
+    free() {
+        this.map.delete(this.eid);
     }
     get events() {
-        return KeyEventMap.get(this.eid);
+        return this.map.get(this.eid);
     }
 }
 KeyEventProxy.instance = new KeyEventProxy();
+const KeyEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const KeyHold = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const KeyEventHandler = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const KeyEventHandlerReady = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+class KeyEventHandlerProxy {
+    constructor() {
+        this.eid = _common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
+        this.map = new Map();
+    }
+    static get(eid) {
+        KeyEventHandlerProxy.instance.eid = eid;
+        return KeyEventHandlerProxy.instance;
+    }
+    allocate(keydownListener, keyupListener) {
+        this.map.set(this.eid, {
+            keydownListener,
+            keyupListener
+        });
+    }
+    free() {
+        this.map.delete(this.eid);
+    }
+    get keydownListener() {
+        return this.map.get(this.eid).keydownListener;
+    }
+    get keyupListener() {
+        return this.map.get(this.eid).keyupListener;
+    }
+}
+KeyEventHandlerProxy.instance = new KeyEventHandlerProxy();
 
 
 /***/ }),
@@ -2254,6 +2247,7 @@ __webpack_require__.r(__webpack_exports__);
 
 const euler = new three__WEBPACK_IMPORTED_MODULE_1__.Euler(0, 0, 0, 'YXZ');
 const controlsQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_avatar_mouse_controls__WEBPACK_IMPORTED_MODULE_2__.AvatarMouseControls]);
+const controlsExitQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)(controlsQuery);
 const avatarQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_avatar__WEBPACK_IMPORTED_MODULE_3__.Avatar, _components_entity_object3d__WEBPACK_IMPORTED_MODULE_4__.EntityObject3D, _components_network__WEBPACK_IMPORTED_MODULE_5__.Local]);
 const mouseQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_mouse__WEBPACK_IMPORTED_MODULE_6__.MousePosition, _components_mouse__WEBPACK_IMPORTED_MODULE_6__.PreviousMousePosition]);
 const raycastedQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_raycast__WEBPACK_IMPORTED_MODULE_7__.Raycasted]);
@@ -2264,6 +2258,9 @@ const MIN_POLAR_ANGLE = 0; // radians
 const MAX_POLAR_ANGLE = Math.PI; // radians
 const PI_2 = Math.PI / 2;
 const avatarMouseControlsSystem = (world) => {
+    controlsExitQuery(world).forEach(eid => {
+        _components_avatar_mouse_controls__WEBPACK_IMPORTED_MODULE_2__.AvatarMouseControlsProxy.get(eid).free();
+    });
     const raycastedExist = raycastedQuery(world).length > 0;
     const grabbedExist = grabbedQuery(world).length > 0;
     const avatarEids = avatarQuery(world);
@@ -2492,38 +2489,49 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_keyboard__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/keyboard */ "../client/src/components/keyboard.ts");
 
 
-const initEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_keyboard__WEBPACK_IMPORTED_MODULE_1__.KeyEventHandlerInit]));
-const destroyEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_keyboard__WEBPACK_IMPORTED_MODULE_1__.KeyEventHandler, _components_keyboard__WEBPACK_IMPORTED_MODULE_1__.KeyEventHandlerDestroy]));
+const handlerQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_keyboard__WEBPACK_IMPORTED_MODULE_1__.KeyEventHandler]);
+const handlerEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)(handlerQuery);
+const handlerExitQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)(handlerQuery);
 const listenerQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_keyboard__WEBPACK_IMPORTED_MODULE_1__.KeyEventListener]);
 const eventQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_keyboard__WEBPACK_IMPORTED_MODULE_1__.KeyEvent]);
+const addEvent = (world, eid, type, code) => {
+    if (!(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_keyboard__WEBPACK_IMPORTED_MODULE_1__.KeyEvent, eid)) {
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_keyboard__WEBPACK_IMPORTED_MODULE_1__.KeyEvent, eid);
+        _components_keyboard__WEBPACK_IMPORTED_MODULE_1__.KeyEventProxy.get(eid).allocate();
+    }
+    _components_keyboard__WEBPACK_IMPORTED_MODULE_1__.KeyEventProxy.get(eid).add(type, code);
+};
 const keyEventHandleSystem = (world) => {
-    destroyEnterQuery(world).forEach(eid => {
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_keyboard__WEBPACK_IMPORTED_MODULE_1__.KeyEventHandlerDestroy, eid);
+    handlerExitQuery(world).forEach(eid => {
+        if (!(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_keyboard__WEBPACK_IMPORTED_MODULE_1__.KeyEventHandlerReady, eid)) {
+            return;
+        }
         const proxy = _components_keyboard__WEBPACK_IMPORTED_MODULE_1__.KeyEventHandlerProxy.get(eid);
         document.removeEventListener('keydown', proxy.keydownListener);
         document.removeEventListener('keyup', proxy.keyupListener);
-        proxy.free(world);
+        proxy.free();
     });
-    initEnterQuery(world).forEach(eid => {
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_keyboard__WEBPACK_IMPORTED_MODULE_1__.KeyEventHandlerInit, eid);
+    handlerEnterQuery(world).forEach(eid => {
         const keydownListener = (event) => {
             listenerQuery(world).forEach(eid => {
-                _components_keyboard__WEBPACK_IMPORTED_MODULE_1__.KeyEventProxy.get(eid).add(world, _components_keyboard__WEBPACK_IMPORTED_MODULE_1__.KeyEventType.Down, event.keyCode);
+                addEvent(world, eid, _components_keyboard__WEBPACK_IMPORTED_MODULE_1__.KeyEventType.Down, event.keyCode);
             });
         };
         const keyupListener = (event) => {
             listenerQuery(world).forEach(eid => {
-                _components_keyboard__WEBPACK_IMPORTED_MODULE_1__.KeyEventProxy.get(eid).add(world, _components_keyboard__WEBPACK_IMPORTED_MODULE_1__.KeyEventType.Up, event.keyCode);
+                addEvent(world, eid, _components_keyboard__WEBPACK_IMPORTED_MODULE_1__.KeyEventType.Up, event.keyCode);
             });
         };
         document.addEventListener('keydown', keydownListener);
         document.addEventListener('keyup', keyupListener);
-        _components_keyboard__WEBPACK_IMPORTED_MODULE_1__.KeyEventHandlerProxy.get(eid).allocate(world, keydownListener, keyupListener);
+        _components_keyboard__WEBPACK_IMPORTED_MODULE_1__.KeyEventHandlerProxy.get(eid).allocate(keydownListener, keyupListener);
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_keyboard__WEBPACK_IMPORTED_MODULE_1__.KeyEventHandlerReady, eid);
     });
 };
 const keyEventClearSystem = (world) => {
     eventQuery(world).forEach(eid => {
-        _components_keyboard__WEBPACK_IMPORTED_MODULE_1__.KeyEventProxy.get(eid).free(world);
+        _components_keyboard__WEBPACK_IMPORTED_MODULE_1__.KeyEventProxy.get(eid).free();
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_keyboard__WEBPACK_IMPORTED_MODULE_1__.KeyEvent, eid);
     });
 };
 
