@@ -96,6 +96,7 @@ import {
 import { avatarKeyControlsSystem } from "./systems/avatar_key_controls";
 import { avatarMouseControlsSystem } from "./systems/avatar_mouse_controls";
 import { canvasSystem } from "./systems/canvas";
+import { entityObject3DSystem } from "./systems/entity_object3d";
 import { fpsCameraSystem } from "./systems/fps_camera";
 import { grabSystem } from "./systems/grab";
 import { grabbedObjectsMouseTrackSystem } from "./systems/grab_mouse_track";
@@ -210,6 +211,7 @@ export class App {
     this.registerSystem(prefabsSystem, SystemOrder.Setup);
     this.registerSystem(raycasterSystem, SystemOrder.Setup);
     this.registerSystem(rendererSystem, SystemOrder.Setup);
+    this.registerSystem(entityObject3DSystem, SystemOrder.Setup);
     this.registerSystem(sceneSystem, SystemOrder.Setup);
     this.registerSystem(perspectiveCameraSystem, SystemOrder.Setup);
     this.registerSystem(networkedSystem, SystemOrder.Setup);

@@ -31,6 +31,7 @@ export * from "./serializations/transform";
 export * from "./systems/avatar_key_controls";
 export * from "./systems/avatar_mouse_controls";
 export * from "./systems/canvas";
+export * from "./systems/entity_object3d";
 export * from "./systems/fps_camera";
 export * from "./systems/grab";
 export * from "./systems/grab_mouse_track";
