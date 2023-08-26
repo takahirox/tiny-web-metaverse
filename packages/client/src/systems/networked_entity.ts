@@ -11,6 +11,7 @@ import {
   EntityObject3DProxy
 } from "../components/entity_object3d";
 import {
+  Networked,
   NetworkedEntityManager,
   NetworkedEntityManagerProxy,
   NetworkedProxy,
@@ -67,9 +68,9 @@ export const networkedEntitySystem = (world: IWorld, {serializers}: SystemParams
               addComponent(world, Remote, eid);
               type = NetworkedType.Remote;
             }
+            addComponent(world, Networked, eid);
             const networkedProxy = NetworkedProxy.get(eid);
             networkedProxy.allocate(
-              world,
               e.data.network_id,
               type,
               e.data.creator,

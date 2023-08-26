@@ -1,5 +1,9 @@
 import {
+  addComponent,
   defineQuery,
+  enterQuery,
+  exitQuery,
+  hasComponent,
   IWorld,
   removeComponent
 } from "bitecs";
@@ -17,13 +21,13 @@ import {
   StreamEvent,
   StreamEventProxy,
   StreamEventReceiver,
-  StreamEventReceiverDestroy,
-  StreamEventReceiverInit,
+  StreamEventReceiverReady,
   StreamMessageType
 } from "../components/stream";
 
-const initQuery = defineQuery([StreamEventReceiverInit]);
-const destroyQuery = defineQuery([StreamEventReceiver, StreamEventReceiverDestroy]);
+const receiverQuery = defineQuery([StreamEventReceiver]);
+const receiverEnterQuery = enterQuery(receiverQuery);
+const receiverExitQuery = exitQuery(receiverQuery);
 
 const connectedListenerQuery = defineQuery([ConnectedStreamEventListener]);
 const joinedListenerQuery = defineQuery([JoinedStreamEventListener]);
@@ -33,6 +37,7 @@ const joinedPeerListenerQuery = defineQuery([JoinedPeerStreamEventListener]);
 const leftPeerListenerQuery = defineQuery([LeftPeerStreamEventListener]);
 const newConsumerListenerQuery = defineQuery([NewConsumerStreamEventListener]);
 const newPeerListenerQuery = defineQuery([NewPeerStreamEventListener]);
+
 const eventQuery = defineQuery([StreamEvent]);
 const adapterQuery = defineQuery([StreamClient]);
 
@@ -43,25 +48,18 @@ const addEvent = (
   type: StreamMessageType,
   payload: any
 ): void => {
-  StreamEventProxy.get(eid).add(
-    world,
-    type,
-    payload
-  );
+  if (!hasComponent(world, StreamEvent, eid)) {
+    addComponent(world, StreamEvent, eid);
+    StreamEventProxy.get(eid).allocate();
+  }
+  StreamEventProxy.get(eid).add(type, payload);
 };
 
-// TODO: This system may be simpler if adapter is passed via system data
 export const streamEventHandleSystem = (world: IWorld) => {
   // Assumes that adapter entities are same as the ones that
   // receivers are initialized with
-  destroyQuery(world).forEach(eid => {
-    const adapterEids = adapterQuery(world);
-
-    if (adapterEids.length === 0) {
-      return;
-    }
-
-    adapterEids.forEach(adapterEid => {
+  receiverExitQuery(world).forEach(eid => {
+    adapterQuery(world).forEach(adapterEid => {
       const adapter = StreamClientProxy.get(adapterEid).adapter;
 
       adapter.off(StreamMessageType.Connected);
@@ -74,19 +72,15 @@ export const streamEventHandleSystem = (world: IWorld) => {
       adapter.off(StreamMessageType.NewPeer);
     });
 
-    removeComponent(world, StreamEventReceiverDestroy, eid);
-    removeComponent(world, StreamEventReceiver, eid);
+    if (hasComponent(world, StreamEventReceiverReady, eid)) {
+      removeComponent(world, StreamEventReceiverReady, eid);
+	}
   });
 
-  // Assumes that adapter entity is not added after receiver initialization
-  initQuery(world).forEach(eid => {
-    const adapterEids = adapterQuery(world);
-
-    if (adapterEids.length === 0) {
-      return;
-    }
-
-    adapterEids.forEach(adapterEid => {
+  // Assumes that adapter entity is already initialized and
+  // any other adapter entity is not added after receiver initialization
+  receiverEnterQuery(world).forEach(eid => {
+    adapterQuery(world).forEach(adapterEid => {
       const adapter = StreamClientProxy.get(adapterEid).adapter;
 
       // TODO: Validate data?
@@ -141,12 +135,13 @@ export const streamEventHandleSystem = (world: IWorld) => {
       });
     });
 
-    removeComponent(world, StreamEventReceiverInit, eid);
+    addComponent(world, StreamEventReceiverReady, eid);
   });
 };
 
 export const streamEventClearSystem = (world: IWorld) => {
   eventQuery(world).forEach(eid => {
-    StreamEventProxy.get(eid).free(world);
+    StreamEventProxy.get(eid).free();
+    removeComponent(world, StreamEvent, eid);
   });
 };

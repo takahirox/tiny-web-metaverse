@@ -1,19 +1,18 @@
 import {
   addComponent,
+  addEntity,
   defineQuery,
   enterQuery,
   exitQuery,
   IWorld
 } from "bitecs";
 import {
-  MediaDeviceManager,
-  MicRequest,
-  StreamClient,
-  StreamConnectRequest,
+  MicRequestor,
+  StreamConnectRequestor,
   StreamEvent,
   StreamEventProxy,
   StreamMessageType,
-  StreamJoinRequest
+  StreamJoinRequestor
 } from "@tiny-web-metaverse/client/src";
 import { JoinDialog } from "../components/join_dialog";
 
@@ -41,15 +40,11 @@ const joinDialogQuery = defineQuery([JoinDialog]);
 const joinDialogEnterQuery = enterQuery(joinDialogQuery);
 const joinDialogExitQuery = exitQuery(joinDialogQuery);
 const eventQuery = defineQuery([JoinDialog, StreamEvent]);
-const clientQuery = defineQuery([StreamClient]);
-const mediaDeviceManagerQuery = defineQuery([MediaDeviceManager]);
 
 const show = (world: IWorld): void => {
   onClick = () => {
     button.disabled = true;
-    clientQuery(world).forEach(eid => {
-      addComponent(world, StreamConnectRequest, eid);
-    });
+    addComponent(world, StreamConnectRequestor, addEntity(world));
   };
 
   button.disabled = false;
@@ -82,17 +77,11 @@ export const updateJoinDialogSystem = (world: IWorld): void => {
     for (const event of StreamEventProxy.get(eid).events) {
       switch (event.type) {
         case StreamMessageType.Connected:
-          clientQuery(world).forEach(clientEid => {
-            addComponent(world, StreamJoinRequest, clientEid);
-          });
+          addComponent(world, StreamJoinRequestor, addEntity(world));
           break;
         case StreamMessageType.Joined:
           hide();
-
-          // Assumes always single media device manager entity exists
-          const managerEid = mediaDeviceManagerQuery(world)[0];
-          addComponent(world, MicRequest, managerEid);
-
+          addComponent(world, MicRequestor, addEntity(world));
           break;
         // TODO: Implement Left and Exited
       }

@@ -1,5 +1,5 @@
 import { defineComponent } from "bitecs";
 
-export const MediaDeviceManager = defineComponent();
-export const MicRequest = defineComponent();
-export const MicConnected = defineComponent();
+export const MicRequestor = defineComponent();
+export const MicConnectedEvent = defineComponent();
+export const MicConnectedEventListener = defineComponent();

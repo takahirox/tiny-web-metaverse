@@ -1,47 +1,60 @@
 import {
+  addComponent,
   defineQuery,
   enterQuery,
+  exitQuery,
+  hasComponent,
   IWorld,
   removeComponent
 } from "bitecs";
 import {
   MouseMoveEvent,
   MouseMoveEventHandler,
-  MouseMoveEventHandlerDestroy,
-  MouseMoveEventHandlerInit,
-  MouseMoveEventHandlerInitProxy,
   MouseMoveEventHandlerProxy,
+  MouseMoveEventHandlerReady,
   MouseMoveEventListener,
   MouseMoveEventProxy
 } from "../components/mouse";
 
-const initEnterQuery = enterQuery(defineQuery([MouseMoveEventHandlerInit]));
-const destroyEnterQuery = enterQuery(defineQuery(
-  [MouseMoveEventHandler, MouseMoveEventHandlerDestroy]));
+const handlerQuery = defineQuery([MouseMoveEventHandler]);
+const handlerEnterQuery = enterQuery(handlerQuery);
+const handlerExitQuery = exitQuery(handlerQuery);
 const listenerQuery = defineQuery([MouseMoveEventListener]);
 const eventQuery = defineQuery([MouseMoveEvent]);
 
-export const mouseMoveEventHandleSystem = (world: IWorld) => {
-  destroyEnterQuery(world).forEach(eid => {
-    removeComponent(world, MouseMoveEventHandlerDestroy, eid);
+const addEvent = (world: IWorld, eid: number, x: number, y: number): void => {
+  if (!hasComponent(world, MouseMoveEvent, eid)) {
+    addComponent(world, MouseMoveEvent, eid);
+    MouseMoveEventProxy.get(eid).allocate();
+  }
+  MouseMoveEventProxy.get(eid).add(x, y);
+};
 
+export const mouseMoveEventHandleSystem = (world: IWorld) => {
+  handlerExitQuery(world).forEach(eid => {
+    const proxy = MouseMoveEventHandlerProxy.get(eid);
+
+    if (proxy.listenersAlive) {
+      const target = proxy.target;
+      target.removeEventListener('mousemove', proxy.listener);
+    }
+
+    if (hasComponent(world, MouseMoveEventHandlerReady, eid)) {
+      removeComponent(world, MouseMoveEventHandlerReady, eid);
+    }
+
+    proxy.free();
+  });
+
+  handlerEnterQuery(world).forEach(eid => {
     const proxy = MouseMoveEventHandlerProxy.get(eid);
     const target = proxy.target;
 
-    target.removeEventListener('mousemove', proxy.listener);
-
-    proxy.free(world);
-  });
-
-  initEnterQuery(world).forEach(eid => {
-    const proxy = MouseMoveEventHandlerInitProxy.get(eid);
-    const target = proxy.target;
-    proxy.free(world);
-
     const listener = (event: MouseEvent): void => {
       listenerQuery(world).forEach(eid => {
-        MouseMoveEventProxy.get(eid).add(
+        addEvent(
           world,
+          eid,
           (event.offsetX / target.clientWidth) * 2.0 - 1.0,
           -((event.offsetY / target.clientHeight) * 2.0 - 1.0)
         );
@@ -49,17 +62,14 @@ export const mouseMoveEventHandleSystem = (world: IWorld) => {
     };
 
     target.addEventListener('mousemove', listener);
-
-    MouseMoveEventHandlerProxy.get(eid).allocate(
-      world,
-      target,
-      listener
-    );
+    MouseMoveEventHandlerProxy.get(eid).allocate(listener);
+    addComponent(world, MouseMoveEventHandlerReady, eid);
   });
 };
 
 export const mouseMoveEventClearSystem = (world: IWorld) => {
   eventQuery(world).forEach(eid => {
-    MouseMoveEventProxy.get(eid).free(world);
+    MouseMoveEventProxy.get(eid).free();
+    removeComponent(world, MouseMoveEvent, eid);
   });
 };

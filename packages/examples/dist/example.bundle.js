@@ -23,49 +23,49 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_entity_object3d__WEBPACK_IMPORTED_MODULE_54__ = __webpack_require__(/*! ./components/entity_object3d */ "../client/src/components/entity_object3d.ts");
 /* harmony import */ var _components_mouse__WEBPACK_IMPORTED_MODULE_46__ = __webpack_require__(/*! ./components/mouse */ "../client/src/components/mouse.ts");
 /* harmony import */ var _components_keyboard__WEBPACK_IMPORTED_MODULE_45__ = __webpack_require__(/*! ./components/keyboard */ "../client/src/components/keyboard.ts");
-/* harmony import */ var _components_media_device__WEBPACK_IMPORTED_MODULE_43__ = __webpack_require__(/*! ./components/media_device */ "../client/src/components/media_device.ts");
-/* harmony import */ var _components_network__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./components/network */ "../client/src/components/network.ts");
-/* harmony import */ var _components_prefab__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! ./components/prefab */ "../client/src/components/prefab.ts");
+/* harmony import */ var _components_network__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! ./components/network */ "../client/src/components/network.ts");
+/* harmony import */ var _components_prefab__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! ./components/prefab */ "../client/src/components/prefab.ts");
 /* harmony import */ var _components_raycast__WEBPACK_IMPORTED_MODULE_48__ = __webpack_require__(/*! ./components/raycast */ "../client/src/components/raycast.ts");
 /* harmony import */ var _components_renderer__WEBPACK_IMPORTED_MODULE_51__ = __webpack_require__(/*! ./components/renderer */ "../client/src/components/renderer.ts");
-/* harmony import */ var _components_room_id__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! ./components/room_id */ "../client/src/components/room_id.ts");
-/* harmony import */ var _components_user_id__WEBPACK_IMPORTED_MODULE_42__ = __webpack_require__(/*! ./components/user_id */ "../client/src/components/user_id.ts");
+/* harmony import */ var _components_room_id__WEBPACK_IMPORTED_MODULE_42__ = __webpack_require__(/*! ./components/room_id */ "../client/src/components/room_id.ts");
+/* harmony import */ var _components_user_id__WEBPACK_IMPORTED_MODULE_43__ = __webpack_require__(/*! ./components/user_id */ "../client/src/components/user_id.ts");
 /* harmony import */ var _components_scene__WEBPACK_IMPORTED_MODULE_52__ = __webpack_require__(/*! ./components/scene */ "../client/src/components/scene.ts");
 /* harmony import */ var _components_stream__WEBPACK_IMPORTED_MODULE_44__ = __webpack_require__(/*! ./components/stream */ "../client/src/components/stream.ts");
-/* harmony import */ var _components_time__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! ./components/time */ "../client/src/components/time.ts");
+/* harmony import */ var _components_time__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! ./components/time */ "../client/src/components/time.ts");
 /* harmony import */ var _components_window_resize__WEBPACK_IMPORTED_MODULE_47__ = __webpack_require__(/*! ./components/window_resize */ "../client/src/components/window_resize.ts");
-/* harmony import */ var _serializations_transform__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! ./serializations/transform */ "../client/src/serializations/transform.ts");
-/* harmony import */ var _systems_avatar_key_controls__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./systems/avatar_key_controls */ "../client/src/systems/avatar_key_controls.ts");
-/* harmony import */ var _systems_avatar_mouse_controls__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./systems/avatar_mouse_controls */ "../client/src/systems/avatar_mouse_controls.ts");
+/* harmony import */ var _serializations_transform__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! ./serializations/transform */ "../client/src/serializations/transform.ts");
+/* harmony import */ var _systems_avatar_key_controls__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./systems/avatar_key_controls */ "../client/src/systems/avatar_key_controls.ts");
+/* harmony import */ var _systems_avatar_mouse_controls__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./systems/avatar_mouse_controls */ "../client/src/systems/avatar_mouse_controls.ts");
 /* harmony import */ var _systems_canvas__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./systems/canvas */ "../client/src/systems/canvas.ts");
-/* harmony import */ var _systems_fps_camera__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./systems/fps_camera */ "../client/src/systems/fps_camera.ts");
-/* harmony import */ var _systems_grab__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./systems/grab */ "../client/src/systems/grab.ts");
-/* harmony import */ var _systems_grab_mouse_track__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./systems/grab_mouse_track */ "../client/src/systems/grab_mouse_track.ts");
+/* harmony import */ var _systems_fps_camera__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./systems/fps_camera */ "../client/src/systems/fps_camera.ts");
+/* harmony import */ var _systems_grab__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./systems/grab */ "../client/src/systems/grab.ts");
+/* harmony import */ var _systems_grab_mouse_track__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./systems/grab_mouse_track */ "../client/src/systems/grab_mouse_track.ts");
 /* harmony import */ var _systems_keyboard_event__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./systems/keyboard_event */ "../client/src/systems/keyboard_event.ts");
-/* harmony import */ var _systems_linear_move__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./systems/linear_move */ "../client/src/systems/linear_move.ts");
-/* harmony import */ var _systems_linear_transform__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./systems/linear_transform */ "../client/src/systems/linear_transform.ts");
+/* harmony import */ var _systems_linear_move__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./systems/linear_move */ "../client/src/systems/linear_move.ts");
+/* harmony import */ var _systems_linear_transform__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./systems/linear_transform */ "../client/src/systems/linear_transform.ts");
 /* harmony import */ var _systems_media_device__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./systems/media_device */ "../client/src/systems/media_device.ts");
 /* harmony import */ var _systems_mouse_button_event__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./systems/mouse_button_event */ "../client/src/systems/mouse_button_event.ts");
 /* harmony import */ var _systems_mouse_move_event__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./systems/mouse_move_event */ "../client/src/systems/mouse_move_event.ts");
 /* harmony import */ var _systems_mouse_position_track__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./systems/mouse_position_track */ "../client/src/systems/mouse_position_track.ts");
-/* harmony import */ var _systems_mouse_raycast__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./systems/mouse_raycast */ "../client/src/systems/mouse_raycast.ts");
-/* harmony import */ var _systems_mouse_select__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./systems/mouse_select */ "../client/src/systems/mouse_select.ts");
+/* harmony import */ var _systems_mouse_raycast__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./systems/mouse_raycast */ "../client/src/systems/mouse_raycast.ts");
+/* harmony import */ var _systems_mouse_select__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./systems/mouse_select */ "../client/src/systems/mouse_select.ts");
 /* harmony import */ var _systems_network_event__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./systems/network_event */ "../client/src/systems/network_event.ts");
-/* harmony import */ var _systems_network_send__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! ./systems/network_send */ "../client/src/systems/network_send.ts");
-/* harmony import */ var _systems_networked_entity__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./systems/networked_entity */ "../client/src/systems/networked_entity.ts");
+/* harmony import */ var _systems_network_send__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./systems/network_send */ "../client/src/systems/network_send.ts");
+/* harmony import */ var _systems_networked__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./systems/networked */ "../client/src/systems/networked.ts");
+/* harmony import */ var _systems_networked_entity__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./systems/networked_entity */ "../client/src/systems/networked_entity.ts");
 /* harmony import */ var _systems_perspective_camera__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./systems/perspective_camera */ "../client/src/systems/perspective_camera.ts");
 /* harmony import */ var _systems_prefab__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./systems/prefab */ "../client/src/systems/prefab.ts");
-/* harmony import */ var _systems_raycast__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./systems/raycast */ "../client/src/systems/raycast.ts");
+/* harmony import */ var _systems_raycast__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ./systems/raycast */ "../client/src/systems/raycast.ts");
 /* harmony import */ var _systems_raycaster__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./systems/raycaster */ "../client/src/systems/raycaster.ts");
-/* harmony import */ var _systems_render__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./systems/render */ "../client/src/systems/render.ts");
+/* harmony import */ var _systems_render__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./systems/render */ "../client/src/systems/render.ts");
 /* harmony import */ var _systems_renderer__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./systems/renderer */ "../client/src/systems/renderer.ts");
 /* harmony import */ var _systems_scene__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./systems/scene */ "../client/src/systems/scene.ts");
 /* harmony import */ var _systems_stream_connection__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./systems/stream_connection */ "../client/src/systems/stream_connection.ts");
 /* harmony import */ var _systems_stream_remote_peers__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./systems/stream_remote_peers */ "../client/src/systems/stream_remote_peers.ts");
 /* harmony import */ var _systems_stream_event__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./systems/stream_event */ "../client/src/systems/stream_event.ts");
 /* harmony import */ var _systems_time__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./systems/time */ "../client/src/systems/time.ts");
-/* harmony import */ var _systems_transform__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ./systems/transform */ "../client/src/systems/transform.ts");
-/* harmony import */ var _systems_update_matrices__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! ./systems/update_matrices */ "../client/src/systems/update_matrices.ts");
+/* harmony import */ var _systems_transform__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./systems/transform */ "../client/src/systems/transform.ts");
+/* harmony import */ var _systems_update_matrices__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./systems/update_matrices */ "../client/src/systems/update_matrices.ts");
 /* harmony import */ var _systems_window_resize_event__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./systems/window_resize_event */ "../client/src/systems/window_resize_event.ts");
 
 
@@ -163,48 +163,49 @@ class App {
         this.registerSystem(_systems_renderer__WEBPACK_IMPORTED_MODULE_19__.rendererSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.Setup);
         this.registerSystem(_systems_scene__WEBPACK_IMPORTED_MODULE_20__.sceneSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.Setup);
         this.registerSystem(_systems_perspective_camera__WEBPACK_IMPORTED_MODULE_21__.perspectiveCameraSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.Setup);
-        this.registerSystem(_systems_networked_entity__WEBPACK_IMPORTED_MODULE_22__.networkedEntitySystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.Setup);
-        this.registerSystem(_systems_linear_move__WEBPACK_IMPORTED_MODULE_23__.linearMoveSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.BeforeMatricesUpdate);
-        this.registerSystem(_systems_linear_transform__WEBPACK_IMPORTED_MODULE_24__.linearTransformSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.BeforeMatricesUpdate);
-        this.registerSystem(_systems_mouse_raycast__WEBPACK_IMPORTED_MODULE_25__.mouseRaycastSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.BeforeMatricesUpdate);
-        this.registerSystem(_systems_mouse_select__WEBPACK_IMPORTED_MODULE_26__.mouseSelectSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.BeforeMatricesUpdate);
-        this.registerSystem(_systems_grab__WEBPACK_IMPORTED_MODULE_27__.grabSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.BeforeMatricesUpdate);
-        this.registerSystem(_systems_grab_mouse_track__WEBPACK_IMPORTED_MODULE_28__.grabbedObjectsMouseTrackSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.BeforeMatricesUpdate);
-        this.registerSystem(_systems_avatar_key_controls__WEBPACK_IMPORTED_MODULE_29__.avatarKeyControlsSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.BeforeMatricesUpdate);
-        this.registerSystem(_systems_avatar_mouse_controls__WEBPACK_IMPORTED_MODULE_30__.avatarMouseControlsSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.BeforeMatricesUpdate);
-        this.registerSystem(_systems_fps_camera__WEBPACK_IMPORTED_MODULE_31__.fpsCameraSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.MatricesUpdate - 1);
-        this.registerSystem(_systems_network_send__WEBPACK_IMPORTED_MODULE_32__.networkSendSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.MatricesUpdate - 1);
-        this.registerSystem(_systems_update_matrices__WEBPACK_IMPORTED_MODULE_33__.updateMatricesSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.MatricesUpdate);
-        this.registerSystem(_systems_render__WEBPACK_IMPORTED_MODULE_34__.renderSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.Render);
+        this.registerSystem(_systems_networked__WEBPACK_IMPORTED_MODULE_22__.networkedSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.Setup);
+        this.registerSystem(_systems_networked_entity__WEBPACK_IMPORTED_MODULE_23__.networkedEntitySystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.Setup);
+        this.registerSystem(_systems_linear_move__WEBPACK_IMPORTED_MODULE_24__.linearMoveSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.BeforeMatricesUpdate);
+        this.registerSystem(_systems_linear_transform__WEBPACK_IMPORTED_MODULE_25__.linearTransformSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.BeforeMatricesUpdate);
+        this.registerSystem(_systems_mouse_raycast__WEBPACK_IMPORTED_MODULE_26__.mouseRaycastSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.BeforeMatricesUpdate);
+        this.registerSystem(_systems_mouse_select__WEBPACK_IMPORTED_MODULE_27__.mouseSelectSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.BeforeMatricesUpdate);
+        this.registerSystem(_systems_grab__WEBPACK_IMPORTED_MODULE_28__.grabSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.BeforeMatricesUpdate);
+        this.registerSystem(_systems_grab_mouse_track__WEBPACK_IMPORTED_MODULE_29__.grabbedObjectsMouseTrackSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.BeforeMatricesUpdate);
+        this.registerSystem(_systems_avatar_key_controls__WEBPACK_IMPORTED_MODULE_30__.avatarKeyControlsSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.BeforeMatricesUpdate);
+        this.registerSystem(_systems_avatar_mouse_controls__WEBPACK_IMPORTED_MODULE_31__.avatarMouseControlsSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.BeforeMatricesUpdate);
+        this.registerSystem(_systems_fps_camera__WEBPACK_IMPORTED_MODULE_32__.fpsCameraSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.MatricesUpdate - 1);
+        this.registerSystem(_systems_network_send__WEBPACK_IMPORTED_MODULE_33__.networkSendSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.MatricesUpdate - 1);
+        this.registerSystem(_systems_update_matrices__WEBPACK_IMPORTED_MODULE_34__.updateMatricesSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.MatricesUpdate);
+        this.registerSystem(_systems_render__WEBPACK_IMPORTED_MODULE_35__.renderSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.Render);
         this.registerSystem(_systems_keyboard_event__WEBPACK_IMPORTED_MODULE_7__.keyEventClearSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.TearDown);
         this.registerSystem(_systems_mouse_move_event__WEBPACK_IMPORTED_MODULE_8__.mouseMoveEventClearSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.TearDown);
         this.registerSystem(_systems_mouse_button_event__WEBPACK_IMPORTED_MODULE_9__.mouseButtonEventClearSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.TearDown);
+        this.registerSystem(_systems_media_device__WEBPACK_IMPORTED_MODULE_6__.micEventClearSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.TearDown);
         this.registerSystem(_systems_window_resize_event__WEBPACK_IMPORTED_MODULE_10__.windowResizeEventClearSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.TearDown);
         this.registerSystem(_systems_network_event__WEBPACK_IMPORTED_MODULE_11__.networkEventClearSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.TearDown);
         this.registerSystem(_systems_stream_event__WEBPACK_IMPORTED_MODULE_12__.streamEventClearSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.TearDown);
-        this.registerSystem(_systems_raycast__WEBPACK_IMPORTED_MODULE_35__.clearRaycastedSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.TearDown);
-        this.registerSystem(_systems_transform__WEBPACK_IMPORTED_MODULE_36__.clearTransformUpdatedSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.TearDown);
-        this.registerSerializers('position', _components_network__WEBPACK_IMPORTED_MODULE_37__.NetworkedPosition, _serializations_transform__WEBPACK_IMPORTED_MODULE_38__.positionSerializers);
-        this.registerSerializers('quaternion', _components_network__WEBPACK_IMPORTED_MODULE_37__.NetworkedQuaternion, _serializations_transform__WEBPACK_IMPORTED_MODULE_38__.quaternionSerializers);
-        this.registerSerializers('scale', _components_network__WEBPACK_IMPORTED_MODULE_37__.NetworkedScale, _serializations_transform__WEBPACK_IMPORTED_MODULE_38__.scaleSerializers);
+        this.registerSystem(_systems_raycast__WEBPACK_IMPORTED_MODULE_36__.clearRaycastedSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.TearDown);
+        this.registerSystem(_systems_transform__WEBPACK_IMPORTED_MODULE_37__.clearTransformUpdatedSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.TearDown);
+        this.registerSerializers('position', _components_network__WEBPACK_IMPORTED_MODULE_38__.NetworkedPosition, _serializations_transform__WEBPACK_IMPORTED_MODULE_39__.positionSerializers);
+        this.registerSerializers('quaternion', _components_network__WEBPACK_IMPORTED_MODULE_38__.NetworkedQuaternion, _serializations_transform__WEBPACK_IMPORTED_MODULE_39__.quaternionSerializers);
+        this.registerSerializers('scale', _components_network__WEBPACK_IMPORTED_MODULE_38__.NetworkedScale, _serializations_transform__WEBPACK_IMPORTED_MODULE_39__.scaleSerializers);
         // Entity 0 for null entity
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
         const timeEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_time__WEBPACK_IMPORTED_MODULE_39__.Time, timeEid);
-        _components_time__WEBPACK_IMPORTED_MODULE_39__.TimeProxy.get(timeEid).allocate(new three__WEBPACK_IMPORTED_MODULE_2__.Clock(), 0, 0);
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_time__WEBPACK_IMPORTED_MODULE_40__.Time, timeEid);
+        _components_time__WEBPACK_IMPORTED_MODULE_40__.TimeProxy.get(timeEid).allocate(new three__WEBPACK_IMPORTED_MODULE_2__.Clock(), 0, 0);
         const prefabsEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_prefab__WEBPACK_IMPORTED_MODULE_40__.Prefabs, prefabsEid);
-        _components_prefab__WEBPACK_IMPORTED_MODULE_40__.PrefabsProxy.get(prefabsEid).allocate();
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_prefab__WEBPACK_IMPORTED_MODULE_41__.Prefabs, prefabsEid);
+        _components_prefab__WEBPACK_IMPORTED_MODULE_41__.PrefabsProxy.get(prefabsEid).allocate();
         const roomIdEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_room_id__WEBPACK_IMPORTED_MODULE_41__.RoomId, roomIdEid);
-        _components_room_id__WEBPACK_IMPORTED_MODULE_41__.RoomIdProxy.get(roomIdEid).allocate(roomId);
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_room_id__WEBPACK_IMPORTED_MODULE_42__.RoomId, roomIdEid);
+        _components_room_id__WEBPACK_IMPORTED_MODULE_42__.RoomIdProxy.get(roomIdEid).allocate(roomId);
         const userIdEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_user_id__WEBPACK_IMPORTED_MODULE_42__.UserId, userIdEid);
-        _components_user_id__WEBPACK_IMPORTED_MODULE_42__.UserIdProxy.get(userIdEid).allocate(userId);
-        const mediaDeviceManagerEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_media_device__WEBPACK_IMPORTED_MODULE_43__.MediaDeviceManager, mediaDeviceManagerEid);
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_user_id__WEBPACK_IMPORTED_MODULE_43__.UserId, userIdEid);
+        _components_user_id__WEBPACK_IMPORTED_MODULE_43__.UserIdProxy.get(userIdEid).allocate(userId);
         const streamRemotePeersEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
-        _components_stream__WEBPACK_IMPORTED_MODULE_44__.StreamRemotePeersProxy.get(streamRemotePeersEid).allocate(this.world);
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_stream__WEBPACK_IMPORTED_MODULE_44__.StreamRemotePeers, streamRemotePeersEid);
+        _components_stream__WEBPACK_IMPORTED_MODULE_44__.StreamRemotePeersProxy.get(streamRemotePeersEid).allocate();
         const streamRemotePeerRegisterEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_stream__WEBPACK_IMPORTED_MODULE_44__.StreamRemotePeerRegister, streamRemotePeerRegisterEid);
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_stream__WEBPACK_IMPORTED_MODULE_44__.ConnectedStreamEventListener, streamRemotePeerRegisterEid);
@@ -216,30 +217,37 @@ class App {
         const keyEventHandlerEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_keyboard__WEBPACK_IMPORTED_MODULE_45__.KeyEventHandler, keyEventHandlerEid);
         const mouseMoveEventHandlerEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
-        _components_mouse__WEBPACK_IMPORTED_MODULE_46__.MouseMoveEventHandlerInitProxy.get(mouseMoveEventHandlerEid).allocate(this.world, canvas);
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_mouse__WEBPACK_IMPORTED_MODULE_46__.MouseMoveEventHandler, mouseMoveEventHandlerEid);
+        _components_mouse__WEBPACK_IMPORTED_MODULE_46__.MouseMoveEventHandlerProxy.get(mouseMoveEventHandlerEid).init(canvas);
         const mouseButtonEventHandlerEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
-        _components_mouse__WEBPACK_IMPORTED_MODULE_46__.MouseButtonEventHandlerInitProxy.get(mouseButtonEventHandlerEid).allocate(this.world, canvas);
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_mouse__WEBPACK_IMPORTED_MODULE_46__.MouseButtonEventHandler, mouseButtonEventHandlerEid);
+        _components_mouse__WEBPACK_IMPORTED_MODULE_46__.MouseButtonEventHandlerProxy.get(mouseButtonEventHandlerEid).init(canvas);
         const resizeEventHandlerEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_window_resize__WEBPACK_IMPORTED_MODULE_47__.WindowResizeEventHandlerInit, resizeEventHandlerEid);
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_window_resize__WEBPACK_IMPORTED_MODULE_47__.WindowResizeEventHandler, resizeEventHandlerEid);
         const networkAdapterEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
-        _components_network__WEBPACK_IMPORTED_MODULE_37__.StateClientProxy.get(networkAdapterEid).allocate(this.world, this.networkAdapter);
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_network__WEBPACK_IMPORTED_MODULE_38__.StateClient, networkAdapterEid);
+        _components_network__WEBPACK_IMPORTED_MODULE_38__.StateClientProxy.get(networkAdapterEid).allocate(this.networkAdapter);
         const streamClientEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
-        _components_stream__WEBPACK_IMPORTED_MODULE_44__.StreamClientProxy.get(streamClientEid).allocate(this.world, this.streamAdapter);
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_stream__WEBPACK_IMPORTED_MODULE_44__.StreamNotConnected, streamClientEid);
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_stream__WEBPACK_IMPORTED_MODULE_44__.StreamClient, streamClientEid);
+        _components_stream__WEBPACK_IMPORTED_MODULE_44__.StreamClientProxy.get(streamClientEid).allocate(this.streamAdapter);
         const networkEventReceiverEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_network__WEBPACK_IMPORTED_MODULE_37__.NetworkEventReceiverInit, networkEventReceiverEid);
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_network__WEBPACK_IMPORTED_MODULE_38__.NetworkEventReceiver, networkEventReceiverEid);
         const networkEventSenderEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
-        _components_network__WEBPACK_IMPORTED_MODULE_37__.NetworkEventSenderProxy.get(networkEventSenderEid).allocate(this.world);
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_network__WEBPACK_IMPORTED_MODULE_38__.NetworkEventSender, networkEventSenderEid);
+        _components_network__WEBPACK_IMPORTED_MODULE_38__.NetworkEventSender.lastSendTime[networkEventSenderEid] = 0.0;
         const streamEventReceiverEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_stream__WEBPACK_IMPORTED_MODULE_44__.StreamEventReceiverInit, streamEventReceiverEid);
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_stream__WEBPACK_IMPORTED_MODULE_44__.StreamEventReceiver, streamEventReceiverEid);
         const networkedEntityManagerEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
-        _components_network__WEBPACK_IMPORTED_MODULE_37__.NetworkedEntityManagerProxy.get(networkedEntityManagerEid).allocate(this.world);
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_network__WEBPACK_IMPORTED_MODULE_37__.ComponentNetworkEventListener, networkedEntityManagerEid);
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_network__WEBPACK_IMPORTED_MODULE_37__.EntityNetworkEventListener, networkedEntityManagerEid);
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_network__WEBPACK_IMPORTED_MODULE_37__.UserNetworkEventListener, networkedEntityManagerEid);
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_network__WEBPACK_IMPORTED_MODULE_38__.NetworkedEntityManager, networkedEntityManagerEid);
+        _components_network__WEBPACK_IMPORTED_MODULE_38__.NetworkedEntityManagerProxy.get(networkedEntityManagerEid).allocate();
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_network__WEBPACK_IMPORTED_MODULE_38__.ComponentNetworkEventListener, networkedEntityManagerEid);
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_network__WEBPACK_IMPORTED_MODULE_38__.EntityNetworkEventListener, networkedEntityManagerEid);
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_network__WEBPACK_IMPORTED_MODULE_38__.UserNetworkEventListener, networkedEntityManagerEid);
         const mousePositionEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
-        _components_mouse__WEBPACK_IMPORTED_MODULE_46__.MousePositionProxy.get(mousePositionEid).allocate(this.world);
-        _components_mouse__WEBPACK_IMPORTED_MODULE_46__.PreviousMousePositionProxy.get(mousePositionEid).allocate(this.world);
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_mouse__WEBPACK_IMPORTED_MODULE_46__.MousePosition, mousePositionEid);
+        _components_mouse__WEBPACK_IMPORTED_MODULE_46__.MousePositionProxy.get(mousePositionEid).allocate();
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_mouse__WEBPACK_IMPORTED_MODULE_46__.PreviousMousePosition, mousePositionEid);
+        _components_mouse__WEBPACK_IMPORTED_MODULE_46__.PreviousMousePositionProxy.get(mousePositionEid).allocate();
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_mouse__WEBPACK_IMPORTED_MODULE_46__.MouseMoveEventListener, mousePositionEid);
         const raycasterEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_raycast__WEBPACK_IMPORTED_MODULE_48__.RaycasterTag, raycasterEid);
@@ -755,6 +763,9 @@ class KeyEventHandlerProxy {
     get keyupListener() {
         return this.map.get(this.eid).keyupListener;
     }
+    get alive() {
+        return this.map.has(this.eid);
+    }
 }
 KeyEventHandlerProxy.instance = new KeyEventHandlerProxy();
 
@@ -829,15 +840,15 @@ const LinearScale = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   MediaDeviceManager: () => (/* binding */ MediaDeviceManager),
-/* harmony export */   MicConnected: () => (/* binding */ MicConnected),
-/* harmony export */   MicRequest: () => (/* binding */ MicRequest)
+/* harmony export */   MicConnectedEvent: () => (/* binding */ MicConnectedEvent),
+/* harmony export */   MicConnectedEventListener: () => (/* binding */ MicConnectedEventListener),
+/* harmony export */   MicRequestor: () => (/* binding */ MicRequestor)
 /* harmony export */ });
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
 
-const MediaDeviceManager = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const MicRequest = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const MicConnected = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const MicRequestor = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const MicConnectedEvent = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const MicConnectedEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 
 
 /***/ }),
@@ -852,10 +863,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   MouseButtonEvent: () => (/* binding */ MouseButtonEvent),
 /* harmony export */   MouseButtonEventHandler: () => (/* binding */ MouseButtonEventHandler),
-/* harmony export */   MouseButtonEventHandlerDestroy: () => (/* binding */ MouseButtonEventHandlerDestroy),
-/* harmony export */   MouseButtonEventHandlerInit: () => (/* binding */ MouseButtonEventHandlerInit),
-/* harmony export */   MouseButtonEventHandlerInitProxy: () => (/* binding */ MouseButtonEventHandlerInitProxy),
 /* harmony export */   MouseButtonEventHandlerProxy: () => (/* binding */ MouseButtonEventHandlerProxy),
+/* harmony export */   MouseButtonEventHandlerReady: () => (/* binding */ MouseButtonEventHandlerReady),
 /* harmony export */   MouseButtonEventListener: () => (/* binding */ MouseButtonEventListener),
 /* harmony export */   MouseButtonEventProxy: () => (/* binding */ MouseButtonEventProxy),
 /* harmony export */   MouseButtonEventType: () => (/* binding */ MouseButtonEventType),
@@ -863,10 +872,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   MouseButtonType: () => (/* binding */ MouseButtonType),
 /* harmony export */   MouseMoveEvent: () => (/* binding */ MouseMoveEvent),
 /* harmony export */   MouseMoveEventHandler: () => (/* binding */ MouseMoveEventHandler),
-/* harmony export */   MouseMoveEventHandlerDestroy: () => (/* binding */ MouseMoveEventHandlerDestroy),
-/* harmony export */   MouseMoveEventHandlerInit: () => (/* binding */ MouseMoveEventHandlerInit),
-/* harmony export */   MouseMoveEventHandlerInitProxy: () => (/* binding */ MouseMoveEventHandlerInitProxy),
 /* harmony export */   MouseMoveEventHandlerProxy: () => (/* binding */ MouseMoveEventHandlerProxy),
+/* harmony export */   MouseMoveEventHandlerReady: () => (/* binding */ MouseMoveEventHandlerReady),
 /* harmony export */   MouseMoveEventListener: () => (/* binding */ MouseMoveEventListener),
 /* harmony export */   MouseMoveEventProxy: () => (/* binding */ MouseMoveEventProxy),
 /* harmony export */   MousePosition: () => (/* binding */ MousePosition),
@@ -891,234 +898,197 @@ var MouseButtonType;
     MouseButtonType[MouseButtonType["Right"] = 2] = "Right";
 })(MouseButtonType || (MouseButtonType = {}));
 ;
-const MouseButtonEventHandlerInit = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const MouseButtonEventHandlerInitMap = new Map();
-const MouseButtonEventHandlerDestroy = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const MouseButtonEventHandler = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const MouseButtonEventHandlerMap = new Map();
 const MouseButtonEvent = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const MouseButtonEventMap = new Map();
 const MouseButtonEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 const MouseButtonHold = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const MouseMoveEventHandlerInit = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const MouseMoveEventHandlerInitMap = new Map();
-const MouseMoveEventHandlerDestroy = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const MouseMoveEventHandler = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const MouseMoveEventHandlerMap = new Map();
-const MouseMoveEvent = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const MouseMoveEventMap = new Map();
-const MouseMoveEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const MousePosition = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const MousePositionMap = new Map();
-const PreviousMousePosition = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const PreviousMousePositionMap = new Map();
-class MouseButtonEventHandlerInitProxy {
-    constructor() {
-        this.eid = _src_common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
-    }
-    static get(eid) {
-        MouseButtonEventHandlerInitProxy.instance.eid = eid;
-        return MouseButtonEventHandlerInitProxy.instance;
-    }
-    allocate(world, target) {
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, MouseButtonEventHandlerInit, this.eid);
-        MouseButtonEventHandlerInitMap.set(this.eid, target);
-    }
-    free(world) {
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, MouseButtonEventHandlerInit, this.eid);
-        MouseButtonEventHandlerInitMap.delete(this.eid);
-    }
-    get target() {
-        return MouseButtonEventHandlerInitMap.get(this.eid);
-    }
-}
-MouseButtonEventHandlerInitProxy.instance = new MouseButtonEventHandlerInitProxy();
-class MouseButtonEventHandlerProxy {
-    constructor() {
-        this.eid = _src_common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
-    }
-    static get(eid) {
-        MouseButtonEventHandlerProxy.instance.eid = eid;
-        return MouseButtonEventHandlerProxy.instance;
-    }
-    allocate(world, target, mousedownListener, mouseupListener, contextmenuListener) {
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, MouseButtonEventHandler, this.eid);
-        MouseButtonEventHandlerMap.set(this.eid, {
-            target,
-            mousedownListener,
-            mouseupListener,
-            contextmenuListener
-        });
-    }
-    free(world) {
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, MouseButtonEventHandler, this.eid);
-        MouseButtonEventHandlerMap.delete(this.eid);
-    }
-    get target() {
-        return MouseButtonEventHandlerMap.get(this.eid).target;
-    }
-    get mousedownListener() {
-        return MouseButtonEventHandlerMap.get(this.eid).mousedownListener;
-    }
-    get mouseupListener() {
-        return MouseButtonEventHandlerMap.get(this.eid).mouseupListener;
-    }
-    get contextmenuListener() {
-        return MouseButtonEventHandlerMap.get(this.eid).contextmenuListener;
-    }
-}
-MouseButtonEventHandlerProxy.instance = new MouseButtonEventHandlerProxy();
 class MouseButtonEventProxy {
     constructor() {
         this.eid = _src_common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
+        this.map = new Map();
     }
     static get(eid) {
         MouseButtonEventProxy.instance.eid = eid;
         return MouseButtonEventProxy.instance;
     }
-    add(world, type, button, x, y) {
-        if (!(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, MouseButtonEvent, this.eid)) {
-            (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, MouseButtonEvent, this.eid);
-            MouseButtonEventMap.set(this.eid, []);
-        }
-        MouseButtonEventMap.get(this.eid).push({ button, x, y, type });
+    allocate() {
+        this.map.set(this.eid, []);
     }
-    free(world) {
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, MouseButtonEvent, this.eid);
-        MouseButtonEventMap.delete(this.eid);
+    add(type, button, x, y) {
+        this.map.get(this.eid).push({ button, x, y, type });
+    }
+    free() {
+        this.map.delete(this.eid);
     }
     get events() {
-        return MouseButtonEventMap.get(this.eid);
+        return this.map.get(this.eid);
     }
 }
 MouseButtonEventProxy.instance = new MouseButtonEventProxy();
-class MouseMoveEventHandlerInitProxy {
-    constructor() {
-        this.eid = _src_common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
-    }
-    static get(eid) {
-        MouseMoveEventHandlerInitProxy.instance.eid = eid;
-        return MouseMoveEventHandlerInitProxy.instance;
-    }
-    allocate(world, target) {
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, MouseMoveEventHandlerInit, this.eid);
-        MouseMoveEventHandlerInitMap.set(this.eid, target);
-    }
-    free(world) {
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, MouseMoveEventHandlerInit, this.eid);
-        MouseMoveEventHandlerInitMap.delete(this.eid);
-    }
-    get target() {
-        return MouseMoveEventHandlerInitMap.get(this.eid);
-    }
-}
-MouseMoveEventHandlerInitProxy.instance = new MouseMoveEventHandlerInitProxy();
-class MouseMoveEventHandlerProxy {
-    constructor() {
-        this.eid = _src_common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
-    }
-    static get(eid) {
-        MouseMoveEventHandlerProxy.instance.eid = eid;
-        return MouseMoveEventHandlerProxy.instance;
-    }
-    allocate(world, target, listener) {
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, MouseMoveEventHandler, this.eid);
-        MouseMoveEventHandlerMap.set(this.eid, { listener, target });
-    }
-    free(world) {
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, MouseMoveEventHandler, this.eid);
-        MouseMoveEventHandlerMap.delete(this.eid);
-    }
-    get listener() {
-        return MouseMoveEventHandlerMap.get(this.eid).listener;
-    }
-    get target() {
-        return MouseMoveEventHandlerMap.get(this.eid).target;
-    }
-}
-MouseMoveEventHandlerProxy.instance = new MouseMoveEventHandlerProxy();
+const MouseMoveEvent = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const MouseMoveEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 class MouseMoveEventProxy {
     constructor() {
         this.eid = _src_common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
+        this.map = new Map();
     }
     static get(eid) {
         MouseMoveEventProxy.instance.eid = eid;
         return MouseMoveEventProxy.instance;
     }
-    add(world, x, y) {
-        if (!(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, MouseMoveEvent, this.eid)) {
-            (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, MouseMoveEvent, this.eid);
-            MouseMoveEventMap.set(this.eid, []);
-        }
-        MouseMoveEventMap.get(this.eid).push({ x, y });
+    allocate() {
+        this.map.set(this.eid, []);
     }
-    free(world) {
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, MouseMoveEvent, this.eid);
-        MouseMoveEventMap.delete(this.eid);
+    add(x, y) {
+        this.map.get(this.eid).push({ x, y });
+    }
+    free() {
+        this.map.delete(this.eid);
     }
     get events() {
-        return MouseMoveEventMap.get(this.eid);
+        return this.map.get(this.eid);
     }
 }
 MouseMoveEventProxy.instance = new MouseMoveEventProxy();
+const MousePosition = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const PreviousMousePosition = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 class MousePositionProxy {
     constructor() {
         this.eid = _src_common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
+        this.map = new Map();
     }
     static get(eid) {
         MousePositionProxy.instance.eid = eid;
         return MousePositionProxy.instance;
     }
-    allocate(world) {
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, MousePosition, this.eid);
-        MousePositionMap.set(this.eid, { x: 0, y: 0 });
+    allocate() {
+        this.map.set(this.eid, { x: 0, y: 0 });
     }
-    free(world) {
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, MousePosition, this.eid);
-        MousePositionMap.delete(this.eid);
+    free() {
+        this.map.delete(this.eid);
     }
     update(x, y) {
-        const values = MousePositionMap.get(this.eid);
+        const values = this.map.get(this.eid);
         values.x = x;
         values.y = y;
     }
     get x() {
-        return MousePositionMap.get(this.eid).x;
+        return this.map.get(this.eid).x;
     }
     get y() {
-        return MousePositionMap.get(this.eid).y;
+        return this.map.get(this.eid).y;
     }
 }
 MousePositionProxy.instance = new MousePositionProxy();
 class PreviousMousePositionProxy {
     constructor() {
         this.eid = _src_common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
+        this.map = new Map();
     }
     static get(eid) {
         PreviousMousePositionProxy.instance.eid = eid;
         return PreviousMousePositionProxy.instance;
     }
-    allocate(world) {
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, PreviousMousePosition, this.eid);
-        PreviousMousePositionMap.set(this.eid, { x: 0, y: 0 });
+    allocate() {
+        this.map.set(this.eid, { x: 0, y: 0 });
     }
-    free(world) {
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, PreviousMousePosition, this.eid);
-        PreviousMousePositionMap.delete(this.eid);
+    free() {
+        this.map.delete(this.eid);
     }
     update(x, y) {
-        const values = PreviousMousePositionMap.get(this.eid);
+        const values = this.map.get(this.eid);
         values.x = x;
         values.y = y;
     }
     get x() {
-        return PreviousMousePositionMap.get(this.eid).x;
+        return this.map.get(this.eid).x;
     }
     get y() {
-        return PreviousMousePositionMap.get(this.eid).y;
+        return this.map.get(this.eid).y;
     }
 }
 PreviousMousePositionProxy.instance = new PreviousMousePositionProxy();
+const MouseButtonEventHandler = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const MouseButtonEventHandlerReady = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+class MouseButtonEventHandlerProxy {
+    constructor() {
+        this.eid = _src_common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
+        this.targets = new Map();
+        this.listeners = new Map();
+    }
+    static get(eid) {
+        MouseButtonEventHandlerProxy.instance.eid = eid;
+        return MouseButtonEventHandlerProxy.instance;
+    }
+    init(target) {
+        this.targets.set(this.eid, target);
+    }
+    allocate(mousedownListener, mouseupListener, contextmenuListener) {
+        this.listeners.set(this.eid, {
+            mousedownListener,
+            mouseupListener,
+            contextmenuListener
+        });
+    }
+    free() {
+        this.targets.delete(this.eid);
+        this.listeners.delete(this.eid);
+    }
+    get target() {
+        return this.targets.get(this.eid);
+    }
+    get mousedownListener() {
+        return this.listeners.get(this.eid).mousedownListener;
+    }
+    get mouseupListener() {
+        return this.listeners.get(this.eid).mouseupListener;
+    }
+    get contextmenuListener() {
+        return this.listeners.get(this.eid).contextmenuListener;
+    }
+    get alive() {
+        return this.targets.has(this.eid) || this.listeners.has(this.eid);
+    }
+    get listenersAlive() {
+        return this.listeners.has(this.eid);
+    }
+}
+MouseButtonEventHandlerProxy.instance = new MouseButtonEventHandlerProxy();
+const MouseMoveEventHandler = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const MouseMoveEventHandlerReady = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+class MouseMoveEventHandlerProxy {
+    constructor() {
+        this.eid = _src_common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
+        this.targets = new Map();
+        this.listeners = new Map();
+    }
+    static get(eid) {
+        MouseMoveEventHandlerProxy.instance.eid = eid;
+        return MouseMoveEventHandlerProxy.instance;
+    }
+    init(target) {
+        this.targets.set(this.eid, target);
+    }
+    allocate(listener) {
+        this.listeners.set(this.eid, listener);
+    }
+    free() {
+        this.targets.delete(this.eid);
+        this.listeners.delete(this.eid);
+    }
+    get listener() {
+        return this.listeners.get(this.eid);
+    }
+    get target() {
+        return this.targets.get(this.eid);
+    }
+    get alive() {
+        return this.targets.has(this.eid) || this.listeners.has(this.eid);
+    }
+    get listenersAlive() {
+        return this.listeners.has(this.eid);
+    }
+}
+MouseMoveEventHandlerProxy.instance = new MouseMoveEventHandlerProxy();
 
 
 /***/ }),
@@ -1137,10 +1107,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   NetworkEvent: () => (/* binding */ NetworkEvent),
 /* harmony export */   NetworkEventProxy: () => (/* binding */ NetworkEventProxy),
 /* harmony export */   NetworkEventReceiver: () => (/* binding */ NetworkEventReceiver),
-/* harmony export */   NetworkEventReceiverDestroy: () => (/* binding */ NetworkEventReceiverDestroy),
-/* harmony export */   NetworkEventReceiverInit: () => (/* binding */ NetworkEventReceiverInit),
+/* harmony export */   NetworkEventReceiverReady: () => (/* binding */ NetworkEventReceiverReady),
 /* harmony export */   NetworkEventSender: () => (/* binding */ NetworkEventSender),
-/* harmony export */   NetworkEventSenderProxy: () => (/* binding */ NetworkEventSenderProxy),
 /* harmony export */   NetworkMessageType: () => (/* binding */ NetworkMessageType),
 /* harmony export */   Networked: () => (/* binding */ Networked),
 /* harmony export */   NetworkedEntityManager: () => (/* binding */ NetworkedEntityManager),
@@ -1148,7 +1116,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   NetworkedPosition: () => (/* binding */ NetworkedPosition),
 /* harmony export */   NetworkedProxy: () => (/* binding */ NetworkedProxy),
 /* harmony export */   NetworkedQuaternion: () => (/* binding */ NetworkedQuaternion),
-/* harmony export */   NetworkedReady: () => (/* binding */ NetworkedReady),
 /* harmony export */   NetworkedScale: () => (/* binding */ NetworkedScale),
 /* harmony export */   NetworkedType: () => (/* binding */ NetworkedType),
 /* harmony export */   Remote: () => (/* binding */ Remote),
@@ -1182,8 +1149,10 @@ var NetworkedType;
     NetworkedType["Shared"] = "shared";
 })(NetworkedType || (NetworkedType = {}));
 ;
+const Local = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const Remote = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const Shared = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 const Networked = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const NetworkedReady = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 class NetworkedProxy {
     constructor() {
         this.eid = _common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
@@ -1194,8 +1163,7 @@ class NetworkedProxy {
         return NetworkedProxy.instance;
     }
     // TODO: Avoid any
-    allocate(world, networkId, type, creator, prefabName, prefabParams) {
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, Networked, this.eid);
+    allocate(networkId, type, creator, prefabName, prefabParams) {
         this.map.set(this.eid, {
             components: new Map(),
             creator,
@@ -1205,9 +1173,8 @@ class NetworkedProxy {
             type
         });
     }
-    free(world) {
+    free() {
         this.map.delete(this.eid);
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, Networked, this.eid);
     }
     hasNetworkedComponent(key) {
         return this.map.get(this.eid).components.has(key);
@@ -1248,94 +1215,6 @@ class NetworkedProxy {
     }
 }
 NetworkedProxy.instance = new NetworkedProxy();
-const Local = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const Remote = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const Shared = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const NetworkedPosition = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const NetworkedQuaternion = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const NetworkedScale = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const NetworkEvent = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const StateClient = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const NetworkEventReceiver = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const NetworkEventReceiverInit = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const NetworkEventReceiverDestroy = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const TextMessageNetworkEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const UserNetworkEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const EntityNetworkEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const ComponentNetworkEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const NetworkEventSender = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-class StateClientProxy {
-    constructor() {
-        this.eid = _common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
-        this.map = new Map();
-    }
-    static get(eid) {
-        StateClientProxy.instance.eid = eid;
-        return StateClientProxy.instance;
-    }
-    allocate(world, adapter) {
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, StateClient, this.eid);
-        this.map.set(this.eid, adapter);
-    }
-    free(world) {
-        this.map.delete(this.eid);
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, StateClient, this.eid);
-    }
-    get adapter() {
-        return this.map.get(this.eid);
-    }
-}
-StateClientProxy.instance = new StateClientProxy();
-class NetworkEventProxy {
-    constructor() {
-        this.eid = _common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
-        this.map = new Map();
-    }
-    static get(eid) {
-        NetworkEventProxy.instance.eid = eid;
-        return NetworkEventProxy.instance;
-    }
-    add(world, type, data) {
-        if (!(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, NetworkEvent, this.eid)) {
-            (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, NetworkEvent, this.eid);
-            this.map.set(this.eid, []);
-        }
-        this.map.get(this.eid).push({ data, type });
-    }
-    free(world) {
-        this.map.delete(this.eid);
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, NetworkEvent, this.eid);
-    }
-    get events() {
-        return this.map.get(this.eid);
-    }
-}
-NetworkEventProxy.instance = new NetworkEventProxy();
-class NetworkEventSenderProxy {
-    constructor() {
-        this.eid = _common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
-        this.map = new Map();
-    }
-    static get(eid) {
-        NetworkEventSenderProxy.instance.eid = eid;
-        return NetworkEventSenderProxy.instance;
-    }
-    allocate(world) {
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, NetworkEventSender, this.eid);
-        this.map.set(this.eid, { lastSendTime: 0.0 });
-    }
-    free(world) {
-        this.map.delete(this.eid);
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, NetworkEventSender, this.eid);
-    }
-    get lastSendTime() {
-        return this.map.get(this.eid).lastSendTime;
-    }
-    set lastSendTime(lastSendTime) {
-        this.map.get(this.eid).lastSendTime = lastSendTime;
-    }
-}
-NetworkEventSenderProxy.instance = new NetworkEventSenderProxy();
 const NetworkedEntityManager = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 class NetworkedEntityManagerProxy {
     constructor() {
@@ -1346,8 +1225,7 @@ class NetworkedEntityManagerProxy {
         NetworkedEntityManagerProxy.instance.eid = eid;
         return NetworkedEntityManagerProxy.instance;
     }
-    allocate(world) {
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, NetworkedEntityManager, this.eid);
+    allocate() {
         this.map.set(this.eid, {
             deleted: new Set(),
             eidToNetworkIdMap: new Map(),
@@ -1356,9 +1234,8 @@ class NetworkedEntityManagerProxy {
             userIdToNetworkIdsMap: new Map()
         });
     }
-    free(world) {
+    free() {
         this.map.delete(this.eid);
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, NetworkedEntityManager, this.eid);
     }
     add(eid, networkId, userId) {
         this.map.get(this.eid).eidToNetworkIdMap.set(eid, networkId);
@@ -1397,6 +1274,63 @@ class NetworkedEntityManagerProxy {
     }
 }
 NetworkedEntityManagerProxy.instance = new NetworkedEntityManagerProxy();
+const StateClient = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+class StateClientProxy {
+    constructor() {
+        this.eid = _common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
+        this.map = new Map();
+    }
+    static get(eid) {
+        StateClientProxy.instance.eid = eid;
+        return StateClientProxy.instance;
+    }
+    allocate(adapter) {
+        this.map.set(this.eid, adapter);
+    }
+    free() {
+        this.map.delete(this.eid);
+    }
+    get adapter() {
+        return this.map.get(this.eid);
+    }
+}
+StateClientProxy.instance = new StateClientProxy();
+const NetworkEvent = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+class NetworkEventProxy {
+    constructor() {
+        this.eid = _common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
+        this.map = new Map();
+    }
+    static get(eid) {
+        NetworkEventProxy.instance.eid = eid;
+        return NetworkEventProxy.instance;
+    }
+    allocate() {
+        this.map.set(this.eid, []);
+    }
+    add(type, data) {
+        this.map.get(this.eid).push({ data, type });
+    }
+    free() {
+        this.map.delete(this.eid);
+    }
+    get events() {
+        return this.map.get(this.eid);
+    }
+}
+NetworkEventProxy.instance = new NetworkEventProxy();
+const NetworkEventReceiver = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const NetworkEventReceiverReady = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const TextMessageNetworkEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const UserNetworkEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const EntityNetworkEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const ComponentNetworkEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const NetworkEventSender = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({
+    lastSendTime: bitecs__WEBPACK_IMPORTED_MODULE_0__.Types.f32
+});
+const NetworkedPosition = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const NetworkedQuaternion = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const NetworkedScale = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 
 
 /***/ }),
@@ -1649,21 +1583,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   NewPeerStreamEventListener: () => (/* binding */ NewPeerStreamEventListener),
 /* harmony export */   StreamClient: () => (/* binding */ StreamClient),
 /* harmony export */   StreamClientProxy: () => (/* binding */ StreamClientProxy),
-/* harmony export */   StreamConnectRequest: () => (/* binding */ StreamConnectRequest),
-/* harmony export */   StreamConnecting: () => (/* binding */ StreamConnecting),
+/* harmony export */   StreamConnectRequestor: () => (/* binding */ StreamConnectRequestor),
 /* harmony export */   StreamEvent: () => (/* binding */ StreamEvent),
 /* harmony export */   StreamEventProxy: () => (/* binding */ StreamEventProxy),
 /* harmony export */   StreamEventReceiver: () => (/* binding */ StreamEventReceiver),
-/* harmony export */   StreamEventReceiverDestroy: () => (/* binding */ StreamEventReceiverDestroy),
-/* harmony export */   StreamEventReceiverInit: () => (/* binding */ StreamEventReceiverInit),
-/* harmony export */   StreamInLobby: () => (/* binding */ StreamInLobby),
-/* harmony export */   StreamInRoom: () => (/* binding */ StreamInRoom),
-/* harmony export */   StreamJoinRequest: () => (/* binding */ StreamJoinRequest),
-/* harmony export */   StreamJoining: () => (/* binding */ StreamJoining),
-/* harmony export */   StreamLeaveRequest: () => (/* binding */ StreamLeaveRequest),
-/* harmony export */   StreamLeaving: () => (/* binding */ StreamLeaving),
+/* harmony export */   StreamEventReceiverReady: () => (/* binding */ StreamEventReceiverReady),
+/* harmony export */   StreamJoinRequestor: () => (/* binding */ StreamJoinRequestor),
+/* harmony export */   StreamLeaveRequestor: () => (/* binding */ StreamLeaveRequestor),
 /* harmony export */   StreamMessageType: () => (/* binding */ StreamMessageType),
-/* harmony export */   StreamNotConnected: () => (/* binding */ StreamNotConnected),
 /* harmony export */   StreamRemotePeerRegister: () => (/* binding */ StreamRemotePeerRegister),
 /* harmony export */   StreamRemotePeers: () => (/* binding */ StreamRemotePeers),
 /* harmony export */   StreamRemotePeersProxy: () => (/* binding */ StreamRemotePeersProxy)
@@ -1686,29 +1613,7 @@ var StreamMessageType;
     StreamMessageType["NewPeer"] = "newPeer";
 })(StreamMessageType || (StreamMessageType = {}));
 ;
-const StreamEvent = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 const StreamClient = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const StreamRemotePeerRegister = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const StreamNotConnected = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const StreamConnecting = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const StreamInLobby = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const StreamJoining = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const StreamInRoom = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const StreamLeaving = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const StreamConnectRequest = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const StreamJoinRequest = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const StreamLeaveRequest = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const StreamEventReceiver = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const StreamEventReceiverInit = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const StreamEventReceiverDestroy = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const ConnectedStreamEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const DisconnectedStreamEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const JoinedStreamEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const ExitedPeerStreamEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const JoinedPeerStreamEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const LeftPeerStreamEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const NewConsumerStreamEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const NewPeerStreamEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 class StreamClientProxy {
     constructor() {
         this.eid = _common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
@@ -1718,19 +1623,21 @@ class StreamClientProxy {
         StreamClientProxy.instance.eid = eid;
         return StreamClientProxy.instance;
     }
-    allocate(world, adapter) {
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, StreamClient, this.eid);
+    allocate(adapter) {
         this.map.set(this.eid, adapter);
     }
-    free(world) {
+    free() {
         this.map.delete(this.eid);
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, StreamClient, this.eid);
     }
     get adapter() {
         return this.map.get(this.eid);
     }
 }
 StreamClientProxy.instance = new StreamClientProxy();
+const StreamConnectRequestor = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const StreamJoinRequestor = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const StreamLeaveRequestor = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const StreamEvent = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 class StreamEventProxy {
     constructor() {
         this.eid = _common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
@@ -1740,22 +1647,30 @@ class StreamEventProxy {
         StreamEventProxy.instance.eid = eid;
         return StreamEventProxy.instance;
     }
-    add(world, type, data) {
-        if (!(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, StreamEvent, this.eid)) {
-            (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, StreamEvent, this.eid);
-            this.map.set(this.eid, []);
-        }
+    allocate() {
+        this.map.set(this.eid, []);
+    }
+    add(type, data) {
         this.map.get(this.eid).push({ data, type });
     }
-    free(world) {
+    free() {
         this.map.delete(this.eid);
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, StreamEvent, this.eid);
     }
     get events() {
         return this.map.get(this.eid);
     }
 }
 StreamEventProxy.instance = new StreamEventProxy();
+const StreamEventReceiver = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const StreamEventReceiverReady = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const ConnectedStreamEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const DisconnectedStreamEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const JoinedStreamEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const ExitedPeerStreamEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const JoinedPeerStreamEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const LeftPeerStreamEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const NewConsumerStreamEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const NewPeerStreamEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 const StreamRemotePeers = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 class StreamRemotePeersProxy {
     constructor() {
@@ -1766,15 +1681,13 @@ class StreamRemotePeersProxy {
         StreamRemotePeersProxy.instance.eid = eid;
         return StreamRemotePeersProxy.instance;
     }
-    allocate(world) {
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, StreamRemotePeers, this.eid);
+    allocate() {
         this.map.set(this.eid, new Map());
     }
-    free(world) {
+    free() {
         this.map.delete(this.eid);
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, StreamRemotePeers, this.eid);
     }
-    remote(id) {
+    remove(id) {
         this.map.get(this.eid).delete(id);
     }
     get peers() {
@@ -1782,6 +1695,7 @@ class StreamRemotePeersProxy {
     }
 }
 StreamRemotePeersProxy.instance = new StreamRemotePeersProxy();
+const StreamRemotePeerRegister = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 
 
 /***/ }),
@@ -1911,9 +1825,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   WindowResizeEvent: () => (/* binding */ WindowResizeEvent),
 /* harmony export */   WindowResizeEventHandler: () => (/* binding */ WindowResizeEventHandler),
-/* harmony export */   WindowResizeEventHandlerDestroy: () => (/* binding */ WindowResizeEventHandlerDestroy),
-/* harmony export */   WindowResizeEventHandlerInit: () => (/* binding */ WindowResizeEventHandlerInit),
 /* harmony export */   WindowResizeEventHandlerProxy: () => (/* binding */ WindowResizeEventHandlerProxy),
+/* harmony export */   WindowResizeEventHandlerReady: () => (/* binding */ WindowResizeEventHandlerReady),
 /* harmony export */   WindowResizeEventListener: () => (/* binding */ WindowResizeEventListener),
 /* harmony export */   WindowSize: () => (/* binding */ WindowSize)
 /* harmony export */ });
@@ -1921,32 +1834,32 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../common */ "../client/src/common.ts");
 
 
-const WindowResizeEventHandlerInit = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const WindowResizeEventHandlerDestroy = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const WindowResizeEventHandler = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const WindowResizeEventHandlerMap = new Map();
 const WindowResizeEvent = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 const WindowResizeEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 // TODO: Rename?
 const WindowSize = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const WindowResizeEventHandler = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const WindowResizeEventHandlerReady = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 class WindowResizeEventHandlerProxy {
     constructor() {
         this.eid = _common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
+        this.map = new Map();
     }
     static get(eid) {
         WindowResizeEventHandlerProxy.instance.eid = eid;
         return WindowResizeEventHandlerProxy.instance;
     }
-    allocate(world, listener) {
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, WindowResizeEventHandler, this.eid);
-        WindowResizeEventHandlerMap.set(this.eid, listener);
+    allocate(listener) {
+        this.map.set(this.eid, listener);
     }
-    free(world) {
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, WindowResizeEventHandler, this.eid);
-        WindowResizeEventHandlerMap.delete(this.eid);
+    free() {
+        this.map.delete(this.eid);
     }
     get listener() {
-        return WindowResizeEventHandlerMap.get(this.eid);
+        return this.map.get(this.eid);
+    }
+    get alive() {
+        return this.map.has(this.eid);
     }
 }
 WindowResizeEventHandlerProxy.instance = new WindowResizeEventHandlerProxy();
@@ -2503,13 +2416,15 @@ const addEvent = (world, eid, type, code) => {
 };
 const keyEventHandleSystem = (world) => {
     handlerExitQuery(world).forEach(eid => {
-        if (!(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_keyboard__WEBPACK_IMPORTED_MODULE_1__.KeyEventHandlerReady, eid)) {
-            return;
-        }
         const proxy = _components_keyboard__WEBPACK_IMPORTED_MODULE_1__.KeyEventHandlerProxy.get(eid);
-        document.removeEventListener('keydown', proxy.keydownListener);
-        document.removeEventListener('keyup', proxy.keyupListener);
+        if (proxy.alive) {
+            document.removeEventListener('keydown', proxy.keydownListener);
+            document.removeEventListener('keyup', proxy.keyupListener);
+        }
         proxy.free();
+        if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_keyboard__WEBPACK_IMPORTED_MODULE_1__.KeyEventHandlerReady, eid)) {
+            (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_keyboard__WEBPACK_IMPORTED_MODULE_1__.KeyEventHandlerReady, eid);
+        }
     });
     handlerEnterQuery(world).forEach(eid => {
         const keydownListener = (event) => {
@@ -2692,56 +2607,49 @@ const linearTransformSystem = (world) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   micEventClearSystem: () => (/* binding */ micEventClearSystem),
 /* harmony export */   micRequestSystem: () => (/* binding */ micRequestSystem)
 /* harmony export */ });
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
-/* harmony import */ var _components_media_device__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/media_device */ "../client/src/components/media_device.ts");
-/* harmony import */ var _components_stream__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/stream */ "../client/src/components/stream.ts");
+/* harmony import */ var _components_media_device__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/media_device */ "../client/src/components/media_device.ts");
+/* harmony import */ var _components_stream__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/stream */ "../client/src/components/stream.ts");
+/* harmony import */ var _utils_bitecs__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/bitecs */ "../client/src/utils/bitecs.ts");
+/* harmony import */ var _utils_coroutine__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/coroutine */ "../client/src/utils/coroutine.ts");
 
 
 
-function* getAudioMedia(world) {
-    let done = false;
-    let error = null;
-    navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-        // TODO: Store the track or stream into a Component and
-        //       produce in another system?
-        const track = stream.getAudioTracks()[0];
-        // Assumes always single adapter entity exists
-        const adapter = _components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamClientProxy.get(adapterQuery(world)[0]).adapter;
-        // TODO: What if not connected?
-        return adapter.produce(track);
-    }).then(() => {
-        done = true;
-    }).catch(e => {
-        done = true;
-        error = e;
-    });
-    while (!done) {
-        yield;
-    }
-    if (error !== null) {
-        throw error;
-    }
+
+
+function* connectUserAudioMedia(world) {
+    const stream = yield* (0,_utils_coroutine__WEBPACK_IMPORTED_MODULE_1__.toGenerator)(navigator.mediaDevices.getUserMedia({ audio: true }));
+    const track = stream.getAudioTracks()[0];
+    // Assumes always single adapter entity exists
+    const adapter = _components_stream__WEBPACK_IMPORTED_MODULE_2__.StreamClientProxy.get(adapterQuery(world)[0]).adapter;
+    // TODO: What if adapter is not connected?
+    return yield* (0,_utils_coroutine__WEBPACK_IMPORTED_MODULE_1__.toGenerator)(adapter.produce(track));
 }
-const micRequestQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_media_device__WEBPACK_IMPORTED_MODULE_2__.MediaDeviceManager, _components_media_device__WEBPACK_IMPORTED_MODULE_2__.MicRequest]);
+const micRequestQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_media_device__WEBPACK_IMPORTED_MODULE_3__.MicRequestor]);
 const micRequestEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)(micRequestQuery);
 const micRequestExitQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)(micRequestQuery);
-const adapterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamClient]);
+const adapterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_stream__WEBPACK_IMPORTED_MODULE_2__.StreamClient]);
+const eventQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_media_device__WEBPACK_IMPORTED_MODULE_3__.MicConnectedEvent]);
+const connectedEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_media_device__WEBPACK_IMPORTED_MODULE_3__.MicConnectedEventListener]);
 const generators = new Map();
 const micRequestSystem = (world) => {
     micRequestExitQuery(world).forEach(eid => {
         generators.delete(eid);
     });
     micRequestEnterQuery(world).forEach(eid => {
-        generators.set(eid, getAudioMedia(world));
+        generators.set(eid, connectUserAudioMedia(world));
     });
     micRequestQuery(world).forEach(eid => {
         let done = false;
         try {
             if (generators.get(eid).next().done === true) {
                 done = true;
-                (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_media_device__WEBPACK_IMPORTED_MODULE_2__.MicConnected, eid);
+                connectedEventListener(world).forEach(listenerEid => {
+                    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_media_device__WEBPACK_IMPORTED_MODULE_3__.MicConnectedEvent, listenerEid);
+                });
             }
         }
         catch (error) {
@@ -2751,8 +2659,14 @@ const micRequestSystem = (world) => {
         }
         if (done) {
             generators.delete(eid);
-            (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_media_device__WEBPACK_IMPORTED_MODULE_2__.MicRequest, eid);
+            (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_media_device__WEBPACK_IMPORTED_MODULE_3__.MicRequestor, eid);
+            (0,_utils_bitecs__WEBPACK_IMPORTED_MODULE_4__.removeEntityIfNoComponent)(world, eid);
         }
+    });
+};
+const micEventClearSystem = (world) => {
+    eventQuery(world).forEach(eid => {
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_media_device__WEBPACK_IMPORTED_MODULE_3__.MicConnectedEvent, eid);
     });
 };
 
@@ -2779,28 +2693,35 @@ const MouseButtonTypeTable = {
     1: _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseButtonType.Middle,
     2: _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseButtonType.Right
 };
-const initEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseButtonEventHandlerInit]));
-const destroyEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseButtonEventHandler, _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseButtonEventHandlerDestroy]));
+const handlerQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseButtonEventHandler]);
+const handlerEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)(handlerQuery);
+const handlerExitQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)(handlerQuery);
 const listenerQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseButtonEventListener]);
 const eventQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseButtonEvent]);
 const addMouseButtonEvent = (world, eid, type, event) => {
+    if (!(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseButtonEvent, eid)) {
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseButtonEvent, eid);
+        _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseButtonEventProxy.get(eid).allocate();
+    }
     // TODO: Use canvas, not document.body?
-    _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseButtonEventProxy.get(eid).add(world, type, MouseButtonTypeTable[event.button], (event.offsetX / document.body.clientWidth) * 2.0 - 1.0, -((event.offsetY / document.body.clientHeight) * 2.0 - 1.0));
+    _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseButtonEventProxy.get(eid).add(type, MouseButtonTypeTable[event.button], (event.offsetX / document.body.clientWidth) * 2.0 - 1.0, -((event.offsetY / document.body.clientHeight) * 2.0 - 1.0));
 };
 const mouseButtonEventHandleSystem = (world) => {
-    destroyEnterQuery(world).forEach(eid => {
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseButtonEventHandlerDestroy, eid);
+    handlerExitQuery(world).forEach(eid => {
         const proxy = _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseButtonEventHandlerProxy.get(eid);
-        const target = proxy.target;
-        target.removeEventListener('mousedown', proxy.mousedownListener);
-        target.removeEventListener('mouseup', proxy.mouseupListener);
-        target.removeEventListener('contextmenu', proxy.contextmenuListener);
-        proxy.free(world);
+        if (proxy.listenersAlive) {
+            const target = proxy.target;
+            target.removeEventListener('mousedown', proxy.mousedownListener);
+            target.removeEventListener('mouseup', proxy.mouseupListener);
+            target.removeEventListener('contextmenu', proxy.contextmenuListener);
+        }
+        if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseButtonEventHandlerReady, eid)) {
+            (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseButtonEventHandlerReady, eid);
+        }
+        proxy.free();
     });
-    initEnterQuery(world).forEach(eid => {
-        const proxy = _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseButtonEventHandlerInitProxy.get(eid);
-        const target = proxy.target;
-        proxy.free(world);
+    handlerEnterQuery(world).forEach(eid => {
+        const proxy = _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseButtonEventHandlerProxy.get(eid);
         const mousedownListener = (event) => {
             // TODO: May need to check world is still alive?
             listenerQuery(world).forEach(eid => {
@@ -2815,15 +2736,18 @@ const mouseButtonEventHandleSystem = (world) => {
         const contextmenuListener = (event) => {
             event.preventDefault();
         };
+        const target = proxy.target;
         target.addEventListener('mousedown', mousedownListener);
         target.addEventListener('mouseup', mouseupListener);
         target.addEventListener('contextmenu', contextmenuListener);
-        _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseButtonEventHandlerProxy.get(eid).allocate(world, target, mousedownListener, mouseupListener, contextmenuListener);
+        _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseButtonEventHandlerProxy.get(eid).allocate(mousedownListener, mouseupListener, contextmenuListener);
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseButtonEventHandlerReady, eid);
     });
 };
 const mouseButtonEventClearSystem = (world) => {
     eventQuery(world).forEach(eid => {
-        _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseButtonEventProxy.get(eid).free(world);
+        _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseButtonEventProxy.get(eid).free();
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseButtonEvent, eid);
     });
 };
 
@@ -2845,34 +2769,47 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_mouse__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/mouse */ "../client/src/components/mouse.ts");
 
 
-const initEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseMoveEventHandlerInit]));
-const destroyEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseMoveEventHandler, _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseMoveEventHandlerDestroy]));
+const handlerQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseMoveEventHandler]);
+const handlerEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)(handlerQuery);
+const handlerExitQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)(handlerQuery);
 const listenerQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseMoveEventListener]);
 const eventQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseMoveEvent]);
+const addEvent = (world, eid, x, y) => {
+    if (!(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseMoveEvent, eid)) {
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseMoveEvent, eid);
+        _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseMoveEventProxy.get(eid).allocate();
+    }
+    _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseMoveEventProxy.get(eid).add(x, y);
+};
 const mouseMoveEventHandleSystem = (world) => {
-    destroyEnterQuery(world).forEach(eid => {
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseMoveEventHandlerDestroy, eid);
+    handlerExitQuery(world).forEach(eid => {
+        const proxy = _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseMoveEventHandlerProxy.get(eid);
+        if (proxy.listenersAlive) {
+            const target = proxy.target;
+            target.removeEventListener('mousemove', proxy.listener);
+        }
+        if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseMoveEventHandlerReady, eid)) {
+            (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseMoveEventHandlerReady, eid);
+        }
+        proxy.free();
+    });
+    handlerEnterQuery(world).forEach(eid => {
         const proxy = _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseMoveEventHandlerProxy.get(eid);
         const target = proxy.target;
-        target.removeEventListener('mousemove', proxy.listener);
-        proxy.free(world);
-    });
-    initEnterQuery(world).forEach(eid => {
-        const proxy = _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseMoveEventHandlerInitProxy.get(eid);
-        const target = proxy.target;
-        proxy.free(world);
         const listener = (event) => {
             listenerQuery(world).forEach(eid => {
-                _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseMoveEventProxy.get(eid).add(world, (event.offsetX / target.clientWidth) * 2.0 - 1.0, -((event.offsetY / target.clientHeight) * 2.0 - 1.0));
+                addEvent(world, eid, (event.offsetX / target.clientWidth) * 2.0 - 1.0, -((event.offsetY / target.clientHeight) * 2.0 - 1.0));
             });
         };
         target.addEventListener('mousemove', listener);
-        _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseMoveEventHandlerProxy.get(eid).allocate(world, target, listener);
+        _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseMoveEventHandlerProxy.get(eid).allocate(listener);
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseMoveEventHandlerReady, eid);
     });
 };
 const mouseMoveEventClearSystem = (world) => {
     eventQuery(world).forEach(eid => {
-        _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseMoveEventProxy.get(eid).free(world);
+        _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseMoveEventProxy.get(eid).free();
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_mouse__WEBPACK_IMPORTED_MODULE_1__.MouseMoveEvent, eid);
     });
 };
 
@@ -3040,8 +2977,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_network__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/network */ "../client/src/components/network.ts");
 
 
-const initQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkEventReceiverInit]);
-const destroyQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkEventReceiver, _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkEventReceiverDestroy]);
+const receiverQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkEventReceiver]);
+const receiverEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)(receiverQuery);
+const receiverExitQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)(receiverQuery);
 const userListenerQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_1__.UserNetworkEventListener]);
 const entityListenerQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_1__.EntityNetworkEventListener]);
 const componentListenerQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_1__.ComponentNetworkEventListener]);
@@ -3049,18 +2987,18 @@ const eventQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_compone
 const adapterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_1__.StateClient]);
 // TODO: Avoid any
 const addEvent = (world, eid, type, payload) => {
-    _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkEventProxy.get(eid).add(world, type, payload.data);
+    if (!(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkEvent, eid)) {
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkEvent, eid);
+        _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkEventProxy.get(eid).allocate();
+    }
+    _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkEventProxy.get(eid).add(type, payload.data);
 };
 // TODO: This system may be simpler if adapter is passed via system data
 const networkEventHandleSystem = (world) => {
     // Assumes that adapter entities are same as the ones that
     // receivers are initialized with
-    destroyQuery(world).forEach(eid => {
-        const adapterEids = adapterQuery(world);
-        if (adapterEids.length === 0) {
-            return;
-        }
-        adapterEids.forEach(adapterEid => {
+    receiverExitQuery(world).forEach(eid => {
+        adapterQuery(world).forEach(adapterEid => {
             const adapter = _components_network__WEBPACK_IMPORTED_MODULE_1__.StateClientProxy.get(adapterEid).adapter;
             adapter.removeEventListener(_components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkMessageType.UserJoined);
             adapter.removeEventListener(_components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkMessageType.UserLeft);
@@ -3068,16 +3006,14 @@ const networkEventHandleSystem = (world) => {
             adapter.removeEventListener(_components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkMessageType.RemoveEntity);
             adapter.removeEventListener(_components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkMessageType.AddComponent);
         });
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkEventReceiverDestroy, eid);
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkEventReceiver, eid);
-    });
-    // Assumes that adapter entity is not added after receiver initialization
-    initQuery(world).forEach(eid => {
-        const adapterEids = adapterQuery(world);
-        if (adapterEids.length === 0) {
-            return;
+        if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkEventReceiverReady, eid)) {
+            (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkEventReceiverReady, eid);
         }
-        adapterEids.forEach(adapterEid => {
+    });
+    // Assumes that adapter entity is already initialized
+    // and any other adapter entity is not added after receiver initialization
+    receiverEnterQuery(world).forEach(eid => {
+        adapterQuery(world).forEach(adapterEid => {
             const adapter = _components_network__WEBPACK_IMPORTED_MODULE_1__.StateClientProxy.get(adapterEid).adapter;
             // TODO: Validate network data?
             adapter.addEventListener(_components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkMessageType.UserJoined, (payload) => {
@@ -3107,12 +3043,13 @@ const networkEventHandleSystem = (world) => {
                 });
             });
         });
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkEventReceiverInit, eid);
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkEventReceiverReady, eid);
     });
 };
 const networkEventClearSystem = (world) => {
     eventQuery(world).forEach(eid => {
-        _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkEventProxy.get(eid).free(world);
+        _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkEventProxy.get(eid).free();
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkEvent, eid);
     });
 };
 
@@ -3145,16 +3082,16 @@ const adapterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_compo
 const managerQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkedEntityManager]);
 const networkSendSystem = (world, { serializerKeys, serializers }) => {
     senderQuery(world).forEach(senderEid => {
-        const senderProxy = _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkEventSenderProxy.get(senderEid);
+        const lastSendTime = _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkEventSender.lastSendTime[senderEid];
         timeQuery(world).forEach(timeEid => {
             const timeProxy = _components_time__WEBPACK_IMPORTED_MODULE_2__.TimeProxy.get(timeEid);
             // Sends messages at fixed intervals (rather than anytime updated) so
             // that frequently updated components do not cause a client to flood
             // the network with an unnecessary amount of update messages
-            if (timeProxy.elapsed < senderProxy.lastSendTime + _common__WEBPACK_IMPORTED_MODULE_3__.NETWORK_INTERVAL) {
+            if (timeProxy.elapsed < lastSendTime + _common__WEBPACK_IMPORTED_MODULE_3__.NETWORK_INTERVAL) {
                 return;
             }
-            senderProxy.lastSendTime = timeProxy.elapsed;
+            _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkEventSender.lastSendTime[senderEid] = timeProxy.elapsed;
             adapterQuery(world).forEach(adapterEid => {
                 const adapter = _components_network__WEBPACK_IMPORTED_MODULE_1__.StateClientProxy.get(adapterEid).adapter;
                 const myUserId = adapter.userId;
@@ -3238,6 +3175,30 @@ const networkSendSystem = (world, { serializerKeys, serializers }) => {
 
 /***/ }),
 
+/***/ "../client/src/systems/networked.ts":
+/*!******************************************!*\
+  !*** ../client/src/systems/networked.ts ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   networkedSystem: () => (/* binding */ networkedSystem)
+/* harmony export */ });
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var _components_network__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/network */ "../client/src/components/network.ts");
+
+
+const networkedExitQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_1__.Networked]));
+const networkedSystem = (world) => {
+    networkedExitQuery(world).forEach(eid => {
+        _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkedProxy.get(eid).free();
+    });
+};
+
+
+/***/ }),
+
 /***/ "../client/src/systems/networked_entity.ts":
 /*!*************************************************!*\
   !*** ../client/src/systems/networked_entity.ts ***!
@@ -3296,8 +3257,9 @@ const networkedEntitySystem = (world, { serializers }) => {
                             (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_1__.Remote, eid);
                             type = _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkedType.Remote;
                         }
+                        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_1__.Networked, eid);
                         const networkedProxy = _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkedProxy.get(eid);
-                        networkedProxy.allocate(world, e.data.network_id, type, e.data.creator, e.data.prefab, e.data.prefab_params);
+                        networkedProxy.allocate(e.data.network_id, type, e.data.creator, e.data.prefab, e.data.prefab_params);
                         for (const c of e.data.components) {
                             if (serializers.has(c.component_name)) {
                                 const data = JSON.parse(c.data);
@@ -3602,17 +3564,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_room_id__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/room_id */ "../client/src/components/room_id.ts");
 /* harmony import */ var _components_stream__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/stream */ "../client/src/components/stream.ts");
 /* harmony import */ var _components_user_id__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/user_id */ "../client/src/components/user_id.ts");
+/* harmony import */ var _utils_bitecs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils/bitecs */ "../client/src/utils/bitecs.ts");
+/* harmony import */ var _utils_coroutine__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/coroutine */ "../client/src/utils/coroutine.ts");
 
 
 
 
-const connectRequestQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamClient, _components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamConnectRequest]);
+
+
+const connectRequestQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamConnectRequestor]);
 const connectRequestEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)(connectRequestQuery);
 const connectRequestExitQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)(connectRequestQuery);
-const joinRequestQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamClient, _components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamJoinRequest]);
+const joinRequestQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamJoinRequestor]);
 const joinRequestEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)(joinRequestQuery);
 const joinRequestExitQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)(joinRequestQuery);
-const leaveRequestQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamClient, _components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamLeaveRequest]);
+const leaveRequestQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamLeaveRequestor]);
 const leaveRequestEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)(leaveRequestQuery);
 const leaveRequestExitQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)(leaveRequestQuery);
 const adapterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamClient]);
@@ -3626,62 +3592,23 @@ function* connect(world) {
     const adapter = _components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamClientProxy.get(adapterQuery(world)[0]).adapter;
     const roomId = _components_room_id__WEBPACK_IMPORTED_MODULE_2__.RoomIdProxy.get(roomIdQuery(world)[0]).roomId;
     const userId = _components_user_id__WEBPACK_IMPORTED_MODULE_3__.UserIdProxy.get(userIdQuery(world)[0]).userId;
-    let done = false;
-    let error = null;
     // TODO: What if adapter entity or component is removed
     //       before done?
-    adapter.connect(roomId, userId).then(() => {
-        done = true;
-    }).catch((e) => {
-        done = true;
-        error = e;
-    });
-    while (!done) {
-        yield;
-    }
-    if (error !== null) {
-        throw error;
-    }
+    yield* (0,_utils_coroutine__WEBPACK_IMPORTED_MODULE_4__.toGenerator)(adapter.connect(roomId, userId));
 }
 function* join(world) {
     // Assumes always single adapter entity exists
     const adapter = _components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamClientProxy.get(adapterQuery(world)[0]).adapter;
-    let done = false;
-    let error = null;
     // TODO: What if adapter entity or component is removed
     //       before done?
-    adapter.join().then(() => {
-        done = true;
-    }).catch((e) => {
-        done = true;
-        error = e;
-    });
-    while (!done) {
-        yield;
-    }
-    if (error !== null) {
-        throw error;
-    }
+    yield* (0,_utils_coroutine__WEBPACK_IMPORTED_MODULE_4__.toGenerator)(adapter.join());
 }
 function* leave(world) {
     // Assumes always single adapter entity exists
     const adapter = _components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamClientProxy.get(adapterQuery(world)[0]).adapter;
-    let done = false;
-    let error = null;
     // TODO: What if adapter entity or component is removed
     //       before done?
-    adapter.leave().then(() => {
-        done = true;
-    }).catch((e) => {
-        done = true;
-        error = e;
-    });
-    while (!done) {
-        yield;
-    }
-    if (error !== null) {
-        throw error;
-    }
+    yield* (0,_utils_coroutine__WEBPACK_IMPORTED_MODULE_4__.toGenerator)(adapter.leave());
 }
 const streamConnectionSystem = (world) => {
     connectRequestExitQuery(world).forEach(eid => {
@@ -3689,15 +3616,12 @@ const streamConnectionSystem = (world) => {
     });
     connectRequestEnterQuery(world).forEach(eid => {
         connectGenerators.set(eid, connect(world));
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamConnecting, eid);
     });
     connectRequestQuery(world).forEach(eid => {
         let done = false;
         try {
             if (connectGenerators.get(eid).next().done === true) {
                 done = true;
-                (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamNotConnected, eid);
-                (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamInLobby, eid);
             }
         }
         catch (error) {
@@ -3707,8 +3631,10 @@ const streamConnectionSystem = (world) => {
         }
         if (done) {
             connectGenerators.delete(eid);
-            (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamConnectRequest, eid);
-            (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamConnecting, eid);
+            (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamConnectRequestor, eid);
+            // In general requestor entity doesn't have any other component
+            // so remove the entity if no component.
+            (0,_utils_bitecs__WEBPACK_IMPORTED_MODULE_5__.removeEntityIfNoComponent)(world, eid);
         }
     });
     joinRequestExitQuery(world).forEach(eid => {
@@ -3716,15 +3642,12 @@ const streamConnectionSystem = (world) => {
     });
     joinRequestEnterQuery(world).forEach(eid => {
         joinGenerators.set(eid, join(world));
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamJoining, eid);
     });
     joinRequestQuery(world).forEach(eid => {
         let done = false;
         try {
             if (joinGenerators.get(eid).next().done === true) {
                 done = true;
-                (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamInRoom, eid);
-                (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamInLobby, eid);
             }
         }
         catch (error) {
@@ -3734,8 +3657,8 @@ const streamConnectionSystem = (world) => {
         }
         if (done) {
             joinGenerators.delete(eid);
-            (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamJoinRequest, eid);
-            (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamJoining, eid);
+            (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamJoinRequestor, eid);
+            (0,_utils_bitecs__WEBPACK_IMPORTED_MODULE_5__.removeEntityIfNoComponent)(world, eid);
         }
     });
     leaveRequestExitQuery(world).forEach(eid => {
@@ -3743,15 +3666,12 @@ const streamConnectionSystem = (world) => {
     });
     leaveRequestEnterQuery(world).forEach(eid => {
         leaveGenerators.set(eid, leave(world));
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamLeaving, eid);
     });
     leaveRequestQuery(world).forEach(eid => {
         let done = false;
         try {
             if (leaveGenerators.get(eid).next().done === true) {
                 done = true;
-                (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamInLobby, eid);
-                (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamInRoom, eid);
             }
         }
         catch (error) {
@@ -3761,8 +3681,8 @@ const streamConnectionSystem = (world) => {
         }
         if (done) {
             leaveGenerators.delete(eid);
-            (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamLeaveRequest, eid);
-            (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamLeaving, eid);
+            (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamLeaveRequestor, eid);
+            (0,_utils_bitecs__WEBPACK_IMPORTED_MODULE_5__.removeEntityIfNoComponent)(world, eid);
         }
     });
 };
@@ -3785,8 +3705,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_stream__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/stream */ "../client/src/components/stream.ts");
 
 
-const initQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamEventReceiverInit]);
-const destroyQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamEventReceiver, _components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamEventReceiverDestroy]);
+const receiverQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamEventReceiver]);
+const receiverEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)(receiverQuery);
+const receiverExitQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)(receiverQuery);
 const connectedListenerQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_stream__WEBPACK_IMPORTED_MODULE_1__.ConnectedStreamEventListener]);
 const joinedListenerQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_stream__WEBPACK_IMPORTED_MODULE_1__.JoinedStreamEventListener]);
 const disconnectedListenerQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_stream__WEBPACK_IMPORTED_MODULE_1__.DisconnectedStreamEventListener]);
@@ -3799,18 +3720,17 @@ const eventQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_compone
 const adapterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamClient]);
 // TODO: Avoid any
 const addEvent = (world, eid, type, payload) => {
-    _components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamEventProxy.get(eid).add(world, type, payload);
+    if (!(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamEvent, eid)) {
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamEvent, eid);
+        _components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamEventProxy.get(eid).allocate();
+    }
+    _components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamEventProxy.get(eid).add(type, payload);
 };
-// TODO: This system may be simpler if adapter is passed via system data
 const streamEventHandleSystem = (world) => {
     // Assumes that adapter entities are same as the ones that
     // receivers are initialized with
-    destroyQuery(world).forEach(eid => {
-        const adapterEids = adapterQuery(world);
-        if (adapterEids.length === 0) {
-            return;
-        }
-        adapterEids.forEach(adapterEid => {
+    receiverExitQuery(world).forEach(eid => {
+        adapterQuery(world).forEach(adapterEid => {
             const adapter = _components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamClientProxy.get(adapterEid).adapter;
             adapter.off(_components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamMessageType.Connected);
             adapter.off(_components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamMessageType.Joined);
@@ -3821,16 +3741,14 @@ const streamEventHandleSystem = (world) => {
             adapter.off(_components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamMessageType.NewConsumer);
             adapter.off(_components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamMessageType.NewPeer);
         });
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamEventReceiverDestroy, eid);
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamEventReceiver, eid);
-    });
-    // Assumes that adapter entity is not added after receiver initialization
-    initQuery(world).forEach(eid => {
-        const adapterEids = adapterQuery(world);
-        if (adapterEids.length === 0) {
-            return;
+        if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamEventReceiverReady, eid)) {
+            (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamEventReceiverReady, eid);
         }
-        adapterEids.forEach(adapterEid => {
+    });
+    // Assumes that adapter entity is already initialized and
+    // any other adapter entity is not added after receiver initialization
+    receiverEnterQuery(world).forEach(eid => {
+        adapterQuery(world).forEach(adapterEid => {
             const adapter = _components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamClientProxy.get(adapterEid).adapter;
             // TODO: Validate data?
             adapter.on(_components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamMessageType.Connected, (payload) => {
@@ -3875,12 +3793,13 @@ const streamEventHandleSystem = (world) => {
                 });
             });
         });
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamEventReceiverInit, eid);
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamEventReceiverReady, eid);
     });
 };
 const streamEventClearSystem = (world) => {
     eventQuery(world).forEach(eid => {
-        _components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamEventProxy.get(eid).free(world);
+        _components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamEventProxy.get(eid).free();
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_stream__WEBPACK_IMPORTED_MODULE_1__.StreamEvent, eid);
     });
 };
 
@@ -4130,33 +4049,95 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_window_resize__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/window_resize */ "../client/src/components/window_resize.ts");
 
 
-const initEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_window_resize__WEBPACK_IMPORTED_MODULE_1__.WindowResizeEventHandlerInit]));
-const destroyEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_window_resize__WEBPACK_IMPORTED_MODULE_1__.WindowResizeEventHandler, _components_window_resize__WEBPACK_IMPORTED_MODULE_1__.WindowResizeEventHandlerDestroy]));
+const handlerQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_window_resize__WEBPACK_IMPORTED_MODULE_1__.WindowResizeEventHandler]);
+const handlerEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)(handlerQuery);
+const handlerExitQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)(handlerQuery);
 const listenerQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_window_resize__WEBPACK_IMPORTED_MODULE_1__.WindowResizeEventListener]);
 const eventQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_window_resize__WEBPACK_IMPORTED_MODULE_1__.WindowResizeEvent]);
 const windowResizeEventHandleSystem = (world) => {
-    destroyEnterQuery(world).forEach(eid => {
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_window_resize__WEBPACK_IMPORTED_MODULE_1__.WindowResizeEventHandlerDestroy, eid);
+    handlerExitQuery(world).forEach(eid => {
         const proxy = _components_window_resize__WEBPACK_IMPORTED_MODULE_1__.WindowResizeEventHandlerProxy.get(eid);
-        window.removeEventListener('resize', proxy.listener);
-        proxy.free(world);
+        if (proxy.alive) {
+            window.removeEventListener('resize', proxy.listener);
+        }
+        if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_window_resize__WEBPACK_IMPORTED_MODULE_1__.WindowResizeEventHandlerReady, eid)) {
+            (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_window_resize__WEBPACK_IMPORTED_MODULE_1__.WindowResizeEventHandlerReady, eid);
+        }
+        proxy.free();
     });
-    initEnterQuery(world).forEach(eid => {
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_window_resize__WEBPACK_IMPORTED_MODULE_1__.WindowResizeEventHandlerInit, eid);
+    handlerEnterQuery(world).forEach(eid => {
         const listener = () => {
             listenerQuery(world).forEach(eid => {
                 (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_window_resize__WEBPACK_IMPORTED_MODULE_1__.WindowResizeEvent, eid);
             });
         };
         window.addEventListener('resize', listener);
-        _components_window_resize__WEBPACK_IMPORTED_MODULE_1__.WindowResizeEventHandlerProxy.get(eid).allocate(world, listener);
+        _components_window_resize__WEBPACK_IMPORTED_MODULE_1__.WindowResizeEventHandlerProxy.get(eid).allocate(listener);
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_window_resize__WEBPACK_IMPORTED_MODULE_1__.WindowResizeEventHandlerReady, eid);
     });
 };
 const windowResizeEventClearSystem = (world) => {
     eventQuery(world).forEach(eid => {
+        _components_window_resize__WEBPACK_IMPORTED_MODULE_1__.WindowResizeEventHandlerProxy.get(eid).free();
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_window_resize__WEBPACK_IMPORTED_MODULE_1__.WindowResizeEvent, eid);
     });
 };
+
+
+/***/ }),
+
+/***/ "../client/src/utils/bitecs.ts":
+/*!*************************************!*\
+  !*** ../client/src/utils/bitecs.ts ***!
+  \*************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   removeEntityIfNoComponent: () => (/* binding */ removeEntityIfNoComponent)
+/* harmony export */ });
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
+
+const removeEntityIfNoComponent = (world, eid) => {
+    if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.getEntityComponents)(world, eid).length === 0) {
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeEntity)(world, eid);
+        return true;
+    }
+    return false;
+};
+
+
+/***/ }),
+
+/***/ "../client/src/utils/coroutine.ts":
+/*!****************************************!*\
+  !*** ../client/src/utils/coroutine.ts ***!
+  \****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   toGenerator: () => (/* binding */ toGenerator)
+/* harmony export */ });
+function* toGenerator(pending) {
+    let done = false;
+    let error = null;
+    let result = null;
+    pending.then(res => {
+        done = true;
+        result = res;
+    }).catch(e => {
+        done = true;
+        error = e;
+    });
+    while (!done) {
+        yield;
+    }
+    if (error !== null) {
+        throw error;
+    }
+    return result;
+}
 
 
 /***/ }),
@@ -4203,7 +4184,8 @@ prefabParams = {}) => {
     else {
         throw new Error(`Invalid networked type ${type}`);
     }
-    _components_network__WEBPACK_IMPORTED_MODULE_4__.NetworkedProxy.get(eid).allocate(world, generateUUID(), type, userId, prefabName, prefabParams);
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_4__.Networked, eid);
+    _components_network__WEBPACK_IMPORTED_MODULE_4__.NetworkedProxy.get(eid).allocate(generateUUID(), type, userId, prefabName, prefabParams);
     return eid;
 };
 
@@ -4503,14 +4485,10 @@ const joinDialogQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_co
 const joinDialogEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)(joinDialogQuery);
 const joinDialogExitQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)(joinDialogQuery);
 const eventQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_join_dialog__WEBPACK_IMPORTED_MODULE_1__.JoinDialog, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_2__.StreamEvent]);
-const clientQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_2__.StreamClient]);
-const mediaDeviceManagerQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_3__.MediaDeviceManager]);
 const show = (world) => {
     onClick = () => {
         button.disabled = true;
-        clientQuery(world).forEach(eid => {
-            (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_2__.StreamConnectRequest, eid);
-        });
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_2__.StreamConnectRequestor, (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world));
     };
     button.disabled = false;
     button.addEventListener('click', onClick);
@@ -4535,15 +4513,11 @@ const updateJoinDialogSystem = (world) => {
         for (const event of _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_2__.StreamEventProxy.get(eid).events) {
             switch (event.type) {
                 case _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_2__.StreamMessageType.Connected:
-                    clientQuery(world).forEach(clientEid => {
-                        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_2__.StreamJoinRequest, clientEid);
-                    });
+                    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_2__.StreamJoinRequestor, (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world));
                     break;
                 case _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_2__.StreamMessageType.Joined:
                     hide();
-                    // Assumes always single media device manager entity exists
-                    const managerEid = mediaDeviceManagerQuery(world)[0];
-                    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_3__.MicRequest, managerEid);
+                    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_3__.MicRequestor, (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world));
                     break;
                 // TODO: Implement Left and Exited
             }

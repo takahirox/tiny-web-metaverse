@@ -7,44 +7,30 @@ import {
   removeComponent
 } from "bitecs";
 import {
-  MediaDeviceManager,
-  MicConnected,
-  MicRequest,
+  MicConnectedEvent,
+  MicConnectedEventListener,
+  MicRequestor,
 } from "../components/media_device";
 import { StreamClient, StreamClientProxy } from "../components/stream";
+import { removeEntityIfNoComponent } from "../utils/bitecs";
+import { toGenerator } from "../utils/coroutine";
 
-function* getAudioMedia(world: IWorld): Generator {
-  let done = false;
-  let error = null;
-
-  navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-    // TODO: Store the track or stream into a Component and
-    //       produce in another system?
-    const track = stream.getAudioTracks()[0];
-    // Assumes always single adapter entity exists
-    const adapter = StreamClientProxy.get(adapterQuery(world)[0]).adapter;
-    // TODO: What if not connected?
-    return adapter.produce(track);
-  }).then(() => {
-    done = true;
-  }).catch(e => {
-    done = true;
-    error = e;
-  });  
-
-  while (!done) {
-    yield;
-  }
-
-  if (error !== null) {
-    throw error;
-  }
+function* connectUserAudioMedia(world: IWorld): Generator {
+  const stream = yield* toGenerator(navigator.mediaDevices.getUserMedia({ audio: true }));
+  const track = stream.getAudioTracks()[0];
+  // Assumes always single adapter entity exists
+  const adapter = StreamClientProxy.get(adapterQuery(world)[0]).adapter;
+  // TODO: What if adapter is not connected?
+  return yield* toGenerator(adapter.produce(track));
 }
 
-const micRequestQuery = defineQuery([MediaDeviceManager, MicRequest]);
+const micRequestQuery = defineQuery([MicRequestor]);
 const micRequestEnterQuery = enterQuery(micRequestQuery);
 const micRequestExitQuery = exitQuery(micRequestQuery);
+
 const adapterQuery = defineQuery([StreamClient]);
+const eventQuery = defineQuery([MicConnectedEvent]);
+const connectedEventListener = defineQuery([MicConnectedEventListener]);
 
 const generators = new Map<number, Generator>();
 
@@ -54,7 +40,7 @@ export const micRequestSystem = (world: IWorld): void => {
   });
 
   micRequestEnterQuery(world).forEach(eid => {
-    generators.set(eid, getAudioMedia(world));
+    generators.set(eid, connectUserAudioMedia(world));
   });
 
   micRequestQuery(world).forEach(eid => {
@@ -62,7 +48,9 @@ export const micRequestSystem = (world: IWorld): void => {
     try {
       if (generators.get(eid).next().done === true) {
         done = true;
-        addComponent(world, MicConnected, eid);
+        connectedEventListener(world).forEach(listenerEid => {
+          addComponent(world, MicConnectedEvent, listenerEid);		
+        });
       }
     } catch (error) {
       // TODO: Proper error handling
@@ -71,7 +59,14 @@ export const micRequestSystem = (world: IWorld): void => {
     }
     if (done) {
       generators.delete(eid);
-      removeComponent(world, MicRequest, eid);
+      removeComponent(world, MicRequestor, eid);
+      removeEntityIfNoComponent(world, eid);
     }
+  });
+};
+
+export const micEventClearSystem = (world: IWorld): void => {
+  eventQuery(world).forEach(eid => {
+    removeComponent(world, MicConnectedEvent, eid); 
   });
 };

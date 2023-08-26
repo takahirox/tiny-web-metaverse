@@ -1,16 +1,17 @@
 import {
+  addComponent,
   defineQuery,
   enterQuery,
+  exitQuery,
+  hasComponent,
   IWorld,
   removeComponent
 } from "bitecs";
 import {
   MouseButtonEvent,
   MouseButtonEventHandler,
-  MouseButtonEventHandlerDestroy,
-  MouseButtonEventHandlerInit,
-  MouseButtonEventHandlerInitProxy,
   MouseButtonEventHandlerProxy,
+  MouseButtonEventHandlerReady,
   MouseButtonEventListener,
   MouseButtonEventProxy,
   MouseButtonEventType,
@@ -23,9 +24,9 @@ const MouseButtonTypeTable: Record<number, MouseButtonType> = {
   2: MouseButtonType.Right
 };
 
-const initEnterQuery = enterQuery(defineQuery([MouseButtonEventHandlerInit]));
-const destroyEnterQuery = enterQuery(defineQuery(
-  [MouseButtonEventHandler, MouseButtonEventHandlerDestroy]));
+const handlerQuery = defineQuery([MouseButtonEventHandler]);
+const handlerEnterQuery = enterQuery(handlerQuery);
+const handlerExitQuery = exitQuery(handlerQuery);
 const listenerQuery = defineQuery([MouseButtonEventListener]);
 const eventQuery = defineQuery([MouseButtonEvent]);
 
@@ -35,9 +36,13 @@ const addMouseButtonEvent = (
   type: MouseButtonEventType,
   event: MouseEvent
 ): void => {
+  if (!hasComponent(world, MouseButtonEvent, eid)) {
+    addComponent(world, MouseButtonEvent, eid);
+    MouseButtonEventProxy.get(eid).allocate();
+  }
+
   // TODO: Use canvas, not document.body?
   MouseButtonEventProxy.get(eid).add(
-    world,
     type,
     MouseButtonTypeTable[event.button],
     (event.offsetX / document.body.clientWidth) * 2.0 - 1.0,
@@ -46,23 +51,26 @@ const addMouseButtonEvent = (
 }
 
 export const mouseButtonEventHandleSystem = (world: IWorld) => {
-  destroyEnterQuery(world).forEach(eid => {
-    removeComponent(world, MouseButtonEventHandlerDestroy, eid);
-
+  handlerExitQuery(world).forEach(eid => {
     const proxy = MouseButtonEventHandlerProxy.get(eid);
-    const target = proxy.target;
 
-    target.removeEventListener('mousedown', proxy.mousedownListener);
-    target.removeEventListener('mouseup', proxy.mouseupListener);
-    target.removeEventListener('contextmenu', proxy.contextmenuListener);
+    if (proxy.listenersAlive) {
+      const target = proxy.target;
 
-    proxy.free(world);
+      target.removeEventListener('mousedown', proxy.mousedownListener);
+      target.removeEventListener('mouseup', proxy.mouseupListener);
+      target.removeEventListener('contextmenu', proxy.contextmenuListener);
+    }
+
+    if (hasComponent(world, MouseButtonEventHandlerReady, eid)) {
+      removeComponent(world, MouseButtonEventHandlerReady, eid);
+    }
+
+    proxy.free();
   });
 
-  initEnterQuery(world).forEach(eid => {
-    const proxy = MouseButtonEventHandlerInitProxy.get(eid);
-    const target = proxy.target;
-    proxy.free(world);
+  handlerEnterQuery(world).forEach(eid => {
+    const proxy = MouseButtonEventHandlerProxy.get(eid);
 
     const mousedownListener = (event: MouseEvent): void => {
       // TODO: May need to check world is still alive?
@@ -81,22 +89,25 @@ export const mouseButtonEventHandleSystem = (world: IWorld) => {
       event.preventDefault();
     };
 
+    const target = proxy.target;
+
     target.addEventListener('mousedown', mousedownListener);
     target.addEventListener('mouseup', mouseupListener);
     target.addEventListener('contextmenu', contextmenuListener);
 
     MouseButtonEventHandlerProxy.get(eid).allocate(
-      world,
-      target,
       mousedownListener,
       mouseupListener,
       contextmenuListener
     );
+
+    addComponent(world, MouseButtonEventHandlerReady, eid);
   });
 };
 
 export const mouseButtonEventClearSystem = (world: IWorld) => {
   eventQuery(world).forEach(eid => {
-    MouseButtonEventProxy.get(eid).free(world);
+    MouseButtonEventProxy.get(eid).free();
+    removeComponent(world, MouseButtonEvent, eid);
   });
 };

@@ -37,24 +37,29 @@ import {
 } from "./components/camera";
 import { EntityObject3DProxy } from "./components/entity_object3d";
 import {
-  MouseButtonEventHandlerInitProxy,
+  MouseButtonEventHandler,
+  MouseButtonEventHandlerProxy,
   MouseButtonEventListener,
-  MouseMoveEventHandlerInitProxy,
+  MouseMoveEventHandler,
+  MouseMoveEventHandlerProxy,
   MouseMoveEventListener,
+  MousePosition,
   MousePositionProxy,
+  PreviousMousePosition,
   PreviousMousePositionProxy
 } from "./components/mouse";
 import { KeyEventHandler } from "./components/keyboard";
-import { MediaDeviceManager } from "./components/media_device";
 import {
   ComponentNetworkEventListener,
   EntityNetworkEventListener,
+  NetworkedEntityManager,
   NetworkedEntityManagerProxy,
   NetworkedPosition,
   NetworkedQuaternion,
   NetworkedScale,
-  NetworkEventReceiverInit,
-  NetworkEventSenderProxy,
+  NetworkEventReceiver,
+  NetworkEventSender,
+  StateClient,
   StateClientProxy,
   UserNetworkEventListener
 } from "./components/network";
@@ -71,15 +76,16 @@ import {
   LeftPeerStreamEventListener,
   NewConsumerStreamEventListener,
   NewPeerStreamEventListener,
+  StreamClient,
   StreamClientProxy,
   StreamRemotePeerRegister,
-  StreamEventReceiverInit,
-  StreamNotConnected,
+  StreamEventReceiver,
+  StreamRemotePeers,
   StreamRemotePeersProxy
 } from "./components/stream";
 import { Time, TimeProxy } from "./components/time";
 import {
-  WindowResizeEventHandlerInit,
+  WindowResizeEventHandler,
   WindowResizeEventListener,
   WindowSize
 } from "./components/window_resize";
@@ -100,7 +106,7 @@ import {
 } from "./systems/keyboard_event";
 import { linearMoveSystem } from "./systems/linear_move";
 import { linearTransformSystem } from "./systems/linear_transform";
-import { micRequestSystem } from "./systems/media_device";
+import { micRequestSystem, micEventClearSystem } from "./systems/media_device";
 import {
   mouseButtonEventClearSystem,
   mouseButtonEventHandleSystem
@@ -114,6 +120,7 @@ import { mouseRaycastSystem } from "./systems/mouse_raycast";
 import { mouseSelectSystem } from "./systems/mouse_select";
 import { networkEventClearSystem, networkEventHandleSystem } from "./systems/network_event";
 import { networkSendSystem } from "./systems/network_send";
+import { networkedSystem } from "./systems/networked";
 import { networkedEntitySystem } from "./systems/networked_entity";
 import { perspectiveCameraSystem } from "./systems/perspective_camera";
 import { prefabsSystem } from "./systems/prefab";
@@ -205,6 +212,7 @@ export class App {
     this.registerSystem(rendererSystem, SystemOrder.Setup);
     this.registerSystem(sceneSystem, SystemOrder.Setup);
     this.registerSystem(perspectiveCameraSystem, SystemOrder.Setup);
+    this.registerSystem(networkedSystem, SystemOrder.Setup);
     this.registerSystem(networkedEntitySystem, SystemOrder.Setup);
 
     this.registerSystem(linearMoveSystem, SystemOrder.BeforeMatricesUpdate);
@@ -226,6 +234,7 @@ export class App {
     this.registerSystem(keyEventClearSystem, SystemOrder.TearDown);
     this.registerSystem(mouseMoveEventClearSystem, SystemOrder.TearDown);
     this.registerSystem(mouseButtonEventClearSystem, SystemOrder.TearDown);
+    this.registerSystem(micEventClearSystem, SystemOrder.TearDown);
     this.registerSystem(windowResizeEventClearSystem, SystemOrder.TearDown);
     this.registerSystem(networkEventClearSystem, SystemOrder.TearDown);
     this.registerSystem(streamEventClearSystem, SystemOrder.TearDown);
@@ -255,11 +264,9 @@ export class App {
     addComponent(this.world, UserId, userIdEid);
     UserIdProxy.get(userIdEid).allocate(userId);
 
-    const mediaDeviceManagerEid = addEntity(this.world);
-    addComponent(this.world, MediaDeviceManager, mediaDeviceManagerEid);
-
     const streamRemotePeersEid = addEntity(this.world);
-    StreamRemotePeersProxy.get(streamRemotePeersEid).allocate(this.world);
+    addComponent(this.world, StreamRemotePeers, streamRemotePeersEid);
+    StreamRemotePeersProxy.get(streamRemotePeersEid).allocate();
 
     const streamRemotePeerRegisterEid = addEntity(this.world);
     addComponent(this.world, StreamRemotePeerRegister, streamRemotePeerRegisterEid);
@@ -274,39 +281,46 @@ export class App {
     addComponent(this.world, KeyEventHandler, keyEventHandlerEid);
 
     const mouseMoveEventHandlerEid = addEntity(this.world);
-    MouseMoveEventHandlerInitProxy.get(mouseMoveEventHandlerEid).allocate(this.world, canvas);
+    addComponent(this.world, MouseMoveEventHandler, mouseMoveEventHandlerEid);
+    MouseMoveEventHandlerProxy.get(mouseMoveEventHandlerEid).init(canvas);
 
     const mouseButtonEventHandlerEid = addEntity(this.world);
-    MouseButtonEventHandlerInitProxy.get(mouseButtonEventHandlerEid).allocate(this.world, canvas);
+    addComponent(this.world, MouseButtonEventHandler, mouseButtonEventHandlerEid);
+    MouseButtonEventHandlerProxy.get(mouseButtonEventHandlerEid).init(canvas);
 
     const resizeEventHandlerEid = addEntity(this.world);
-    addComponent(this.world, WindowResizeEventHandlerInit, resizeEventHandlerEid);
+    addComponent(this.world, WindowResizeEventHandler, resizeEventHandlerEid);
 
     const networkAdapterEid = addEntity(this.world);
-    StateClientProxy.get(networkAdapterEid).allocate(this.world, this.networkAdapter);
+    addComponent(this.world, StateClient, networkAdapterEid);
+    StateClientProxy.get(networkAdapterEid).allocate(this.networkAdapter);
 
     const streamClientEid = addEntity(this.world);
-    StreamClientProxy.get(streamClientEid).allocate(this.world, this.streamAdapter);
-    addComponent(this.world, StreamNotConnected, streamClientEid);
+    addComponent(this.world, StreamClient, streamClientEid);
+    StreamClientProxy.get(streamClientEid).allocate(this.streamAdapter);
 
     const networkEventReceiverEid = addEntity(this.world);
-    addComponent(this.world, NetworkEventReceiverInit, networkEventReceiverEid);
+    addComponent(this.world, NetworkEventReceiver, networkEventReceiverEid);
 
     const networkEventSenderEid = addEntity(this.world);
-    NetworkEventSenderProxy.get(networkEventSenderEid).allocate(this.world);
+    addComponent(this.world, NetworkEventSender, networkEventSenderEid);
+    NetworkEventSender.lastSendTime[networkEventSenderEid] = 0.0;
 
     const streamEventReceiverEid = addEntity(this.world);
-    addComponent(this.world, StreamEventReceiverInit, streamEventReceiverEid);
+    addComponent(this.world, StreamEventReceiver, streamEventReceiverEid);
 
     const networkedEntityManagerEid = addEntity(this.world);
-    NetworkedEntityManagerProxy.get(networkedEntityManagerEid).allocate(this.world);
+    addComponent(this.world, NetworkedEntityManager, networkedEntityManagerEid);
+    NetworkedEntityManagerProxy.get(networkedEntityManagerEid).allocate();
     addComponent(this.world, ComponentNetworkEventListener, networkedEntityManagerEid);
     addComponent(this.world, EntityNetworkEventListener, networkedEntityManagerEid);
     addComponent(this.world, UserNetworkEventListener, networkedEntityManagerEid);
 
     const mousePositionEid = addEntity(this.world);
-    MousePositionProxy.get(mousePositionEid).allocate(this.world);
-    PreviousMousePositionProxy.get(mousePositionEid).allocate(this.world);
+    addComponent(this.world, MousePosition, mousePositionEid);
+    MousePositionProxy.get(mousePositionEid).allocate();
+    addComponent(this.world, PreviousMousePosition, mousePositionEid);
+    PreviousMousePositionProxy.get(mousePositionEid).allocate();
     addComponent(this.world, MouseMoveEventListener, mousePositionEid);
 
     const raycasterEid = addEntity(this.world);

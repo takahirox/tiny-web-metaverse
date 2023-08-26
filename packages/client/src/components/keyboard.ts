@@ -91,4 +91,8 @@ export class KeyEventHandlerProxy {
   get keyupListener(): (event: KeyboardEvent) => void {
     return this.map.get(this.eid).keyupListener;
   }
+
+  get alive(): boolean {
+    return this.map.has(this.eid);
+  }
 }

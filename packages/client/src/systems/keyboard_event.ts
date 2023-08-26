@@ -33,16 +33,18 @@ const addEvent = (world: IWorld, eid: number, type: KeyEventType, code: number):
 
 export const keyEventHandleSystem = (world: IWorld) => {
   handlerExitQuery(world).forEach(eid => {
-    if (!hasComponent(world, KeyEventHandlerReady, eid)) {
-      return;
-    }
-
     const proxy = KeyEventHandlerProxy.get(eid);
 
-    document.removeEventListener('keydown', proxy.keydownListener);
-    document.removeEventListener('keyup', proxy.keyupListener);
+    if (proxy.alive) {
+      document.removeEventListener('keydown', proxy.keydownListener);
+      document.removeEventListener('keyup', proxy.keyupListener);
+    }
 
     proxy.free();
+
+    if (hasComponent(world, KeyEventHandlerReady, eid)) {
+      removeComponent(world, KeyEventHandlerReady, eid);
+    }
   });
 
   handlerEnterQuery(world).forEach(eid => {

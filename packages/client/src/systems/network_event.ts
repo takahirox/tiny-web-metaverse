@@ -1,5 +1,9 @@
 import {
+  addComponent,
   defineQuery,
+  enterQuery,
+  exitQuery,
+  hasComponent,
   IWorld,
   removeComponent
 } from "bitecs";
@@ -9,16 +13,17 @@ import {
   NetworkEvent,
   NetworkEventProxy,
   NetworkEventReceiver,
-  NetworkEventReceiverDestroy,
-  NetworkEventReceiverInit,
+  NetworkEventReceiverReady,
   NetworkMessageType,
   StateClient,
   StateClientProxy,
   UserNetworkEventListener
 } from "../components/network";
 
-const initQuery = defineQuery([NetworkEventReceiverInit]);
-const destroyQuery = defineQuery([NetworkEventReceiver, NetworkEventReceiverDestroy]);
+const receiverQuery = defineQuery([NetworkEventReceiver]);
+const receiverEnterQuery = enterQuery(receiverQuery);
+const receiverExitQuery = exitQuery(receiverQuery);
+
 const userListenerQuery = defineQuery([UserNetworkEventListener]);
 const entityListenerQuery = defineQuery([EntityNetworkEventListener]);
 const componentListenerQuery = defineQuery([ComponentNetworkEventListener]);
@@ -32,25 +37,19 @@ const addEvent = (
   type: NetworkMessageType,
   payload: any
 ): void => {
-  NetworkEventProxy.get(eid).add(
-    world,
-    type,
-    payload.data
-  );
+  if (!hasComponent(world, NetworkEvent, eid)) {
+    addComponent(world, NetworkEvent, eid);
+    NetworkEventProxy.get(eid).allocate();
+  }
+  NetworkEventProxy.get(eid).add(type, payload.data);
 };
 
 // TODO: This system may be simpler if adapter is passed via system data
 export const networkEventHandleSystem = (world: IWorld) => {
   // Assumes that adapter entities are same as the ones that
   // receivers are initialized with
-  destroyQuery(world).forEach(eid => {
-    const adapterEids = adapterQuery(world);
-
-    if (adapterEids.length === 0) {
-      return;
-    }
-
-    adapterEids.forEach(adapterEid => {
+  receiverExitQuery(world).forEach(eid => {
+    adapterQuery(world).forEach(adapterEid => {
       const adapter = StateClientProxy.get(adapterEid).adapter;
 
       adapter.removeEventListener(NetworkMessageType.UserJoined);
@@ -60,19 +59,15 @@ export const networkEventHandleSystem = (world: IWorld) => {
       adapter.removeEventListener(NetworkMessageType.AddComponent);
     });
 
-    removeComponent(world, NetworkEventReceiverDestroy, eid);
-    removeComponent(world, NetworkEventReceiver, eid);
+    if (hasComponent(world, NetworkEventReceiverReady, eid)) {
+      removeComponent(world, NetworkEventReceiverReady, eid);
+    }
   });
 
-  // Assumes that adapter entity is not added after receiver initialization
-  initQuery(world).forEach(eid => {
-    const adapterEids = adapterQuery(world);
-
-    if (adapterEids.length === 0) {
-      return;
-    }
-
-    adapterEids.forEach(adapterEid => {
+  // Assumes that adapter entity is already initialized
+  // and any other adapter entity is not added after receiver initialization
+  receiverEnterQuery(world).forEach(eid => {
+    adapterQuery(world).forEach(adapterEid => {
       const adapter = StateClientProxy.get(adapterEid).adapter;
 
       // TODO: Validate network data?
@@ -109,12 +104,13 @@ export const networkEventHandleSystem = (world: IWorld) => {
       });
     });
 
-    removeComponent(world, NetworkEventReceiverInit, eid);
+    addComponent(world, NetworkEventReceiverReady, eid);
   });
 };
 
 export const networkEventClearSystem = (world: IWorld) => {
   eventQuery(world).forEach(eid => {
-    NetworkEventProxy.get(eid).free(world);
+    NetworkEventProxy.get(eid).free();
+    removeComponent(world, NetworkEvent, eid);
   });
 };

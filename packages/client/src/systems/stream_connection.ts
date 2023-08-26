@@ -1,5 +1,4 @@
 import {
-  addComponent,
   defineQuery,
   enterQuery,
   exitQuery,
@@ -10,27 +9,23 @@ import { RoomId, RoomIdProxy } from "../components/room_id";
 import {
   StreamClient,
   StreamClientProxy,
-  StreamConnecting,
-  StreamConnectRequest,
-  StreamInLobby,
-  StreamInRoom,
-  StreamJoining,
-  StreamJoinRequest,
-  StreamNotConnected,
-  StreamLeaveRequest,
-  StreamLeaving
+  StreamConnectRequestor,
+  StreamJoinRequestor,
+  StreamLeaveRequestor
 } from "../components/stream";
 import { UserId, UserIdProxy } from "../components/user_id";
+import { removeEntityIfNoComponent } from "../utils/bitecs";
+import { toGenerator } from "../utils/coroutine";
 
-const connectRequestQuery = defineQuery([StreamClient, StreamConnectRequest]);
+const connectRequestQuery = defineQuery([StreamConnectRequestor]);
 const connectRequestEnterQuery = enterQuery(connectRequestQuery);
 const connectRequestExitQuery = exitQuery(connectRequestQuery);
 
-const joinRequestQuery = defineQuery([StreamClient, StreamJoinRequest]);
+const joinRequestQuery = defineQuery([StreamJoinRequestor]);
 const joinRequestEnterQuery = enterQuery(joinRequestQuery);
 const joinRequestExitQuery = exitQuery(joinRequestQuery);
 
-const leaveRequestQuery = defineQuery([StreamClient, StreamLeaveRequest]);
+const leaveRequestQuery = defineQuery([StreamLeaveRequestor]);
 const leaveRequestEnterQuery = enterQuery(leaveRequestQuery);
 const leaveRequestExitQuery = exitQuery(leaveRequestQuery);
 
@@ -42,84 +37,33 @@ const connectGenerators = new Map<number, Generator>();
 const joinGenerators = new Map<number, Generator>();
 const leaveGenerators = new Map<number, Generator>();
 
-function* connect(world: IWorld): Generator<void, void, void> {
+function* connect(world: IWorld): Generator<void, void> {
   // Assumes always single adapter, roomId, userId entities exist
   const adapter = StreamClientProxy.get(adapterQuery(world)[0]).adapter;
   const roomId = RoomIdProxy.get(roomIdQuery(world)[0]).roomId;
   const userId = UserIdProxy.get(userIdQuery(world)[0]).userId;
 
-  let done = false;
-  let error = null;
-
   // TODO: What if adapter entity or component is removed
   //       before done?
-
-  adapter.connect(roomId, userId).then(() => {
-    done = true;  
-  }).catch((e: Error) => {
-    done = true;
-    error = e;
-  });
-
-  while (!done) {
-    yield;
-  }
-
-  if (error !== null) {
-    throw error;
-  }
+  yield* toGenerator(adapter.connect(roomId, userId));
 }
 
-function* join(world: IWorld): Generator<void, void, void> {
+function* join(world: IWorld): Generator<void, void> {
   // Assumes always single adapter entity exists
   const adapter = StreamClientProxy.get(adapterQuery(world)[0]).adapter;
 
-  let done = false;
-  let error = null;
-
   // TODO: What if adapter entity or component is removed
   //       before done?
-
-  adapter.join().then(() => {
-    done = true;  
-  }).catch((e: Error) => {
-    done = true;
-    error = e;
-  });
-
-  while (!done) {
-    yield;
-  }
-
-  if (error !== null) {
-    throw error;
-  }
+  yield* toGenerator(adapter.join());
 }
 
-function* leave(world: IWorld): Generator<void, void, void> {
+function* leave(world: IWorld): Generator<void, void> {
   // Assumes always single adapter entity exists
   const adapter = StreamClientProxy.get(adapterQuery(world)[0]).adapter;
 
-  let done = false;
-  let error = null;
-
   // TODO: What if adapter entity or component is removed
   //       before done?
-
-  adapter.leave().then(() => {
-    done = true;  
-  }).catch((e: Error) => {
-    done = true;
-    error = e;
-  });
-
-  while (!done) {
-    yield;
-  }
-
-  if (error !== null) {
-    throw error;
-  }
+  yield* toGenerator(adapter.leave());
 }
 
 export const streamConnectionSystem = (world: IWorld): void => {
@@ -129,7 +73,6 @@ export const streamConnectionSystem = (world: IWorld): void => {
 
   connectRequestEnterQuery(world).forEach(eid => {
     connectGenerators.set(eid, connect(world));
-    addComponent(world, StreamConnecting, eid);
   });
 
   connectRequestQuery(world).forEach(eid => {
@@ -137,8 +80,6 @@ export const streamConnectionSystem = (world: IWorld): void => {
     try {
       if (connectGenerators.get(eid).next().done === true) {
         done = true;
-        removeComponent(world, StreamNotConnected, eid);
-        addComponent(world, StreamInLobby, eid);
       }
     } catch (error) {
       done = true;
@@ -147,8 +88,10 @@ export const streamConnectionSystem = (world: IWorld): void => {
     }
     if (done) {
       connectGenerators.delete(eid);
-      removeComponent(world, StreamConnectRequest, eid);
-      removeComponent(world, StreamConnecting, eid);
+      removeComponent(world, StreamConnectRequestor, eid);
+      // In general requestor entity doesn't have any other component
+      // so remove the entity if no component.
+      removeEntityIfNoComponent(world, eid);
     }
   });
 
@@ -158,7 +101,6 @@ export const streamConnectionSystem = (world: IWorld): void => {
 
   joinRequestEnterQuery(world).forEach(eid => {
     joinGenerators.set(eid, join(world));
-    addComponent(world, StreamJoining, eid);
   });
 
   joinRequestQuery(world).forEach(eid => {
@@ -166,8 +108,6 @@ export const streamConnectionSystem = (world: IWorld): void => {
     try {
       if (joinGenerators.get(eid).next().done === true) {
         done = true;
-        addComponent(world, StreamInRoom, eid);
-        removeComponent(world, StreamInLobby, eid);
       }
     } catch (error) {
       done = true;
@@ -176,8 +116,8 @@ export const streamConnectionSystem = (world: IWorld): void => {
     }
     if (done) {
       joinGenerators.delete(eid);
-      removeComponent(world, StreamJoinRequest, eid);
-      removeComponent(world, StreamJoining, eid);
+      removeComponent(world, StreamJoinRequestor, eid);
+      removeEntityIfNoComponent(world, eid);
     }
   });
 
@@ -187,7 +127,6 @@ export const streamConnectionSystem = (world: IWorld): void => {
 
   leaveRequestEnterQuery(world).forEach(eid => {
     leaveGenerators.set(eid, leave(world));
-    addComponent(world, StreamLeaving, eid);
   });
 
   leaveRequestQuery(world).forEach(eid => {
@@ -195,8 +134,6 @@ export const streamConnectionSystem = (world: IWorld): void => {
     try {
       if (leaveGenerators.get(eid).next().done === true) {
         done = true;
-        addComponent(world, StreamInLobby, eid);
-        removeComponent(world, StreamInRoom, eid);
       }
     } catch (error) {
       done = true;
@@ -205,8 +142,8 @@ export const streamConnectionSystem = (world: IWorld): void => {
     }
     if (done) {
       leaveGenerators.delete(eid);
-      removeComponent(world, StreamLeaveRequest, eid);
-      removeComponent(world, StreamLeaving, eid);
+      removeComponent(world, StreamLeaveRequestor, eid);
+      removeEntityIfNoComponent(world, eid);
     }
   });
 };

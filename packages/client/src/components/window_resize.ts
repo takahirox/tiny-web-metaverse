@@ -1,29 +1,22 @@
-import {
-  addComponent,
-  defineComponent,
-  IWorld,
-  removeComponent
-} from "bitecs";
+import { defineComponent } from "bitecs";
 import { NULL_EID } from "../common";
-
-type WindowResizeEventHandlerValue = () => void;
-
-export const WindowResizeEventHandlerInit = defineComponent();
-export const WindowResizeEventHandlerDestroy = defineComponent();
-export const WindowResizeEventHandler = defineComponent();
-const WindowResizeEventHandlerMap = new Map<number, WindowResizeEventHandlerValue>();
 
 export const WindowResizeEvent = defineComponent();
 export const WindowResizeEventListener = defineComponent();
 // TODO: Rename?
 export const WindowSize = defineComponent();
 
+export const WindowResizeEventHandler = defineComponent();
+export const WindowResizeEventHandlerReady = defineComponent();
+
 export class WindowResizeEventHandlerProxy {
   private static instance: WindowResizeEventHandlerProxy = new WindowResizeEventHandlerProxy();
   private eid: number;
+  private map: Map<number, () => void>;
 
   private constructor() {
     this.eid = NULL_EID;
+    this.map = new Map();
   }
 
   static get(eid: number): WindowResizeEventHandlerProxy {
@@ -31,17 +24,19 @@ export class WindowResizeEventHandlerProxy {
     return WindowResizeEventHandlerProxy.instance;
   }
 
-  allocate(world: IWorld, listener: () => void): void {
-    addComponent(world, WindowResizeEventHandler, this.eid);
-    WindowResizeEventHandlerMap.set(this.eid, listener);
+  allocate(listener: () => void): void {
+    this.map.set(this.eid, listener);
   }
 
-  free(world: IWorld): void {
-    removeComponent(world, WindowResizeEventHandler, this.eid);
-    WindowResizeEventHandlerMap.delete(this.eid);
+  free(): void {
+    this.map.delete(this.eid);
   }
 
   get listener(): () => void {
-    return WindowResizeEventHandlerMap.get(this.eid);
+    return this.map.get(this.eid)!;
+  }
+
+  get alive(): boolean {
+    return this.map.has(this.eid);
   }
 }

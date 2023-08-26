@@ -17,7 +17,6 @@ import {
   NetworkedProxy,
   NetworkedType,
   NetworkEventSender,
-  NetworkEventSenderProxy,
   NetworkMessageType,
   Remote,
   StateClient,
@@ -34,18 +33,18 @@ const managerQuery = defineQuery([NetworkedEntityManager]);
 
 export const networkSendSystem = (world: IWorld, {serializerKeys, serializers}: SystemParams) => {
   senderQuery(world).forEach(senderEid => {
-    const senderProxy = NetworkEventSenderProxy.get(senderEid);
+    const lastSendTime = NetworkEventSender.lastSendTime[senderEid];
     timeQuery(world).forEach(timeEid => {
       const timeProxy = TimeProxy.get(timeEid);
 
       // Sends messages at fixed intervals (rather than anytime updated) so
       // that frequently updated components do not cause a client to flood
       // the network with an unnecessary amount of update messages
-      if (timeProxy.elapsed < senderProxy.lastSendTime + NETWORK_INTERVAL) {
+      if (timeProxy.elapsed < lastSendTime + NETWORK_INTERVAL) {
         return;
       }
 
-      senderProxy.lastSendTime = timeProxy.elapsed;
+      NetworkEventSender.lastSendTime[senderEid] = timeProxy.elapsed;
 
       adapterQuery(world).forEach(adapterEid => {
         const adapter = StateClientProxy.get(adapterEid).adapter;

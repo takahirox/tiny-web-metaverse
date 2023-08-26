@@ -1,10 +1,4 @@
-import {
-  addComponent,
-  defineComponent,
-  hasComponent,
-  IWorld,
-  removeComponent
-} from "bitecs";
+import { defineComponent } from "bitecs";
 import { StreamAdapter } from "@tiny-web-metaverse/stream_client";
 import { NULL_EID } from "../common";
 
@@ -21,42 +15,12 @@ export enum StreamMessageType {
   NewPeer = 'newPeer'
 };
 
-export const StreamEvent = defineComponent();
-
 export const StreamClient = defineComponent();
-
-export const StreamRemotePeerRegister = defineComponent();
-
-export const StreamNotConnected = defineComponent();
-export const StreamConnecting = defineComponent();
-export const StreamInLobby = defineComponent();
-export const StreamJoining = defineComponent();
-export const StreamInRoom = defineComponent();
-export const StreamLeaving = defineComponent();
-
-export const StreamConnectRequest = defineComponent();
-export const StreamJoinRequest = defineComponent();
-export const StreamLeaveRequest = defineComponent();
-
-export const StreamEventReceiver = defineComponent();
-export const StreamEventReceiverInit = defineComponent();
-export const StreamEventReceiverDestroy = defineComponent();
-
-export const ConnectedStreamEventListener = defineComponent();
-export const DisconnectedStreamEventListener = defineComponent();
-export const JoinedStreamEventListener = defineComponent();
-export const ExitedPeerStreamEventListener = defineComponent();
-export const JoinedPeerStreamEventListener = defineComponent();
-export const LeftPeerStreamEventListener = defineComponent();
-export const NewConsumerStreamEventListener = defineComponent();
-export const NewPeerStreamEventListener = defineComponent();
-
-type StreamClientValue = StreamAdapter;
 
 export class StreamClientProxy {
   private static instance: StreamClientProxy = new StreamClientProxy();
   private eid: number;
-  private map: Map<number, StreamClientValue>;
+  private map: Map<number, StreamAdapter>;
 
   private constructor() {
     this.eid = NULL_EID;
@@ -68,20 +32,24 @@ export class StreamClientProxy {
     return StreamClientProxy.instance;
   }
 
-  allocate(world: IWorld, adapter: StreamClientValue): void {
-    addComponent(world, StreamClient, this.eid);
+  allocate(adapter: StreamAdapter): void {
     this.map.set(this.eid, adapter);
   }
 
-  free(world: IWorld): void {
+  free(): void {
     this.map.delete(this.eid);
-    removeComponent(world, StreamClient, this.eid);
   }
 
-  get adapter(): StreamClientValue {
+  get adapter(): StreamAdapter {
     return this.map.get(this.eid)!;
   }
 }
+
+export const StreamConnectRequestor = defineComponent();
+export const StreamJoinRequestor = defineComponent();
+export const StreamLeaveRequestor = defineComponent();
+
+export const StreamEvent = defineComponent();
 
 // TODO: Avoid any
 type StreamEventValue = {
@@ -104,21 +72,16 @@ export class StreamEventProxy {
     return StreamEventProxy.instance;
   }
 
-  add(
-    world: IWorld,
-    type: StreamMessageType,
-    data: any
-  ): void {
-    if (!hasComponent(world, StreamEvent, this.eid)) {
-      addComponent(world, StreamEvent, this.eid);
-      this.map.set(this.eid, []);
-    }
+  allocate(): void {
+    this.map.set(this.eid, []);
+  }
+
+  add(type: StreamMessageType, data: any): void {
     this.map.get(this.eid)!.push({data, type});
   }
 
-  free(world: IWorld): void {
+  free(): void {
     this.map.delete(this.eid);
-    removeComponent(world, StreamEvent, this.eid);
   }
 
   get events(): StreamEventValue[] {
@@ -126,15 +89,25 @@ export class StreamEventProxy {
   }
 }
 
-type RemoteStreamPeerValue = {
+export const StreamEventReceiver = defineComponent();
+export const StreamEventReceiverReady = defineComponent();
+
+export const ConnectedStreamEventListener = defineComponent();
+export const DisconnectedStreamEventListener = defineComponent();
+export const JoinedStreamEventListener = defineComponent();
+export const ExitedPeerStreamEventListener = defineComponent();
+export const JoinedPeerStreamEventListener = defineComponent();
+export const LeftPeerStreamEventListener = defineComponent();
+export const NewConsumerStreamEventListener = defineComponent();
+export const NewPeerStreamEventListener = defineComponent();
+
+export const StreamRemotePeers = defineComponent();
+
+type StreamRemotePeersValue = Map<string /* id */, {
   audio?: HTMLAudioElement,
   id: string,
   joined: boolean
-};
-
-type StreamRemotePeersValue = Map<string /* id */, RemoteStreamPeerValue>;
-
-export const StreamRemotePeers = defineComponent();
+}>;
 
 export class StreamRemotePeersProxy {
   private static instance: StreamRemotePeersProxy = new StreamRemotePeersProxy();
@@ -151,17 +124,15 @@ export class StreamRemotePeersProxy {
     return StreamRemotePeersProxy.instance;
   }
 
-  allocate(world: IWorld): void {
-    addComponent(world, StreamRemotePeers, this.eid);
+  allocate(): void {
     this.map.set(this.eid, new Map());
   }
 
-  free(world: IWorld): void {
+  free(): void {
     this.map.delete(this.eid);
-    removeComponent(world, StreamRemotePeers, this.eid);
   }
 
-  remote(id: string): void {
+  remove(id: string): void {
     this.map.get(this.eid)!.delete(id);
   }
 
@@ -169,3 +140,5 @@ export class StreamRemotePeersProxy {
     return this.map.get(this.eid)!;
   }
 }
+
+export const StreamRemotePeerRegister = defineComponent();

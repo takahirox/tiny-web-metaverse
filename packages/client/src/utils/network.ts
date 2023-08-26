@@ -2,6 +2,7 @@ import { addComponent, defineQuery, IWorld } from "bitecs";
 import { MathUtils } from "three";
 import {
   Local,
+  Networked,
   NetworkedProxy,
   NetworkedType,
   Shared
@@ -38,8 +39,9 @@ export const createNetworkedEntity = (
     throw new Error(`Invalid networked type ${type}`);
   }
 
+  addComponent(world, Networked, eid);
   NetworkedProxy.get(eid).allocate(
-    world, generateUUID(), type, userId, prefabName, prefabParams);
+    generateUUID(), type, userId, prefabName, prefabParams);
 
   return eid;
 };
