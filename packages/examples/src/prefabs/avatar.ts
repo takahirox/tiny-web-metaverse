@@ -5,8 +5,8 @@ import {
 } from "bitecs";
 import { Mesh, MeshBasicMaterial, SphereGeometry } from "three";
 import {
+  addObject3D,
   Avatar,
-  EntityObject3DProxy,
   InScene,
   NetworkedPosition,
   NetworkedQuaternion,
@@ -41,7 +41,7 @@ export const AvatarPrefab = (world: IWorld): number => {
   avatarObject.add(leftEyeObject);
   avatarObject.add(rightEyeObject);
 
-  EntityObject3DProxy.get(eid).addObject3D(world, avatarObject);
+  addObject3D(world, avatarObject, eid);
 
   return eid;
 };

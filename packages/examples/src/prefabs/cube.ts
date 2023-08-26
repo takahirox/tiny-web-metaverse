@@ -5,7 +5,7 @@ import {
 } from "bitecs";
 import { BoxGeometry, Mesh, MeshBasicMaterial } from "three";
 import {
-  EntityObject3DProxy,
+  addObject3D,
   InScene,
   Grabbable,
   MouseButtonEventListener,
@@ -26,9 +26,9 @@ export const CubePrefab = (world: IWorld): number => {
   addComponent(world, Grabbable, eid);
   addComponent(world, Selectable, eid);
   addComponent(world, InScene, eid);
-  EntityObject3DProxy.get(eid).addObject3D(world, new Mesh(
+  addObject3D(world, new Mesh(
     new BoxGeometry(0.5, 0.5, 0.5),
     new MeshBasicMaterial()
-  ));
+  ), eid);
   return eid;
 };

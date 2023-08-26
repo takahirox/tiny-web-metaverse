@@ -2,18 +2,14 @@ import {
   defineQuery,
   enterQuery,
   exitQuery,
-  hasComponent,
   IWorld
 } from "bitecs";
-import {
-  EntityObject3D,
-  EntityObject3DProxy
-} from "../components/entity_object3d";
 import {
   PerspectiveCameraProxy,
   PerspectiveCameraTag
 } from "../components/camera";
 import { WindowResizeEvent, WindowSize } from "../components/window_resize";
+import { hasObject3D, removeObject3D } from "../utils/entity_object3d";
 
 const cameraExitQuery = exitQuery(defineQuery([PerspectiveCameraTag]));
 const cameraWindowResizeEnterQuery =
@@ -24,8 +20,8 @@ export const perspectiveCameraSystem = (world: IWorld): void => {
     const proxy = PerspectiveCameraProxy.get(eid);
     const camera = proxy.camera;
 
-    if (hasComponent(world, EntityObject3D, eid)) {
-      EntityObject3DProxy.get(eid).removeObject3D(world, camera);
+    if (hasObject3D(world, camera, eid)) {
+      removeObject3D(world, camera, eid);
     }
 
     proxy.free();

@@ -20,7 +20,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_avatar_mouse_controls__WEBPACK_IMPORTED_MODULE_49__ = __webpack_require__(/*! ./components/avatar_mouse_controls */ "../client/src/components/avatar_mouse_controls.ts");
 /* harmony import */ var _components_canvas__WEBPACK_IMPORTED_MODULE_50__ = __webpack_require__(/*! ./components/canvas */ "../client/src/components/canvas.ts");
 /* harmony import */ var _components_camera__WEBPACK_IMPORTED_MODULE_53__ = __webpack_require__(/*! ./components/camera */ "../client/src/components/camera.ts");
-/* harmony import */ var _components_entity_object3d__WEBPACK_IMPORTED_MODULE_54__ = __webpack_require__(/*! ./components/entity_object3d */ "../client/src/components/entity_object3d.ts");
 /* harmony import */ var _components_mouse__WEBPACK_IMPORTED_MODULE_46__ = __webpack_require__(/*! ./components/mouse */ "../client/src/components/mouse.ts");
 /* harmony import */ var _components_keyboard__WEBPACK_IMPORTED_MODULE_45__ = __webpack_require__(/*! ./components/keyboard */ "../client/src/components/keyboard.ts");
 /* harmony import */ var _components_network__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! ./components/network */ "../client/src/components/network.ts");
@@ -67,6 +66,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _systems_transform__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./systems/transform */ "../client/src/systems/transform.ts");
 /* harmony import */ var _systems_update_matrices__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! ./systems/update_matrices */ "../client/src/systems/update_matrices.ts");
 /* harmony import */ var _systems_window_resize_event__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./systems/window_resize_event */ "../client/src/systems/window_resize_event.ts");
+/* harmony import */ var _utils_entity_object3d__WEBPACK_IMPORTED_MODULE_54__ = __webpack_require__(/*! ./utils/entity_object3d */ "../client/src/utils/entity_object3d.ts");
 
 
 
@@ -277,7 +277,7 @@ class App {
         const camera = new three__WEBPACK_IMPORTED_MODULE_2__.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.001, 2000.0);
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_camera__WEBPACK_IMPORTED_MODULE_53__.PerspectiveCameraTag, cameraEid);
         _components_camera__WEBPACK_IMPORTED_MODULE_53__.PerspectiveCameraProxy.get(cameraEid).allocate(camera);
-        _components_entity_object3d__WEBPACK_IMPORTED_MODULE_54__.EntityObject3DProxy.get(cameraEid).addObject3D(this.world, camera);
+        (0,_utils_entity_object3d__WEBPACK_IMPORTED_MODULE_54__.addObject3D)(this.world, camera, cameraEid);
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_camera__WEBPACK_IMPORTED_MODULE_53__.FpsCamera, cameraEid);
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_scene__WEBPACK_IMPORTED_MODULE_52__.InScene, cameraEid);
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_camera__WEBPACK_IMPORTED_MODULE_53__.SceneCamera, cameraEid);
@@ -551,10 +551,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 // TODO: Add MeshTag or RenderableObject3D component?
-const EntityObject3D = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
-const RootObject3DMap = new Map();
-const Object3DsMap = new Map();
-const GroupMap = new Map();
+// TODO: Move to common?
 class EntityRootGroup extends three__WEBPACK_IMPORTED_MODULE_1__.Group {
     constructor() {
         super();
@@ -562,99 +559,40 @@ class EntityRootGroup extends three__WEBPACK_IMPORTED_MODULE_1__.Group {
         this.type = 'EntityRootGroup';
     }
 }
-// Ensures that objects associated with an entity form
-// the following depending on the number of objects
-//   0:  EntityRootGroup (Root)
-//   1:  Object3D        (Root)
-//   2-: EntityRootGroup (Root) - Object3DA
-//                              - Object3DB
-//                              - ...
+const EntityObject3D = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 class EntityObject3DProxy {
     constructor() {
         this.eid = _common__WEBPACK_IMPORTED_MODULE_2__.NULL_EID;
+        this.rootObjectMap = new Map();
+        this.objectsMap = new Map();
+        this.groupMap = new Map();
     }
     static get(eid) {
         EntityObject3DProxy.instance.eid = eid;
         return EntityObject3DProxy.instance;
     }
-    allocate(world) {
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, EntityObject3D, this.eid);
+    allocate() {
         const group = new EntityRootGroup();
-        RootObject3DMap.set(this.eid, group);
-        Object3DsMap.set(this.eid, []);
-        GroupMap.set(this.eid, group);
+        this.rootObjectMap.set(this.eid, group);
+        this.objectsMap.set(this.eid, []);
+        this.groupMap.set(this.eid, group);
     }
-    free(world) {
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, EntityObject3D, this.eid);
-        RootObject3DMap.delete(this.eid);
-        Object3DsMap.delete(this.eid);
-        GroupMap.delete(this.eid);
-    }
-    addObject3D(world, obj) {
-        if (!(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, EntityObject3D, this.eid)) {
-            this.allocate(world);
-        }
-        const objects = this.objects;
-        if (objects.length === 0) {
-            this.swapRootObject3D(obj);
-        }
-        else {
-            if (objects.length === 1) {
-                const oldRootObj = this.swapRootObject3D(this.group);
-                this.root.add(oldRootObj);
-            }
-            this.root.add(obj);
-        }
-        objects.push(obj);
-    }
-    removeObject3D(world, obj) {
-        if (!(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, EntityObject3D, this.eid)) {
-            // Throw an error?
-            return;
-        }
-        const index = this.objects.indexOf(obj);
-        if (index === -1) {
-            // Throw an error?
-            return;
-        }
-        this.objects.splice(index, 1);
-        if (this.objects.length === 0) {
-            this.swapRootObject3D(this.group);
-        }
-        else {
-            this.root.remove(obj);
-            if (this.objects.length === 1) {
-                this.swapRootObject3D(this.objects[0]);
-            }
-        }
-    }
-    swapRootObject3D(newRoot) {
-        const oldRoot = this.root;
-        three__WEBPACK_IMPORTED_MODULE_1__.Object3D.prototype.copy.call(newRoot, oldRoot);
-        if (oldRoot.parent !== null) {
-            oldRoot.parent.add(newRoot);
-            oldRoot.parent.remove(oldRoot);
-        }
-        while (oldRoot.children.length > 0) {
-            newRoot.add(oldRoot.children[0]);
-        }
-        //
-        this.root = newRoot;
-        oldRoot.matrixWorld.identity();
-        oldRoot.matrix.identity().decompose(oldRoot.position, oldRoot.quaternion, oldRoot.scale);
-        return oldRoot;
+    free() {
+        this.rootObjectMap.delete(this.eid);
+        this.objectsMap.delete(this.eid);
+        this.groupMap.delete(this.eid);
     }
     get root() {
-        return RootObject3DMap.get(this.eid);
+        return this.rootObjectMap.get(this.eid);
     }
     set root(obj) {
-        RootObject3DMap.set(this.eid, obj);
+        this.rootObjectMap.set(this.eid, obj);
     }
     get objects() {
-        return Object3DsMap.get(this.eid);
+        return this.objectsMap.get(this.eid);
     }
     get group() {
-        return GroupMap.get(this.eid);
+        return this.groupMap.get(this.eid);
     }
 }
 EntityObject3DProxy.instance = new EntityObject3DProxy();
@@ -2626,7 +2564,10 @@ function* connectUserAudioMedia(world) {
     // Assumes always single adapter entity exists
     const adapter = _components_stream__WEBPACK_IMPORTED_MODULE_2__.StreamClientProxy.get(adapterQuery(world)[0]).adapter;
     // TODO: What if adapter is not connected?
-    return yield* (0,_utils_coroutine__WEBPACK_IMPORTED_MODULE_1__.toGenerator)(adapter.produce(track));
+    yield* (0,_utils_coroutine__WEBPACK_IMPORTED_MODULE_1__.toGenerator)(adapter.produce(track));
+    connectedEventListener(world).forEach(listenerEid => {
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_media_device__WEBPACK_IMPORTED_MODULE_3__.MicConnectedEvent, listenerEid);
+    });
 }
 const micRequestQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_media_device__WEBPACK_IMPORTED_MODULE_3__.MicRequestor]);
 const micRequestEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)(micRequestQuery);
@@ -2647,9 +2588,6 @@ const micRequestSystem = (world) => {
         try {
             if (generators.get(eid).next().done === true) {
                 done = true;
-                connectedEventListener(world).forEach(listenerEid => {
-                    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_media_device__WEBPACK_IMPORTED_MODULE_3__.MicConnectedEvent, listenerEid);
-                });
             }
         }
         catch (error) {
@@ -3337,9 +3275,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   perspectiveCameraSystem: () => (/* binding */ perspectiveCameraSystem)
 /* harmony export */ });
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
-/* harmony import */ var _components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/entity_object3d */ "../client/src/components/entity_object3d.ts");
 /* harmony import */ var _components_camera__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/camera */ "../client/src/components/camera.ts");
 /* harmony import */ var _components_window_resize__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/window_resize */ "../client/src/components/window_resize.ts");
+/* harmony import */ var _utils_entity_object3d__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/entity_object3d */ "../client/src/utils/entity_object3d.ts");
 
 
 
@@ -3350,8 +3288,8 @@ const perspectiveCameraSystem = (world) => {
     cameraExitQuery(world).forEach(eid => {
         const proxy = _components_camera__WEBPACK_IMPORTED_MODULE_1__.PerspectiveCameraProxy.get(eid);
         const camera = proxy.camera;
-        if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__.EntityObject3D, eid)) {
-            _components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__.EntityObject3DProxy.get(eid).removeObject3D(world, camera);
+        if ((0,_utils_entity_object3d__WEBPACK_IMPORTED_MODULE_3__.hasObject3D)(world, camera, eid)) {
+            (0,_utils_entity_object3d__WEBPACK_IMPORTED_MODULE_3__.removeObject3D)(world, camera, eid);
         }
         proxy.free();
     });
@@ -4142,6 +4080,98 @@ function* toGenerator(pending) {
 
 /***/ }),
 
+/***/ "../client/src/utils/entity_object3d.ts":
+/*!**********************************************!*\
+  !*** ../client/src/utils/entity_object3d.ts ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   addObject3D: () => (/* binding */ addObject3D),
+/* harmony export */   hasObject3D: () => (/* binding */ hasObject3D),
+/* harmony export */   removeObject3D: () => (/* binding */ removeObject3D)
+/* harmony export */ });
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "../../node_modules/three/build/three.module.js");
+/* harmony import */ var _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/entity_object3d */ "../client/src/components/entity_object3d.ts");
+
+
+
+// Ensures that objects associated with an entity form
+// the following depending on the number of objects
+//   0:  EntityRootGroup (Root)
+//   1:  Object3D        (Root)
+//   2-: EntityRootGroup (Root) - Object3DA
+//                              - Object3DB
+//                              - ...
+const addObject3D = (world, obj, eid) => {
+    const proxy = _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3DProxy.get(eid);
+    if (!(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3D, eid)) {
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3D, eid);
+        proxy.allocate();
+    }
+    const objects = proxy.objects;
+    if (objects.length === 0) {
+        swapRootObject3D(obj, eid);
+    }
+    else {
+        if (objects.length === 1) {
+            const oldRootObj = swapRootObject3D(proxy.group, eid);
+            proxy.root.add(oldRootObj);
+        }
+        proxy.root.add(obj);
+    }
+    objects.push(obj);
+};
+const removeObject3D = (world, obj, eid) => {
+    // TODO: Really needs a check?
+    if (!hasObject3D(world, obj, eid)) {
+        // Throw an error?
+        return;
+    }
+    const proxy = _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3DProxy.get(eid);
+    const index = proxy.objects.indexOf(obj);
+    proxy.objects.splice(index, 1);
+    if (proxy.objects.length === 0) {
+        swapRootObject3D(proxy.group, eid);
+    }
+    else {
+        proxy.root.remove(obj);
+        if (proxy.objects.length === 1) {
+            swapRootObject3D(proxy.objects[0], eid);
+        }
+    }
+};
+// TODO: Optimize
+const hasObject3D = (world, obj, eid) => {
+    if (!(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3D, eid)) {
+        // Throw an error?
+        return false;
+    }
+    return _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3DProxy.get(eid).objects.indexOf(obj) !== -1;
+};
+const swapRootObject3D = (newRoot, eid) => {
+    const proxy = _components_entity_object3d__WEBPACK_IMPORTED_MODULE_1__.EntityObject3DProxy.get(eid);
+    const oldRoot = proxy.root;
+    three__WEBPACK_IMPORTED_MODULE_2__.Object3D.prototype.copy.call(newRoot, oldRoot);
+    if (oldRoot.parent !== null) {
+        oldRoot.parent.add(newRoot);
+        oldRoot.parent.remove(oldRoot);
+    }
+    while (oldRoot.children.length > 0) {
+        newRoot.add(oldRoot.children[0]);
+    }
+    //
+    proxy.root = newRoot;
+    oldRoot.matrixWorld.identity();
+    oldRoot.matrix.identity().decompose(oldRoot.position, oldRoot.quaternion, oldRoot.scale);
+    return oldRoot;
+};
+
+
+/***/ }),
+
 /***/ "../client/src/utils/network.ts":
 /*!**************************************!*\
   !*** ../client/src/utils/network.ts ***!
@@ -4270,7 +4300,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/avatar.ts");
 /* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/network.ts");
 /* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/scene.ts");
-/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/entity_object3d.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/utils/entity_object3d.ts");
 
 
 
@@ -4288,7 +4318,7 @@ const AvatarPrefab = (world) => {
     rightEyeObject.position.set(0.07, 0.1, -0.2);
     avatarObject.add(leftEyeObject);
     avatarObject.add(rightEyeObject);
-    _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_5__.EntityObject3DProxy.get(eid).addObject3D(world, avatarObject);
+    (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_5__.addObject3D)(world, avatarObject, eid);
     return eid;
 };
 
@@ -4313,7 +4343,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/grab.ts");
 /* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/select.ts");
 /* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/scene.ts");
-/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/entity_object3d.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/utils/entity_object3d.ts");
 
 
 
@@ -4327,7 +4357,7 @@ const CubePrefab = (world) => {
     (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_4__.Grabbable, eid);
     (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_5__.Selectable, eid);
     (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_6__.InScene, eid);
-    _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_7__.EntityObject3DProxy.get(eid).addObject3D(world, new three__WEBPACK_IMPORTED_MODULE_8__.Mesh(new three__WEBPACK_IMPORTED_MODULE_8__.BoxGeometry(0.5, 0.5, 0.5), new three__WEBPACK_IMPORTED_MODULE_8__.MeshBasicMaterial()));
+    (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_7__.addObject3D)(world, new three__WEBPACK_IMPORTED_MODULE_8__.Mesh(new three__WEBPACK_IMPORTED_MODULE_8__.BoxGeometry(0.5, 0.5, 0.5), new three__WEBPACK_IMPORTED_MODULE_8__.MeshBasicMaterial()), eid);
     return eid;
 };
 
@@ -80673,12 +80703,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/common.ts");
 /* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/utils/prefab.ts");
 /* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/scene.ts");
-/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/entity_object3d.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/utils/entity_object3d.ts");
 /* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/utils/network.ts");
 /* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/network.ts");
-/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/keyboard.ts");
-/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/mouse.ts");
-/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/stream.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/entity_object3d.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/keyboard.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/mouse.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/stream.ts");
 /* harmony import */ var _components_join_dialog__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/join_dialog */ "./src/components/join_dialog.ts");
 /* harmony import */ var _components_user_event_handler__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/user_event_handler */ "./src/components/user_event_handler.ts");
 /* harmony import */ var _prefabs_avatar__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./prefabs/avatar */ "./src/prefabs/avatar.ts");
@@ -80739,21 +80770,21 @@ const run = () => __awaiter(void 0, void 0, void 0, function* () {
     (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_12__.registerPrefab)(world, 'cube', _prefabs_cube__WEBPACK_IMPORTED_MODULE_4__.CubePrefab);
     const gridEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
     (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_13__.InScene, gridEid);
-    _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_14__.EntityObject3DProxy.get(gridEid).addObject3D(world, new three__WEBPACK_IMPORTED_MODULE_15__.GridHelper());
+    (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_14__.addObject3D)(world, new three__WEBPACK_IMPORTED_MODULE_15__.GridHelper(), gridEid);
     const avatarEid = (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_16__.createNetworkedEntity)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__.NetworkedType.Local, 'avatar');
-    _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_14__.EntityObject3DProxy.get(avatarEid).root.position.set(0.0, 0.25, 2.0);
-    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_18__.KeyEventListener, avatarEid);
+    _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_18__.EntityObject3DProxy.get(avatarEid).root.position.set(0.0, 0.25, 2.0);
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_19__.KeyEventListener, avatarEid);
     const mouseButtonEventEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
-    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_19__.MouseButtonEventListener, mouseButtonEventEid);
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_20__.MouseButtonEventListener, mouseButtonEventEid);
     const userEventHandlerEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
     (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_user_event_handler__WEBPACK_IMPORTED_MODULE_2__.UserEventHandler, userEventHandlerEid);
     (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__.UserNetworkEventListener, userEventHandlerEid);
     const joinDialogEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
     (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_join_dialog__WEBPACK_IMPORTED_MODULE_1__.JoinDialog, joinDialogEid);
-    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_20__.ConnectedStreamEventListener, joinDialogEid);
-    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_20__.JoinedStreamEventListener, joinDialogEid);
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_21__.ConnectedStreamEventListener, joinDialogEid);
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_21__.JoinedStreamEventListener, joinDialogEid);
     const cubeEid = (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_16__.createNetworkedEntity)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__.NetworkedType.Shared, 'cube');
-    _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_14__.EntityObject3DProxy.get(cubeEid).root.position.set((Math.random() - 0.5) * 10.0, 0.25, (Math.random() - 0.5) * 10.0);
+    _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_18__.EntityObject3DProxy.get(cubeEid).root.position.set((Math.random() - 0.5) * 10.0, 0.25, (Math.random() - 0.5) * 10.0);
     app.start();
 });
 run();

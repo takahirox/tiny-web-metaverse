@@ -21,7 +21,11 @@ function* connectUserAudioMedia(world: IWorld): Generator {
   // Assumes always single adapter entity exists
   const adapter = StreamClientProxy.get(adapterQuery(world)[0]).adapter;
   // TODO: What if adapter is not connected?
-  return yield* toGenerator(adapter.produce(track));
+  yield* toGenerator(adapter.produce(track));
+
+  connectedEventListener(world).forEach(listenerEid => {
+    addComponent(world, MicConnectedEvent, listenerEid);		
+  });
 }
 
 const micRequestQuery = defineQuery([MicRequestor]);
@@ -48,9 +52,6 @@ export const micRequestSystem = (world: IWorld): void => {
     try {
       if (generators.get(eid).next().done === true) {
         done = true;
-        connectedEventListener(world).forEach(listenerEid => {
-          addComponent(world, MicConnectedEvent, listenerEid);		
-        });
       }
     } catch (error) {
       // TODO: Proper error handling

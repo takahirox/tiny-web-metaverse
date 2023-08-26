@@ -4,6 +4,7 @@ import {
 } from "bitecs";
 import { GridHelper } from "three";
 import {
+  addObject3D,
   App,
   ConnectedStreamEventListener,
   createNetworkedEntity,
@@ -67,7 +68,7 @@ const run = async (): Promise<void> => {
 
   const gridEid = addEntity(world);
   addComponent(world, InScene, gridEid);
-  EntityObject3DProxy.get(gridEid).addObject3D(world, new GridHelper());
+  addObject3D(world, new GridHelper(), gridEid);
 
   const avatarEid = createNetworkedEntity(world, NetworkedType.Local, 'avatar');
   EntityObject3DProxy.get(avatarEid).root.position.set(0.0, 0.25, 2.0);

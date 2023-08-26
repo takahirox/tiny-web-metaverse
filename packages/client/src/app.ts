@@ -35,7 +35,6 @@ import {
   PerspectiveCameraProxy,
   SceneCamera
 } from "./components/camera";
-import { EntityObject3DProxy } from "./components/entity_object3d";
 import {
   MouseButtonEventHandler,
   MouseButtonEventHandlerProxy,
@@ -139,6 +138,7 @@ import {
   windowResizeEventHandleSystem,
   windowResizeEventClearSystem
 } from "./systems/window_resize_event";
+import { addObject3D } from "./utils/entity_object3d";
 
 type RegisteredSystem = {
   system: System;
@@ -365,7 +365,7 @@ export class App {
 
     addComponent(this.world, PerspectiveCameraTag, cameraEid);
     PerspectiveCameraProxy.get(cameraEid).allocate(camera);
-    EntityObject3DProxy.get(cameraEid).addObject3D(this.world, camera);
+    addObject3D(this.world, camera, cameraEid);
 
     addComponent(this.world, FpsCamera, cameraEid);
     addComponent(this.world, InScene, cameraEid);
