@@ -15,15 +15,16 @@ import {
   MouseButtonEventListener,
   NetworkedType,
   registerPrefab,
+  SelectedEventListener,
   SystemOrder,
   UserNetworkEventListener
 } from "@tiny-web-metaverse/client/src";
 import { JoinDialog } from "./components/join_dialog";
+import { SideBar } from "./components/side_bar";
 import { UserEventHandler } from "./components/user_event_handler";
 import { AvatarPrefab } from "./prefabs/avatar";
 import { CubePrefab } from "./prefabs/cube";
 import { colorSystem } from "./systems/color";
-import { selectedObjectSystem } from "./systems/selected_object";
 import { userEventSystem } from "./systems/user";
 import { updateJoinDialogSystem } from "./ui/join_dialog";
 import { updateSidebarSystem } from "./ui/side_bar";
@@ -58,7 +59,6 @@ const run = async (): Promise<void> => {
   app.registerSystem(updateJoinDialogSystem, SystemOrder.BeforeMatricesUpdate);
   app.registerSystem(updateSidebarSystem, SystemOrder.BeforeMatricesUpdate);
   app.registerSystem(colorSystem, SystemOrder.Render - 1);
-  app.registerSystem(selectedObjectSystem, SystemOrder.Render - 1);
   app.registerSystem(userEventSystem, SystemOrder.Render - 1);
 
   const world = app.getWorld();
@@ -80,6 +80,10 @@ const run = async (): Promise<void> => {
   const userEventHandlerEid = addEntity(world);
   addComponent(world, UserEventHandler, userEventHandlerEid);
   addComponent(world, UserNetworkEventListener, userEventHandlerEid);
+
+  const sideBarEid = addEntity(world);
+  addComponent(world, SideBar, sideBarEid);
+  addComponent(world, SelectedEventListener, sideBarEid);
 
   const joinDialogEid = addEntity(world);
   addComponent(world, JoinDialog, joinDialogEid);

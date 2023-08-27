@@ -129,6 +129,7 @@ import { raycasterSystem } from "./systems/raycaster";
 import { renderSystem } from "./systems/render";
 import { rendererSystem } from "./systems/renderer";
 import { sceneSystem } from "./systems/scene";
+import { selectedEventClearSystem } from "./systems/selected";
 import { streamConnectionSystem } from "./systems/stream_connection";
 import { streamRemotePeerRegisterSystem } from "./systems/stream_remote_peers";
 import { streamEventClearSystem, streamEventHandleSystem } from "./systems/stream_event";
@@ -236,6 +237,7 @@ export class App {
     this.registerSystem(keyEventClearSystem, SystemOrder.TearDown);
     this.registerSystem(mouseMoveEventClearSystem, SystemOrder.TearDown);
     this.registerSystem(mouseButtonEventClearSystem, SystemOrder.TearDown);
+    this.registerSystem(selectedEventClearSystem, SystemOrder.TearDown);
     this.registerSystem(micEventClearSystem, SystemOrder.TearDown);
     this.registerSystem(windowResizeEventClearSystem, SystemOrder.TearDown);
     this.registerSystem(networkEventClearSystem, SystemOrder.TearDown);

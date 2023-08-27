@@ -1,6 +1,5 @@
 export * from "./app";
 export * from "./common";
-export * from "./message";
 
 export * from "./components/avatar";
 export * from "./components/avatar_mouse_controls";
@@ -54,6 +53,7 @@ export * from "./systems/raycaster";
 export * from "./systems/render";
 export * from "./systems/renderer";
 export * from "./systems/scene";
+export * from "./systems/selected";
 export * from "./systems/stream_connection";
 export * from "./systems/stream_event";
 export * from "./systems/stream_remote_peers";

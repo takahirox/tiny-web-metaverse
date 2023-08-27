@@ -1,15 +1,24 @@
-import { addComponent, hasComponent, IWorld } from "bitecs";
+import {
+  addComponent,
+  defineQuery,
+  entityExists,
+  hasComponent,
+  IWorld
+} from "bitecs";
 import { Euler, Vector3 } from "three";
 import {
   EntityObject3D,
   EntityObject3DProxy,
   NULL_EID,
+  SelectedEvent,
+  SelectedEventProxy,
+  SelectedType,
   TransformUpdated
 } from "@tiny-web-metaverse/client/src";
+import { SideBar } from "../components/side_bar";
 
 const vector3Keys = ['x', 'y', 'z'] as const;
-let eid = NULL_EID;
-let needsUpdate = false;
+let selectedEid = NULL_EID;
 
 enum PropertyType {
   Position,
@@ -130,7 +139,7 @@ const createPositionElement = (): {
     input.max = '10.00';
     input.step = '0.01';
     input.addEventListener('input', () => {
-      if (eid === NULL_EID) {
+      if (selectedEid === NULL_EID) {
         return;
       }
       onInputQueue.push({
@@ -158,7 +167,7 @@ const createRotationElement = (): {
     input.max = `${Math.PI}`;
     input.step = '0.01';
     input.addEventListener('input', () => {
-      if (eid === NULL_EID) {
+      if (selectedEid === NULL_EID) {
         return;
       }
       onInputQueue.push({
@@ -187,7 +196,7 @@ const createScaleElement = (): {
     input.max = '10.0';
     input.step = '0.01';
     input.addEventListener('input', () => {
-      if (eid === NULL_EID) {
+      if (selectedEid === NULL_EID) {
         return;
       }
       onInputQueue.push({
@@ -274,45 +283,54 @@ div.appendChild(positionRootDiv);
 div.appendChild(rotationRootDiv);
 div.appendChild(scaleRootDiv);
 
-// Entity ID should be notified via a component?
-export const notifyEid = (newEid: number): void => {
-  if (eid !== newEid) {
-    eid = newEid;
-    needsUpdate = true;
-  }
-};
+const sideBarQuery = defineQuery([SelectedEvent, SideBar]);
 
 export const updateSidebarSystem = (world: IWorld): void => {
-  if (eid === NULL_EID) {
-    if (needsUpdate) {
-      div.style.display = 'none';
-    }
-  } else {
-    if (needsUpdate) {
-      div.style.display = 'block';
-      eidDiv.innerText = `eid: ${eid}`;
+  let needsUpdate = false;
 
-      if (hasComponent(world, EntityObject3D, eid)) {
-        positionRootDiv.style.display = 'block';
-        rotationRootDiv.style.display = 'block';
-        scaleRootDiv.style.display = 'block';
-      } else {
-        positionRootDiv.style.display = 'none';
-        rotationRootDiv.style.display = 'none';
-        scaleRootDiv.style.display = 'none';
-      }
-    }
-
-    handleOnInputs(world, eid);
-
-    if (hasComponent(world, EntityObject3D, eid) &&
-      (needsUpdate || hasComponent(world, TransformUpdated, eid))) {
-      const obj = EntityObject3DProxy.get(eid).root;
-      updateVector3(positionSpans, positionInputs, obj.position);
-      updateVector3(rotationSpans, rotationInputs, obj.rotation);
-      updateVector3(scaleSpans, scaleInputs, obj.scale);
-    }
+  if (!entityExists(world, selectedEid)) {
+    selectedEid = NULL_EID;
+    div.style.display = 'none';
   }
 
-  needsUpdate = false;
+  sideBarQuery(world).forEach(eventEid => {
+    for (const event of SelectedEventProxy.get(eventEid).events) {
+      switch (event.type) {
+        case SelectedType.Deselected:
+          if (selectedEid === event.eid) {
+            selectedEid = NULL_EID;
+            div.style.display = 'none';
+          }
+          break;
+        case SelectedType.Selected:
+          selectedEid = event.eid;
+          needsUpdate = true;
+
+          div.style.display = 'block';
+          eidDiv.innerText = `eid: ${selectedEid}`;
+
+          if (hasComponent(world, EntityObject3D, selectedEid)) {
+            positionRootDiv.style.display = 'block';
+            rotationRootDiv.style.display = 'block';
+            scaleRootDiv.style.display = 'block';
+          } else {
+            positionRootDiv.style.display = 'none';
+            rotationRootDiv.style.display = 'none';
+            scaleRootDiv.style.display = 'none';
+          }
+
+          break;
+      }
+    }
+  });
+
+  handleOnInputs(world, selectedEid);
+
+  if (hasComponent(world, EntityObject3D, selectedEid) &&
+    (needsUpdate || hasComponent(world, TransformUpdated, selectedEid))) {
+    const obj = EntityObject3DProxy.get(selectedEid).root;
+    updateVector3(positionSpans, positionInputs, obj.position);
+    updateVector3(rotationSpans, rotationInputs, obj.rotation);
+    updateVector3(scaleSpans, scaleInputs, obj.scale);
+  }
 };

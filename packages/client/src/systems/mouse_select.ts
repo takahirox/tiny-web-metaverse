@@ -12,9 +12,25 @@ import {
   MouseButtonType
 } from "../components/mouse";
 import { Raycasted } from "../components/raycast";
-import { Selectable, Selected } from "../components/select";
+import {
+  Selectable,
+  Selected,
+  SelectedEvent,
+  SelectedEventListener,
+  SelectedEventProxy,
+  SelectedType
+} from "../components/select";
+
+const addEvent = (world: IWorld, eid: number, type: SelectedType, selectedEid: number): void => {
+  if (!hasComponent(world, SelectedEvent, eid)) {
+    addComponent(world, SelectedEvent, eid);
+    SelectedEventProxy.get(eid).allocate();
+  }
+  SelectedEventProxy.get(eid).add(type, selectedEid);
+};
 
 const eventQuery = defineQuery([MouseButtonEvent, Selectable]);
+const listenerQuery = defineQuery([SelectedEventListener]);
 
 export const mouseSelectSystem = (world: IWorld) => {
   eventQuery(world).forEach(eid => {
@@ -23,11 +39,17 @@ export const mouseSelectSystem = (world: IWorld) => {
         continue;
       }
       if (e.type === MouseButtonEventType.Down) {
+        let selectedType: SelectedType;
         if (hasComponent(world, Selected, eid)) {
           removeComponent(world, Selected, eid);
+          selectedType = SelectedType.Deselected;
         } else if (hasComponent(world, Raycasted, eid)) {
           addComponent(world, Selected, eid);
+          selectedType = SelectedType.Selected;
         }
+        listenerQuery(world).forEach(listenerEid => {
+          addEvent(world, listenerEid, selectedType, eid);
+        });
       }
     }
   });
