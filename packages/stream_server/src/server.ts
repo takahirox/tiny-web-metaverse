@@ -5,7 +5,9 @@ import * as socketIO from "socket.io";
 import {
   LISTEN_IP,
   LISTEN_PORT,
-  LOG_LEVEL
+  LOG_LEVEL,
+  RTC_MAX_PORT,
+  RTC_MIN_PORT
 } from "./configure";
 import { Logger } from "./logger";
 import { Room } from "./room";
@@ -46,7 +48,9 @@ export class Server {
 
     // Mediasoup Worker
     const worker = await mediasoup.createWorker({
-      logLevel: LOG_LEVEL
+      logLevel: LOG_LEVEL,
+      rtcMaxPort: RTC_MAX_PORT,
+      rtcMinPort: RTC_MIN_PORT
     });
 
     const server = new Server(webServer, socketServer, worker);

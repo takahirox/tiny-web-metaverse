@@ -1,5 +1,5 @@
 import * as mediasoup from "mediasoup";
-import { LISTEN_IP, MEDIA_CODECS } from "./configure";
+import { ANNOUNCED_IP, LISTEN_IP, MEDIA_CODECS } from "./configure";
 import {
   ConsumerParams,
   getConsumerParams,
@@ -113,7 +113,7 @@ export class Room {
 
   private async createWebRtcTransport(): Promise<mediasoup.types.WebRtcTransport> {
     return await this.router.createWebRtcTransport({
-      listenIps: [LISTEN_IP],
+      listenIps: [{ announcedIp: ANNOUNCED_IP, ip: LISTEN_IP }],
       // TODO: Configurable
       enableUdp: true,
       enableTcp: true,

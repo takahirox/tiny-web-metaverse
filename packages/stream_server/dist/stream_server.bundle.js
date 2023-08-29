@@ -14592,13 +14592,20 @@ module.exports = {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   ANNOUNCED_IP: () => (/* binding */ ANNOUNCED_IP),
 /* harmony export */   LISTEN_IP: () => (/* binding */ LISTEN_IP),
 /* harmony export */   LISTEN_PORT: () => (/* binding */ LISTEN_PORT),
 /* harmony export */   LOG_LEVEL: () => (/* binding */ LOG_LEVEL),
-/* harmony export */   MEDIA_CODECS: () => (/* binding */ MEDIA_CODECS)
+/* harmony export */   MEDIA_CODECS: () => (/* binding */ MEDIA_CODECS),
+/* harmony export */   RTC_MAX_PORT: () => (/* binding */ RTC_MAX_PORT),
+/* harmony export */   RTC_MIN_PORT: () => (/* binding */ RTC_MIN_PORT)
 /* harmony export */ });
-const LISTEN_PORT = 3000;
-const LISTEN_IP = '127.0.0.1';
+const LISTEN_PORT = parseInt(process.env.MEDIASOUP_LISTEN_PORT) || 3000;
+const LISTEN_IP = process.env.MEDIASOUP_LISTEN_IP || '127.0.0.1';
+const ANNOUNCED_IP = process.env.MEDIASOUP_ANNOUNCED_IP || '127.0.0.1';
+// TODO: Configurable
+const RTC_MAX_PORT = parseInt(process.env.MEDIASOUP_RTC_MAX_PORT) || 2100;
+const RTC_MIN_PORT = parseInt(process.env.MEDIASOUP_RTC_MIN_PORT) || 2000;
 const LOG_LEVEL = 'debug';
 const MEDIA_CODECS = [
     {
@@ -14909,7 +14916,7 @@ class Room {
     createWebRtcTransport() {
         return __awaiter(this, void 0, void 0, function* () {
             return yield this.router.createWebRtcTransport({
-                listenIps: [_configure__WEBPACK_IMPORTED_MODULE_0__.LISTEN_IP],
+                listenIps: [{ announcedIp: _configure__WEBPACK_IMPORTED_MODULE_0__.ANNOUNCED_IP, ip: _configure__WEBPACK_IMPORTED_MODULE_0__.LISTEN_IP }],
                 // TODO: Configurable
                 enableUdp: true,
                 enableTcp: true,
@@ -15077,7 +15084,9 @@ class Server {
             });
             // Mediasoup Worker
             const worker = yield mediasoup__WEBPACK_IMPORTED_MODULE_2__.createWorker({
-                logLevel: _configure__WEBPACK_IMPORTED_MODULE_4__.LOG_LEVEL
+                logLevel: _configure__WEBPACK_IMPORTED_MODULE_4__.LOG_LEVEL,
+                rtcMaxPort: _configure__WEBPACK_IMPORTED_MODULE_4__.RTC_MAX_PORT,
+                rtcMinPort: _configure__WEBPACK_IMPORTED_MODULE_4__.RTC_MIN_PORT
             });
             const server = new Server(webServer, socketServer, worker);
             yield server.initWebServer();

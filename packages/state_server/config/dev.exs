@@ -2,10 +2,10 @@ import Config
 
 # Configure your database
 config :server, Server.Repo,
-  username: "postgres",
-  password: "postgres",
-  hostname: "localhost",
-  database: "server_dev",
+  username: System.get_env("DATABASE_USERNAME") || "postgres",
+  password: System.get_env("DATABASE_PASSWORD") || "postgres",
+  hostname: System.get_env("DATABASE_HOSTNAME") || "localhost",
+  database: System.get_env("DATABASE_NAME") || "server_dev",
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
@@ -19,7 +19,27 @@ config :server, Server.Repo,
 config :server, ServerWeb.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
-  http: [ip: {127, 0, 0, 1}, port: 4000],
+  http: [
+    ip: case System.get_env("PHOENIX_LISTEN_IP") do
+          nil -> {127, 0, 0, 1}
+          value ->
+            case :inet.parse_address(String.to_charlist(value)) do
+              {:ok, ip} -> ip
+              # TODO: Fatal error instead?
+              _ -> {127, 0, 0, 1}
+            end
+        end,
+    port: case System.get_env("PHOENIX_LISTEN_PORT") do
+            nil -> 4000
+            value ->
+              try do
+                String.to_integer(value)
+              rescue
+                # TODO: Fatal error instead?
+                RuntimeError -> 4000
+              end
+          end
+  ],
   check_origin: false,
   code_reloader: true,
   debug_errors: true,
