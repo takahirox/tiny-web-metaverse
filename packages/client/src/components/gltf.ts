@@ -30,3 +30,5 @@ export class GltfAssetLoaderProxy {
     return this.map.get(this.eid)!;
   }
 }
+
+export const GltfSceneLoader = defineComponent();

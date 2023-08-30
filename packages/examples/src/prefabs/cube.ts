@@ -3,7 +3,7 @@ import {
   addEntity,
   IWorld
 } from "bitecs";
-import { BoxGeometry, Mesh, MeshBasicMaterial } from "three";
+import { BoxGeometry, Mesh, MeshStandardMaterial } from "three";
 import {
   addObject3D,
   InScene,
@@ -28,7 +28,7 @@ export const CubePrefab = (world: IWorld): number => {
   addComponent(world, InScene, eid);
   addObject3D(world, new Mesh(
     new BoxGeometry(0.5, 0.5, 0.5),
-    new MeshBasicMaterial()
+    new MeshStandardMaterial({ metalness: 0.8, roughness: 0.2 })
   ), eid);
   return eid;
 };

@@ -33,6 +33,6 @@ export const DuckPrefab = (world: IWorld): number => {
   EntityObject3DProxy.get(eid).allocate();
 
   addComponent(world, GltfAssetLoader, eid);
-  GltfAssetLoaderProxy.get(eid).allocate('assets/Duck/Duck.gltf');
+  GltfAssetLoaderProxy.get(eid).allocate('assets/models/Duck/Duck.gltf');
   return eid;
 };

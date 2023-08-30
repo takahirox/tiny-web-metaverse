@@ -55,6 +55,8 @@ export * from "./systems/raycaster";
 export * from "./systems/render";
 export * from "./systems/renderer";
 export * from "./systems/scene";
+export * from "./systems/scene_environment_map";
+export * from "./systems/scene_environment_map_load";
 export * from "./systems/selected";
 export * from "./systems/stream_connection";
 export * from "./systems/stream_event";

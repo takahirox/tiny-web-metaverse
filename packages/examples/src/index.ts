@@ -15,6 +15,8 @@ import {
   MouseButtonEventListener,
   NetworkedType,
   registerPrefab,
+  SceneEnvironmentMapLoader,
+  SceneEnvironmentMapLoaderProxy,
   SelectedEventListener,
   SystemOrder,
   UserNetworkEventListener
@@ -75,6 +77,10 @@ const run = async (): Promise<void> => {
   const avatarEid = createNetworkedEntity(world, NetworkedType.Local, 'avatar');
   EntityObject3DProxy.get(avatarEid).root.position.set(0.0, 0.25, 2.0);
   addComponent(world, KeyEventListener, avatarEid);
+
+  const envMapLoaderEid = addEntity(world);
+  addComponent(world, SceneEnvironmentMapLoader, envMapLoaderEid);
+  SceneEnvironmentMapLoaderProxy.get(envMapLoaderEid).allocate('assets/textures/royal_esplanade_1k.hdr');
 
   const mouseButtonEventEid = addEntity(world);
   addComponent(world, MouseButtonEventListener, mouseButtonEventEid);

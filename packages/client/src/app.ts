@@ -6,7 +6,6 @@ import {
   IWorld
 } from "bitecs";
 import {
-  AmbientLight,
   Clock,
   Color,
   MathUtils,
@@ -131,6 +130,8 @@ import { raycasterSystem } from "./systems/raycaster";
 import { renderSystem } from "./systems/render";
 import { rendererSystem } from "./systems/renderer";
 import { sceneSystem } from "./systems/scene";
+import { sceneEnvironmentMapSystem } from "./systems/scene_environment_map";
+import { sceneEnvironmentMapLoadSystem } from "./systems/scene_environment_map_load";
 import { selectedEventClearSystem } from "./systems/selected";
 import { streamConnectionSystem } from "./systems/stream_connection";
 import { streamRemotePeerRegisterSystem } from "./systems/stream_remote_peers";
@@ -216,10 +217,12 @@ export class App {
     this.registerSystem(rendererSystem, SystemOrder.Setup);
     this.registerSystem(entityObject3DSystem, SystemOrder.Setup);
     this.registerSystem(sceneSystem, SystemOrder.Setup);
+    this.registerSystem(sceneEnvironmentMapSystem, SystemOrder.Setup);
     this.registerSystem(perspectiveCameraSystem, SystemOrder.Setup);
     this.registerSystem(networkedSystem, SystemOrder.Setup);
     this.registerSystem(networkedEntitySystem, SystemOrder.Setup);
     this.registerSystem(gltfAssetLoadSystem, SystemOrder.Setup);
+    this.registerSystem(sceneEnvironmentMapLoadSystem, SystemOrder.Setup);
 
     this.registerSystem(linearMoveSystem, SystemOrder.BeforeMatricesUpdate);
     this.registerSystem(linearTransformSystem, SystemOrder.BeforeMatricesUpdate);
@@ -359,9 +362,6 @@ export class App {
     scene.background = new Color(0xffffff);
 
     SceneProxy.get(sceneEid).allocate(scene);
-
-    // TODO: Add AmbientLight component
-    scene.add(new AmbientLight(0xaaaaaa));
 
     const cameraEid = addEntity(this.world);
 

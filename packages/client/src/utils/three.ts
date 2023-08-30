@@ -1,5 +1,6 @@
-import { Mesh } from "three";
+import { EquirectangularReflectionMapping, Mesh, Texture } from "three";
 import { GLTF, GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
 import { toGenerator } from "./coroutine";
 
 export function* loadGltf(url: string): Generator<void, GLTF> {
@@ -19,3 +20,15 @@ export const recenter = (mesh: Mesh): Mesh => {
 export const resize = (mesh: Mesh): Mesh => {
   return mesh;
 };
+
+export function* loadHdrTexture(url: string): Generator<void, Texture> {
+  // TODO: Reuse the loader instead of creating every time?
+  const loader = new RGBELoader();
+  return yield* toGenerator(new Promise((resolve, reject) => {
+    loader.load(url, texture => {
+      // TODO: Configurable?
+      texture.mapping = EquirectangularReflectionMapping;
+      resolve(texture);
+    }, undefined, reject);
+  }));
+}
