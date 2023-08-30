@@ -1,8 +1,8 @@
 import { addComponent, defineQuery, IWorld } from "bitecs";
 import { Intersection, Object3D, Vector2, Vector3 } from "three";
 import {
+  PerspectiveCameraComponent,
   PerspectiveCameraProxy,
-  PerspectiveCameraTag,
   SceneCamera
 } from "../components/camera";
 import {
@@ -16,16 +16,16 @@ import {
 import {
   Raycastable,
   Raycasted,
-  RaycasterProxy,
-  RaycasterTag
+  RaycasterComponent,
+  RaycasterProxy
 } from "../components/raycast";
 import { NULL_EID } from "../common";
 
 const vec2 = new Vector2();
 const vec3 = new Vector3();
 
-const raycasterQuery = defineQuery([RaycasterTag]);
-const cameraQuery = defineQuery([EntityObject3D, PerspectiveCameraTag, SceneCamera]);
+const raycasterQuery = defineQuery([RaycasterComponent]);
+const cameraQuery = defineQuery([EntityObject3D, PerspectiveCameraComponent, SceneCamera]);
 const mouseQuery = defineQuery([MousePosition]);
 const raycastableQuery = defineQuery([Raycastable, EntityObject3D]);
 

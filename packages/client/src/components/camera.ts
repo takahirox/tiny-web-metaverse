@@ -2,7 +2,7 @@ import { defineComponent } from "bitecs";
 import { PerspectiveCamera } from "three";
 import { NULL_EID } from "../common";
 
-export const PerspectiveCameraTag = defineComponent();
+export const PerspectiveCameraComponent = defineComponent();
 
 export class PerspectiveCameraProxy {
   private static instance: PerspectiveCameraProxy = new PerspectiveCameraProxy();

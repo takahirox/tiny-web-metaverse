@@ -2,7 +2,7 @@ import { defineComponent } from "bitecs";
 import { Group, Object3D } from "three";
 import { NULL_EID } from "../common";
 
-// TODO: Add MeshTag or RenderableObject3D component?
+// TODO: Add MeshComponent or RenderableObject3D component?
 
 // TODO: Move to common?
 export class EntityRootGroup extends Group {

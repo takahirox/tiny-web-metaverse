@@ -256,7 +256,7 @@ class App {
         _components_mouse__WEBPACK_IMPORTED_MODULE_48__.PreviousMousePositionProxy.get(mousePositionEid).allocate();
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_mouse__WEBPACK_IMPORTED_MODULE_48__.MouseMoveEventListener, mousePositionEid);
         const raycasterEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_raycast__WEBPACK_IMPORTED_MODULE_50__.RaycasterTag, raycasterEid);
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_raycast__WEBPACK_IMPORTED_MODULE_50__.RaycasterComponent, raycasterEid);
         _components_raycast__WEBPACK_IMPORTED_MODULE_50__.RaycasterProxy.get(raycasterEid).allocate(new three__WEBPACK_IMPORTED_MODULE_2__.Raycaster());
         const avatarMouseControlsEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_avatar_mouse_controls__WEBPACK_IMPORTED_MODULE_51__.AvatarMouseControls, avatarMouseControlsEid);
@@ -271,7 +271,7 @@ class App {
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_window_resize__WEBPACK_IMPORTED_MODULE_49__.WindowSize, rendererEid);
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_window_resize__WEBPACK_IMPORTED_MODULE_49__.WindowResizeEventListener, rendererEid);
         const sceneEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_scene__WEBPACK_IMPORTED_MODULE_54__.SceneTag, sceneEid);
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_scene__WEBPACK_IMPORTED_MODULE_54__.SceneComponent, sceneEid);
         // TODO: Configurable Scene
         const scene = new three__WEBPACK_IMPORTED_MODULE_2__.Scene();
         // Matrices are updated in updateMatricesSystem.
@@ -281,7 +281,7 @@ class App {
         const cameraEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
         // TODO: Configurable
         const camera = new three__WEBPACK_IMPORTED_MODULE_2__.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.001, 2000.0);
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_camera__WEBPACK_IMPORTED_MODULE_55__.PerspectiveCameraTag, cameraEid);
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_camera__WEBPACK_IMPORTED_MODULE_55__.PerspectiveCameraComponent, cameraEid);
         _components_camera__WEBPACK_IMPORTED_MODULE_55__.PerspectiveCameraProxy.get(cameraEid).allocate(camera);
         (0,_utils_entity_object3d__WEBPACK_IMPORTED_MODULE_56__.addObject3D)(this.world, camera, cameraEid);
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_camera__WEBPACK_IMPORTED_MODULE_55__.FpsCamera, cameraEid);
@@ -463,15 +463,15 @@ AvatarMouseControlsProxy.instance = new AvatarMouseControlsProxy();
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   FpsCamera: () => (/* binding */ FpsCamera),
+/* harmony export */   PerspectiveCameraComponent: () => (/* binding */ PerspectiveCameraComponent),
 /* harmony export */   PerspectiveCameraProxy: () => (/* binding */ PerspectiveCameraProxy),
-/* harmony export */   PerspectiveCameraTag: () => (/* binding */ PerspectiveCameraTag),
 /* harmony export */   SceneCamera: () => (/* binding */ SceneCamera)
 /* harmony export */ });
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../common */ "../client/src/common.ts");
 
 
-const PerspectiveCameraTag = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const PerspectiveCameraComponent = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 class PerspectiveCameraProxy {
     constructor() {
         this.eid = _common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
@@ -556,7 +556,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-// TODO: Add MeshTag or RenderableObject3D component?
+// TODO: Add MeshComponent or RenderableObject3D component?
 // TODO: Move to common?
 class EntityRootGroup extends three__WEBPACK_IMPORTED_MODULE_1__.Group {
     constructor() {
@@ -1332,8 +1332,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Raycastable: () => (/* binding */ Raycastable),
 /* harmony export */   Raycasted: () => (/* binding */ Raycasted),
-/* harmony export */   RaycasterProxy: () => (/* binding */ RaycasterProxy),
-/* harmony export */   RaycasterTag: () => (/* binding */ RaycasterTag)
+/* harmony export */   RaycasterComponent: () => (/* binding */ RaycasterComponent),
+/* harmony export */   RaycasterProxy: () => (/* binding */ RaycasterProxy)
 /* harmony export */ });
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../common */ "../client/src/common.ts");
@@ -1343,7 +1343,7 @@ const Raycastable = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 const Raycasted = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({
     distance: bitecs__WEBPACK_IMPORTED_MODULE_0__.Types.f32
 });
-const RaycasterTag = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const RaycasterComponent = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 class RaycasterProxy {
     constructor() {
         this.eid = _common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
@@ -1457,14 +1457,14 @@ RoomIdProxy.instance = new RoomIdProxy();
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   InScene: () => (/* binding */ InScene),
-/* harmony export */   SceneProxy: () => (/* binding */ SceneProxy),
-/* harmony export */   SceneTag: () => (/* binding */ SceneTag)
+/* harmony export */   SceneComponent: () => (/* binding */ SceneComponent),
+/* harmony export */   SceneProxy: () => (/* binding */ SceneProxy)
 /* harmony export */ });
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../common */ "../client/src/common.ts");
 
 
-const SceneTag = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const SceneComponent = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 const InScene = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 class SceneProxy {
     constructor() {
@@ -2274,7 +2274,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const avatarQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_avatar__WEBPACK_IMPORTED_MODULE_1__.Avatar, _components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__.EntityObject3D, _components_network__WEBPACK_IMPORTED_MODULE_3__.Local]);
-const cameraQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_camera__WEBPACK_IMPORTED_MODULE_4__.FpsCamera, _components_camera__WEBPACK_IMPORTED_MODULE_4__.PerspectiveCameraTag]);
+const cameraQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_camera__WEBPACK_IMPORTED_MODULE_4__.FpsCamera, _components_camera__WEBPACK_IMPORTED_MODULE_4__.PerspectiveCameraComponent]);
 const fpsCameraSystem = (world) => {
     const avatarEids = avatarQuery(world);
     const cameraEids = cameraQuery(world);
@@ -2365,7 +2365,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const ray = new three__WEBPACK_IMPORTED_MODULE_1__.Ray();
-const cameraQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_camera__WEBPACK_IMPORTED_MODULE_2__.PerspectiveCameraTag, _components_camera__WEBPACK_IMPORTED_MODULE_2__.SceneCamera]);
+const cameraQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_camera__WEBPACK_IMPORTED_MODULE_2__.PerspectiveCameraComponent, _components_camera__WEBPACK_IMPORTED_MODULE_2__.SceneCamera]);
 const mouseQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_mouse__WEBPACK_IMPORTED_MODULE_3__.MousePosition]);
 const grabbedQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_entity_object3d__WEBPACK_IMPORTED_MODULE_4__.EntityObject3D, _components_grab__WEBPACK_IMPORTED_MODULE_5__.Grabbed, _components_scene__WEBPACK_IMPORTED_MODULE_6__.InScene]);
 const grabbedObjectsMouseTrackSystem = (world) => {
@@ -2878,8 +2878,8 @@ __webpack_require__.r(__webpack_exports__);
 
 const vec2 = new three__WEBPACK_IMPORTED_MODULE_1__.Vector2();
 const vec3 = new three__WEBPACK_IMPORTED_MODULE_1__.Vector3();
-const raycasterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_raycast__WEBPACK_IMPORTED_MODULE_2__.RaycasterTag]);
-const cameraQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__.EntityObject3D, _components_camera__WEBPACK_IMPORTED_MODULE_4__.PerspectiveCameraTag, _components_camera__WEBPACK_IMPORTED_MODULE_4__.SceneCamera]);
+const raycasterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_raycast__WEBPACK_IMPORTED_MODULE_2__.RaycasterComponent]);
+const cameraQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__.EntityObject3D, _components_camera__WEBPACK_IMPORTED_MODULE_4__.PerspectiveCameraComponent, _components_camera__WEBPACK_IMPORTED_MODULE_4__.SceneCamera]);
 const mouseQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_mouse__WEBPACK_IMPORTED_MODULE_5__.MousePosition]);
 const raycastableQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_raycast__WEBPACK_IMPORTED_MODULE_2__.Raycastable, _components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__.EntityObject3D]);
 const mouseRaycastSystem = (world) => {
@@ -3363,8 +3363,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const cameraExitQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_camera__WEBPACK_IMPORTED_MODULE_1__.PerspectiveCameraTag]));
-const cameraWindowResizeEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_camera__WEBPACK_IMPORTED_MODULE_1__.PerspectiveCameraTag, _components_window_resize__WEBPACK_IMPORTED_MODULE_2__.WindowResizeEvent, _components_window_resize__WEBPACK_IMPORTED_MODULE_2__.WindowSize]));
+const cameraExitQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_camera__WEBPACK_IMPORTED_MODULE_1__.PerspectiveCameraComponent]));
+const cameraWindowResizeEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_camera__WEBPACK_IMPORTED_MODULE_1__.PerspectiveCameraComponent, _components_window_resize__WEBPACK_IMPORTED_MODULE_2__.WindowResizeEvent, _components_window_resize__WEBPACK_IMPORTED_MODULE_2__.WindowSize]));
 const perspectiveCameraSystem = (world) => {
     cameraExitQuery(world).forEach(eid => {
         const proxy = _components_camera__WEBPACK_IMPORTED_MODULE_1__.PerspectiveCameraProxy.get(eid);
@@ -3446,7 +3446,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_raycast__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/raycast */ "../client/src/components/raycast.ts");
 
 
-const raycasterExitQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_raycast__WEBPACK_IMPORTED_MODULE_1__.RaycasterTag]));
+const raycasterExitQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_raycast__WEBPACK_IMPORTED_MODULE_1__.RaycasterComponent]));
 const raycasterSystem = (world) => {
     raycasterExitQuery(world).forEach(eid => {
         _components_raycast__WEBPACK_IMPORTED_MODULE_1__.RaycasterProxy.get(eid).free();
@@ -3475,8 +3475,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const rendererQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_renderer__WEBPACK_IMPORTED_MODULE_1__.Renderer]);
-const sceneQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_scene__WEBPACK_IMPORTED_MODULE_2__.SceneTag]);
-const cameraQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_camera__WEBPACK_IMPORTED_MODULE_3__.PerspectiveCameraTag, _components_camera__WEBPACK_IMPORTED_MODULE_3__.SceneCamera]);
+const sceneQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_scene__WEBPACK_IMPORTED_MODULE_2__.SceneComponent]);
+const cameraQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_camera__WEBPACK_IMPORTED_MODULE_3__.PerspectiveCameraComponent, _components_camera__WEBPACK_IMPORTED_MODULE_3__.SceneCamera]);
 const renderSystem = (world) => {
     const rendererEids = rendererQuery(world);
     const sceneEids = sceneQuery(world);
@@ -3545,7 +3545,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const sceneQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_scene__WEBPACK_IMPORTED_MODULE_1__.SceneTag]);
+const sceneQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_scene__WEBPACK_IMPORTED_MODULE_1__.SceneComponent]);
 const sceneExitQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)(sceneQuery);
 const inSceneQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_scene__WEBPACK_IMPORTED_MODULE_1__.InScene, _components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__.EntityObject3D]);
 const inSceneEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)(inSceneQuery);
@@ -4068,7 +4068,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_scene__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/scene */ "../client/src/components/scene.ts");
 
 
-const sceneQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_scene__WEBPACK_IMPORTED_MODULE_1__.SceneTag]);
+const sceneQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_scene__WEBPACK_IMPORTED_MODULE_1__.SceneComponent]);
 const updateMatricesSystem = (world) => {
     sceneQuery(world).forEach(eid => {
         _components_scene__WEBPACK_IMPORTED_MODULE_1__.SceneProxy.get(eid).scene.updateMatrixWorld(true);

@@ -31,7 +31,7 @@ import {
 import { Canvas, CanvasProxy } from "./components/canvas";
 import {
   FpsCamera,
-  PerspectiveCameraTag,
+  PerspectiveCameraComponent,
   PerspectiveCameraProxy,
   SceneCamera
 } from "./components/camera";
@@ -63,11 +63,11 @@ import {
   UserNetworkEventListener
 } from "./components/network";
 import { Prefabs, PrefabsProxy } from "./components/prefab";
-import { RaycasterTag, RaycasterProxy } from "./components/raycast";
+import { RaycasterComponent, RaycasterProxy } from "./components/raycast";
 import { Renderer, RendererProxy } from "./components/renderer";
 import { RoomId, RoomIdProxy } from "./components/room_id";
 import { UserId, UserIdProxy } from "./components/user_id";
-import { InScene, SceneProxy, SceneTag } from "./components/scene";
+import { InScene, SceneProxy, SceneComponent } from "./components/scene";
 import {
   ConnectedStreamEventListener,
   ExitedPeerStreamEventListener,
@@ -328,7 +328,7 @@ export class App {
     addComponent(this.world, MouseMoveEventListener, mousePositionEid);
 
     const raycasterEid = addEntity(this.world);
-    addComponent(this.world, RaycasterTag, raycasterEid);
+    addComponent(this.world, RaycasterComponent, raycasterEid);
     RaycasterProxy.get(raycasterEid).allocate(new Raycaster());
 
     const avatarMouseControlsEid = addEntity(this.world);
@@ -347,7 +347,7 @@ export class App {
     addComponent(this.world, WindowResizeEventListener, rendererEid);
 
     const sceneEid = addEntity(this.world);
-    addComponent(this.world, SceneTag, sceneEid);
+    addComponent(this.world, SceneComponent, sceneEid);
 
     // TODO: Configurable Scene
     const scene = new Scene();
@@ -367,7 +367,7 @@ export class App {
       2000.0
     );
 
-    addComponent(this.world, PerspectiveCameraTag, cameraEid);
+    addComponent(this.world, PerspectiveCameraComponent, cameraEid);
     PerspectiveCameraProxy.get(cameraEid).allocate(camera);
     addObject3D(this.world, camera, cameraEid);
 

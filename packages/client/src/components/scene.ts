@@ -2,7 +2,7 @@ import { defineComponent } from "bitecs";
 import { Scene } from "three";
 import { NULL_EID } from "../common";
 
-export const SceneTag = defineComponent();
+export const SceneComponent = defineComponent();
 export const InScene = defineComponent();
 
 export class SceneProxy {

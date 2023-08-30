@@ -2,7 +2,7 @@ import { addComponent, defineQuery, IWorld } from "bitecs";
 import { Ray } from "three";
 import {
   PerspectiveCameraProxy,
-  PerspectiveCameraTag,
+  PerspectiveCameraComponent,
   SceneCamera
 } from "../components/camera";
 import {
@@ -19,7 +19,7 @@ import { TransformUpdated } from "../components/transform";
 
 const ray = new Ray();
 
-const cameraQuery = defineQuery([PerspectiveCameraTag, SceneCamera]);
+const cameraQuery = defineQuery([PerspectiveCameraComponent, SceneCamera]);
 const mouseQuery = defineQuery([MousePosition]);
 const grabbedQuery = defineQuery([EntityObject3D, Grabbed, InScene]);
 

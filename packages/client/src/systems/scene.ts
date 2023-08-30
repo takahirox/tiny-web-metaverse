@@ -5,16 +5,16 @@ import {
   IWorld
 } from "bitecs";
 import {
-  EntityObject3DProxy,
-  EntityObject3D
+  EntityObject3D,
+  EntityObject3DProxy
 } from "../components/entity_object3d";
 import {
   InScene,
-  SceneProxy,
-  SceneTag
+  SceneComponent,
+  SceneProxy
 } from "../components/scene";
 
-const sceneQuery = defineQuery([SceneTag]);
+const sceneQuery = defineQuery([SceneComponent]);
 const sceneExitQuery = exitQuery(sceneQuery);
 const inSceneQuery = defineQuery([InScene, EntityObject3D]);
 const inSceneEnterQuery = enterQuery(inSceneQuery);

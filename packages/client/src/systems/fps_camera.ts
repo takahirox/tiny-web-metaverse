@@ -2,7 +2,7 @@ import { defineQuery, IWorld } from "bitecs";
 import { Avatar } from "../components/avatar";
 import {
   FpsCamera,
-  PerspectiveCameraTag,
+  PerspectiveCameraComponent,
   PerspectiveCameraProxy
 } from "../components/camera";
 import {
@@ -12,7 +12,7 @@ import {
 import { Local } from "../components/network";
 
 const avatarQuery = defineQuery([Avatar, EntityObject3D, Local]);
-const cameraQuery = defineQuery([FpsCamera, PerspectiveCameraTag]);
+const cameraQuery = defineQuery([FpsCamera, PerspectiveCameraComponent]);
 
 export const fpsCameraSystem = (world: IWorld) => {
   const avatarEids = avatarQuery(world);

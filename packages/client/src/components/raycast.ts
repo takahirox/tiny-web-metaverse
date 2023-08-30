@@ -7,7 +7,7 @@ export const Raycasted = defineComponent({
   distance: Types.f32
 });
 
-export const RaycasterTag = defineComponent();
+export const RaycasterComponent = defineComponent();
 
 export class RaycasterProxy {
   private static instance: RaycasterProxy = new RaycasterProxy();

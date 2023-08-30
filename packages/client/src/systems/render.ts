@@ -7,18 +7,18 @@ import {
   RendererProxy
 } from "../components/renderer";
 import {
-  SceneProxy,
-  SceneTag
+  SceneComponent,
+  SceneProxy
 } from "../components/scene";
 import {
-  PerspectiveCameraTag,
+  PerspectiveCameraComponent,
   PerspectiveCameraProxy,
   SceneCamera
 } from "../components/camera";
 
 const rendererQuery = defineQuery([Renderer]);
-const sceneQuery = defineQuery([SceneTag]);
-const cameraQuery = defineQuery([PerspectiveCameraTag, SceneCamera]);
+const sceneQuery = defineQuery([SceneComponent]);
+const cameraQuery = defineQuery([PerspectiveCameraComponent, SceneCamera]);
 
 export const renderSystem = (world: IWorld): void => {
   const rendererEids = rendererQuery(world);

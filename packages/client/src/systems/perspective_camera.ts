@@ -5,15 +5,15 @@ import {
   IWorld
 } from "bitecs";
 import {
-  PerspectiveCameraProxy,
-  PerspectiveCameraTag
+  PerspectiveCameraComponent,
+  PerspectiveCameraProxy
 } from "../components/camera";
 import { WindowResizeEvent, WindowSize } from "../components/window_resize";
 import { hasObject3D, removeObject3D } from "../utils/entity_object3d";
 
-const cameraExitQuery = exitQuery(defineQuery([PerspectiveCameraTag]));
+const cameraExitQuery = exitQuery(defineQuery([PerspectiveCameraComponent]));
 const cameraWindowResizeEnterQuery =
-  enterQuery(defineQuery([PerspectiveCameraTag, WindowResizeEvent, WindowSize]));
+  enterQuery(defineQuery([PerspectiveCameraComponent, WindowResizeEvent, WindowSize]));
 
 export const perspectiveCameraSystem = (world: IWorld): void => {
   cameraExitQuery(world).forEach(eid => {
