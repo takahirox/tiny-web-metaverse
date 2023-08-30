@@ -6,6 +6,7 @@ import {
   IWorld
 } from "bitecs";
 import {
+  AmbientLight,
   Clock,
   Color,
   MathUtils,
@@ -98,6 +99,7 @@ import { avatarMouseControlsSystem } from "./systems/avatar_mouse_controls";
 import { canvasSystem } from "./systems/canvas";
 import { entityObject3DSystem } from "./systems/entity_object3d";
 import { fpsCameraSystem } from "./systems/fps_camera";
+import { gltfAssetLoadSystem } from "./systems/gltf_asset_load";
 import { grabSystem } from "./systems/grab";
 import { grabbedObjectsMouseTrackSystem } from "./systems/grab_mouse_track";
 import {
@@ -217,6 +219,7 @@ export class App {
     this.registerSystem(perspectiveCameraSystem, SystemOrder.Setup);
     this.registerSystem(networkedSystem, SystemOrder.Setup);
     this.registerSystem(networkedEntitySystem, SystemOrder.Setup);
+    this.registerSystem(gltfAssetLoadSystem, SystemOrder.Setup);
 
     this.registerSystem(linearMoveSystem, SystemOrder.BeforeMatricesUpdate);
     this.registerSystem(linearTransformSystem, SystemOrder.BeforeMatricesUpdate);
@@ -356,6 +359,9 @@ export class App {
     scene.background = new Color(0xffffff);
 
     SceneProxy.get(sceneEid).allocate(scene);
+
+    // TODO: Add AmbientLight component
+    scene.add(new AmbientLight(0xaaaaaa));
 
     const cameraEid = addEntity(this.world);
 

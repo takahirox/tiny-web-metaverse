@@ -87,7 +87,6 @@ export const streamConnectionSystem = (world: IWorld): void => {
       console.error(error);
     }
     if (done) {
-      connectGenerators.delete(eid);
       removeComponent(world, StreamConnectRequestor, eid);
       // In general requestor entity doesn't have any other component
       // so remove the entity if no component.

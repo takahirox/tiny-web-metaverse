@@ -24,6 +24,7 @@ import { SideBar } from "./components/side_bar";
 import { UserEventHandler } from "./components/user_event_handler";
 import { AvatarPrefab } from "./prefabs/avatar";
 import { CubePrefab } from "./prefabs/cube";
+import { DuckPrefab } from "./prefabs/duck";
 import { colorSystem } from "./systems/color";
 import { userEventSystem } from "./systems/user";
 import { updateJoinDialogSystem } from "./ui/join_dialog";
@@ -65,6 +66,7 @@ const run = async (): Promise<void> => {
 
   registerPrefab(world, 'avatar', AvatarPrefab);
   registerPrefab(world, 'cube', CubePrefab);
+  registerPrefab(world, 'duck', DuckPrefab);
 
   const gridEid = addEntity(world);
   addComponent(world, InScene, gridEid);
@@ -92,6 +94,13 @@ const run = async (): Promise<void> => {
 
   const cubeEid = createNetworkedEntity(world, NetworkedType.Shared, 'cube');
   EntityObject3DProxy.get(cubeEid).root.position.set(
+    (Math.random() - 0.5) * 10.0,
+    0.25,
+    (Math.random() - 0.5) * 10.0
+  );
+
+  const duckEid = createNetworkedEntity(world, NetworkedType.Shared, 'duck');
+  EntityObject3DProxy.get(duckEid).root.position.set(
     (Math.random() - 0.5) * 10.0,
     0.25,
     (Math.random() - 0.5) * 10.0

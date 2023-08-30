@@ -59,7 +59,6 @@ export const micRequestSystem = (world: IWorld): void => {
       done = true;
     }
     if (done) {
-      generators.delete(eid);
       removeComponent(world, MicRequestor, eid);
       removeEntityIfNoComponent(world, eid);
     }
