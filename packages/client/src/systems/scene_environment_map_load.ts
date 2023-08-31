@@ -1,18 +1,15 @@
 import {
-  addComponent,
   defineQuery,
   enterQuery,
   exitQuery,
-  hasComponent,
   IWorld,
   removeComponent
 } from "bitecs";
 import {
   SceneComponent,
-  SceneEnvironmentMap,
   SceneEnvironmentMapLoader,
   SceneEnvironmentMapLoaderProxy,
-  SceneEnvironmentMapProxy
+  SceneProxy
 } from "../components/scene";
 import { loadHdrTexture } from "../utils/three";
 
@@ -25,11 +22,10 @@ function* load(world: IWorld, eid: number): Generator<void, void> {
   const url = SceneEnvironmentMapLoaderProxy.get(eid).url;
   const texture = yield* loadHdrTexture(url);
   sceneQuery(world).forEach(sceneEid => {
-    // TODO: What to do if scene already has environment map?
-    if (!hasComponent(world, SceneEnvironmentMap, sceneEid)) {
-      addComponent(world, SceneEnvironmentMap, sceneEid);
-      SceneEnvironmentMapProxy.get(sceneEid).allocate(texture);  
-    }
+    // TODO: What if scene already has environment map?
+    const scene = SceneProxy.get(sceneEid).scene;
+    scene.background = texture;
+    scene.environment = texture;
   });
 }
 

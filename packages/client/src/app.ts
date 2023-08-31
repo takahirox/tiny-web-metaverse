@@ -130,7 +130,6 @@ import { raycasterSystem } from "./systems/raycaster";
 import { renderSystem } from "./systems/render";
 import { rendererSystem } from "./systems/renderer";
 import { sceneSystem } from "./systems/scene";
-import { sceneEnvironmentMapSystem } from "./systems/scene_environment_map";
 import { sceneEnvironmentMapLoadSystem } from "./systems/scene_environment_map_load";
 import { selectedEventClearSystem } from "./systems/selected";
 import { streamConnectionSystem } from "./systems/stream_connection";
@@ -217,7 +216,6 @@ export class App {
     this.registerSystem(rendererSystem, SystemOrder.Setup);
     this.registerSystem(entityObject3DSystem, SystemOrder.Setup);
     this.registerSystem(sceneSystem, SystemOrder.Setup);
-    this.registerSystem(sceneEnvironmentMapSystem, SystemOrder.Setup);
     this.registerSystem(perspectiveCameraSystem, SystemOrder.Setup);
     this.registerSystem(networkedSystem, SystemOrder.Setup);
     this.registerSystem(networkedEntitySystem, SystemOrder.Setup);

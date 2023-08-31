@@ -1,5 +1,5 @@
 import { addComponent, defineQuery, IWorld } from "bitecs";
-import { Intersection, Object3D, Vector2, Vector3 } from "three";
+import { Intersection, Vector2, Vector3 } from "three";
 import {
   PerspectiveCameraComponent,
   PerspectiveCameraProxy,
@@ -50,7 +50,6 @@ export const mouseRaycastSystem = (world: IWorld) => {
         const intersected: Intersection[] = [];
 
         let minDistance: number | null = null;
-        let raycastedObject: Object3D | null = null;
         let raycastedEid: number = NULL_EID;
 
         // Adds Raycasted component to only the closest object
@@ -63,7 +62,6 @@ export const mouseRaycastSystem = (world: IWorld) => {
             const distance = intersected[0].distance;
             if (minDistance === null || distance < minDistance) {
               minDistance = distance;
-              raycastedObject = intersected[0].object;
               raycastedEid = raycastableEid;
             }
           }
@@ -71,7 +69,7 @@ export const mouseRaycastSystem = (world: IWorld) => {
 
         if (raycastedEid !== NULL_EID) {
           addComponent(world, Raycasted, raycastedEid);
-          vec3.copy(raycastedObject!.position).sub(cameraRoot.position);
+          vec3.copy(EntityObject3DProxy.get(raycastedEid).root.position).sub(cameraRoot.position);
           Raycasted.distance[raycastedEid] = vec3.length();
         }
       });

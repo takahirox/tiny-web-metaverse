@@ -108,7 +108,7 @@ const run = async (): Promise<void> => {
   const duckEid = createNetworkedEntity(world, NetworkedType.Shared, 'duck');
   EntityObject3DProxy.get(duckEid).root.position.set(
     (Math.random() - 0.5) * 10.0,
-    0.25,
+    0.1,
     (Math.random() - 0.5) * 10.0
   );
 

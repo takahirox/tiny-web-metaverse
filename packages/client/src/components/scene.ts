@@ -1,5 +1,5 @@
 import { defineComponent } from "bitecs";
-import { Scene, Texture } from "three";
+import { Scene } from "three";
 import { NULL_EID } from "../common";
 
 export const SceneComponent = defineComponent();
@@ -29,36 +29,6 @@ export class SceneProxy {
   }
 
   get scene(): Scene {
-    return this.map.get(this.eid)!;
-  }
-}
-
-export const SceneEnvironmentMap = defineComponent();
-
-export class SceneEnvironmentMapProxy {
-  private static instance: SceneEnvironmentMapProxy = new SceneEnvironmentMapProxy();
-  private eid: number;
-  private map: Map<number, Texture>;
-
-  private constructor() {
-    this.eid = NULL_EID;
-    this.map = new Map();
-  }
-
-  static get(eid: number): SceneEnvironmentMapProxy {
-    SceneEnvironmentMapProxy.instance.eid = eid;
-    return SceneEnvironmentMapProxy.instance;
-  }
-
-  allocate(texture: Texture): void {
-    this.map.set(this.eid, texture);
-  }
-
-  free(): void {
-    this.map.delete(this.eid);
-  }
-
-  get texture(): Texture {
     return this.map.get(this.eid)!;
   }
 }
