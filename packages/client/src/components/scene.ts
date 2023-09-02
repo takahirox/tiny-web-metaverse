@@ -33,6 +33,8 @@ export class SceneProxy {
   }
 }
 
+export const SceneObject = defineComponent();
+
 export const SceneEnvironmentMapLoader = defineComponent();
 
 export class SceneEnvironmentMapLoaderProxy {

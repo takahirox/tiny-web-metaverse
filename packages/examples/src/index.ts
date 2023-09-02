@@ -2,12 +2,12 @@ import {
   addComponent,
   addEntity
 } from "bitecs";
-import { GridHelper } from "three";
 import {
-  addObject3D,
   App,
   ConnectedStreamEventListener,
   createNetworkedEntity,
+  GltfSceneLoader,
+  GltfSceneLoaderProxy,
   EntityObject3DProxy,
   InScene,
   JoinedStreamEventListener,
@@ -31,6 +31,8 @@ import { colorSystem } from "./systems/color";
 import { userEventSystem } from "./systems/user";
 import { updateJoinDialogSystem } from "./ui/join_dialog";
 import { updateSidebarSystem } from "./ui/side_bar";
+
+const sceneAssetUrl = 'assets/scenes/hello_webxr.glb';
 
 const url = new URL(location.href);
 
@@ -70,9 +72,10 @@ const run = async (): Promise<void> => {
   registerPrefab(world, 'cube', CubePrefab);
   registerPrefab(world, 'duck', DuckPrefab);
 
-  const gridEid = addEntity(world);
-  addComponent(world, InScene, gridEid);
-  addObject3D(world, new GridHelper(), gridEid);
+  const sceneEid = addEntity(world);
+  addComponent(world, InScene, sceneEid);
+  addComponent(world, GltfSceneLoader, sceneEid);
+  GltfSceneLoaderProxy.get(sceneEid).allocate(sceneAssetUrl);
 
   const avatarEid = createNetworkedEntity(world, NetworkedType.Local, 'avatar');
   EntityObject3DProxy.get(avatarEid).root.position.set(0.0, 0.25, 2.0);

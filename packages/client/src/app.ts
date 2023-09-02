@@ -99,6 +99,7 @@ import { canvasSystem } from "./systems/canvas";
 import { entityObject3DSystem } from "./systems/entity_object3d";
 import { fpsCameraSystem } from "./systems/fps_camera";
 import { gltfAssetLoadSystem } from "./systems/gltf_asset_load";
+import { gltfSceneLoadSystem } from "./systems/gltf_scene_load";
 import { grabSystem } from "./systems/grab";
 import { grabbedObjectsMouseTrackSystem } from "./systems/grab_mouse_track";
 import {
@@ -220,6 +221,7 @@ export class App {
     this.registerSystem(networkedSystem, SystemOrder.Setup);
     this.registerSystem(networkedEntitySystem, SystemOrder.Setup);
     this.registerSystem(gltfAssetLoadSystem, SystemOrder.Setup);
+    this.registerSystem(gltfSceneLoadSystem, SystemOrder.Setup);
     this.registerSystem(sceneEnvironmentMapLoadSystem, SystemOrder.Setup);
 
     this.registerSystem(linearMoveSystem, SystemOrder.BeforeMatricesUpdate);

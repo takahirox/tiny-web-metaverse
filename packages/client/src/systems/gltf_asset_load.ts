@@ -7,7 +7,6 @@ import {
 } from "bitecs";
 import { Group } from "three";
 import { GltfAssetLoader, GltfAssetLoaderProxy } from "../components/gltf";
-import { removeEntityIfNoComponent } from "../utils/bitecs";
 import { addObject3D } from "../utils/entity_object3d";
 import {
   loadGltf,
@@ -67,7 +66,6 @@ export const gltfAssetLoadSystem = (world: IWorld): void => {
     }
     if (done) {
       removeComponent(world, GltfAssetLoader, eid);
-      removeEntityIfNoComponent(world, eid);
     }
   })
 };

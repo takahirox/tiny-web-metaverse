@@ -79,6 +79,9 @@ export const mouseButtonEventHandleSystem = (world: IWorld) => {
       });
     };
 
+    // TODO: Should we fire up event if the window is unfocused
+    //       while holding mouse buttons?
+
     const mouseupListener = (event: MouseEvent): void => {
       listenerQuery(world).forEach(eid => {
         addMouseButtonEvent(world, eid, MouseButtonEventType.Up, event);

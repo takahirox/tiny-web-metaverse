@@ -18,6 +18,8 @@ import {
   Selectable
 } from "@tiny-web-metaverse/client/src";
 
+const assetUrl = 'assets/models/Duck/Duck.gltf';
+
 export const DuckPrefab = (world: IWorld): number => {
   const eid = addEntity(world);
   addComponent(world, NetworkedPosition, eid);
@@ -33,6 +35,6 @@ export const DuckPrefab = (world: IWorld): number => {
   EntityObject3DProxy.get(eid).allocate();
 
   addComponent(world, GltfAssetLoader, eid);
-  GltfAssetLoaderProxy.get(eid).allocate('assets/models/Duck/Duck.gltf');
+  GltfAssetLoaderProxy.get(eid).allocate(assetUrl);
   return eid;
 };
