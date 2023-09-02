@@ -87458,6 +87458,7 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
 
 
 const sceneAssetUrl = 'assets/scenes/hello_webxr.glb';
+const envTextureUrl = 'assets/textures/royal_esplanade_1k.hdr';
 const url = new URL(location.href);
 const reloadWithRoomIdIfNeeded = () => __awaiter(void 0, void 0, void 0, function* () {
     if (!url.searchParams.has('room_id')) {
@@ -87495,7 +87496,7 @@ const run = () => __awaiter(void 0, void 0, void 0, function* () {
     (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_19__.KeyEventListener, avatarEid);
     const envMapLoaderEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
     (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_14__.SceneEnvironmentMapLoader, envMapLoaderEid);
-    _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_14__.SceneEnvironmentMapLoaderProxy.get(envMapLoaderEid).allocate('assets/textures/royal_esplanade_1k.hdr');
+    _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_14__.SceneEnvironmentMapLoaderProxy.get(envMapLoaderEid).allocate(envTextureUrl);
     const mouseButtonEventEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
     (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_20__.MouseButtonEventListener, mouseButtonEventEid);
     const userEventHandlerEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);

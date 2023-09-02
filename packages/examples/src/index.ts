@@ -33,6 +33,7 @@ import { updateJoinDialogSystem } from "./ui/join_dialog";
 import { updateSidebarSystem } from "./ui/side_bar";
 
 const sceneAssetUrl = 'assets/scenes/hello_webxr.glb';
+const envTextureUrl = 'assets/textures/royal_esplanade_1k.hdr';
 
 const url = new URL(location.href);
 
@@ -83,7 +84,7 @@ const run = async (): Promise<void> => {
 
   const envMapLoaderEid = addEntity(world);
   addComponent(world, SceneEnvironmentMapLoader, envMapLoaderEid);
-  SceneEnvironmentMapLoaderProxy.get(envMapLoaderEid).allocate('assets/textures/royal_esplanade_1k.hdr');
+  SceneEnvironmentMapLoaderProxy.get(envMapLoaderEid).allocate(envTextureUrl);
 
   const mouseButtonEventEid = addEntity(world);
   addComponent(world, MouseButtonEventListener, mouseButtonEventEid);
