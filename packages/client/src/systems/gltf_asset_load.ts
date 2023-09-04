@@ -1,4 +1,5 @@
 import {
+  addComponent,
   defineQuery,
   enterQuery,
   exitQuery,
@@ -6,7 +7,12 @@ import {
   removeComponent
 } from "bitecs";
 import { Group } from "three";
-import { GltfAssetLoader, GltfAssetLoaderProxy } from "../components/gltf";
+import {
+  GltfAssetLoader,
+  GltfAssetLoaderProxy,
+  GltfRoot,
+  GltfRootProxy
+} from "../components/gltf";
 import { addObject3D } from "../utils/entity_object3d";
 import {
   loadGltf,
@@ -19,6 +25,8 @@ function* load(world: IWorld, eid: number): Generator {
   const gltf = yield* loadGltf(url);
   // TODO: Throw error if no gltf.scene?
   const scene = gltf.scene || gltf.scenes[0];
+  addComponent(world, GltfRoot, eid);
+  GltfRootProxy.get(eid).allocate(scene);
 
   // TODO: Should resize be conditional?
   // TODO: Move resize to any other system?
@@ -33,7 +41,6 @@ function* load(world: IWorld, eid: number): Generator {
   //       performance impact especially when updating matrices.
   const root = new Group();
   root.add(scene);
-
   addObject3D(world, root, eid);
 }
 

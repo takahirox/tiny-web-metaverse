@@ -3,6 +3,9 @@ import {
   addEntity
 } from "bitecs";
 import {
+  gltfMixerAnimationSystem
+} from "@tiny-web-metaverse/addons/src";
+import {
   App,
   ConnectedStreamEventListener,
   createNetworkedEntity,
@@ -27,6 +30,7 @@ import { UserEventHandler } from "./components/user_event_handler";
 import { AvatarPrefab } from "./prefabs/avatar";
 import { CubePrefab } from "./prefabs/cube";
 import { DuckPrefab } from "./prefabs/duck";
+import { FoxPrefab } from "./prefabs/fox";
 import { colorSystem } from "./systems/color";
 import { userEventSystem } from "./systems/user";
 import { updateJoinDialogSystem } from "./ui/join_dialog";
@@ -62,6 +66,7 @@ const run = async (): Promise<void> => {
 
   document.body.appendChild(canvas);
 
+  app.registerSystem(gltfMixerAnimationSystem, SystemOrder.Setup + 1);
   app.registerSystem(updateJoinDialogSystem, SystemOrder.BeforeMatricesUpdate);
   app.registerSystem(updateSidebarSystem, SystemOrder.BeforeMatricesUpdate);
   app.registerSystem(colorSystem, SystemOrder.Render - 1);
@@ -72,6 +77,7 @@ const run = async (): Promise<void> => {
   registerPrefab(world, 'avatar', AvatarPrefab);
   registerPrefab(world, 'cube', CubePrefab);
   registerPrefab(world, 'duck', DuckPrefab);
+  registerPrefab(world, 'fox', FoxPrefab);
 
   const sceneEid = addEntity(world);
   addComponent(world, InScene, sceneEid);
@@ -101,6 +107,13 @@ const run = async (): Promise<void> => {
   addComponent(world, JoinDialog, joinDialogEid);
   addComponent(world, ConnectedStreamEventListener, joinDialogEid);
   addComponent(world, JoinedStreamEventListener, joinDialogEid);
+
+  const foxEid = createNetworkedEntity(world, NetworkedType.Shared, 'fox');
+  EntityObject3DProxy.get(foxEid).root.position.set(
+    (Math.random() - 0.5) * 10.0,
+    0.1,
+    (Math.random() - 0.5) * 10.0
+  );
 
   const cubeEid = createNetworkedEntity(world, NetworkedType.Shared, 'cube');
   EntityObject3DProxy.get(cubeEid).root.position.set(

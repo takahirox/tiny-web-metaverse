@@ -6,7 +6,12 @@ import {
   IWorld,
   removeComponent
 } from "bitecs";
-import { GltfSceneLoader, GltfSceneLoaderProxy } from "../components/gltf";
+import {
+  GltfSceneLoader,
+  GltfSceneLoaderProxy,
+  GltfRoot,
+  GltfRootProxy
+} from "../components/gltf";
 import { SceneObject } from "../components/scene";
 import { addObject3D } from "../utils/entity_object3d";
 import { loadGltf } from "../utils/three";
@@ -16,6 +21,8 @@ function* load(world: IWorld, eid: number): Generator {
   const gltf = yield* loadGltf(url);
   // TODO: Throw error if no gltf.scene?
   const scene = gltf.scene || gltf.scenes[0];
+  addComponent(world, GltfRoot, eid);
+  GltfRootProxy.get(eid).allocate(scene);
   addObject3D(world, scene, eid);
   addComponent(world, SceneObject, eid);
 }

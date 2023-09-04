@@ -98,6 +98,7 @@ import { avatarMouseControlsSystem } from "./systems/avatar_mouse_controls";
 import { canvasSystem } from "./systems/canvas";
 import { entityObject3DSystem } from "./systems/entity_object3d";
 import { fpsCameraSystem } from "./systems/fps_camera";
+import { gltfSystem } from "./systems/gltf";
 import { gltfAssetLoadSystem } from "./systems/gltf_asset_load";
 import { gltfSceneLoadSystem } from "./systems/gltf_scene_load";
 import { grabSystem } from "./systems/grab";
@@ -109,6 +110,7 @@ import {
 import { linearMoveSystem } from "./systems/linear_move";
 import { linearTransformSystem } from "./systems/linear_transform";
 import { micRequestSystem, micEventClearSystem } from "./systems/media_device";
+import { mixerAnimationSystem } from "./systems/mixer_animation";
 import {
   mouseButtonEventClearSystem,
   mouseButtonEventHandleSystem
@@ -222,7 +224,9 @@ export class App {
     this.registerSystem(networkedEntitySystem, SystemOrder.Setup);
     this.registerSystem(gltfAssetLoadSystem, SystemOrder.Setup);
     this.registerSystem(gltfSceneLoadSystem, SystemOrder.Setup);
+    this.registerSystem(gltfSystem, SystemOrder.Setup);
     this.registerSystem(sceneEnvironmentMapLoadSystem, SystemOrder.Setup);
+    this.registerSystem(mixerAnimationSystem, SystemOrder.Setup);
 
     this.registerSystem(linearMoveSystem, SystemOrder.BeforeMatricesUpdate);
     this.registerSystem(linearTransformSystem, SystemOrder.BeforeMatricesUpdate);

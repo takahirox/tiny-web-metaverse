@@ -4,14 +4,13 @@
     "url": "https://github.com/takahirox/tiny-web-metaverse/issues"
   },
   "dependencies": {
-    "@tiny-web-metaverse/addons": "^0.0.1",
     "@tiny-web-metaverse/client": "^0.0.1"
   },
-  "description": "Tiny Web metaverse examples",
+  "description": "Tiny Web metaverse addons",
   "homepage": "https://github.com/takahirox/tiny-web-metaverse#readme",
   "license": "MIT",
-  "main": "./dist/example.bundle.js",
-  "name": "@tiny-web-metaverse/examples",
+  "main": "./dist/addons.bundle.js",
+  "name": "@tiny-web-metaverse/addons",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/takahirox/tiny-web-metaverse.git"

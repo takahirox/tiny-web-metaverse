@@ -17,7 +17,14 @@ export function* loadGltf(url: string): Generator<void, GLTF> {
   // TODO: Creating GLTFLoader every time is inefficient? Reuse the loader?
   const loader = new GLTFLoader();
   return yield* toGenerator(new Promise((resolve, reject) => {
-    loader.load(url, resolve, undefined, reject);
+    loader.load(url, gltf => {
+      // TODO: What if no scene of multiple scenes?
+      const scene = gltf.scene || gltf.scenes[0];
+      for (const animation of gltf.animations) {
+        scene.animations.push(animation);
+      }
+      resolve(gltf);
+	}, undefined, reject);
   }));
 }
 

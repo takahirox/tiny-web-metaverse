@@ -26,12 +26,14 @@
     "url": "git+https://github.com/takahirox/tiny-web-metaverse.git"
   },
   "scripts": {
+    "build:addons": "cd packages/addons && npm run build",
     "build:all": "npm run build:stream_server && npm run build:stream_client && npm run build:state_client && npm run build:client && npm run build:examples",
     "build:client": "cd packages/client && npm run build",
     "build:examples": "cd packages/examples && npm run build",
     "build:state_client": "cd packages/state_client && npm run build",
     "build:stream_client": "cd packages/stream_client && npm run build",
     "build:stream_server": "cd packages/stream_server && npm run build",
+    "install:addons": "cd packages/addons && npm install",
     "install:all": "npm install && npm run install:stream_server && npm run install:stream_client && npm run install:state_client && npm run install:client && npm run install:examples",
     "install:client": "cd packages/client && npm install",
     "install:examples": "cd packages/examples && npm install",
