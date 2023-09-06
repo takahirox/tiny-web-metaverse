@@ -213,6 +213,14 @@ class ActiveAnimationsProxy {
     add(action) {
         this.map.get(this.eid).push(action);
     }
+    remove(action) {
+        const actions = this.actions;
+        const index = actions.indexOf(action);
+        if (index === -1) {
+            return;
+        }
+        actions.splice(index, 1);
+    }
     free() {
         this.map.delete(this.eid);
     }

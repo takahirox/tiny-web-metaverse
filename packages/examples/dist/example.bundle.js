@@ -1002,6 +1002,14 @@ class ActiveAnimationsProxy {
     add(action) {
         this.map.get(this.eid).push(action);
     }
+    remove(action) {
+        const actions = this.actions;
+        const index = actions.indexOf(action);
+        if (index === -1) {
+            return;
+        }
+        actions.splice(index, 1);
+    }
     free() {
         this.map.delete(this.eid);
     }
@@ -4648,6 +4656,7 @@ const windowResizeEventClearSystem = (world) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   hasComponents: () => (/* binding */ hasComponents),
 /* harmony export */   removeEntityIfNoComponent: () => (/* binding */ removeEntityIfNoComponent)
 /* harmony export */ });
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
@@ -4658,6 +4667,14 @@ const removeEntityIfNoComponent = (world, eid) => {
         return true;
     }
     return false;
+};
+const hasComponents = (world, components, eid) => {
+    for (const component of components) {
+        if (!(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, component, eid)) {
+            return false;
+        }
+    }
+    return true;
 };
 
 
@@ -5365,9 +5382,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/common.ts");
-/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/entity_object3d.ts");
-/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/transform.ts");
-/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/select.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/mixer_animation.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/utils/bitecs.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/entity_object3d.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/transform.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/utils/mixer_animation.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/select.ts");
 /* harmony import */ var _components_side_bar__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/side_bar */ "./src/components/side_bar.ts");
 
 
@@ -5381,24 +5401,83 @@ var PropertyType;
     PropertyType[PropertyType["Scale"] = 2] = "Scale";
 })(PropertyType || (PropertyType = {}));
 ;
-const onInputQueue = [];
+const onTrsInputQueue = [];
+const onAnimationSelectInputQueue = [];
 /*
 <div>
-  <div>eid: ${eid}</div>
-  <div>position:
-    <div>x: <span>${position.x}</span> <input type="range" /></div>
-    <div>y: <span>${position.y}</span> <input type="range" /></div>
-    <div>z: <span>${position.z}</span> <input type="range" /></div>
+  <div id="eidDiv">eid: ${eid}</div>
+
+  <div id="positionDiv">
+    position:
+    <div id="positionXDiv">
+      x:
+      <span id="positionXSpan">${position.x}</span>
+      <input id="positionXInput" type="range" />
+    </div>
+    <div id="positionYDiv">
+      y:
+      <span id="positionYSpan">${position.y}</span>
+      <input id="positionYInput" type="range" />
+    </div>
+    <div id="positionZDiv">
+      z:
+      <span id="positionZSpan">${position.z}</span>
+      <input id="positionZInput" type="range" />
+    </div>
   </div>
-  <div>rotation:
-    <div>x: <span>${rotation.x}</span> <input type="range" /></div>
-    <div>y: <span>${rotation.y}</span> <input type="range" /></div>
-    <div>z: <span>${rotation.z}</span> <input type="range" /></div>
+  <div id="rotationDiv">
+    rotation:
+    <div id="rotationXDiv">
+      x:
+      <span id="rotationXSpan">${rotation.x}</span>
+      <input id="rotationXInput" type="range" />
+    </div>
+    <div>
+      y:
+      <span id="rotationYSpan">${rotation.y}</span>
+      <input id="rotationYInput" type="range" />
+    </div>
+    <div>
+      z:
+      <span id="rotationZSpan">${rotation.z}</span>
+      <input id="rotationZInput"type="range" />
+    </div>
   </div>
-  <div>scale:
-    <div>x: <span>${scale.x}</span> <input type="range" /></div>
-    <div>y: <span>${scale.y}</span> <input type="range" /></div>
-    <div>z: <span>${scale.z}</span> <input type="range" /></div>
+  <div id="scaleDiv">
+    scale:
+    <div id="scaleXDiv">
+      x:
+      <span id="scaleXSpan">${scale.x}</span>
+      <input id="scaleXInput" type="range" />
+    </div>
+    <div id="scaleYDiv">
+      y:
+      <span id="scaleYSpan">${scale.y}</span>
+      <input id="scaleYInput" type="range" />
+    </div>
+    <div id="scaleZDiv">
+      z:
+      <span id="scaleZSpan">${scale.z}</span>
+      <input id="scaleZInput" type="range" />
+    </div>
+  </div>
+
+  <div id="animationsDiv">
+    animations:
+    <div id="animationClipsDiv">
+      clips: <span></span>
+      <select id="animationClipSelect">
+        <option value="-1">None</option>
+        <option value="0">animation_0</option>
+        ...
+      </select>
+    </div>
+    <div id="animationTimeDiv">
+      time:
+      <span id="animationTimeSpan">${action.time}</span>
+      <input id="animationTimeInput"
+        type="range" min="0" max="${clip.duration}" value="${action.time}" />
+    </div>
   </div>
 </div>
 */
@@ -5449,7 +5528,7 @@ const createPositionElement = () => {
             if (selectedEid === _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_2__.NULL_EID) {
                 return;
             }
-            onInputQueue.push({
+            onTrsInputQueue.push({
                 property: PropertyType.Position,
                 key: key,
                 value: Number(input.value)
@@ -5469,7 +5548,7 @@ const createRotationElement = () => {
             if (selectedEid === _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_2__.NULL_EID) {
                 return;
             }
-            onInputQueue.push({
+            onTrsInputQueue.push({
                 property: PropertyType.Rotation,
                 key: key,
                 value: Number(input.value)
@@ -5490,7 +5569,7 @@ const createScaleElement = () => {
             if (selectedEid === _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_2__.NULL_EID) {
                 return;
             }
-            onInputQueue.push({
+            onTrsInputQueue.push({
                 property: PropertyType.Scale,
                 key: key,
                 value: Number(input.value)
@@ -5499,16 +5578,106 @@ const createScaleElement = () => {
     }
     return result;
 };
-const updateVector3 = (spans, inputs, value) => {
+const createAnimationsElement = () => {
+    const root = document.createElement('div');
+    root.innerText = `animations: `;
+    const clipsDiv = document.createElement('div');
+    clipsDiv.style.display = 'flex';
+    clipsDiv.style.paddingLeft = '1em';
+    clipsDiv.innerText = `clips: `;
+    root.appendChild(clipsDiv);
+    const clipsSpan = document.createElement('span');
+    clipsSpan.style.width = '6em';
+    clipsDiv.appendChild(clipsSpan);
+    const clipSelect = document.createElement('select');
+    clipSelect.style.width = '100px';
+    clipSelect.addEventListener('change', () => {
+        if (selectedEid === _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_2__.NULL_EID) {
+            return;
+        }
+        onAnimationSelectInputQueue.push({
+            index: Number(clipSelect.options[clipSelect.selectedIndex].value)
+        });
+    });
+    clipsDiv.appendChild(clipSelect);
+    const timeDiv = document.createElement('div');
+    timeDiv.style.display = 'flex';
+    timeDiv.style.paddingLeft = '1em';
+    timeDiv.innerText = `time: `;
+    root.appendChild(timeDiv);
+    const timeSpan = document.createElement('span');
+    timeSpan.style.width = '6em';
+    timeDiv.appendChild(timeSpan);
+    const timeInput = document.createElement('input');
+    timeInput.type = 'range';
+    timeInput.style.width = '100px';
+    timeInput.min = '0';
+    timeInput.step = '0.01';
+    timeInput.value = '0';
+    timeDiv.appendChild(timeInput);
+    return { root, clipsDiv, clipSelect, timeDiv, timeSpan, timeInput };
+};
+//
+const updateTrs = (spans, inputs, value) => {
     for (const key of vector3Keys) {
         spans[key].innerText = `${value[key].toFixed(2)}`;
         inputs[key].value = `${value[key]}`;
     }
 };
-const handleOnInputs = (world, eid) => {
-    if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_3__.EntityObject3D, eid)) {
-        const obj = _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_3__.EntityObject3DProxy.get(eid).root;
-        for (const input of onInputQueue) {
+const refreshAnimations = (world, eid) => {
+    while (animationsClipSelect.firstChild) {
+        animationsClipSelect.removeChild(animationsClipSelect.firstChild);
+    }
+    const activeClips = new WeakSet();
+    if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_3__.ActiveAnimations, eid)) {
+        for (const action of _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_3__.ActiveAnimationsProxy.get(eid).actions) {
+            activeClips.add(action.getClip());
+        }
+    }
+    const option = document.createElement('option');
+    option.innerText = 'None';
+    option.value = '-1';
+    animationsClipSelect.appendChild(option);
+    let suffix = 0;
+    let clipIndex = 0;
+    let foundActiveAnimation = false;
+    if ((0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_4__.hasComponents)(world, [_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_5__.EntityObject3D, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_3__.MixerAnimation], eid)) {
+        const root = _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_5__.EntityObject3DProxy.get(eid).root;
+        root.traverse(obj => {
+            for (const clip of obj.animations) {
+                const option = document.createElement('option');
+                option.innerText = clip.name || `animation_${suffix++}`;
+                option.selected = activeClips.has(clip);
+                option.value = `${clipIndex++}`;
+                animationsClipSelect.appendChild(option);
+                if (option.selected) {
+                    foundActiveAnimation = true;
+                }
+            }
+        });
+    }
+    animationsTimeDiv.style.display = foundActiveAnimation ? 'block' : 'none';
+    if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_3__.ActiveAnimations, eid)) {
+        for (const action of _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_3__.ActiveAnimationsProxy.get(eid).actions) {
+            animationsTimeInput.max = `${action.getClip().duration}`;
+        }
+    }
+    animationsTimeInput.value = '0';
+    animationsTimeSpan.innerText = (0.0).toFixed(2);
+};
+const updateAnimationTime = (world, eid) => {
+    if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_3__.ActiveAnimations, eid)) {
+        for (const action of _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_3__.ActiveAnimationsProxy.get(eid).actions) {
+            animationsTimeSpan.innerText = `${action.time.toFixed(2)}`;
+            animationsTimeInput.value = `${action.time}`;
+        }
+    }
+};
+//
+const handleOnTrsInputs = (world, eid) => {
+    if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_5__.EntityObject3D, eid)) {
+        const obj = _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_5__.EntityObject3DProxy.get(eid).root;
+        for (const input of onTrsInputQueue) {
             switch (input.property) {
                 case PropertyType.Position:
                     obj.position[input.key] = input.value;
@@ -5520,11 +5689,44 @@ const handleOnInputs = (world, eid) => {
                     obj.scale[input.key] = input.value;
                     break;
             }
-            (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_4__.TransformUpdated, eid);
+            (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_6__.TransformUpdated, eid);
         }
     }
-    onInputQueue.length = 0;
+    onTrsInputQueue.length = 0;
 };
+const handleOnAnimationClipSelectInputs = (world, eid) => {
+    if ((0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_4__.hasComponents)(world, [_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_5__.EntityObject3D, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_3__.MixerAnimation], eid)) {
+        const mixer = _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_3__.MixerAnimationProxy.get(eid).mixer;
+        for (const input of onAnimationSelectInputQueue) {
+            if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_3__.ActiveAnimations, eid)) {
+                const actions = _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_3__.ActiveAnimationsProxy.get(eid).actions;
+                for (const action of _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_3__.ActiveAnimationsProxy.get(eid).actions) {
+                    action.stop();
+                    mixer.uncacheAction(action.getClip(), action.getRoot());
+                }
+                actions.length = 0;
+            }
+            if (input.index === -1) {
+                animationsTimeDiv.style.display = 'none';
+                continue;
+            }
+            animationsTimeDiv.style.display = 'block';
+            const clips = [];
+            const root = _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_5__.EntityObject3DProxy.get(eid).root;
+            root.traverse(obj => {
+                obj.animations.forEach(animation => clips.push(animation));
+            });
+            const clip = clips[input.index];
+            const action = mixer.clipAction(clip, root);
+            action.play();
+            (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_7__.addAnimation)(world, eid, action);
+            animationsTimeInput.value = '0';
+            animationsTimeInput.max = `${clip.duration}`;
+        }
+    }
+    onAnimationSelectInputQueue.length = 0;
+};
+//
 const div = document.createElement('div');
 div.style.width = 'calc(200px - 1.0em)';
 div.style.height = 'calc(100% - 1.0em)';
@@ -5545,10 +5747,15 @@ div.appendChild(eidDiv);
 const { root: positionRootDiv, spans: positionSpans, inputs: positionInputs } = createPositionElement();
 const { root: rotationRootDiv, spans: rotationSpans, inputs: rotationInputs } = createRotationElement();
 const { root: scaleRootDiv, spans: scaleSpans, inputs: scaleInputs } = createScaleElement();
+const { root: animationsRootDiv, 
+//clipsDiv: animationsClipsDiv,
+clipSelect: animationsClipSelect, timeDiv: animationsTimeDiv, timeSpan: animationsTimeSpan, timeInput: animationsTimeInput } = createAnimationsElement();
 div.appendChild(positionRootDiv);
 div.appendChild(rotationRootDiv);
 div.appendChild(scaleRootDiv);
-const sideBarQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_5__.SelectedEvent, _components_side_bar__WEBPACK_IMPORTED_MODULE_1__.SideBar]);
+div.appendChild(animationsRootDiv);
+//
+const sideBarQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_8__.SelectedEvent, _components_side_bar__WEBPACK_IMPORTED_MODULE_1__.SideBar]);
 const updateSidebarSystem = (world) => {
     let needsUpdate = false;
     if (!(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.entityExists)(world, selectedEid)) {
@@ -5556,20 +5763,20 @@ const updateSidebarSystem = (world) => {
         div.style.display = 'none';
     }
     sideBarQuery(world).forEach(eventEid => {
-        for (const event of _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_5__.SelectedEventProxy.get(eventEid).events) {
+        for (const event of _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_8__.SelectedEventProxy.get(eventEid).events) {
             switch (event.type) {
-                case _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_5__.SelectedType.Deselected:
+                case _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_8__.SelectedType.Deselected:
                     if (selectedEid === event.eid) {
                         selectedEid = _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_2__.NULL_EID;
                         div.style.display = 'none';
                     }
                     break;
-                case _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_5__.SelectedType.Selected:
+                case _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_8__.SelectedType.Selected:
                     selectedEid = event.eid;
                     needsUpdate = true;
                     div.style.display = 'block';
                     eidDiv.innerText = `eid: ${selectedEid}`;
-                    if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_3__.EntityObject3D, selectedEid)) {
+                    if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_5__.EntityObject3D, selectedEid)) {
                         positionRootDiv.style.display = 'block';
                         rotationRootDiv.style.display = 'block';
                         scaleRootDiv.style.display = 'block';
@@ -5583,13 +5790,22 @@ const updateSidebarSystem = (world) => {
             }
         }
     });
-    handleOnInputs(world, selectedEid);
-    if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_3__.EntityObject3D, selectedEid) &&
-        (needsUpdate || (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_4__.TransformUpdated, selectedEid))) {
-        const obj = _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_3__.EntityObject3DProxy.get(selectedEid).root;
-        updateVector3(positionSpans, positionInputs, obj.position);
-        updateVector3(rotationSpans, rotationInputs, obj.rotation);
-        updateVector3(scaleSpans, scaleInputs, obj.scale);
+    handleOnTrsInputs(world, selectedEid);
+    handleOnAnimationClipSelectInputs(world, selectedEid);
+    if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_5__.EntityObject3D, selectedEid)) {
+        if (needsUpdate) {
+            refreshAnimations(world, selectedEid);
+        }
+        if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_3__.ActiveAnimations, selectedEid) &&
+            _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_3__.ActiveAnimationsProxy.get(selectedEid).actions.length > 0) {
+            updateAnimationTime(world, selectedEid);
+        }
+        if (needsUpdate || (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_6__.TransformUpdated, selectedEid)) {
+            const obj = _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_5__.EntityObject3DProxy.get(selectedEid).root;
+            updateTrs(positionSpans, positionInputs, obj.position);
+            updateTrs(rotationSpans, rotationInputs, obj.rotation);
+            updateTrs(scaleSpans, scaleInputs, obj.scale);
+        }
     }
 };
 

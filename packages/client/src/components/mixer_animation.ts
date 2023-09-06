@@ -57,6 +57,15 @@ export class ActiveAnimationsProxy {
     this.map.get(this.eid).push(action);
   }
 
+  remove(action: AnimationAction): void {
+    const actions = this.actions;
+    const index = actions.indexOf(action);
+    if (index === -1) {
+      return;
+    }
+    actions.splice(index, 1);
+  }
+
   free(): void {
     this.map.delete(this.eid);
   }

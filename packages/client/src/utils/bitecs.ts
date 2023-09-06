@@ -1,4 +1,6 @@
 import {
+  Component,
+  hasComponent,
   getEntityComponents,
   IWorld,
   removeEntity
@@ -10,4 +12,13 @@ export const removeEntityIfNoComponent = (world: IWorld, eid: number): boolean =
     return true;
   }
   return false;
+};
+
+export const hasComponents = (world: IWorld, components: Component[], eid: number): boolean => {
+  for (const component of components) {
+    if (!hasComponent(world, component, eid)) {
+      return false;
+    }
+  }
+  return true;
 };

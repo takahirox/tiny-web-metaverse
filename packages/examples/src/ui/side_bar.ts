@@ -5,10 +5,16 @@ import {
   hasComponent,
   IWorld
 } from "bitecs";
-import { Euler, Vector3 } from "three";
+import { AnimationClip, Euler, Vector3 } from "three";
 import {
+  ActiveAnimations,
+  ActiveAnimationsProxy,
+  addAnimation,
   EntityObject3D,
   EntityObject3DProxy,
+  hasComponents,
+  MixerAnimation,
+  MixerAnimationProxy,
   NULL_EID,
   SelectedEvent,
   SelectedEventProxy,
@@ -26,31 +32,95 @@ enum PropertyType {
   Scale
 };
 
-type OnInput = {
+type OnTrsInput = {
   property: PropertyType;
   key: 'x' | 'y' | 'z';
   value: number;
 };
 
-const onInputQueue: OnInput[] = [];
+const onTrsInputQueue: OnTrsInput[] = [];
+
+type OnAnimationSelectInput = {
+  index: number
+};
+
+const onAnimationSelectInputQueue: OnAnimationSelectInput[] = [];
 
 /*
 <div>
-  <div>eid: ${eid}</div>
-  <div>position:
-    <div>x: <span>${position.x}</span> <input type="range" /></div>
-    <div>y: <span>${position.y}</span> <input type="range" /></div>
-    <div>z: <span>${position.z}</span> <input type="range" /></div>
+  <div id="eidDiv">eid: ${eid}</div>
+
+  <div id="positionDiv">
+    position:
+    <div id="positionXDiv">
+      x:
+      <span id="positionXSpan">${position.x}</span>
+      <input id="positionXInput" type="range" />
+    </div>
+    <div id="positionYDiv">
+      y:
+      <span id="positionYSpan">${position.y}</span>
+      <input id="positionYInput" type="range" />
+    </div>
+    <div id="positionZDiv">
+      z:
+      <span id="positionZSpan">${position.z}</span>
+      <input id="positionZInput" type="range" />
+    </div>
   </div>
-  <div>rotation:
-    <div>x: <span>${rotation.x}</span> <input type="range" /></div>
-    <div>y: <span>${rotation.y}</span> <input type="range" /></div>
-    <div>z: <span>${rotation.z}</span> <input type="range" /></div>
+  <div id="rotationDiv">
+    rotation:
+    <div id="rotationXDiv">
+      x:
+      <span id="rotationXSpan">${rotation.x}</span>
+      <input id="rotationXInput" type="range" />
+    </div>
+    <div>
+      y:
+      <span id="rotationYSpan">${rotation.y}</span>
+      <input id="rotationYInput" type="range" />
+    </div>
+    <div>
+      z:
+      <span id="rotationZSpan">${rotation.z}</span>
+      <input id="rotationZInput"type="range" />
+    </div>
   </div>
-  <div>scale:
-    <div>x: <span>${scale.x}</span> <input type="range" /></div>
-    <div>y: <span>${scale.y}</span> <input type="range" /></div>
-    <div>z: <span>${scale.z}</span> <input type="range" /></div>
+  <div id="scaleDiv">
+    scale:
+    <div id="scaleXDiv">
+      x:
+      <span id="scaleXSpan">${scale.x}</span>
+      <input id="scaleXInput" type="range" />
+    </div>
+    <div id="scaleYDiv">
+      y:
+      <span id="scaleYSpan">${scale.y}</span>
+      <input id="scaleYInput" type="range" />
+    </div>
+    <div id="scaleZDiv">
+      z:
+      <span id="scaleZSpan">${scale.z}</span>
+      <input id="scaleZInput" type="range" />
+    </div>
+  </div>
+
+  <div id="animationsDiv">
+    animations:
+    <div id="animationClipsDiv">
+      clips: <span></span>
+	  <select id="animationClipSelect">
+        <option value="-1">None</option>
+        <option value="0">animation_0</option>
+        ...
+      </select>
+    </div>
+    <div id="animationTimeDiv">
+      time:
+      <span id="animationTimeSpan">${action.time}</span>
+      <input id="animationTimeInput"
+        type="range" min="0" max="${clip.duration}" value="${action.time}" />
+    </div>
   </div>
 </div>
 */
@@ -142,7 +212,7 @@ const createPositionElement = (): {
       if (selectedEid === NULL_EID) {
         return;
       }
-      onInputQueue.push({
+      onTrsInputQueue.push({
         property: PropertyType.Position,
         key: key,
         value: Number(input.value)
@@ -170,7 +240,7 @@ const createRotationElement = (): {
       if (selectedEid === NULL_EID) {
         return;
       }
-      onInputQueue.push({
+      onTrsInputQueue.push({
         property: PropertyType.Rotation,
         key: key,
         value: Number(input.value)
@@ -199,7 +269,7 @@ const createScaleElement = (): {
       if (selectedEid === NULL_EID) {
         return;
       }
-      onInputQueue.push({
+      onTrsInputQueue.push({
         property: PropertyType.Scale,
         key: key,
         value: Number(input.value)
@@ -210,7 +280,63 @@ const createScaleElement = (): {
   return result;
 };
 
-const updateVector3 = (
+const createAnimationsElement = (): {
+  root: HTMLDivElement,
+  clipsDiv: HTMLDivElement,
+  clipSelect: HTMLSelectElement,
+  timeDiv: HTMLDivElement,
+  timeSpan: HTMLSpanElement,
+  timeInput: HTMLInputElement
+} => {
+  const root = document.createElement('div');
+  root.innerText = `animations: `;
+
+  const clipsDiv = document.createElement('div');
+  clipsDiv.style.display = 'flex';
+  clipsDiv.style.paddingLeft = '1em';
+  clipsDiv.innerText = `clips: `;
+  root.appendChild(clipsDiv);
+
+  const clipsSpan = document.createElement('span');
+  clipsSpan.style.width = '6em';
+  clipsDiv.appendChild(clipsSpan);
+
+  const clipSelect = document.createElement('select');
+  clipSelect.style.width = '100px';
+  clipSelect.addEventListener('change', () => {
+    if (selectedEid === NULL_EID) {
+      return;
+    }
+    onAnimationSelectInputQueue.push({
+      index: Number(clipSelect.options[clipSelect.selectedIndex].value)
+    });
+  });
+  clipsDiv.appendChild(clipSelect);
+
+  const timeDiv = document.createElement('div');
+  timeDiv.style.display = 'flex';
+  timeDiv.style.paddingLeft = '1em';
+  timeDiv.innerText = `time: `;
+  root.appendChild(timeDiv);
+
+  const timeSpan = document.createElement('span');
+  timeSpan.style.width = '6em';
+  timeDiv.appendChild(timeSpan);
+
+  const timeInput = document.createElement('input');
+  timeInput.type = 'range';
+  timeInput.style.width = '100px';
+  timeInput.min = '0';
+  timeInput.step = '0.01';
+  timeInput.value = '0';
+  timeDiv.appendChild(timeInput);
+
+  return { root, clipsDiv, clipSelect, timeDiv, timeSpan, timeInput };
+};
+
+//
+
+const updateTrs = (
   spans: Vector3Spans,
   inputs: Vector3Inputs,
   value: Vector3 | Euler
@@ -221,10 +347,72 @@ const updateVector3 = (
   }
 };
 
-const handleOnInputs = (world: IWorld, eid: number) => {
+const refreshAnimations = (world: IWorld, eid: number): void => {
+  while (animationsClipSelect.firstChild) {
+    animationsClipSelect.removeChild(animationsClipSelect.firstChild);
+  }
+
+  const activeClips = new WeakSet();
+
+  if (hasComponent(world, ActiveAnimations, eid)) {
+    for (const action of ActiveAnimationsProxy.get(eid).actions) {
+      activeClips.add(action.getClip());
+    }
+  }
+
+  const option = document.createElement('option');
+  option.innerText = 'None';
+  option.value = '-1';
+  animationsClipSelect.appendChild(option);
+
+  let suffix = 0;
+  let clipIndex = 0;
+  let foundActiveAnimation = false;
+
+  if (hasComponents(world, [EntityObject3D, MixerAnimation], eid)) {
+    const root = EntityObject3DProxy.get(eid).root;
+    root.traverse(obj => {
+      for (const clip of obj.animations) {
+        const option = document.createElement('option');
+        option.innerText = clip.name || `animation_${suffix++}`;
+        option.selected = activeClips.has(clip);
+        option.value = `${clipIndex++}`;
+        animationsClipSelect.appendChild(option);
+
+        if (option.selected) {
+          foundActiveAnimation = true;
+        }
+      }
+    });
+  }
+
+  animationsTimeDiv.style.display = foundActiveAnimation ? 'block' : 'none';
+
+  if (hasComponent(world, ActiveAnimations, eid)) {
+    for (const action of ActiveAnimationsProxy.get(eid).actions) {
+      animationsTimeInput.max = `${action.getClip().duration}`;
+    }
+  }
+
+  animationsTimeInput.value = '0';
+  animationsTimeSpan.innerText = (0.0).toFixed(2);
+};
+
+const updateAnimationTime = (world: IWorld, eid: number): void => {
+  if (hasComponent(world, ActiveAnimations, eid)) {
+    for (const action of ActiveAnimationsProxy.get(eid).actions) {
+      animationsTimeSpan.innerText = `${action.time.toFixed(2)}`;
+      animationsTimeInput.value = `${action.time}`;
+    }
+  }
+};
+
+//
+
+const handleOnTrsInputs = (world: IWorld, eid: number) => {
   if (hasComponent(world, EntityObject3D, eid)) {
     const obj = EntityObject3DProxy.get(eid).root;
-    for (const input of onInputQueue) {
+    for (const input of onTrsInputQueue) {
       switch (input.property) {
         case PropertyType.Position:
           obj.position[input.key] = input.value;
@@ -239,8 +427,46 @@ const handleOnInputs = (world: IWorld, eid: number) => {
       addComponent(world, TransformUpdated, eid);
     }
   }
-  onInputQueue.length = 0;
+  onTrsInputQueue.length = 0;
 };
+
+const handleOnAnimationClipSelectInputs = (world: IWorld, eid: number) => {
+  if (hasComponents(world, [EntityObject3D, MixerAnimation], eid)) {
+    const mixer = MixerAnimationProxy.get(eid).mixer;
+    for (const input of onAnimationSelectInputQueue) {
+      if (hasComponent(world, ActiveAnimations, eid)) {
+        const actions = ActiveAnimationsProxy.get(eid).actions;
+        for (const action of ActiveAnimationsProxy.get(eid).actions) {
+          action.stop();
+          mixer.uncacheAction(action.getClip(), action.getRoot());
+        }
+        actions.length = 0;
+      }
+
+      if (input.index === -1) {
+        animationsTimeDiv.style.display = 'none';
+        continue;
+      }
+
+      animationsTimeDiv.style.display = 'block';
+
+      const clips: AnimationClip[] = [];
+      const root = EntityObject3DProxy.get(eid).root;
+      root.traverse(obj => {
+        obj.animations.forEach(animation => clips.push(animation));
+      });
+      const clip = clips[input.index];
+      const action = mixer.clipAction(clip, root);
+      action.play();
+      addAnimation(world, eid, action);
+      animationsTimeInput.value = '0';
+      animationsTimeInput.max = `${clip.duration}`;
+    }
+  }
+  onAnimationSelectInputQueue.length = 0;
+};
+
+//
 
 const div = document.createElement('div');
 div.style.width = 'calc(200px - 1.0em)';
@@ -279,9 +505,21 @@ const {
   inputs: scaleInputs
 } = createScaleElement();
 
+const {
+  root: animationsRootDiv,
+  //clipsDiv: animationsClipsDiv,
+  clipSelect: animationsClipSelect,
+  timeDiv: animationsTimeDiv,
+  timeSpan: animationsTimeSpan,
+  timeInput: animationsTimeInput
+} = createAnimationsElement();
+
 div.appendChild(positionRootDiv);
 div.appendChild(rotationRootDiv);
 div.appendChild(scaleRootDiv);
+div.appendChild(animationsRootDiv);
+
+//
 
 const sideBarQuery = defineQuery([SelectedEvent, SideBar]);
 
@@ -324,13 +562,24 @@ export const updateSidebarSystem = (world: IWorld): void => {
     }
   });
 
-  handleOnInputs(world, selectedEid);
+  handleOnTrsInputs(world, selectedEid);
+  handleOnAnimationClipSelectInputs(world, selectedEid);
 
-  if (hasComponent(world, EntityObject3D, selectedEid) &&
-    (needsUpdate || hasComponent(world, TransformUpdated, selectedEid))) {
-    const obj = EntityObject3DProxy.get(selectedEid).root;
-    updateVector3(positionSpans, positionInputs, obj.position);
-    updateVector3(rotationSpans, rotationInputs, obj.rotation);
-    updateVector3(scaleSpans, scaleInputs, obj.scale);
+  if (hasComponent(world, EntityObject3D, selectedEid)) {
+    if (needsUpdate) {
+      refreshAnimations(world, selectedEid);
+    }
+
+    if (hasComponent(world, ActiveAnimations, selectedEid) &&
+      ActiveAnimationsProxy.get(selectedEid).actions.length > 0) {
+      updateAnimationTime(world, selectedEid);
+    }
+
+    if (needsUpdate || hasComponent(world, TransformUpdated, selectedEid)) {
+      const obj = EntityObject3DProxy.get(selectedEid).root;
+      updateTrs(positionSpans, positionInputs, obj.position);
+      updateTrs(rotationSpans, rotationInputs, obj.rotation);
+      updateTrs(scaleSpans, scaleInputs, obj.scale);
+    }
   }
 };
