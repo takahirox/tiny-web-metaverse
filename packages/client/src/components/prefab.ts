@@ -30,6 +30,10 @@ export class PrefabsProxy {
     this.map.get(this.eid)!.set(key, prefab);
   }
 
+  deregister(key: string): void {
+    this.map.get(this.eid)!.delete(key);
+  }
+
   get(key: string): Prefab {
     return this.map.get(this.eid)!.get(key)!;
   }

@@ -1,4 +1,4 @@
-import { Component, IWorld } from "bitecs";
+import { IWorld } from "bitecs";
 
 export const NULL_EID = 0;
 
@@ -26,21 +26,14 @@ export type Serializer = (world: IWorld, eid: number) => any;
 export type Deserializer = (world: IWorld, eid: number, data: any) => void;
 export type NetworkDeserializer = (world: IWorld, eid: number, data: any) => void;
 export type DiffChecker = (world: IWorld, eid: number, cache: any) => boolean;
-export type Serializers = {
+export type SerializerFunctions = {
   deserializer: Deserializer,
   diffChecker: DiffChecker,
   networkDeserializer: NetworkDeserializer,
   serializer: Serializer
 };
-export type SerializersMap = Map<string, Serializers>;
-export type SerializerKeyMap = Map<Component, string>;
 
-// TODO: Move to Components?
-export type SystemParams = {
-  serializerKeys: SerializerKeyMap,
-  serializers: SerializersMap
-};
-export type System = (world: IWorld, params: SystemParams) => void;
+export type System = (world: IWorld) => void;
 
 // TODO: Configurable
 export const NETWORK_INTERVAL = 1.0 / 60 * 5;

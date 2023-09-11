@@ -1,7 +1,6 @@
 import {
   addComponent,
   addEntity,
-  Component,
   createWorld,
   IWorld
 } from "bitecs";
@@ -16,14 +15,7 @@ import {
 } from "three";
 import { StateAdapter } from "@tiny-web-metaverse/state_client";
 import { StreamAdapter } from "@tiny-web-metaverse/stream_client";
-import {
-  SerializerKeyMap,
-  SerializersMap,
-  Serializers,
-  System,
-  SystemParams,
-  SystemOrder
-} from "./common";
+import { System, SystemOrder } from "./common";
 import {
   AvatarMouseControls,
   AvatarMouseControlsProxy
@@ -68,6 +60,12 @@ import { Renderer, RendererProxy } from "./components/renderer";
 import { RoomId, RoomIdProxy } from "./components/room_id";
 import { UserId, UserIdProxy } from "./components/user_id";
 import { InScene, SceneProxy, SceneComponent } from "./components/scene";
+import {
+  ComponentKeys,
+  ComponentKeysProxy,
+  Serializers,
+  SerializersProxy
+} from "./components/serializer";
 import {
   ConnectedStreamEventListener,
   ExitedPeerStreamEventListener,
@@ -146,6 +144,7 @@ import {
   windowResizeEventClearSystem
 } from "./systems/window_resize_event";
 import { addObject3D } from "./utils/entity_object3d";
+import { registerSerializers } from "./utils/serializer";
 
 type RegisteredSystem = {
   system: System;
@@ -154,9 +153,6 @@ type RegisteredSystem = {
 
 export class App {
   private systems: RegisteredSystem[];
-  private systemParams: SystemParams;
-  private serializers: SerializersMap;
-  private serializerKeys: SerializerKeyMap;
   private world: IWorld;
   private networkAdapter: StateAdapter;
   private streamAdapter: StreamAdapter;
@@ -176,12 +172,6 @@ export class App {
     this.streamAdapter = new StreamAdapter();
 
     this.systems = [];
-    this.serializers = new Map();
-    this.serializerKeys = new Map();
-    this.systemParams = {
-      serializerKeys: this.serializerKeys,
-      serializers: this.serializers
-    };
     this.world = createWorld();
 
     this.init(canvas, roomId, userId);
@@ -255,10 +245,6 @@ export class App {
     this.registerSystem(clearRaycastedSystem, SystemOrder.TearDown);
     this.registerSystem(clearTransformUpdatedSystem, SystemOrder.TearDown);
 
-    this.registerSerializers('position', NetworkedPosition, positionSerializers);
-    this.registerSerializers('quaternion', NetworkedQuaternion, quaternionSerializers);
-    this.registerSerializers('scale', NetworkedScale, scaleSerializers);
-
     // Entity 0 for null entity
     addEntity(this.world);
 
@@ -269,6 +255,14 @@ export class App {
     const prefabsEid = addEntity(this.world);
     addComponent(this.world, Prefabs, prefabsEid);
     PrefabsProxy.get(prefabsEid).allocate();
+
+    const serializersEid = addEntity(this.world);
+    addComponent(this.world, Serializers, serializersEid);
+    SerializersProxy.get(serializersEid).allocate();
+
+    const componentKeysEid = addEntity(this.world);
+    addComponent(this.world, ComponentKeys, componentKeysEid);
+    ComponentKeysProxy.get(componentKeysEid).allocate();
 
     const roomIdEid = addEntity(this.world);
     addComponent(this.world, RoomId, roomIdEid);
@@ -386,6 +380,12 @@ export class App {
     addComponent(this.world, SceneCamera, cameraEid);
     addComponent(this.world, WindowSize, cameraEid);
     addComponent(this.world, WindowResizeEventListener, cameraEid);
+
+    // Serializers
+
+    registerSerializers(this.world, 'position', NetworkedPosition, positionSerializers);
+    registerSerializers(this.world, 'quaternion', NetworkedQuaternion, quaternionSerializers);
+    registerSerializers(this.world, 'scale', NetworkedScale, scaleSerializers);
   }
 
   registerSystem(
@@ -431,19 +431,9 @@ export class App {
     throw new Error(`${system.name} system is not registered.`);
   }
 
-  registerSerializers(key: string, component: Component | null, serializers: Serializers): void {
-    if (this.serializers.has(key)) {
-      throw new Error(`serializer key ${key} is already used.`);
-    }
-    if (component !== null) {
-      this.serializerKeys.set(component, key);
-    }
-    this.serializers.set(key, serializers);
-  }
-
   tick() {
     for (const system of this.systems) {
-      system.system(this.world, this.systemParams);
+      system.system(this.world);
     }
   }
 

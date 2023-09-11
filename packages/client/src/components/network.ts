@@ -306,3 +306,4 @@ export const NetworkEventSender = defineComponent({
 export const NetworkedPosition = defineComponent();
 export const NetworkedQuaternion = defineComponent();
 export const NetworkedScale = defineComponent();
+export const NetworkedMixerAnimation = defineComponent();

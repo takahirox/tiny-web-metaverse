@@ -7,8 +7,7 @@ import {
 } from "bitecs";
 import {
   INITIAL_VERSION,
-  NETWORK_INTERVAL,
-  SystemParams
+  NETWORK_INTERVAL
 } from "../common";
 import {
   Networked,
@@ -23,6 +22,11 @@ import {
   StateClientProxy
 } from "../components/network";
 import { Time, TimeProxy } from "../components/time";
+import {
+  hasComponentKey,
+  getComponentKey,
+  getSerializers
+} from "../utils/serializer";
 
 const senderQuery = defineQuery([NetworkEventSender]);
 const timeQuery = defineQuery([Time]);
@@ -31,7 +35,7 @@ const networkedEnterQuery = enterQuery(networkedQuery);
 const adapterQuery = defineQuery([StateClient]);
 const managerQuery = defineQuery([NetworkedEntityManager]);
 
-export const networkSendSystem = (world: IWorld, {serializerKeys, serializers}: SystemParams) => {
+export const networkSendSystem = (world: IWorld) => {
   senderQuery(world).forEach(senderEid => {
     const lastSendTime = NetworkEventSender.lastSendTime[senderEid];
     timeQuery(world).forEach(timeEid => {
@@ -68,9 +72,9 @@ export const networkSendSystem = (world: IWorld, {serializerKeys, serializers}: 
 
             const components = [];
             for (const component of getEntityComponents(world, networkedEid)) {
-              if (serializerKeys.has(component)) {
-                const name = serializerKeys.get(component)!;
-                const data = serializers.get(name).serializer(world, networkedEid);
+              if (hasComponentKey(world, component)) {
+                const name = getComponentKey(world, component);
+                const data = getSerializers(world, name).serializer(world, networkedEid);
                 networkedProxy.initNetworkedComponent(
                   name,
 				  data,
@@ -116,12 +120,12 @@ export const networkSendSystem = (world: IWorld, {serializerKeys, serializers}: 
           const components = [];
           // TODO: More efficient lookup?
           for (const component of getEntityComponents(world, networkedEid)) {
-            if (serializerKeys.has(component)) {
-              const name = serializerKeys.get(component)!;
+            if (hasComponentKey(world, component)) {
+              const name = getComponentKey(world, component);
               if (networkedProxy.hasNetworkedComponent(name)) {
                 const cache = networkedProxy.getNetworkedComponent(name).cache;
-                if (serializers.get(name).diffChecker(world, networkedEid, cache)) {
-                  const data = serializers.get(name).serializer(world, networkedEid);
+                if (getSerializers(world, name).diffChecker(world, networkedEid, cache)) {
+                  const data = getSerializers(world, name).serializer(world, networkedEid);
                   components.push({
                     name,
                     data: JSON.stringify(data)

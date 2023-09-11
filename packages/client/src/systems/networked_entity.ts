@@ -5,7 +5,6 @@ import {
   IWorld,
   removeEntity
 } from "bitecs";
-import { SystemParams } from "../common";
 import {
   EntityObject3D,
   EntityObject3DProxy
@@ -26,6 +25,7 @@ import {
 } from "../components/network";
 import { InScene } from "../components/scene";
 import { getPrefab } from "../utils/prefab";
+import { hasSerializers, getSerializers } from "../utils/serializer";
 
 const adapterQuery = defineQuery([StateClient]);
 const managerQuery = defineQuery([NetworkedEntityManager, NetworkEvent]);
@@ -47,7 +47,7 @@ const removeComponentsAndEntity = (world: IWorld, eid: number): void => {
   removeEntity(world, eid);
 };
 
-export const networkedEntitySystem = (world: IWorld, {serializers}: SystemParams) => {
+export const networkedEntitySystem = (world: IWorld) => {
   adapterQuery(world).forEach(adapterEid => {
     const userId = StateClientProxy.get(adapterEid).adapter.userId;
     managerQuery(world).forEach(managerEid => {
@@ -78,10 +78,9 @@ export const networkedEntitySystem = (world: IWorld, {serializers}: SystemParams
               e.data.prefab_params
             );
             for (const c of e.data.components) {
-              if (serializers.has(c.component_name)) {
+              if (hasSerializers(world, c.component_name)) {
                 const data = JSON.parse(c.data);
-                serializers
-                  .get(c.component_name)
+                getSerializers(world, c.component_name)
                   // TODO: Write comment, why not networkedDeserializer but deserializer
                   .deserializer(world, eid, data);
                 networkedProxy.initNetworkedComponent(
@@ -111,14 +110,13 @@ export const networkedEntitySystem = (world: IWorld, {serializers}: SystemParams
           const eid = managerProxy.getEid(e.data.network_id);
           // TODO: Duplicated code with the above
           for (const c of e.data.components) {
-            if (serializers.has(c.component_name)) {
+            if (hasSerializers(world, c.component_name)) {
               const networkedProxy = NetworkedProxy.get(eid);
               const networkedComponent = networkedProxy.getNetworkedComponent(c.component_name);
               if (c.version > networkedComponent.version) {
                 const data = JSON.parse(c.data);
                 if (c.owner !== userId) {
-                  serializers
-                    .get(c.component_name)
+                  getSerializers(world, c.component_name)
                     .networkDeserializer(world, eid, data);
                 }
                 networkedProxy.updateNetworkedComponent(
