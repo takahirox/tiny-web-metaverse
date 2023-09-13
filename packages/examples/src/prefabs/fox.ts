@@ -14,6 +14,7 @@ import {
   MixerAnimation,
   MixerAnimationProxy,
   MouseButtonEventListener,
+  NetworkedMixerAnimation,
   NetworkedPosition,
   NetworkedQuaternion,
   NetworkedScale,
@@ -28,6 +29,7 @@ export const FoxPrefab = (world: IWorld): number => {
   addComponent(world, NetworkedPosition, eid);
   addComponent(world, NetworkedQuaternion, eid);
   addComponent(world, NetworkedScale, eid);
+  addComponent(world, NetworkedMixerAnimation, eid);
   addComponent(world, Raycastable, eid);
   addComponent(world, MouseButtonEventListener, eid);
   addComponent(world, Grabbable, eid);

@@ -79,6 +79,7 @@ export const networkSendSystem = (world: IWorld) => {
                   name,
 				  data,
                   myUserId,
+                  timeProxy.elapsed,
                   INITIAL_VERSION
                 );
                 components.push({
@@ -123,8 +124,13 @@ export const networkSendSystem = (world: IWorld) => {
             if (hasComponentKey(world, component)) {
               const name = getComponentKey(world, component);
               if (networkedProxy.hasNetworkedComponent(name)) {
-                const cache = networkedProxy.getNetworkedComponent(name).cache;
-                if (getSerializers(world, name).diffChecker(world, networkedEid, cache)) {
+                const networkedComponent = networkedProxy.getNetworkedComponent(name)
+                if (getSerializers(world, name).diffChecker(
+                  world,
+                  networkedEid,
+                  networkedComponent.cache,
+                  networkedComponent.updatedAt
+                )) {
                   const data = getSerializers(world, name).serializer(world, networkedEid);
                   components.push({
                     name,

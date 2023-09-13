@@ -74,3 +74,5 @@ export class ActiveAnimationsProxy {
     return this.map.get(this.eid)!;
   }
 }
+
+export const ActiveAnimationsUpdated = defineComponent();

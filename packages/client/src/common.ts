@@ -25,8 +25,9 @@ export type Prefab = (world: IWorld, params: object) => number;
 export type Serializer = (world: IWorld, eid: number) => any;
 export type Deserializer = (world: IWorld, eid: number, data: any) => void;
 export type NetworkDeserializer = (world: IWorld, eid: number, data: any) => void;
-export type DiffChecker = (world: IWorld, eid: number, cache: any) => boolean;
+export type DiffChecker = (world: IWorld, eid: number, cache: any, updatedAt: number) => boolean;
 export type SerializerFunctions = {
+  // TODO: Rename? eg: initialDeserializer
   deserializer: Deserializer,
   diffChecker: DiffChecker,
   networkDeserializer: NetworkDeserializer,
@@ -39,4 +40,10 @@ export type System = (world: IWorld) => void;
 export const NETWORK_INTERVAL = 1.0 / 60 * 5;
 
 // TODO: More accurate number
+// TODO: Configurable?
 export const F32_EPSILON = 0.00001;
+
+// In the second.
+// TODO: This is very arbitrary number. Think of better number.
+// TODO: Configurable?
+export const TIME_EPSILON = 2.0;

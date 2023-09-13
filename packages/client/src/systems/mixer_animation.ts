@@ -1,11 +1,13 @@
 import {
   defineQuery,
   exitQuery,
-  IWorld
+  IWorld,
+  removeComponent
 } from "bitecs";
 import {
   ActiveAnimations,
   ActiveAnimationsProxy,
+  ActiveAnimationsUpdated,
   MixerAnimation,
   MixerAnimationProxy
 } from "../components/mixer_animation";
@@ -18,6 +20,7 @@ const animationQuery = defineQuery([MixerAnimation]);
 const exitAnimationQuery = exitQuery(animationQuery);
 const timeQuery = defineQuery([Time]);
 const animationsExitQuery = exitQuery(defineQuery([ActiveAnimations]));
+const updatedQuery = defineQuery([ActiveAnimationsUpdated]);
 
 export const mixerAnimationSystem = (world: IWorld): void => {
   animationsExitQuery(world).forEach(eid => {
@@ -48,4 +51,10 @@ export const mixerAnimationSystem = (world: IWorld): void => {
     const mixer = MixerAnimationProxy.get(eid).mixer;
     mixer.update(delta);
   });
+};
+
+export const clearActiveAnimationsUpdatedSystem = (world: IWorld) => {
+  updatedQuery(world).forEach(eid => {
+    removeComponent(world, ActiveAnimationsUpdated, eid);
+  });	  
 };

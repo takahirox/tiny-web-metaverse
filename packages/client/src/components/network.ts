@@ -26,6 +26,7 @@ type CacheData = any;
 type NetworkedComponent = {
   cache: CacheData;
   owner: string;
+  updatedAt: number;
   version: number;
 };
 
@@ -87,11 +88,13 @@ export class NetworkedProxy {
     key: string,
     cache: CacheData,
     owner: string,
+    updatedAt: number,
     version: number
   ): void {
     this.map.get(this.eid)!.components.set(key, {
       cache,
       owner,
+      updatedAt,
       version
     });
   }
@@ -100,11 +103,13 @@ export class NetworkedProxy {
     key: string,
     cache: CacheData,
     owner: string,
+    updatedAt: number,
     version: number
   ): void {
     const component = this.map.get(this.eid)!.components.get(key);
     component.cache = cache;
     component.owner = owner;
+    component.updatedAt = updatedAt;
     component.version = version;
   }
 

@@ -45,6 +45,7 @@ import {
   EntityNetworkEventListener,
   NetworkedEntityManager,
   NetworkedEntityManagerProxy,
+  NetworkedMixerAnimation,
   NetworkedPosition,
   NetworkedQuaternion,
   NetworkedScale,
@@ -91,6 +92,7 @@ import {
   quaternionSerializers,
   scaleSerializers
 } from "./serializations/transform";
+import { mixerAnimationSerializers } from "./serializations/mixer_animation";
 import { avatarKeyControlsSystem } from "./systems/avatar_key_controls";
 import { avatarMouseControlsSystem } from "./systems/avatar_mouse_controls";
 import { canvasSystem } from "./systems/canvas";
@@ -108,7 +110,10 @@ import {
 import { linearMoveSystem } from "./systems/linear_move";
 import { linearTransformSystem } from "./systems/linear_transform";
 import { micRequestSystem, micEventClearSystem } from "./systems/media_device";
-import { mixerAnimationSystem } from "./systems/mixer_animation";
+import {
+  clearActiveAnimationsUpdatedSystem,
+  mixerAnimationSystem
+} from "./systems/mixer_animation";
 import {
   mouseButtonEventClearSystem,
   mouseButtonEventHandleSystem
@@ -244,6 +249,7 @@ export class App {
     this.registerSystem(streamEventClearSystem, SystemOrder.TearDown);
     this.registerSystem(clearRaycastedSystem, SystemOrder.TearDown);
     this.registerSystem(clearTransformUpdatedSystem, SystemOrder.TearDown);
+    this.registerSystem(clearActiveAnimationsUpdatedSystem, SystemOrder.TearDown);
 
     // Entity 0 for null entity
     addEntity(this.world);
@@ -386,6 +392,7 @@ export class App {
     registerSerializers(this.world, 'position', NetworkedPosition, positionSerializers);
     registerSerializers(this.world, 'quaternion', NetworkedQuaternion, quaternionSerializers);
     registerSerializers(this.world, 'scale', NetworkedScale, scaleSerializers);
+    registerSerializers(this.world, 'mixer_animation', NetworkedMixerAnimation, mixerAnimationSerializers);
   }
 
   registerSystem(

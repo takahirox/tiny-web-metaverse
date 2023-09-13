@@ -80,6 +80,8 @@ defmodule ServerWeb.RoomChannel do
       data: socket.assigns.user_id
     })
 
+    current_timestamp = NaiveDateTime.utc_now()
+
     # Sends existing networked entities' info to the new user's client.
     # TODO: Using join would be more efficient?
     import Ecto.Query, only: [from: 2]
@@ -104,6 +106,7 @@ defmodule ServerWeb.RoomChannel do
               :creator,
               :data,
               :owner,
+              :updated_at,
               :version
             ]),
             where: c.room_id == ^socket.assigns.room_id and
@@ -115,6 +118,7 @@ defmodule ServerWeb.RoomChannel do
                    component_name: res[:component_name],
                    creator: res[:creator],
                    data: res[:data],
+                   elapsed_time: NaiveDateTime.diff(current_timestamp, res[:updated_at], :second),
                    network_id: network_id,
                    owner: res[:owner],
                    version: res[:version]
@@ -184,6 +188,7 @@ defmodule ServerWeb.RoomChannel do
                       component_name: res.component_name,
                       creator: res.creator,
                       data: res.data,
+                      elapsed_time: 0.0,
                       network_id: res.network_id,
                       owner: res.owner,
                       version: res.version
@@ -222,7 +227,6 @@ defmodule ServerWeb.RoomChannel do
     components = components
       |> Enum.map(fn c ->
            # Updates component info
-           # TODO: Update updated_at?
            import Ecto.Query, only: [from: 2]
            from(
              c in Server.Component,
@@ -232,7 +236,10 @@ defmodule ServerWeb.RoomChannel do
              update: [
                set: [
                  data: ^c["data"],
-                 owner: ^socket.assigns.user_id
+                 owner: ^socket.assigns.user_id,
+                 # TODO: Timestamps should match @timestamps_opts
+                 #       if it's configurable
+                 updated_at: ^NaiveDateTime.utc_now()
                ],
                inc: [version: 1]
              ]
@@ -260,6 +267,7 @@ defmodule ServerWeb.RoomChannel do
              component_name: component[:component_name],
              creator: component[:creator],
              data: component[:data],
+             elapsed_time: 0.0,
              network_id: component[:network_id],
              owner: component[:owner],
              version: component[:version]

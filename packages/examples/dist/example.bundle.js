@@ -84,6 +84,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_time__WEBPACK_IMPORTED_MODULE_45__ = __webpack_require__(/*! ./components/time */ "../client/src/components/time.ts");
 /* harmony import */ var _components_window_resize__WEBPACK_IMPORTED_MODULE_53__ = __webpack_require__(/*! ./components/window_resize */ "../client/src/components/window_resize.ts");
 /* harmony import */ var _serializations_transform__WEBPACK_IMPORTED_MODULE_63__ = __webpack_require__(/*! ./serializations/transform */ "../client/src/serializations/transform.ts");
+/* harmony import */ var _serializations_mixer_animation__WEBPACK_IMPORTED_MODULE_64__ = __webpack_require__(/*! ./serializations/mixer_animation */ "../client/src/serializations/mixer_animation.ts");
 /* harmony import */ var _systems_avatar_key_controls__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! ./systems/avatar_key_controls */ "../client/src/systems/avatar_key_controls.ts");
 /* harmony import */ var _systems_avatar_mouse_controls__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! ./systems/avatar_mouse_controls */ "../client/src/systems/avatar_mouse_controls.ts");
 /* harmony import */ var _systems_canvas__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./systems/canvas */ "../client/src/systems/canvas.ts");
@@ -126,6 +127,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _systems_window_resize_event__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./systems/window_resize_event */ "../client/src/systems/window_resize_event.ts");
 /* harmony import */ var _utils_entity_object3d__WEBPACK_IMPORTED_MODULE_61__ = __webpack_require__(/*! ./utils/entity_object3d */ "../client/src/utils/entity_object3d.ts");
 /* harmony import */ var _utils_serializer__WEBPACK_IMPORTED_MODULE_62__ = __webpack_require__(/*! ./utils/serializer */ "../client/src/utils/serializer.ts");
+
 
 
 
@@ -255,6 +257,7 @@ class App {
         this.registerSystem(_systems_stream_event__WEBPACK_IMPORTED_MODULE_12__.streamEventClearSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.TearDown);
         this.registerSystem(_systems_raycast__WEBPACK_IMPORTED_MODULE_43__.clearRaycastedSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.TearDown);
         this.registerSystem(_systems_transform__WEBPACK_IMPORTED_MODULE_44__.clearTransformUpdatedSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.TearDown);
+        this.registerSystem(_systems_mixer_animation__WEBPACK_IMPORTED_MODULE_29__.clearActiveAnimationsUpdatedSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.TearDown);
         // Entity 0 for null entity
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
         const timeEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
@@ -359,6 +362,7 @@ class App {
         (0,_utils_serializer__WEBPACK_IMPORTED_MODULE_62__.registerSerializers)(this.world, 'position', _components_network__WEBPACK_IMPORTED_MODULE_54__.NetworkedPosition, _serializations_transform__WEBPACK_IMPORTED_MODULE_63__.positionSerializers);
         (0,_utils_serializer__WEBPACK_IMPORTED_MODULE_62__.registerSerializers)(this.world, 'quaternion', _components_network__WEBPACK_IMPORTED_MODULE_54__.NetworkedQuaternion, _serializations_transform__WEBPACK_IMPORTED_MODULE_63__.quaternionSerializers);
         (0,_utils_serializer__WEBPACK_IMPORTED_MODULE_62__.registerSerializers)(this.world, 'scale', _components_network__WEBPACK_IMPORTED_MODULE_54__.NetworkedScale, _serializations_transform__WEBPACK_IMPORTED_MODULE_63__.scaleSerializers);
+        (0,_utils_serializer__WEBPACK_IMPORTED_MODULE_62__.registerSerializers)(this.world, 'mixer_animation', _components_network__WEBPACK_IMPORTED_MODULE_54__.NetworkedMixerAnimation, _serializations_mixer_animation__WEBPACK_IMPORTED_MODULE_64__.mixerAnimationSerializers);
     }
     registerSystem(system, orderPriority = _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.BeforeMatricesUpdate) {
         // TODO: Optimize
@@ -430,7 +434,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   INITIAL_VERSION: () => (/* binding */ INITIAL_VERSION),
 /* harmony export */   NETWORK_INTERVAL: () => (/* binding */ NETWORK_INTERVAL),
 /* harmony export */   NULL_EID: () => (/* binding */ NULL_EID),
-/* harmony export */   SystemOrder: () => (/* binding */ SystemOrder)
+/* harmony export */   SystemOrder: () => (/* binding */ SystemOrder),
+/* harmony export */   TIME_EPSILON: () => (/* binding */ TIME_EPSILON)
 /* harmony export */ });
 const NULL_EID = 0;
 //
@@ -450,7 +455,12 @@ const SystemOrder = Object.freeze({
 // TODO: Configurable
 const NETWORK_INTERVAL = 1.0 / 60 * 5;
 // TODO: More accurate number
+// TODO: Configurable?
 const F32_EPSILON = 0.00001;
+// In the second.
+// TODO: This is very arbitrary number. Think of better number.
+// TODO: Configurable?
+const TIME_EPSILON = 2.0;
 
 
 /***/ }),
@@ -954,6 +964,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   ActiveAnimations: () => (/* binding */ ActiveAnimations),
 /* harmony export */   ActiveAnimationsProxy: () => (/* binding */ ActiveAnimationsProxy),
+/* harmony export */   ActiveAnimationsUpdated: () => (/* binding */ ActiveAnimationsUpdated),
 /* harmony export */   MixerAnimation: () => (/* binding */ MixerAnimation),
 /* harmony export */   MixerAnimationProxy: () => (/* binding */ MixerAnimationProxy)
 /* harmony export */ });
@@ -1014,6 +1025,7 @@ class ActiveAnimationsProxy {
     }
 }
 ActiveAnimationsProxy.instance = new ActiveAnimationsProxy();
+const ActiveAnimationsUpdated = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 
 
 /***/ }),
@@ -1345,17 +1357,19 @@ class NetworkedProxy {
     hasNetworkedComponent(key) {
         return this.map.get(this.eid).components.has(key);
     }
-    initNetworkedComponent(key, cache, owner, version) {
+    initNetworkedComponent(key, cache, owner, updatedAt, version) {
         this.map.get(this.eid).components.set(key, {
             cache,
             owner,
+            updatedAt,
             version
         });
     }
-    updateNetworkedComponent(key, cache, owner, version) {
+    updateNetworkedComponent(key, cache, owner, updatedAt, version) {
         const component = this.map.get(this.eid).components.get(key);
         component.cache = cache;
         component.owner = owner;
+        component.updatedAt = updatedAt;
         component.version = version;
     }
     getNetworkedComponent(key) {
@@ -2188,6 +2202,142 @@ class WindowResizeEventHandlerProxy {
     }
 }
 WindowResizeEventHandlerProxy.instance = new WindowResizeEventHandlerProxy();
+
+
+/***/ }),
+
+/***/ "../client/src/serializations/mixer_animation.ts":
+/*!*******************************************************!*\
+  !*** ../client/src/serializations/mixer_animation.ts ***!
+  \*******************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   mixerAnimationSerializers: () => (/* binding */ mixerAnimationSerializers)
+/* harmony export */ });
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../common */ "../client/src/common.ts");
+/* harmony import */ var _components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/entity_object3d */ "../client/src/components/entity_object3d.ts");
+/* harmony import */ var _components_mixer_animation__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/mixer_animation */ "../client/src/components/mixer_animation.ts");
+/* harmony import */ var _components_time__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/time */ "../client/src/components/time.ts");
+/* harmony import */ var _utils_bitecs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/bitecs */ "../client/src/utils/bitecs.ts");
+/* harmony import */ var _utils_mixer_animation__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils/mixer_animation */ "../client/src/utils/mixer_animation.ts");
+
+
+
+
+
+
+
+const timeQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_time__WEBPACK_IMPORTED_MODULE_1__.Time]);
+// TODO: Validation
+// TODO: Optimize
+// TODO: More robust. Is the order guaranteed across the clients(platforms)?
+const collectClips = (root) => {
+    const clips = [];
+    root.traverse(obj => {
+        for (const animation of obj.animations) {
+            clips.push(animation);
+        }
+    });
+    return clips;
+};
+const serialize = (world, eid) => {
+    if (!(0,_utils_bitecs__WEBPACK_IMPORTED_MODULE_2__.hasComponents)(world, [_components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__.EntityObject3D, _components_mixer_animation__WEBPACK_IMPORTED_MODULE_4__.MixerAnimation], eid)) {
+        throw new Error('serialize MixerAnimation requires EntityObject3D and MixerAnimation component.');
+    }
+    const data = [];
+    if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_mixer_animation__WEBPACK_IMPORTED_MODULE_4__.ActiveAnimations, eid)) {
+        const root = _components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__.EntityObject3DProxy.get(eid).root;
+        const clips = collectClips(root);
+        for (const action of _components_mixer_animation__WEBPACK_IMPORTED_MODULE_4__.ActiveAnimationsProxy.get(eid).actions) {
+            const index = clips.indexOf(action.getClip());
+            if (index >= 0) {
+                data.push({ index, paused: action.paused, time: action.time });
+            }
+        }
+    }
+    return data;
+};
+const deserialize = (world, eid, data) => {
+    if (!(0,_utils_bitecs__WEBPACK_IMPORTED_MODULE_2__.hasComponents)(world, [_components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__.EntityObject3D, _components_mixer_animation__WEBPACK_IMPORTED_MODULE_4__.MixerAnimation], eid)) {
+        throw new Error('deserialize MixerAnimation requires EntityObject3D and MixerAnimation component.');
+    }
+    const mixer = _components_mixer_animation__WEBPACK_IMPORTED_MODULE_4__.MixerAnimationProxy.get(eid).mixer;
+    const root = _components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__.EntityObject3DProxy.get(eid).root;
+    // TODO: Implement properly
+    // TODO: Consider paused
+    if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_mixer_animation__WEBPACK_IMPORTED_MODULE_4__.ActiveAnimations, eid)) {
+        for (const action of _components_mixer_animation__WEBPACK_IMPORTED_MODULE_4__.ActiveAnimationsProxy.get(eid).actions) {
+            action.stop();
+            mixer.uncacheAction(action.getClip(), action.getRoot());
+        }
+        _components_mixer_animation__WEBPACK_IMPORTED_MODULE_4__.ActiveAnimationsProxy.get(eid).actions.length = 0;
+    }
+    const clips = collectClips(root);
+    for (const entry of data) {
+        if (entry.index >= clips.length) {
+            // TODO: What if entity objects are not set up yet?
+            // TODO: Throw an error?
+            continue;
+        }
+        const clip = clips[entry.index];
+        const action = mixer.clipAction(clip, root);
+        action.play();
+        // TODO: Take the past time since this data is stored in the server
+        action.time = entry.time;
+        (0,_utils_mixer_animation__WEBPACK_IMPORTED_MODULE_5__.addAnimation)(world, eid, action);
+    }
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_mixer_animation__WEBPACK_IMPORTED_MODULE_4__.ActiveAnimationsUpdated, eid);
+};
+const deserializeNetworked = (world, eid, data) => {
+    // TODO: Implement Properly
+    deserialize(world, eid, data);
+};
+const checkDiff = (world, eid, cache, updatedAt) => {
+    if (!(0,_utils_bitecs__WEBPACK_IMPORTED_MODULE_2__.hasComponents)(world, [_components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__.EntityObject3D, _components_mixer_animation__WEBPACK_IMPORTED_MODULE_4__.MixerAnimation], eid)) {
+        throw new Error('check diff MixerAnimation requires EntityObject3D and MixerAnimation component.');
+    }
+    // Assumes always single time entity exists
+    const timeProxy = _components_time__WEBPACK_IMPORTED_MODULE_1__.TimeProxy.get(timeQuery(world)[0]);
+    // TODO: Implement Properly
+    // TODO: Optimize
+    const root = _components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__.EntityObject3DProxy.get(eid).root;
+    const clips = collectClips(root);
+    const data = serialize(world, eid);
+    if (data.length !== cache.length) {
+        return true;
+    }
+    for (let i = 0; i < data.length; i++) {
+        const entry1 = data[i];
+        const entry2 = cache[i];
+        if (entry1.index !== entry2.index) {
+            return true;
+        }
+        if (entry1.paused !== entry2.paused) {
+            return true;
+        }
+        if (entry1.index >= clips.length) {
+            // TODO: Throw an error?
+            // TODO: What to do?
+            continue;
+        }
+        const clip = clips[entry1.index];
+        // TODO: Check if these calculations are correct
+        const elapsed = timeProxy.elapsed - updatedAt;
+        if (Math.abs(((entry2.time + elapsed) % clip.duration) - entry1.time) > _common__WEBPACK_IMPORTED_MODULE_6__.TIME_EPSILON) {
+            return true;
+        }
+    }
+    return false;
+};
+const mixerAnimationSerializers = {
+    deserializer: deserialize,
+    diffChecker: checkDiff,
+    networkDeserializer: deserializeNetworked,
+    serializer: serialize,
+};
 
 
 /***/ }),
@@ -3190,6 +3340,7 @@ const micEventClearSystem = (world) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   clearActiveAnimationsUpdatedSystem: () => (/* binding */ clearActiveAnimationsUpdatedSystem),
 /* harmony export */   mixerAnimationSystem: () => (/* binding */ mixerAnimationSystem)
 /* harmony export */ });
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
@@ -3202,6 +3353,7 @@ const animationQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_com
 const exitAnimationQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)(animationQuery);
 const timeQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_time__WEBPACK_IMPORTED_MODULE_2__.Time]);
 const animationsExitQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_mixer_animation__WEBPACK_IMPORTED_MODULE_1__.ActiveAnimations]));
+const updatedQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_mixer_animation__WEBPACK_IMPORTED_MODULE_1__.ActiveAnimationsUpdated]);
 const mixerAnimationSystem = (world) => {
     animationsExitQuery(world).forEach(eid => {
         const proxy = _components_mixer_animation__WEBPACK_IMPORTED_MODULE_1__.ActiveAnimationsProxy.get(eid);
@@ -3226,6 +3378,11 @@ const mixerAnimationSystem = (world) => {
         const delta = _components_time__WEBPACK_IMPORTED_MODULE_2__.TimeProxy.get(timeQuery(world)[0]).delta;
         const mixer = _components_mixer_animation__WEBPACK_IMPORTED_MODULE_1__.MixerAnimationProxy.get(eid).mixer;
         mixer.update(delta);
+    });
+};
+const clearActiveAnimationsUpdatedSystem = (world) => {
+    updatedQuery(world).forEach(eid => {
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_mixer_animation__WEBPACK_IMPORTED_MODULE_1__.ActiveAnimationsUpdated, eid);
     });
 };
 
@@ -3687,7 +3844,7 @@ const networkSendSystem = (world) => {
                             if ((0,_utils_serializer__WEBPACK_IMPORTED_MODULE_4__.hasComponentKey)(world, component)) {
                                 const name = (0,_utils_serializer__WEBPACK_IMPORTED_MODULE_4__.getComponentKey)(world, component);
                                 const data = (0,_utils_serializer__WEBPACK_IMPORTED_MODULE_4__.getSerializers)(world, name).serializer(world, networkedEid);
-                                networkedProxy.initNetworkedComponent(name, data, myUserId, _common__WEBPACK_IMPORTED_MODULE_3__.INITIAL_VERSION);
+                                networkedProxy.initNetworkedComponent(name, data, myUserId, timeProxy.elapsed, _common__WEBPACK_IMPORTED_MODULE_3__.INITIAL_VERSION);
                                 components.push({
                                     name,
                                     data: JSON.stringify(data)
@@ -3721,8 +3878,8 @@ const networkSendSystem = (world) => {
                         if ((0,_utils_serializer__WEBPACK_IMPORTED_MODULE_4__.hasComponentKey)(world, component)) {
                             const name = (0,_utils_serializer__WEBPACK_IMPORTED_MODULE_4__.getComponentKey)(world, component);
                             if (networkedProxy.hasNetworkedComponent(name)) {
-                                const cache = networkedProxy.getNetworkedComponent(name).cache;
-                                if ((0,_utils_serializer__WEBPACK_IMPORTED_MODULE_4__.getSerializers)(world, name).diffChecker(world, networkedEid, cache)) {
+                                const networkedComponent = networkedProxy.getNetworkedComponent(name);
+                                if ((0,_utils_serializer__WEBPACK_IMPORTED_MODULE_4__.getSerializers)(world, name).diffChecker(world, networkedEid, networkedComponent.cache, networkedComponent.updatedAt)) {
                                     const data = (0,_utils_serializer__WEBPACK_IMPORTED_MODULE_4__.getSerializers)(world, name).serializer(world, networkedEid);
                                     components.push({
                                         name,
@@ -3785,19 +3942,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   networkedEntitySystem: () => (/* binding */ networkedEntitySystem)
 /* harmony export */ });
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
-/* harmony import */ var _components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/entity_object3d */ "../client/src/components/entity_object3d.ts");
-/* harmony import */ var _components_network__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/network */ "../client/src/components/network.ts");
-/* harmony import */ var _components_scene__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/scene */ "../client/src/components/scene.ts");
-/* harmony import */ var _utils_prefab__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/prefab */ "../client/src/utils/prefab.ts");
-/* harmony import */ var _utils_serializer__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils/serializer */ "../client/src/utils/serializer.ts");
+/* harmony import */ var _components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/entity_object3d */ "../client/src/components/entity_object3d.ts");
+/* harmony import */ var _components_network__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/network */ "../client/src/components/network.ts");
+/* harmony import */ var _components_scene__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/scene */ "../client/src/components/scene.ts");
+/* harmony import */ var _components_time__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/time */ "../client/src/components/time.ts");
+/* harmony import */ var _utils_prefab__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils/prefab */ "../client/src/utils/prefab.ts");
+/* harmony import */ var _utils_serializer__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../utils/serializer */ "../client/src/utils/serializer.ts");
 
 
 
 
 
 
-const adapterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_1__.StateClient]);
-const managerQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkedEntityManager, _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkEvent]);
+
+const timeQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_time__WEBPACK_IMPORTED_MODULE_1__.Time]);
+const adapterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_2__.StateClient]);
+const managerQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedEntityManager, _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkEvent]);
 // TODO: Implement properly
 const removeComponentsAndEntity = (world, eid) => {
     // TODO: We may need a helper function to remove entity because
@@ -3805,45 +3965,47 @@ const removeComponentsAndEntity = (world, eid) => {
     //       components need to be removed in system with Destroy component
     // Remove associated object 3Ds from the scene
     // TODO: This may be needed to be done in the future helper function
-    if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__.EntityObject3D, eid) &&
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_scene__WEBPACK_IMPORTED_MODULE_3__.InScene, eid)) {
-        const root = _components_entity_object3d__WEBPACK_IMPORTED_MODULE_2__.EntityObject3DProxy.get(eid).root;
+    if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__.EntityObject3D, eid) &&
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_scene__WEBPACK_IMPORTED_MODULE_4__.InScene, eid)) {
+        const root = _components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__.EntityObject3DProxy.get(eid).root;
         root.parent.remove(root);
     }
     (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeEntity)(world, eid);
 };
 const networkedEntitySystem = (world) => {
+    // Assume single time entity always exists
+    const timeProxy = _components_time__WEBPACK_IMPORTED_MODULE_1__.TimeProxy.get(timeQuery(world)[0]);
     adapterQuery(world).forEach(adapterEid => {
-        const userId = _components_network__WEBPACK_IMPORTED_MODULE_1__.StateClientProxy.get(adapterEid).adapter.userId;
+        const userId = _components_network__WEBPACK_IMPORTED_MODULE_2__.StateClientProxy.get(adapterEid).adapter.userId;
         managerQuery(world).forEach(managerEid => {
-            const managerProxy = _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkedEntityManagerProxy.get(managerEid);
-            for (const e of _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkEventProxy.get(managerEid).events) {
+            const managerProxy = _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedEntityManagerProxy.get(managerEid);
+            for (const e of _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkEventProxy.get(managerEid).events) {
                 //console.log(e);
-                if (e.type === _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkMessageType.CreateEntity) {
+                if (e.type === _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkMessageType.CreateEntity) {
                     if (e.data.creator !== userId) {
-                        const prefab = (0,_utils_prefab__WEBPACK_IMPORTED_MODULE_4__.getPrefab)(world, e.data.prefab);
+                        const prefab = (0,_utils_prefab__WEBPACK_IMPORTED_MODULE_5__.getPrefab)(world, e.data.prefab);
                         const params = JSON.parse(e.data.prefab_params || '{}');
                         const eid = prefab(world, params);
                         managerProxy.add(eid, e.data.network_id, e.data.creator);
                         let type;
                         if (e.data.shared) {
-                            (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_1__.Shared, eid);
-                            type = _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkedType.Shared;
+                            (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_2__.Shared, eid);
+                            type = _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedType.Shared;
                         }
                         else {
-                            (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_1__.Remote, eid);
-                            type = _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkedType.Remote;
+                            (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_2__.Remote, eid);
+                            type = _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedType.Remote;
                         }
-                        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_1__.Networked, eid);
-                        const networkedProxy = _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkedProxy.get(eid);
+                        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_2__.Networked, eid);
+                        const networkedProxy = _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedProxy.get(eid);
                         networkedProxy.allocate(e.data.network_id, type, e.data.creator, e.data.prefab, e.data.prefab_params);
                         for (const c of e.data.components) {
-                            if ((0,_utils_serializer__WEBPACK_IMPORTED_MODULE_5__.hasSerializers)(world, c.component_name)) {
+                            if ((0,_utils_serializer__WEBPACK_IMPORTED_MODULE_6__.hasSerializers)(world, c.component_name)) {
                                 const data = JSON.parse(c.data);
-                                (0,_utils_serializer__WEBPACK_IMPORTED_MODULE_5__.getSerializers)(world, c.component_name)
+                                (0,_utils_serializer__WEBPACK_IMPORTED_MODULE_6__.getSerializers)(world, c.component_name)
                                     // TODO: Write comment, why not networkedDeserializer but deserializer
                                     .deserializer(world, eid, data);
-                                networkedProxy.initNetworkedComponent(c.component_name, data, c.owner, c.version);
+                                networkedProxy.initNetworkedComponent(c.component_name, data, c.owner, timeProxy.elapsed - c.elapsed_time, c.version);
                             }
                             else {
                                 // TODO: Proper error handling
@@ -3852,30 +4014,30 @@ const networkedEntitySystem = (world) => {
                         }
                     }
                 }
-                if (e.type === _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkMessageType.RemoveEntity) {
+                if (e.type === _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkMessageType.RemoveEntity) {
                     if (e.data.creator !== userId) {
                         const eid = managerProxy.getEid(e.data.network_id);
                         removeComponentsAndEntity(world, eid);
                         managerProxy.remove(e.data.network_id);
                     }
                 }
-                if (e.type === _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkMessageType.UpdateComponent) {
+                if (e.type === _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkMessageType.UpdateComponent) {
                     // TODO: There is a chance that update component message arrives
                     //       earlier than create entity message.
                     //       Save to local storage and apply it when ready?
                     const eid = managerProxy.getEid(e.data.network_id);
                     // TODO: Duplicated code with the above
                     for (const c of e.data.components) {
-                        if ((0,_utils_serializer__WEBPACK_IMPORTED_MODULE_5__.hasSerializers)(world, c.component_name)) {
-                            const networkedProxy = _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkedProxy.get(eid);
+                        if ((0,_utils_serializer__WEBPACK_IMPORTED_MODULE_6__.hasSerializers)(world, c.component_name)) {
+                            const networkedProxy = _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedProxy.get(eid);
                             const networkedComponent = networkedProxy.getNetworkedComponent(c.component_name);
                             if (c.version > networkedComponent.version) {
                                 const data = JSON.parse(c.data);
                                 if (c.owner !== userId) {
-                                    (0,_utils_serializer__WEBPACK_IMPORTED_MODULE_5__.getSerializers)(world, c.component_name)
+                                    (0,_utils_serializer__WEBPACK_IMPORTED_MODULE_6__.getSerializers)(world, c.component_name)
                                         .networkDeserializer(world, eid, data);
                                 }
-                                networkedProxy.updateNetworkedComponent(c.component_name, data, c.owner, c.version);
+                                networkedProxy.updateNetworkedComponent(c.component_name, data, c.owner, timeProxy.elapsed - c.elapsed_time, c.version);
                             }
                         }
                         else {
@@ -3884,7 +4046,7 @@ const networkedEntitySystem = (world) => {
                         }
                     }
                 }
-                if (e.type === _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkMessageType.UserLeft) {
+                if (e.type === _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkMessageType.UserLeft) {
                     if (e.data.user_id !== userId) {
                         for (const networkId of managerProxy.getNetworkIdsByUserId(e.data)) {
                             const eid = managerProxy.getEid(networkId);
@@ -5332,6 +5494,7 @@ const FoxPrefab = (world) => {
     (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_1__.NetworkedPosition, eid);
     (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_1__.NetworkedQuaternion, eid);
     (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_1__.NetworkedScale, eid);
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_1__.NetworkedMixerAnimation, eid);
     (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_2__.Raycastable, eid);
     (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_3__.MouseButtonEventListener, eid);
     (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_4__.Grabbable, eid);
@@ -5871,6 +6034,7 @@ const handleOnAnimationClipSelectInputs = (world, eid) => {
             (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_7__.addAnimation)(world, eid, action);
             animationsTimeInput.value = '0';
             animationsTimeInput.max = `${clip.duration}`;
+            (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_3__.ActiveAnimationsUpdated, eid);
         }
     }
     onAnimationSelectInputQueue.length = 0;
@@ -5942,7 +6106,7 @@ const updateSidebarSystem = (world) => {
     handleOnTrsInputs(world, selectedEid);
     handleOnAnimationClipSelectInputs(world, selectedEid);
     if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_5__.EntityObject3D, selectedEid)) {
-        if (needsUpdate) {
+        if (needsUpdate || (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_3__.ActiveAnimationsUpdated, selectedEid)) {
             refreshAnimations(world, selectedEid);
         }
         if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_3__.ActiveAnimations, selectedEid) &&

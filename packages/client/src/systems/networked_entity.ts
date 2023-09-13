@@ -24,9 +24,11 @@ import {
   StateClientProxy
 } from "../components/network";
 import { InScene } from "../components/scene";
+import { Time, TimeProxy } from "../components/time";
 import { getPrefab } from "../utils/prefab";
 import { hasSerializers, getSerializers } from "../utils/serializer";
 
+const timeQuery = defineQuery([Time]);
 const adapterQuery = defineQuery([StateClient]);
 const managerQuery = defineQuery([NetworkedEntityManager, NetworkEvent]);
 
@@ -48,6 +50,9 @@ const removeComponentsAndEntity = (world: IWorld, eid: number): void => {
 };
 
 export const networkedEntitySystem = (world: IWorld) => {
+  // Assume single time entity always exists
+  const timeProxy = TimeProxy.get(timeQuery(world)[0]);
+
   adapterQuery(world).forEach(adapterEid => {
     const userId = StateClientProxy.get(adapterEid).adapter.userId;
     managerQuery(world).forEach(managerEid => {
@@ -87,6 +92,7 @@ export const networkedEntitySystem = (world: IWorld) => {
                   c.component_name,
                   data,
                   c.owner,
+                  timeProxy.elapsed - c.elapsed_time,
                   c.version
                 );
               } else {
@@ -123,6 +129,7 @@ export const networkedEntitySystem = (world: IWorld) => {
                   c.component_name,
                   data,
                   c.owner,
+                  timeProxy.elapsed - c.elapsed_time,
                   c.version
                 );
               }

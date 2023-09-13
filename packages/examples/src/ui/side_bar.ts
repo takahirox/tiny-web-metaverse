@@ -9,6 +9,7 @@ import { AnimationClip, Euler, Vector3 } from "three";
 import {
   ActiveAnimations,
   ActiveAnimationsProxy,
+  ActiveAnimationsUpdated,
   addAnimation,
   EntityObject3D,
   EntityObject3DProxy,
@@ -461,6 +462,8 @@ const handleOnAnimationClipSelectInputs = (world: IWorld, eid: number) => {
       addAnimation(world, eid, action);
       animationsTimeInput.value = '0';
       animationsTimeInput.max = `${clip.duration}`;
+
+      addComponent(world, ActiveAnimationsUpdated, eid);
     }
   }
   onAnimationSelectInputQueue.length = 0;
@@ -566,7 +569,7 @@ export const updateSidebarSystem = (world: IWorld): void => {
   handleOnAnimationClipSelectInputs(world, selectedEid);
 
   if (hasComponent(world, EntityObject3D, selectedEid)) {
-    if (needsUpdate) {
+    if (needsUpdate || hasComponent(world, ActiveAnimationsUpdated, selectedEid)) {
       refreshAnimations(world, selectedEid);
     }
 
