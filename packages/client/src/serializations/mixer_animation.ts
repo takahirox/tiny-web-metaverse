@@ -1,10 +1,8 @@
 import {
   addComponent,
-  defineQuery,
   hasComponent,
   IWorld
 } from "bitecs";
-import { AnimationClip, Object3D } from "three";
 import { TIME_EPSILON } from "../common";
 import {
   EntityObject3D,
@@ -14,16 +12,16 @@ import {
   ActiveAnimations,
   ActiveAnimationsProxy,
   ActiveAnimationsUpdated,
+  HasAnimations,
   LazyActiveAnimations,
   LazyActiveAnimationsProxy,
   MixerAnimation,
   MixerAnimationProxy
 } from "../components/mixer_animation";
-import { Time, TimeProxy } from "../components/time";
 import { hasComponents } from "../utils/bitecs";
 import { addAnimation } from "../utils/mixer_animation";
-
-const timeQuery = defineQuery([Time]);
+import { collectClips } from "../utils/three";
+import { getTimeProxy } from "../utils/time";
 
 // TODO: Not sure if implemented properly. May need revisit.
 
@@ -32,17 +30,8 @@ export type SerializedMixerAnimation = { index: number, paused: boolean, time: n
 
 // TODO: Validation
 
-// TODO: Optimize
-// TODO: More robust. Is the order guaranteed across the clients(platforms)?
-const collectClips = (root: Object3D): AnimationClip[] => {
-  const clips: AnimationClip[] = [];
-  root.traverse(obj => {
-    for (const animation of obj.animations) {
-      clips.push(animation);
-    }
-  });
-  return clips;	
-};
+// TODO: Optimization
+// TODO: Write comment about AnimationClips
 
 const serialize = (world: IWorld, eid: number): SerializedMixerAnimation => {
   if (!hasComponents(world, [EntityObject3D, MixerAnimation], eid)) {
@@ -58,67 +47,78 @@ const serialize = (world: IWorld, eid: number): SerializedMixerAnimation => {
       const index = clips.indexOf(action.getClip());
       if (index >= 0) {
         data.push({ index, paused: action.paused, time: action.time });
+      } else {
+        // TODO: Error handling
       }
-    }    
+    }
   }
   return data;
 };
 
-const deserialize = (world: IWorld, eid: number, data: SerializedMixerAnimation): void => {
+const deserialize = (
+  world: IWorld,
+  eid: number,
+  data: SerializedMixerAnimation,
+  updatedAt: number
+): void => {
   if (!hasComponents(world, [EntityObject3D, MixerAnimation], eid)) {
     throw new Error('deserialize MixerAnimation requires EntityObject3D and MixerAnimation component.');
   }
 
   const mixer = MixerAnimationProxy.get(eid).mixer;
   const root = EntityObject3DProxy.get(eid).root;
+  const timeProxy = getTimeProxy(world);
 
   // TODO: Implement properly
   // TODO: Consider paused
 
-  const clips = collectClips(root);
-
   // TODO: Write comment
-  if (clips.length === 0) {
+  if (!hasComponent(world, HasAnimations, eid)) {
     addComponent(world, LazyActiveAnimations, eid);
     const proxy = LazyActiveAnimationsProxy.get(eid);
     proxy.allocate();
 
-    // Assumes always single time entity exists
-    const timeProxy = TimeProxy.get(timeQuery(world)[0]);
-
     for (const entry of data) {
-      proxy.add(entry.index, timeProxy.elapsed - entry.time, entry.paused);
+      proxy.add(entry.index, timeProxy.elapsed - updatedAt - entry.time, entry.paused);
     }
+
     return;
   }
 
+  const clips = collectClips(root);
+
   if (hasComponent(world, ActiveAnimations, eid)) {
-    for (const action of ActiveAnimationsProxy.get(eid).actions) {
+    const proxy = ActiveAnimationsProxy.get(eid);
+    for (const action of proxy.actions) {
       action.stop();
       mixer.uncacheAction(action.getClip(), action.getRoot());
-    }    
-    ActiveAnimationsProxy.get(eid).actions.length = 0;
+    }
+    proxy.clear();
   }
 
   for (const entry of data) {
     if (entry.index >= clips.length) {
-      // TODO: Throw an error?
+      // TODO: Error handling
       continue;
     }
     const clip = clips[entry.index];
     const action = mixer.clipAction(clip, root);
     action.play();
-    // TODO: Take the past time since this data is stored in the server
-    action.time = entry.time;
+    action.time = (timeProxy.elapsed - updatedAt + entry.time) % clip.duration;
     addAnimation(world, eid, action);
   }
 
   addComponent(world, ActiveAnimationsUpdated, eid);
 };
 
-const deserializeNetworked = (world: IWorld, eid: number, data: SerializedMixerAnimation): void => {
+const deserializeNetworked = (
+  world: IWorld,
+  eid: number,
+  data: SerializedMixerAnimation,
+  updatedAt: number
+): void => {
   // TODO: Implement Properly
-  deserialize(world, eid, data);
+  deserialize(world, eid, data, updatedAt);
 };
 
 const checkDiff = (
@@ -131,19 +131,17 @@ const checkDiff = (
     throw new Error('check diff MixerAnimation requires EntityObject3D and MixerAnimation component.');
   }
 
-  // Assumes always single time entity exists
-  const timeProxy = TimeProxy.get(timeQuery(world)[0]);
+  // TODO: Write comment
+  if (!hasComponent(world, HasAnimations, eid)) {
+    return false;
+  }
 
   // TODO: Implement Properly
   // TODO: Optimize
   const root = EntityObject3DProxy.get(eid).root;
   const clips = collectClips(root);
-
-  if (clips.length === 0) {
-    return false;
-  }
-
   const data = serialize(world, eid);
+  const timeProxy = getTimeProxy(world);
 
   if (data.length !== cache.length) {
     return true;
@@ -162,8 +160,7 @@ const checkDiff = (
     }
 
     if (entry1.index >= clips.length) {
-      // TODO: Throw an error?
-      // TODO: What to do?
+      // TODO: Error handling
       continue;
     }
 

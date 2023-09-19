@@ -8,21 +8,17 @@ import {
 } from "bitecs";
 import {
   GltfSceneLoader,
-  GltfSceneLoaderProxy,
-  GltfRoot,
-  GltfRootProxy
+  GltfSceneLoaderProxy
 } from "../components/gltf";
 import { SceneObject } from "../components/scene";
 import { addObject3D } from "../utils/entity_object3d";
-import { loadGltf } from "../utils/three";
+import { loadGltfBitecs } from "../utils/bitecs_three";
 
 function* load(world: IWorld, eid: number): Generator {
   const url = GltfSceneLoaderProxy.get(eid).url;
-  const gltf = yield* loadGltf(url);
+  const gltf = yield* loadGltfBitecs(world, eid, url);
   // TODO: Throw error if no gltf.scene?
   const scene = gltf.scene || gltf.scenes[0];
-  addComponent(world, GltfRoot, eid);
-  GltfRootProxy.get(eid).allocate(scene);
   addObject3D(world, scene, eid);
   addComponent(world, SceneObject, eid);
 }

@@ -1,4 +1,5 @@
 import {
+  AnimationClip,
   Box3,
   EquirectangularReflectionMapping,
   Object3D,
@@ -17,14 +18,7 @@ export function* loadGltf(url: string): Generator<void, GLTF> {
   // TODO: Creating GLTFLoader every time is inefficient? Reuse the loader?
   const loader = new GLTFLoader();
   return yield* toGenerator(new Promise((resolve, reject) => {
-    loader.load(url, gltf => {
-      // TODO: What if no scene of multiple scenes?
-      const scene = gltf.scene || gltf.scenes[0];
-      for (const animation of gltf.animations) {
-        scene.animations.push(animation);
-      }
-      resolve(gltf);
-	}, undefined, reject);
+    loader.load(url, resolve, undefined, reject);
   }));
 }
 
@@ -66,3 +60,16 @@ export function* loadHdrTexture(url: string): Generator<void, Texture> {
     }, undefined, reject);
   }));
 }
+
+// TODO: Optimize
+// TODO: More robust. Is the order guaranteed across the clients(platforms)
+//       because objects can be added asynchronously?
+export const collectClips = (root: Object3D): AnimationClip[] => {
+  const clips: AnimationClip[] = [];
+  root.traverse(obj => {
+    for (const animation of obj.animations) {
+      clips.push(animation);
+    }
+  });
+  return clips;	
+};

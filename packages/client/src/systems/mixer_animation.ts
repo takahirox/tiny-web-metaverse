@@ -8,22 +8,19 @@ import {
   ActiveAnimations,
   ActiveAnimationsProxy,
   ActiveAnimationsUpdated,
+  HasAnimations,
   MixerAnimation,
   MixerAnimationProxy
 } from "../components/mixer_animation";
-import {
-  Time,
-  TimeProxy
-} from "../components/time";
+import { getTimeProxy } from "../utils/time";
 
-const animationQuery = defineQuery([MixerAnimation]);
+const animationQuery = defineQuery([HasAnimations, MixerAnimation]);
 const exitAnimationQuery = exitQuery(animationQuery);
-const timeQuery = defineQuery([Time]);
-const animationsExitQuery = exitQuery(defineQuery([ActiveAnimations]));
+const activeAnimationsExitQuery = exitQuery(defineQuery([ActiveAnimations]));
 const updatedQuery = defineQuery([ActiveAnimationsUpdated]);
 
 export const mixerAnimationSystem = (world: IWorld): void => {
-  animationsExitQuery(world).forEach(eid => {
+  activeAnimationsExitQuery(world).forEach(eid => {
     const proxy = ActiveAnimationsProxy.get(eid);
 
     for (const action of proxy.actions) {
@@ -41,13 +38,12 @@ export const mixerAnimationSystem = (world: IWorld): void => {
     const proxy = MixerAnimationProxy.get(eid);
     const mixer = proxy.mixer;
     mixer.stopAllAction();
-    // TODO: Uncache resources
+    // TODO: Uncache all resources
     proxy.free();
   });
 
   animationQuery(world).forEach(eid => {
-    // Assumes alwayt single time entity exists
-    const delta = TimeProxy.get(timeQuery(world)[0]).delta;
+    const delta = getTimeProxy(world).delta;
     const mixer = MixerAnimationProxy.get(eid).mixer;
     mixer.update(delta);
   });

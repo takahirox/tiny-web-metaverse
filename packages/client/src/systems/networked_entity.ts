@@ -24,11 +24,10 @@ import {
   StateClientProxy
 } from "../components/network";
 import { InScene } from "../components/scene";
-import { Time, TimeProxy } from "../components/time";
 import { getPrefab } from "../utils/prefab";
 import { hasSerializers, getSerializers } from "../utils/serializer";
+import { getTimeProxy } from "../utils/time";
 
-const timeQuery = defineQuery([Time]);
 const adapterQuery = defineQuery([StateClient]);
 const managerQuery = defineQuery([NetworkedEntityManager, NetworkEvent]);
 
@@ -50,15 +49,14 @@ const removeComponentsAndEntity = (world: IWorld, eid: number): void => {
 };
 
 export const networkedEntitySystem = (world: IWorld) => {
-  // Assume single time entity always exists
-  const timeProxy = TimeProxy.get(timeQuery(world)[0]);
+  const timeProxy = getTimeProxy(world);
 
   adapterQuery(world).forEach(adapterEid => {
     const userId = StateClientProxy.get(adapterEid).adapter.userId;
     managerQuery(world).forEach(managerEid => {
       const managerProxy = NetworkedEntityManagerProxy.get(managerEid);
       for (const e of NetworkEventProxy.get(managerEid).events) {
-        console.log(e);
+        //console.log(e);
         if (e.type === NetworkMessageType.CreateEntity) {
           if (e.data.creator !== userId) {
             const prefab = getPrefab(world, e.data.prefab);
@@ -85,14 +83,15 @@ export const networkedEntitySystem = (world: IWorld) => {
             for (const c of e.data.components) {
               if (hasSerializers(world, c.component_name)) {
                 const data = JSON.parse(c.data);
+                const updatedAt = timeProxy.elapsed - c.elapsed_time;
                 getSerializers(world, c.component_name)
                   // TODO: Write comment, why not networkedDeserializer but deserializer
-                  .deserializer(world, eid, data);
+                  .deserializer(world, eid, data, updatedAt);
                 networkedProxy.initNetworkedComponent(
                   c.component_name,
                   data,
                   c.owner,
-                  timeProxy.elapsed - c.elapsed_time,
+                  updatedAt,
                   c.version
                 );
               } else {
@@ -122,8 +121,9 @@ export const networkedEntitySystem = (world: IWorld) => {
               if (c.version > networkedComponent.version) {
                 const data = JSON.parse(c.data);
                 if (c.owner !== userId) {
+                  const updatedAt = timeProxy.elapsed - c.elapsed_time;
                   getSerializers(world, c.component_name)
-                    .networkDeserializer(world, eid, data);
+                    .networkDeserializer(world, eid, data, updatedAt);
                 }
                 networkedProxy.updateNetworkedComponent(
                   c.component_name,

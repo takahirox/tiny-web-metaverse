@@ -32,6 +32,9 @@ export class MixerAnimationProxy {
   }
 }
 
+// TODO: Write comment
+export const HasAnimations = defineComponent();
+
 export const ActiveAnimations = defineComponent();
 
 export class ActiveAnimationsProxy {
@@ -54,7 +57,11 @@ export class ActiveAnimationsProxy {
   }
 
   add(action: AnimationAction): void {
-    this.map.get(this.eid).push(action);
+    this.map.get(this.eid)!.push(action);
+  }
+
+  clear(): void {
+    this.map.get(this.eid)!.length = 0;
   }
 
   remove(action: AnimationAction): void {

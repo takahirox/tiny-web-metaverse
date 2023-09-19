@@ -2,10 +2,10 @@ import {
   addComponent,
   defineQuery,
   exitQuery,
+  hasComponent,
   IWorld,
   removeComponent
 } from "bitecs";
-import { AnimationClip, Object3D } from "three";
 import {
   EntityObject3D,
   EntityObject3DProxy
@@ -14,45 +14,37 @@ import {
   ActiveAnimationsUpdated,
   LazyActiveAnimations,
   LazyActiveAnimationsProxy,
+  HasAnimations,
   MixerAnimation,
   MixerAnimationProxy
 } from "../components/mixer_animation";
-import { Time, TimeProxy } from "../components/time";
 import { addAnimation } from "../utils/mixer_animation";
-
-// TODO: Optimize
-// TODO: Duplicated with the one in mixer_animation serialize file
-const collectClips = (root: Object3D): AnimationClip[] => {
-  const clips: AnimationClip[] = [];
-  root.traverse(obj => {
-    for (const animation of obj.animations) {
-      clips.push(animation);
-    }
-  });
-  return clips;	
-};
+import { collectClips } from "../utils/three";
+import { getTimeProxy } from "../utils/time";
 
 const lazyQuery = defineQuery([EntityObject3D, LazyActiveAnimations, MixerAnimation]);
 const lazyExitQuery = exitQuery(defineQuery([LazyActiveAnimations]));
-const timeQuery = defineQuery([Time]);
 
 export const lazilyActivateAnimationSystem = (world: IWorld): void => {
-  // Assume single time entity always exists
-  const timeProxy = TimeProxy.get(timeQuery(world)[0]);
+  const timeProxy = getTimeProxy(world);
 
   lazyQuery(world).forEach(eid => {
-    const root = EntityObject3DProxy.get(eid).root;
-    const clips = collectClips(root);
-
-    if (clips.length === 0) {
+    // TODO: Write comment
+    if (!hasComponent(world, HasAnimations, eid)) {
       return;
     }
 
+    const root = EntityObject3DProxy.get(eid).root;
     const mixer = MixerAnimationProxy.get(eid).mixer;
     const animations = LazyActiveAnimationsProxy.get(eid).animations;
+    const clips = collectClips(root);
 
-    // Use pause
+    // TODO: Use pause
     for (const animation of animations) {
+      if (animation.index >= clips.length) {
+        // TODO: Error handling
+        continue;
+      }
       const clip = clips[animation.index];
       const action = mixer.clipAction(clip, root);
       action.play();

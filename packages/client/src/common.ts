@@ -23,8 +23,8 @@ export type Prefab = (world: IWorld, params: object) => number;
 
 // TODO: Avoid any
 export type Serializer = (world: IWorld, eid: number) => any;
-export type Deserializer = (world: IWorld, eid: number, data: any) => void;
-export type NetworkDeserializer = (world: IWorld, eid: number, data: any) => void;
+export type Deserializer = (world: IWorld, eid: number, data: any, updatedAt: number) => void;
+export type NetworkDeserializer = (world: IWorld, eid: number, data: any, updatedAt: number) => void;
 export type DiffChecker = (world: IWorld, eid: number, cache: any, updatedAt: number) => boolean;
 export type SerializerFunctions = {
   // TODO: Rename? eg: initialDeserializer

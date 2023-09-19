@@ -74,6 +74,7 @@ export * from "./systems/update_matrices";
 export * from "./systems/window_resize_event";
 
 export * from "./utils/bitecs";
+export * from "./utils/bitecs_three";
 export * from "./utils/coroutine";
 export * from "./utils/entity_object3d";
 export * from "./utils/mixer_animation";
@@ -81,3 +82,5 @@ export * from "./utils/network";
 export * from "./utils/prefab";
 export * from "./utils/serializer";
 export * from "./utils/three";
+export * from "./utils/time";
+

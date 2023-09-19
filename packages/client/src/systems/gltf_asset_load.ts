@@ -1,5 +1,4 @@
 import {
-  addComponent,
   defineQuery,
   enterQuery,
   exitQuery,
@@ -9,24 +8,21 @@ import {
 import { Group } from "three";
 import {
   GltfAssetLoader,
-  GltfAssetLoaderProxy,
-  GltfRoot,
-  GltfRootProxy
+  GltfAssetLoaderProxy
 } from "../components/gltf";
 import { addObject3D } from "../utils/entity_object3d";
+import { loadGltfBitecs } from "../utils/bitecs_three";
 import {
-  loadGltf,
   recenterObject3D,
   resizeObject3D
 } from "../utils/three";
 
 function* load(world: IWorld, eid: number): Generator {
   const url = GltfAssetLoaderProxy.get(eid).url;
-  const gltf = yield* loadGltf(url);
+  const gltf = yield* loadGltfBitecs(world, eid, url);
+
   // TODO: Throw error if no gltf.scene?
   const scene = gltf.scene || gltf.scenes[0];
-  addComponent(world, GltfRoot, eid);
-  GltfRootProxy.get(eid).allocate(scene);
 
   // TODO: Should resize be conditional?
   // TODO: Move resize to any other system?
