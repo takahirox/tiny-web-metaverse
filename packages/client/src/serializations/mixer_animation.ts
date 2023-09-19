@@ -14,6 +14,8 @@ import {
   ActiveAnimations,
   ActiveAnimationsProxy,
   ActiveAnimationsUpdated,
+  LazyActiveAnimations,
+  LazyActiveAnimationsProxy,
   MixerAnimation,
   MixerAnimationProxy
 } from "../components/mixer_animation";
@@ -73,6 +75,23 @@ const deserialize = (world: IWorld, eid: number, data: SerializedMixerAnimation)
   // TODO: Implement properly
   // TODO: Consider paused
 
+  const clips = collectClips(root);
+
+  // TODO: Write comment
+  if (clips.length === 0) {
+    addComponent(world, LazyActiveAnimations, eid);
+    const proxy = LazyActiveAnimationsProxy.get(eid);
+    proxy.allocate();
+
+    // Assumes always single time entity exists
+    const timeProxy = TimeProxy.get(timeQuery(world)[0]);
+
+    for (const entry of data) {
+      proxy.add(entry.index, timeProxy.elapsed - entry.time, entry.paused);
+    }
+    return;
+  }
+
   if (hasComponent(world, ActiveAnimations, eid)) {
     for (const action of ActiveAnimationsProxy.get(eid).actions) {
       action.stop();
@@ -81,10 +100,8 @@ const deserialize = (world: IWorld, eid: number, data: SerializedMixerAnimation)
     ActiveAnimationsProxy.get(eid).actions.length = 0;
   }
 
-  const clips = collectClips(root);
   for (const entry of data) {
     if (entry.index >= clips.length) {
-      // TODO: What if entity objects are not set up yet?
       // TODO: Throw an error?
       continue;
     }
@@ -121,6 +138,11 @@ const checkDiff = (
   // TODO: Optimize
   const root = EntityObject3DProxy.get(eid).root;
   const clips = collectClips(root);
+
+  if (clips.length === 0) {
+    return false;
+  }
+
   const data = serialize(world, eid);
 
   if (data.length !== cache.length) {

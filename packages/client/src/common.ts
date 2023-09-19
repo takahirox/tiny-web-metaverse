@@ -28,8 +28,10 @@ export type NetworkDeserializer = (world: IWorld, eid: number, data: any) => voi
 export type DiffChecker = (world: IWorld, eid: number, cache: any, updatedAt: number) => boolean;
 export type SerializerFunctions = {
   // TODO: Rename? eg: initialDeserializer
+  // TODO: Write comment what this is for
   deserializer: Deserializer,
   diffChecker: DiffChecker,
+  // TODO: Write comment what this is for
   networkDeserializer: NetworkDeserializer,
   serializer: Serializer
 };

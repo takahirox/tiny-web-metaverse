@@ -7,6 +7,13 @@
     "@tiny-web-metaverse/client": "^0.0.1"
   },
   "description": "Tiny Web metaverse addons",
+  "exports": {
+    ".": {
+      "import": "./dist/addons.bundle.js"
+    },
+    "./src": "./src/index.ts",
+    "./src/*": "./src/*"
+  },
   "homepage": "https://github.com/takahirox/tiny-web-metaverse#readme",
   "license": "MIT",
   "main": "./dist/addons.bundle.js",

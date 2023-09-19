@@ -107,6 +107,7 @@ import {
   keyEventHandleSystem,
   keyEventClearSystem
 } from "./systems/keyboard_event";
+import { lazilyActivateAnimationSystem } from "./systems/lazily_activate_animation";
 import { linearMoveSystem } from "./systems/linear_move";
 import { linearTransformSystem } from "./systems/linear_transform";
 import { micRequestSystem, micEventClearSystem } from "./systems/media_device";
@@ -215,13 +216,14 @@ export class App {
     this.registerSystem(entityObject3DSystem, SystemOrder.Setup);
     this.registerSystem(sceneSystem, SystemOrder.Setup);
     this.registerSystem(perspectiveCameraSystem, SystemOrder.Setup);
-    this.registerSystem(networkedSystem, SystemOrder.Setup);
-    this.registerSystem(networkedEntitySystem, SystemOrder.Setup);
     this.registerSystem(gltfAssetLoadSystem, SystemOrder.Setup);
     this.registerSystem(gltfSceneLoadSystem, SystemOrder.Setup);
     this.registerSystem(gltfSystem, SystemOrder.Setup);
     this.registerSystem(sceneEnvironmentMapLoadSystem, SystemOrder.Setup);
     this.registerSystem(mixerAnimationSystem, SystemOrder.Setup);
+    this.registerSystem(networkedSystem, SystemOrder.Setup);
+    this.registerSystem(networkedEntitySystem, SystemOrder.Setup);
+    this.registerSystem(lazilyActivateAnimationSystem, SystemOrder.Setup + 1);
 
     this.registerSystem(linearMoveSystem, SystemOrder.BeforeMatricesUpdate);
     this.registerSystem(linearTransformSystem, SystemOrder.BeforeMatricesUpdate);

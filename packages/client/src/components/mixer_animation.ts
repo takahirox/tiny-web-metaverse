@@ -76,3 +76,47 @@ export class ActiveAnimationsProxy {
 }
 
 export const ActiveAnimationsUpdated = defineComponent();
+
+export const LazyActiveAnimations = defineComponent();
+
+type LazyActiveAnimationsValue = {
+  index: number,
+  paused: boolean,
+  startedAt: number
+};
+
+export class LazyActiveAnimationsProxy {
+  private static instance: LazyActiveAnimationsProxy = new LazyActiveAnimationsProxy();
+  private eid: number;
+  private map: Map<number, LazyActiveAnimationsValue[]>;
+
+  private constructor() {
+    this.eid = NULL_EID;
+    this.map = new Map();
+  }
+
+  static get(eid: number): LazyActiveAnimationsProxy {
+    LazyActiveAnimationsProxy.instance.eid = eid;
+    return LazyActiveAnimationsProxy.instance;
+  }
+
+  allocate(): void {
+    this.map.set(this.eid, []);
+  }
+
+  add(index: number, startedAt: number, paused: boolean): void {
+    this.map.get(this.eid)!.push({ index, paused, startedAt });
+  }
+
+  clear(): void {
+    this.map.get(this.eid)!.length = 0;
+  }
+
+  free(): void {
+    this.map.delete(this.eid);
+  }
+
+  get animations(): LazyActiveAnimationsValue[] {
+    return this.map.get(this.eid)!;
+  }
+}

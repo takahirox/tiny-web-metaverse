@@ -42,6 +42,7 @@ export * from "./systems/gltf_scene_load";
 export * from "./systems/grab";
 export * from "./systems/grab_mouse_track";
 export * from "./systems/keyboard_event";
+export * from "./systems/lazily_activate_animation";
 export * from "./systems/linear_move";
 export * from "./systems/linear_transform";
 export * from "./systems/media_device";
