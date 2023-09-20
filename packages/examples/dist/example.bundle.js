@@ -1556,6 +1556,7 @@ const ComponentNetworkEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.def
 const NetworkEventSender = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({
     lastSendTime: bitecs__WEBPACK_IMPORTED_MODULE_0__.Types.f32
 });
+// TODO: Move to NetworkedTransform?
 const NetworkedPosition = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 const NetworkedQuaternion = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 const NetworkedScale = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();

@@ -1,1 +1,1 @@
-# tiny-web-metaverse-client
+# tiny-web-metaverse

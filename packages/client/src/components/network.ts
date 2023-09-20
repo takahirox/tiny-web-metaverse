@@ -308,7 +308,9 @@ export const NetworkEventSender = defineComponent({
   lastSendTime: Types.f32
 });
 
+// TODO: Move to NetworkedTransform?
 export const NetworkedPosition = defineComponent();
 export const NetworkedQuaternion = defineComponent();
 export const NetworkedScale = defineComponent();
+
 export const NetworkedMixerAnimation = defineComponent();
