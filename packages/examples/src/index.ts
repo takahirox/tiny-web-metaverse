@@ -3,7 +3,12 @@ import {
   addEntity
 } from "bitecs";
 import {
-  gltfMixerAnimationSystem
+  gltfMixerAnimationSystem,
+  lazilyUpdateVideoStateSystem,
+  NetworkedVideo,
+  videoSystem,
+  videoLoadSystem,
+  videoSerializers
 } from "@tiny-web-metaverse/addons/src";
 import {
   App,
@@ -18,6 +23,7 @@ import {
   MouseButtonEventListener,
   NetworkedType,
   registerPrefab,
+  registerSerializers,
   SceneEnvironmentMapLoader,
   SceneEnvironmentMapLoaderProxy,
   SelectedEventListener,
@@ -31,6 +37,7 @@ import { AvatarPrefab } from "./prefabs/avatar";
 import { CubePrefab } from "./prefabs/cube";
 import { DuckPrefab } from "./prefabs/duck";
 import { FoxPrefab } from "./prefabs/fox";
+import { VideoPrefab } from "./prefabs/video";
 import { colorSystem } from "./systems/color";
 import { userEventSystem } from "./systems/user";
 import { updateJoinDialogSystem } from "./ui/join_dialog";
@@ -66,7 +73,10 @@ const run = async (): Promise<void> => {
 
   document.body.appendChild(canvas);
 
+  app.registerSystem(videoSystem, SystemOrder.Setup);
+  app.registerSystem(videoLoadSystem, SystemOrder.Setup);
   app.registerSystem(gltfMixerAnimationSystem, SystemOrder.Setup + 1);
+  app.registerSystem(lazilyUpdateVideoStateSystem, SystemOrder.Setup + 1);
   app.registerSystem(updateJoinDialogSystem, SystemOrder.BeforeMatricesUpdate);
   app.registerSystem(updateSidebarSystem, SystemOrder.BeforeMatricesUpdate);
   app.registerSystem(colorSystem, SystemOrder.Render - 1);
@@ -78,6 +88,9 @@ const run = async (): Promise<void> => {
   registerPrefab(world, 'cube', CubePrefab);
   registerPrefab(world, 'duck', DuckPrefab);
   registerPrefab(world, 'fox', FoxPrefab);
+  registerPrefab(world, 'video', VideoPrefab);
+
+  registerSerializers(world, 'video', NetworkedVideo, videoSerializers);
 
   const sceneEid = addEntity(world);
   addComponent(world, InScene, sceneEid);
@@ -108,13 +121,6 @@ const run = async (): Promise<void> => {
   addComponent(world, ConnectedStreamEventListener, joinDialogEid);
   addComponent(world, JoinedStreamEventListener, joinDialogEid);
 
-  const foxEid = createNetworkedEntity(world, NetworkedType.Shared, 'fox');
-  EntityObject3DProxy.get(foxEid).root.position.set(
-    (Math.random() - 0.5) * 10.0,
-    0.1,
-    (Math.random() - 0.5) * 10.0
-  );
-
   const cubeEid = createNetworkedEntity(world, NetworkedType.Shared, 'cube');
   EntityObject3DProxy.get(cubeEid).root.position.set(
     (Math.random() - 0.5) * 10.0,
@@ -129,6 +135,20 @@ const run = async (): Promise<void> => {
     (Math.random() - 0.5) * 10.0
   );
 
+  const foxEid = createNetworkedEntity(world, NetworkedType.Shared, 'fox');
+  EntityObject3DProxy.get(foxEid).root.position.set(
+    (Math.random() - 0.5) * 10.0,
+    0.1,
+    (Math.random() - 0.5) * 10.0
+  );
+/*
+  const videoEid = createNetworkedEntity(world, NetworkedType.Shared, 'video');
+  EntityObject3DProxy.get(videoEid).root.position.set(
+    (Math.random() - 0.5) * 10.0,
+    0.5,
+    (Math.random() - 0.5) * 10.0
+  );
+*/
   app.start();
 };
 

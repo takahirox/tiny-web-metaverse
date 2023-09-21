@@ -34,6 +34,8 @@ export const lazilyActivateAnimationSystem = (world: IWorld): void => {
       return;
     }
 
+    // TODO: Remove the duplicated code with the one in the deserializers
+
     const root = EntityObject3DProxy.get(eid).root;
     const mixer = MixerAnimationProxy.get(eid).mixer;
     const animations = LazyActiveAnimationsProxy.get(eid).animations;

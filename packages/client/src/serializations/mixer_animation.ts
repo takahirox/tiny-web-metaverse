@@ -167,8 +167,13 @@ const checkDiff = (
     const clip = clips[entry1.index];
     // TODO: Check if these calculations are correct
     const elapsed = timeProxy.elapsed - updatedAt;
+    // TODO: Take loop type into account
+    const timeDiff = Math.min(
+      Math.abs(((entry2.time + elapsed) % clip.duration) - entry1.time),
+      clip.duration - Math.abs(((entry2.time + elapsed) % clip.duration) - entry1.time)
+    );
 
-    if (Math.abs(((entry2.time + elapsed) % clip.duration) - entry1.time) > TIME_EPSILON) {
+    if (timeDiff > TIME_EPSILON) {
       return true;
     }
   }
