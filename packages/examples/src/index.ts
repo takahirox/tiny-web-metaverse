@@ -4,6 +4,8 @@ import {
 } from "bitecs";
 import {
   gltfMixerAnimationSystem,
+  imageSystem,
+  imageLoadSystem,
   lazilyUpdateVideoStateSystem,
   NetworkedVideo,
   videoSystem,
@@ -37,6 +39,7 @@ import { AvatarPrefab } from "./prefabs/avatar";
 import { CubePrefab } from "./prefabs/cube";
 import { DuckPrefab } from "./prefabs/duck";
 import { FoxPrefab } from "./prefabs/fox";
+import { ImagePrefab } from "./prefabs/image";
 import { VideoPrefab } from "./prefabs/video";
 import { colorSystem } from "./systems/color";
 import { userEventSystem } from "./systems/user";
@@ -73,6 +76,8 @@ const run = async (): Promise<void> => {
 
   document.body.appendChild(canvas);
 
+  app.registerSystem(imageSystem, SystemOrder.Setup);
+  app.registerSystem(imageLoadSystem, SystemOrder.Setup);
   app.registerSystem(videoSystem, SystemOrder.Setup);
   app.registerSystem(videoLoadSystem, SystemOrder.Setup);
   app.registerSystem(gltfMixerAnimationSystem, SystemOrder.Setup + 1);
@@ -88,6 +93,7 @@ const run = async (): Promise<void> => {
   registerPrefab(world, 'cube', CubePrefab);
   registerPrefab(world, 'duck', DuckPrefab);
   registerPrefab(world, 'fox', FoxPrefab);
+  registerPrefab(world, 'image', ImagePrefab);
   registerPrefab(world, 'video', VideoPrefab);
 
   registerSerializers(world, 'video', NetworkedVideo, videoSerializers);
@@ -141,6 +147,15 @@ const run = async (): Promise<void> => {
     0.1,
     (Math.random() - 0.5) * 10.0
   );
+
+  const imageEid = createNetworkedEntity(world, NetworkedType.Shared, 'image');
+  EntityObject3DProxy.get(imageEid).root.position.set(
+    (Math.random() - 0.5) * 10.0,
+    0.5,
+    (Math.random() - 0.5) * 10.0
+  );
+
+  // Commenting out because of bad performance
 /*
   const videoEid = createNetworkedEntity(world, NetworkedType.Shared, 'video');
   EntityObject3DProxy.get(videoEid).root.position.set(
