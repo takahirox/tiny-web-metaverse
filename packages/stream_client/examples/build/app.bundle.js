@@ -16155,7 +16155,7 @@ const throwError = (error) => {
 };
 // TODO: Proper error handling
 class StreamAdapter {
-    constructor(serverUrl = 'ws://localhost:3000') {
+    constructor(serverUrl = `ws://${window.location.hostname}:3000`) {
         _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.info(`Server URL: ${serverUrl}.`);
         this.socket = socket_io_client__WEBPACK_IMPORTED_MODULE_1__.io(serverUrl, { autoConnect: false });
         this.device = new mediasoup_client__WEBPACK_IMPORTED_MODULE_0__.Device();

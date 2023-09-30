@@ -14,7 +14,7 @@ export class StateAdapter {
     url?: string,
     userId: string
   }) {
-    const url = params.url || 'ws://localhost:4000/socket';
+    const url = params.url || `ws://${window.location.hostname}:4000/socket`;
     const topic = `room:${params.roomId}`;
     this.userId = params.userId;
 
