@@ -5,9 +5,12 @@ const mode = 'development';
 module.exports = [
   {
     devServer: {
+      // TODO: Fix me. Can be a security hole.
+      allowedHosts: 'all',
       client: {
         progress: true
       },
+      host: '0.0.0.0',
       port: 8080,
       static: {
         directory: path.join(__dirname),
