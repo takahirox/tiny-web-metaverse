@@ -1,6 +1,6 @@
 # tiny-web-metaverse
 
-Tiny Web Metaverse project is for simple, easy, flexible, and extensible online
+Tiny Web Metaverse project is for simple, easy, flexible, and extensible web
 3D virtual platform.
 
 ## Online Demo
@@ -15,6 +15,22 @@ Note: Audio is supported on local test
 ## Screenshot
 
 T.B.D.
+
+## Features
+
+T.B.D.
+
+## Sub-projects
+
+See `packages` directory.
+
+* addons:
+* client:
+* examples:
+* state_client:
+* state_server:
+* stream_client:
+* stream_server:
 
 ## How to build
 
