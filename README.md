@@ -1,7 +1,7 @@
 # tiny-web-metaverse
 
-Tiny Web Metaverse project is a simple, easy, flexible, and extensible online
-3D virtual platform project.
+Tiny Web Metaverse project is for simple, easy, flexible, and extensible online
+3D virtual platform.
 
 ## Online Demo
 
@@ -62,10 +62,10 @@ Prerequirements:
 $ ./Dockerfiles/up.sh
 ```
 
-## Deploy to AWS ECS
+## Deploy Demo to AWS ECS
 
 T.B.D.
 
-## Deploy to Google Cloud
+## Deploy Demo to Google Cloud
 
 T.B.D.
