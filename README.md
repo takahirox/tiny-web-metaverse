@@ -22,7 +22,7 @@ T.B.D.
 
 ## Sub-projects
 
-See `packages` directory.
+This project consists of the sub projects. See `packages` directory.
 
 * [addons](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/addons):
 * [client](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/client):
@@ -47,6 +47,7 @@ Prerequirements:
 
 * Install [PostgreSQL](https://www.postgresql.org/)
 * Install [Elixir](https://elixir-lang.org/)
+* [Build the project](#how-to-build)
 
 ```sh
 # Terminal 1
@@ -78,14 +79,131 @@ Prerequirements:
 $ ./Dockerfiles/up.sh
 ```
 
-## Deploy Demo to AWS ECS Fargate
+And access http://localhost:8080 on your browser.
 
-T.B.D.
+## Deploy Demo to AWS ECS EC2 with Docker
 
-## Deploy Demo to AWS ECS EC2
+Note:
 
-T.B.D.
+* No audio support yet [#39](https://github.com/takahirox/tiny-web-metaverse/issues/39)
+
+Prerequirements:
+
+* [Make an AWS account](https://aws.amazon.com/)
+
+### Launch an EC2 instance
+
+1. [Login to AWS Management console](https://aws.amazon.com/console/)
+2. Create and download key pair
+3. Launch a new EC2 instance with the key pair
+
+Note: If you want to use a [free tier EC2 instance (t2.micro or t3.micro depending on regions)](https://aws.amazon.com/free/)
+for trial. Increase the storage size to miximum capacity for free (30GB SSD).
+
+4. Setup a security group
+
+Add Inbound rules
+
+Port range: 3000
+Type: Custom TCP Rule
+Protocol: TCP
+Port Range: 8080
+Source: 0.0.0.0/0 
+Description: stream_server
+
+TODO: Open UDP ports when audio is supported?
+
+port: 4000
+Type: Custom TCP Rule
+Protocol: TCP
+Port Range: 8080
+Source: 0.0.0.0/0
+Description: state_server
+
+port: 8080
+Type: Custom TCP Rule
+Protocol: TCP
+Port Range: 8080
+Source: 0.0.0.0/0
+Description: examples
+
+5. Remember the EC2 instance public domain name
+
+TODO: Set up domain name
+
+### Login to EC2 instance
+
+Copy the downloaded key pair file (called `foo.pem` here) to `~/.ssh`.
+
+```sh
+$ cp Downloads/foo.pem ~/.ssh/
+```
+
+Login to the by using the EC2 instance public domain name (called `ec2-01-234-567-890.ap-northeast-1.compute.amazonaws.com` here).
+
+```sh
+$ ssh -i ~/.ssh/foo.pem ec2-user@ec2-01-234-567-890.ap-northeast-1.compute.amazonaws.com
+```
+
+### Install Docker
+
+```sh
+$ sudo dnf update
+$ sudo dnf install docker
+$ sudo systemctl enable --now docker
+$ sudo usermod -aG docker ec2-user
+$ id
+$ exit
+$ ssh -i ~/.ssh/foo.pem ec2-user@ec2-01-234-567-890.ap-northeast-1.compute.amazonaws.com
+$ docker info
+```
+
+### Install Docker compose
+
+```sh
+$ sudo mkdir -p /usr/local/lib/docker/cli-plugins/
+$ sudo curl -SL https://github.com/docker/compose/releases/download/v2.22.0/docker-compose-linux-x86_64 -o /usr/local/lib/docker/cli-plugins/docker-compose
+$ sudo chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
+```
+
+Find the latest or preferred package version from https://github.com/docker/compose/releases/
+
+### Install Git
+
+```sh
+$ sudo dnf install git
+```
+
+### Optional: Setup Swap space
+
+Consider to setup swap space if using low memory instance like free tier instances
+(t2.micro or t3.micro).
+
+```sh
+$ sudo dd if=/dev/zero of=/swapfile bs=1M count=4096
+$ sudo chmod 600 /swapfile
+$ sudo mkswap /swapfile
+$ sudo swapon /swapfile
+$ swapon -s
+$ vi /etc/fstab
+# Add /swapfile swap swap defaults 0 0
+```
+
+### Run the project
+
+```sh
+$ git clone https://github.com/takahirox/tiny-web-metaverse.git
+$ cd tiny-web-metaverse
+$ docker compose up -d
+```
 
 ## Deploy Demo to Google Cloud
 
 T.B.D.
+
+## How to support the project
+
+* Test and [Report bugs](https://github.com/takahirox/tiny-web-metaverse/issues)
+* [Make Pull requests](https://github.com/takahirox/tiny-web-metaverse/pulls) to fix bugs or add new features
+* Monthly or one-time support via GitHub sponsors: T.B.D.
+* Make a support contract: T.B.D.

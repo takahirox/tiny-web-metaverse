@@ -15,6 +15,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfiles/examples.Dockerfile
+    depends_on:
+      - state_server
+      - stream_server
     ports:
       - "8080:8080"
   state_server:
