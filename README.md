@@ -104,28 +104,31 @@ for trial. Increase the storage size to miximum capacity for free (30GB SSD).
 
 Add Inbound rules
 
-Port range: 3000
-Type: Custom TCP Rule
-Protocol: TCP
-Port Range: 8080
-Source: 0.0.0.0/0 
-Description: stream_server
+Rule 1:
+- Port range: 3000
+- Type: Custom TCP Rule
+- Protocol: TCP
+- Port Range: 8080
+- Source: 0.0.0.0/0
+- Description: stream_server
 
 TODO: Open UDP ports when audio is supported?
 
-port: 4000
-Type: Custom TCP Rule
-Protocol: TCP
-Port Range: 8080
-Source: 0.0.0.0/0
-Description: state_server
+Rule 2:
+- Port range: 4000
+- Type: Custom TCP Rule
+- Protocol: TCP
+- Port Range: 8080
+- Source: 0.0.0.0/0
+- Description: state_server
 
-port: 8080
-Type: Custom TCP Rule
-Protocol: TCP
-Port Range: 8080
-Source: 0.0.0.0/0
-Description: examples
+Rule 3:
+- Port range: 8080
+- Type: Custom TCP Rule
+- Protocol: TCP
+- Port Range: 8080
+- Source: 0.0.0.0/0
+- Description: examples
 
 5. Remember the EC2 instance public domain name
 
@@ -184,7 +187,7 @@ $ sudo dd if=/dev/zero of=/swapfile bs=1M count=4096
 $ sudo chmod 600 /swapfile
 $ sudo mkswap /swapfile
 $ sudo swapon /swapfile
-$ swapon -s
+$ sudo swapon -s
 $ vi /etc/fstab
 # Add /swapfile swap swap defaults 0 0
 ```
