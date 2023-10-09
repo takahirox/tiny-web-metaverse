@@ -46,6 +46,7 @@ $ npm run build:all
 Prerequirements:
 
 * Install [PostgreSQL](https://www.postgresql.org/)
+  * Setup User/Password as postgres/postgres
 * Install [Elixir](https://elixir-lang.org/)
 * [Build the project](#how-to-build)
 
@@ -81,7 +82,7 @@ $ ./Dockerfiles/up.sh
 
 And access http://localhost:8080 on your browser.
 
-## Deploy Demo to AWS ECS EC2 with Docker
+## Deploy Demo to AWS ECS with Docker
 
 Note:
 
