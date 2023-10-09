@@ -13,7 +13,7 @@ import {
   EntityObject3DProxy,
   Grabbed,
   Raycastable,
-  Raycasted,
+  RaycastedNearest,
   Selected
 } from "@tiny-web-metaverse/client/src";
 
@@ -44,7 +44,7 @@ export const colorSystem = (world: IWorld) => {
         color.setHex(0x2222aa);
       } else if (hasComponent(world, Selected, eid)) {
         color.setHex(0x22aa22);
-      } else if (!grabbedExist && hasComponent(world, Raycasted, eid)) {
+      } else if (!grabbedExist && hasComponent(world, RaycastedNearest, eid)) {
         color.setHex(0xaa2222);
       } else {
         color.copy(material.userData.color);

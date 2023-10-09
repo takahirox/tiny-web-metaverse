@@ -6,7 +6,7 @@ import {
   removeComponent
 } from "bitecs";
 import { Grabbable, Grabbed } from "../components/grab";
-import { Raycasted } from "../components/raycast";
+import { Raycasted, RaycastedNearest } from "../components/raycast";
 import {
   MouseButtonEvent,
   MouseButtonEventProxy,
@@ -17,7 +17,7 @@ import {
 const grabbableQuery = defineQuery([Grabbable, MouseButtonEvent]);
 
 // TODO: Rename to mouseGrabSystem?
-export const grabSystem = (world: IWorld) => {
+export const grabWithMouseSystem = (world: IWorld) => {
   // TODO: Optimize
   grabbableQuery(world).forEach(grabbableEid => {
     for (const e of MouseButtonEventProxy.get(grabbableEid).events) {
@@ -25,7 +25,8 @@ export const grabSystem = (world: IWorld) => {
         return;
       }
       if (e.type === MouseButtonEventType.Down &&
-        hasComponent(world, Raycasted, grabbableEid)) {
+        hasComponent(world, Raycasted, grabbableEid) &&
+        hasComponent(world, RaycastedNearest, grabbableEid)) {
         addComponent(world, Grabbed, grabbableEid);
         Grabbed.distance[grabbableEid] = Raycasted.distance[grabbableEid];
       } else if (e.type === MouseButtonEventType.Up) {

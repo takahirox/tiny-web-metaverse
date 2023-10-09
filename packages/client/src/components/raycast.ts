@@ -6,6 +6,7 @@ export const Raycastable = defineComponent();
 export const Raycasted = defineComponent({
   distance: Types.f32
 });
+export const RaycastedNearest = defineComponent();
 
 export const RaycasterComponent = defineComponent();
 

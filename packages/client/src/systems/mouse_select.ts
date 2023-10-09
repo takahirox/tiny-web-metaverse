@@ -11,7 +11,7 @@ import {
   MouseButtonEventType,
   MouseButtonType
 } from "../components/mouse";
-import { Raycasted } from "../components/raycast";
+import { Raycasted, RaycastedNearest } from "../components/raycast";
 import {
   Selectable,
   Selected,
@@ -43,7 +43,8 @@ export const mouseSelectSystem = (world: IWorld) => {
         if (hasComponent(world, Selected, eid)) {
           removeComponent(world, Selected, eid);
           selectedType = SelectedType.Deselected;
-        } else if (hasComponent(world, Raycasted, eid)) {
+        } else if (hasComponent(world, Raycasted, eid) &&
+          hasComponent(world, RaycastedNearest, eid)) {
           addComponent(world, Selected, eid);
           selectedType = SelectedType.Selected;
         }

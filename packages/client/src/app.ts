@@ -55,10 +55,21 @@ import {
   StateClientProxy,
   UserNetworkEventListener
 } from "./components/network";
+import { Pointer, PointerProxy } from "./components/pointer";
 import { Prefabs, PrefabsProxy } from "./components/prefab";
 import { RaycasterComponent, RaycasterProxy } from "./components/raycast";
 import { Renderer, RendererProxy } from "./components/renderer";
 import { RoomId, RoomIdProxy } from "./components/room_id";
+import {
+  TouchEventHandler,
+  TouchEventHandlerProxy,
+  TouchEventListener,
+  TouchMoveEventHandler,
+  TouchMoveEventHandlerProxy,
+  TouchMoveEventListener,
+  TouchPosition,
+  TouchPositionProxy
+} from "./components/touch";
 import { UserId, UserIdProxy } from "./components/user_id";
 import { InScene, SceneProxy, SceneComponent } from "./components/scene";
 import {
@@ -101,7 +112,7 @@ import { fpsCameraSystem } from "./systems/fps_camera";
 import { gltfSystem } from "./systems/gltf";
 import { gltfAssetLoadSystem } from "./systems/gltf_asset_load";
 import { gltfSceneLoadSystem } from "./systems/gltf_scene_load";
-import { grabSystem } from "./systems/grab";
+import { grabWithMouseSystem } from "./systems/grab_with_mouse";
 import { grabbedObjectsMouseTrackSystem } from "./systems/grab_mouse_track";
 import {
   keyEventHandleSystem,
@@ -123,8 +134,8 @@ import {
   mouseMoveEventClearSystem,
   mouseMoveEventHandleSystem
 } from "./systems/mouse_move_event";
+import { mousePositionToPointerSystem } from "./systems/mouse_position_to_pointer";
 import { mousePositionTrackSystem } from "./systems/mouse_position_track";
-import { mouseRaycastSystem } from "./systems/mouse_raycast";
 import { mouseSelectSystem } from "./systems/mouse_select";
 import { networkEventClearSystem, networkEventHandleSystem } from "./systems/network_event";
 import { networkSendSystem } from "./systems/network_send";
@@ -132,7 +143,7 @@ import { networkedSystem } from "./systems/networked";
 import { networkedEntitySystem } from "./systems/networked_entity";
 import { perspectiveCameraSystem } from "./systems/perspective_camera";
 import { prefabsSystem } from "./systems/prefab";
-import { clearRaycastedSystem } from "./systems/raycast";
+import { clearRaycastedSystem, raycastSystem } from "./systems/raycast";
 import { raycasterSystem } from "./systems/raycaster";
 import { renderSystem } from "./systems/render";
 import { rendererSystem } from "./systems/renderer";
@@ -143,6 +154,16 @@ import { streamConnectionSystem } from "./systems/stream_connection";
 import { streamRemotePeerRegisterSystem } from "./systems/stream_remote_peers";
 import { streamEventClearSystem, streamEventHandleSystem } from "./systems/stream_event";
 import { timeSystem } from "./systems/time";
+import {
+  touchEventClearSystem,
+  touchEventHandleSystem
+} from "./systems/touch_event";
+import {
+  touchMoveEventClearSystem,
+  touchMoveEventHandleSystem
+} from "./systems/touch_move_event";
+import { touchPositionToPointerSystem } from "./systems/touch_position_to_pointer";
+import { touchPositionTrackSystem } from "./systems/touch_position_track";
 import { clearTransformUpdatedSystem } from "./systems/transform";
 import { updateMatricesSystem } from "./systems/update_matrices";
 import {
@@ -201,6 +222,8 @@ export class App {
     this.registerSystem(keyEventHandleSystem, SystemOrder.EventHandling);
     this.registerSystem(mouseMoveEventHandleSystem, SystemOrder.EventHandling);
     this.registerSystem(mouseButtonEventHandleSystem, SystemOrder.EventHandling);
+    this.registerSystem(touchMoveEventHandleSystem, SystemOrder.EventHandling);
+    this.registerSystem(touchEventHandleSystem, SystemOrder.EventHandling);
     this.registerSystem(windowResizeEventHandleSystem, SystemOrder.EventHandling);
     this.registerSystem(networkEventHandleSystem, SystemOrder.EventHandling);
     this.registerSystem(streamEventHandleSystem, SystemOrder.EventHandling);
@@ -208,6 +231,10 @@ export class App {
     this.registerSystem(streamRemotePeerRegisterSystem, SystemOrder.EventHandling);
 
     this.registerSystem(mousePositionTrackSystem, SystemOrder.EventHandling + 1);
+    this.registerSystem(touchPositionTrackSystem, SystemOrder.EventHandling + 1);
+
+    this.registerSystem(mousePositionToPointerSystem, SystemOrder.EventHandling + 2);
+    this.registerSystem(touchPositionToPointerSystem, SystemOrder.EventHandling + 2);
 
     this.registerSystem(canvasSystem, SystemOrder.Setup);
     this.registerSystem(prefabsSystem, SystemOrder.Setup);
@@ -227,9 +254,9 @@ export class App {
 
     this.registerSystem(linearMoveSystem, SystemOrder.BeforeMatricesUpdate);
     this.registerSystem(linearTransformSystem, SystemOrder.BeforeMatricesUpdate);
-    this.registerSystem(mouseRaycastSystem, SystemOrder.BeforeMatricesUpdate);
+    this.registerSystem(raycastSystem, SystemOrder.BeforeMatricesUpdate);
     this.registerSystem(mouseSelectSystem, SystemOrder.BeforeMatricesUpdate);
-    this.registerSystem(grabSystem, SystemOrder.BeforeMatricesUpdate);
+    this.registerSystem(grabWithMouseSystem, SystemOrder.BeforeMatricesUpdate);
     this.registerSystem(grabbedObjectsMouseTrackSystem, SystemOrder.BeforeMatricesUpdate);
     this.registerSystem(avatarKeyControlsSystem, SystemOrder.BeforeMatricesUpdate);
     this.registerSystem(avatarMouseControlsSystem, SystemOrder.BeforeMatricesUpdate);
@@ -244,6 +271,8 @@ export class App {
     this.registerSystem(keyEventClearSystem, SystemOrder.TearDown);
     this.registerSystem(mouseMoveEventClearSystem, SystemOrder.TearDown);
     this.registerSystem(mouseButtonEventClearSystem, SystemOrder.TearDown);
+    this.registerSystem(touchMoveEventClearSystem, SystemOrder.TearDown);
+    this.registerSystem(touchEventClearSystem, SystemOrder.TearDown);
     this.registerSystem(selectedEventClearSystem, SystemOrder.TearDown);
     this.registerSystem(micEventClearSystem, SystemOrder.TearDown);
     this.registerSystem(windowResizeEventClearSystem, SystemOrder.TearDown);
@@ -304,6 +333,14 @@ export class App {
     addComponent(this.world, MouseButtonEventHandler, mouseButtonEventHandlerEid);
     MouseButtonEventHandlerProxy.get(mouseButtonEventHandlerEid).init(canvas);
 
+    const touchMoveEventHandlerEid = addEntity(this.world);
+    addComponent(this.world, TouchMoveEventHandler, touchMoveEventHandlerEid);
+    TouchMoveEventHandlerProxy.get(touchMoveEventHandlerEid).init(canvas);
+
+    const touchEventHandlerEid = addEntity(this.world);
+    addComponent(this.world, TouchEventHandler, touchEventHandlerEid);
+    TouchEventHandlerProxy.get(touchEventHandlerEid).init(canvas);
+
     const resizeEventHandlerEid = addEntity(this.world);
     addComponent(this.world, WindowResizeEventHandler, resizeEventHandlerEid);
 
@@ -332,12 +369,22 @@ export class App {
     addComponent(this.world, EntityNetworkEventListener, networkedEntityManagerEid);
     addComponent(this.world, UserNetworkEventListener, networkedEntityManagerEid);
 
+    const pointerEid = addEntity(this.world);
+    addComponent(this.world, Pointer, pointerEid);
+    PointerProxy.get(pointerEid).allocate();
+
     const mousePositionEid = addEntity(this.world);
     addComponent(this.world, MousePosition, mousePositionEid);
     MousePositionProxy.get(mousePositionEid).allocate();
     addComponent(this.world, PreviousMousePosition, mousePositionEid);
     PreviousMousePositionProxy.get(mousePositionEid).allocate();
     addComponent(this.world, MouseMoveEventListener, mousePositionEid);
+
+    const touchPositionEid = addEntity(this.world);
+    addComponent(this.world, TouchPosition, touchPositionEid);
+    TouchPositionProxy.get(touchPositionEid).allocate();
+    addComponent(this.world, TouchEventListener, touchPositionEid);
+    addComponent(this.world, TouchMoveEventListener, touchPositionEid);
 
     const raycasterEid = addEntity(this.world);
     addComponent(this.world, RaycasterComponent, raycasterEid);

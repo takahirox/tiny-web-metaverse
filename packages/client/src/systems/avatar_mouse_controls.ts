@@ -27,7 +27,7 @@ import {
   PreviousMousePositionProxy
 } from "../components/mouse";
 import { Local } from "../components/network";
-import { Raycasted } from "../components/raycast";
+import { Raycasted, RaycastedNearest } from "../components/raycast";
 import { TransformUpdated } from "../components/transform";
 
 const euler = new Euler(0, 0, 0, 'YXZ');
@@ -36,7 +36,7 @@ const controlsQuery = defineQuery([AvatarMouseControls]);
 const controlsExitQuery = exitQuery(controlsQuery);
 const avatarQuery = defineQuery([Avatar, EntityObject3D, Local]);
 const mouseQuery = defineQuery([MousePosition, PreviousMousePosition]);
-const raycastedQuery = defineQuery([Raycasted]);
+const raycastedQuery = defineQuery([Raycasted, RaycastedNearest]);
 const grabbedQuery = defineQuery([Grabbed]);
 
 // TODO: Consider to reuse Three.js PointerLockControls
