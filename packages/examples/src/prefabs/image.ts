@@ -6,6 +6,7 @@ import {
 import {
   EntityObject3D,
   EntityObject3DProxy,
+  FirstSourceInteractable,
   Grabbable,
   InScene,
   MouseButtonEventListener,
@@ -14,7 +15,8 @@ import {
   NetworkedScale,
   Raycastable,
   SecondSourceInteractable,
-  Selectable
+  Selectable,
+  TouchEventListener
 } from "@tiny-web-metaverse/client/src";
 import {
   ImageLoader,
@@ -30,8 +32,10 @@ export const ImagePrefab = (world: IWorld): number => {
   addComponent(world, NetworkedScale, eid);
   addComponent(world, Raycastable, eid);
   addComponent(world, MouseButtonEventListener, eid);
-  addComponent(world, Grabbable, eid);
+  addComponent(world, TouchEventListener, eid);
+  addComponent(world, FirstSourceInteractable, eid);
   addComponent(world, SecondSourceInteractable, eid);
+  addComponent(world, Grabbable, eid);
   addComponent(world, Selectable, eid);
   addComponent(world, InScene, eid);
 

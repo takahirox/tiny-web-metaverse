@@ -13,9 +13,11 @@ import {
 import { RaycastedNearest } from "../components/raycast";
 import {
   FirstSourceInteractable,
+  FirstSourceInteractionLeaveEvent,
   FirstSourceInteractionTriggerEvent,
   FirstSourceInteracted,
   SecondSourceInteractable,
+  SecondSourceInteractionLeaveEvent,
   SecondSourceInteractionTriggerEvent,
   SecondSourceInteracted
 } from "../components/interact";
@@ -35,6 +37,8 @@ export const mouseInteractSystem = (world: IWorld) => {
         if (hasComponent(world, RaycastedNearest, eid)) {
           addComponent(world, FirstSourceInteracted, eid);
 		}
+      } else if (e.type === MouseButtonEventType.Up) {
+        addComponent(world, FirstSourceInteractionLeaveEvent, eid);
       }
     }
   });
@@ -49,6 +53,8 @@ export const mouseInteractSystem = (world: IWorld) => {
         if (hasComponent(world, RaycastedNearest, eid)) {
           addComponent(world, SecondSourceInteracted, eid);
 		}
+      } else if (e.type === MouseButtonEventType.Up) {
+        addComponent(world, SecondSourceInteractionLeaveEvent, eid);
       }
     }
   });

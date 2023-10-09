@@ -6,9 +6,11 @@ import { defineComponent } from "bitecs";
 // TODO: Rename
 
 export const FirstSourceInteractable = defineComponent();
-export const FirstSourceInteractionTriggerEvent = defineComponent();
 export const FirstSourceInteracted = defineComponent();
+export const FirstSourceInteractionTriggerEvent = defineComponent();
+export const FirstSourceInteractionLeaveEvent = defineComponent();
 
 export const SecondSourceInteractable = defineComponent();
-export const SecondSourceInteractionTriggerEvent = defineComponent();
 export const SecondSourceInteracted = defineComponent();
+export const SecondSourceInteractionTriggerEvent = defineComponent();
+export const SecondSourceInteractionLeaveEvent = defineComponent();

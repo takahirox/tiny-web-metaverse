@@ -112,7 +112,7 @@ import { fpsCameraSystem } from "./systems/fps_camera";
 import { gltfSystem } from "./systems/gltf";
 import { gltfAssetLoadSystem } from "./systems/gltf_asset_load";
 import { gltfSceneLoadSystem } from "./systems/gltf_scene_load";
-import { grabWithMouseSystem } from "./systems/grab_with_mouse";
+import { grabSystem } from "./systems/grab";
 import { grabbedObjectsMouseTrackSystem } from "./systems/grab_mouse_track";
 import { clearInteractionSystem } from "./systems/interacted";
 import {
@@ -159,6 +159,7 @@ import {
   touchEventClearSystem,
   touchEventHandleSystem
 } from "./systems/touch_event";
+import { touchInteractSystem } from "./systems/touch_interact";
 import {
   touchMoveEventClearSystem,
   touchMoveEventHandleSystem
@@ -257,8 +258,9 @@ export class App {
     this.registerSystem(linearTransformSystem, SystemOrder.BeforeMatricesUpdate);
     this.registerSystem(raycastSystem, SystemOrder.BeforeMatricesUpdate);
     this.registerSystem(mouseInteractSystem, SystemOrder.BeforeMatricesUpdate);
+    this.registerSystem(touchInteractSystem, SystemOrder.BeforeMatricesUpdate);
     this.registerSystem(selectSystem, SystemOrder.BeforeMatricesUpdate);
-    this.registerSystem(grabWithMouseSystem, SystemOrder.BeforeMatricesUpdate);
+    this.registerSystem(grabSystem, SystemOrder.BeforeMatricesUpdate);
     this.registerSystem(grabbedObjectsMouseTrackSystem, SystemOrder.BeforeMatricesUpdate);
     this.registerSystem(avatarKeyControlsSystem, SystemOrder.BeforeMatricesUpdate);
     this.registerSystem(avatarMouseControlsSystem, SystemOrder.BeforeMatricesUpdate);

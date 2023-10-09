@@ -6,6 +6,7 @@ import {
 import {
   EntityObject3D,
   EntityObject3DProxy,
+  FirstSourceInteractable,
   GltfAssetLoader,
   GltfAssetLoaderProxy,
   InScene,
@@ -16,7 +17,8 @@ import {
   NetworkedScale,
   Raycastable,
   SecondSourceInteractable,
-  Selectable
+  Selectable,
+  TouchEventListener
 } from "@tiny-web-metaverse/client/src";
 
 const assetUrl = 'assets/models/Duck/Duck.gltf';
@@ -28,6 +30,8 @@ export const DuckPrefab = (world: IWorld): number => {
   addComponent(world, NetworkedScale, eid);
   addComponent(world, Raycastable, eid);
   addComponent(world, MouseButtonEventListener, eid);
+  addComponent(world, TouchEventListener, eid);
+  addComponent(world, FirstSourceInteractable, eid);
   addComponent(world, Grabbable, eid);
   addComponent(world, SecondSourceInteractable, eid);
   addComponent(world, Selectable, eid);

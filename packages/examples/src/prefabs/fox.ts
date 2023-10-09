@@ -7,6 +7,7 @@ import { AnimationMixer } from "three";
 import {
   EntityObject3D,
   EntityObject3DProxy,
+  FirstSourceInteractable,
   GltfAssetLoader,
   GltfAssetLoaderProxy,
   Grabbable,
@@ -20,7 +21,8 @@ import {
   NetworkedScale,
   Raycastable,
   SecondSourceInteractable,
-  Selectable
+  Selectable,
+  TouchEventListener,
 } from "@tiny-web-metaverse/client/src";
 
 const assetUrl = 'assets/models/Fox/Fox.gltf';
@@ -33,8 +35,10 @@ export const FoxPrefab = (world: IWorld): number => {
   addComponent(world, NetworkedMixerAnimation, eid);
   addComponent(world, Raycastable, eid);
   addComponent(world, MouseButtonEventListener, eid);
-  addComponent(world, Grabbable, eid);
+  addComponent(world, TouchEventListener, eid);
+  addComponent(world, FirstSourceInteractable, eid);
   addComponent(world, SecondSourceInteractable, eid);
+  addComponent(world, Grabbable, eid);
   addComponent(world, Selectable, eid);
   addComponent(world, InScene, eid);
 

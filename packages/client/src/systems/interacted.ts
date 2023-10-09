@@ -5,30 +5,42 @@ import {
 } from "bitecs";
 import {
   FirstSourceInteracted,
+  FirstSourceInteractionLeaveEvent,
   FirstSourceInteractionTriggerEvent,
   SecondSourceInteracted,
+  SecondSourceInteractionLeaveEvent,
   SecondSourceInteractionTriggerEvent
 } from "../components/interact";
 
-const firstEventQuery = defineQuery([FirstSourceInteractionTriggerEvent]);
 const firstInteractedQuery = defineQuery([FirstSourceInteracted]);
-const secondEventQuery = defineQuery([SecondSourceInteractionTriggerEvent]);
+const firstTriggerEventQuery = defineQuery([FirstSourceInteractionTriggerEvent]);
+const firstLeaveEventQuery = defineQuery([FirstSourceInteractionLeaveEvent]);
 const secondInteractedQuery = defineQuery([SecondSourceInteracted]);
+const secondTriggerEventQuery = defineQuery([SecondSourceInteractionTriggerEvent]);
+const secondLeaveEventQuery = defineQuery([SecondSourceInteractionLeaveEvent]);
 
 export const clearInteractionSystem = (world: IWorld): void => {
-  firstEventQuery(world).forEach(eid => {
-    removeComponent(world, FirstSourceInteractionTriggerEvent, eid);
-  });
-
   firstInteractedQuery(world).forEach(eid => {
     removeComponent(world, FirstSourceInteracted, eid);
   });
 
-  secondEventQuery(world).forEach(eid => {
-    removeComponent(world, SecondSourceInteractionTriggerEvent, eid);
+  firstTriggerEventQuery(world).forEach(eid => {
+    removeComponent(world, FirstSourceInteractionTriggerEvent, eid);
+  });
+
+  firstLeaveEventQuery(world).forEach(eid => {
+    removeComponent(world, FirstSourceInteractionLeaveEvent, eid);
   });
 
   secondInteractedQuery(world).forEach(eid => {
     removeComponent(world, SecondSourceInteracted, eid);
+  });
+
+  secondTriggerEventQuery(world).forEach(eid => {
+    removeComponent(world, SecondSourceInteractionTriggerEvent, eid);
+  });
+
+  secondLeaveEventQuery(world).forEach(eid => {
+    removeComponent(world, SecondSourceInteractionLeaveEvent, eid);
   });
 };
