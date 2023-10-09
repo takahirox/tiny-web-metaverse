@@ -6,13 +6,14 @@ import {
 import { BoxGeometry, Mesh, MeshStandardMaterial } from "three";
 import {
   addObject3D,
-  InScene,
   Grabbable,
+  InScene,
   MouseButtonEventListener,
   NetworkedPosition,
   NetworkedQuaternion,
   NetworkedScale,
   Raycastable,
+  SecondSourceInteractable,
   Selectable
 } from "@tiny-web-metaverse/client/src";
 
@@ -24,6 +25,7 @@ export const CubePrefab = (world: IWorld): number => {
   addComponent(world, Raycastable, eid);
   addComponent(world, MouseButtonEventListener, eid);
   addComponent(world, Grabbable, eid);
+  addComponent(world, SecondSourceInteractable, eid);
   addComponent(world, Selectable, eid);
   addComponent(world, InScene, eid);
   addObject3D(world, new Mesh(

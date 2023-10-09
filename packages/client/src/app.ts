@@ -114,6 +114,7 @@ import { gltfAssetLoadSystem } from "./systems/gltf_asset_load";
 import { gltfSceneLoadSystem } from "./systems/gltf_scene_load";
 import { grabWithMouseSystem } from "./systems/grab_with_mouse";
 import { grabbedObjectsMouseTrackSystem } from "./systems/grab_mouse_track";
+import { clearInteractionSystem } from "./systems/interacted";
 import {
   keyEventHandleSystem,
   keyEventClearSystem
@@ -136,7 +137,7 @@ import {
 } from "./systems/mouse_move_event";
 import { mousePositionToPointerSystem } from "./systems/mouse_position_to_pointer";
 import { mousePositionTrackSystem } from "./systems/mouse_position_track";
-import { mouseSelectSystem } from "./systems/mouse_select";
+import { mouseInteractSystem } from "./systems/mouse_interact";
 import { networkEventClearSystem, networkEventHandleSystem } from "./systems/network_event";
 import { networkSendSystem } from "./systems/network_send";
 import { networkedSystem } from "./systems/networked";
@@ -149,7 +150,7 @@ import { renderSystem } from "./systems/render";
 import { rendererSystem } from "./systems/renderer";
 import { sceneSystem } from "./systems/scene";
 import { sceneEnvironmentMapLoadSystem } from "./systems/scene_environment_map_load";
-import { selectedEventClearSystem } from "./systems/selected";
+import { selectedEventClearSystem, selectSystem } from "./systems/select";
 import { streamConnectionSystem } from "./systems/stream_connection";
 import { streamRemotePeerRegisterSystem } from "./systems/stream_remote_peers";
 import { streamEventClearSystem, streamEventHandleSystem } from "./systems/stream_event";
@@ -255,7 +256,8 @@ export class App {
     this.registerSystem(linearMoveSystem, SystemOrder.BeforeMatricesUpdate);
     this.registerSystem(linearTransformSystem, SystemOrder.BeforeMatricesUpdate);
     this.registerSystem(raycastSystem, SystemOrder.BeforeMatricesUpdate);
-    this.registerSystem(mouseSelectSystem, SystemOrder.BeforeMatricesUpdate);
+    this.registerSystem(mouseInteractSystem, SystemOrder.BeforeMatricesUpdate);
+    this.registerSystem(selectSystem, SystemOrder.BeforeMatricesUpdate);
     this.registerSystem(grabWithMouseSystem, SystemOrder.BeforeMatricesUpdate);
     this.registerSystem(grabbedObjectsMouseTrackSystem, SystemOrder.BeforeMatricesUpdate);
     this.registerSystem(avatarKeyControlsSystem, SystemOrder.BeforeMatricesUpdate);
@@ -281,6 +283,7 @@ export class App {
     this.registerSystem(clearRaycastedSystem, SystemOrder.TearDown);
     this.registerSystem(clearTransformUpdatedSystem, SystemOrder.TearDown);
     this.registerSystem(clearActiveAnimationsUpdatedSystem, SystemOrder.TearDown);
+    this.registerSystem(clearInteractionSystem, SystemOrder.TearDown);
 
     // Entity 0 for null entity
     addEntity(this.world);
