@@ -673,7 +673,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _systems_gltf_asset_load__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ./systems/gltf_asset_load */ "../client/src/systems/gltf_asset_load.ts");
 /* harmony import */ var _systems_gltf_scene_load__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ./systems/gltf_scene_load */ "../client/src/systems/gltf_scene_load.ts");
 /* harmony import */ var _systems_grab__WEBPACK_IMPORTED_MODULE_42__ = __webpack_require__(/*! ./systems/grab */ "../client/src/systems/grab.ts");
-/* harmony import */ var _systems_grab_mouse_track__WEBPACK_IMPORTED_MODULE_43__ = __webpack_require__(/*! ./systems/grab_mouse_track */ "../client/src/systems/grab_mouse_track.ts");
+/* harmony import */ var _systems_grab_pointer_track__WEBPACK_IMPORTED_MODULE_43__ = __webpack_require__(/*! ./systems/grab_pointer_track */ "../client/src/systems/grab_pointer_track.ts");
 /* harmony import */ var _systems_interacted__WEBPACK_IMPORTED_MODULE_51__ = __webpack_require__(/*! ./systems/interacted */ "../client/src/systems/interacted.ts");
 /* harmony import */ var _systems_keyboard_event__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./systems/keyboard_event */ "../client/src/systems/keyboard_event.ts");
 /* harmony import */ var _systems_lazily_activate_animation__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! ./systems/lazily_activate_animation */ "../client/src/systems/lazily_activate_animation.ts");
@@ -843,7 +843,7 @@ class App {
         this.registerSystem(_systems_touch_interact__WEBPACK_IMPORTED_MODULE_40__.touchInteractSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.BeforeMatricesUpdate);
         this.registerSystem(_systems_select__WEBPACK_IMPORTED_MODULE_41__.selectSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.BeforeMatricesUpdate);
         this.registerSystem(_systems_grab__WEBPACK_IMPORTED_MODULE_42__.grabSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.BeforeMatricesUpdate);
-        this.registerSystem(_systems_grab_mouse_track__WEBPACK_IMPORTED_MODULE_43__.grabbedObjectsMouseTrackSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.BeforeMatricesUpdate);
+        this.registerSystem(_systems_grab_pointer_track__WEBPACK_IMPORTED_MODULE_43__.grabbedObjectsPointerTrackSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.BeforeMatricesUpdate);
         this.registerSystem(_systems_avatar_key_controls__WEBPACK_IMPORTED_MODULE_44__.avatarKeyControlsSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.BeforeMatricesUpdate);
         this.registerSystem(_systems_avatar_mouse_controls__WEBPACK_IMPORTED_MODULE_45__.avatarMouseControlsSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.BeforeMatricesUpdate);
         this.registerSystem(_systems_fps_camera__WEBPACK_IMPORTED_MODULE_46__.fpsCameraSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.MatricesUpdate - 1);
@@ -3936,22 +3936,22 @@ const grabSystem = (world) => {
 
 /***/ }),
 
-/***/ "../client/src/systems/grab_mouse_track.ts":
-/*!*************************************************!*\
-  !*** ../client/src/systems/grab_mouse_track.ts ***!
-  \*************************************************/
+/***/ "../client/src/systems/grab_pointer_track.ts":
+/*!***************************************************!*\
+  !*** ../client/src/systems/grab_pointer_track.ts ***!
+  \***************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   grabbedObjectsMouseTrackSystem: () => (/* binding */ grabbedObjectsMouseTrackSystem)
+/* harmony export */   grabbedObjectsPointerTrackSystem: () => (/* binding */ grabbedObjectsPointerTrackSystem)
 /* harmony export */ });
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "../../node_modules/three/build/three.module.js");
 /* harmony import */ var _components_camera__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/camera */ "../client/src/components/camera.ts");
 /* harmony import */ var _components_entity_object3d__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/entity_object3d */ "../client/src/components/entity_object3d.ts");
 /* harmony import */ var _components_grab__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/grab */ "../client/src/components/grab.ts");
-/* harmony import */ var _components_mouse__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/mouse */ "../client/src/components/mouse.ts");
+/* harmony import */ var _components_pointer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/pointer */ "../client/src/components/pointer.ts");
 /* harmony import */ var _components_scene__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../components/scene */ "../client/src/components/scene.ts");
 /* harmony import */ var _components_transform__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../components/transform */ "../client/src/components/transform.ts");
 
@@ -3964,19 +3964,16 @@ __webpack_require__.r(__webpack_exports__);
 
 const ray = new three__WEBPACK_IMPORTED_MODULE_1__.Ray();
 const cameraQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_camera__WEBPACK_IMPORTED_MODULE_2__.PerspectiveCameraComponent, _components_camera__WEBPACK_IMPORTED_MODULE_2__.SceneCamera]);
-const mouseQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_mouse__WEBPACK_IMPORTED_MODULE_3__.MousePosition]);
+const pointerQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_pointer__WEBPACK_IMPORTED_MODULE_3__.Pointer]);
 const grabbedQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_entity_object3d__WEBPACK_IMPORTED_MODULE_4__.EntityObject3D, _components_grab__WEBPACK_IMPORTED_MODULE_5__.Grabbed, _components_scene__WEBPACK_IMPORTED_MODULE_6__.InScene]);
-const grabbedObjectsMouseTrackSystem = (world) => {
-    const cameraEids = cameraQuery(world);
-    const mouseEids = mouseQuery(world);
-    const grabbedEids = grabbedQuery(world);
-    cameraEids.forEach(cameraEid => {
+const grabbedObjectsPointerTrackSystem = (world) => {
+    cameraQuery(world).forEach(cameraEid => {
         const camera = _components_camera__WEBPACK_IMPORTED_MODULE_2__.PerspectiveCameraProxy.get(cameraEid).camera;
-        mouseEids.forEach(mouseEid => {
-            const proxy = _components_mouse__WEBPACK_IMPORTED_MODULE_3__.MousePositionProxy.get(mouseEid);
+        pointerQuery(world).forEach(pointerEid => {
+            const proxy = _components_pointer__WEBPACK_IMPORTED_MODULE_3__.PointerProxy.get(pointerEid);
             ray.origin.setFromMatrixPosition(camera.matrixWorld);
             ray.direction.set(proxy.x, proxy.y, 0.5).unproject(camera).sub(ray.origin).normalize();
-            grabbedEids.forEach(grabbedEid => {
+            grabbedQuery(world).forEach(grabbedEid => {
                 _components_entity_object3d__WEBPACK_IMPORTED_MODULE_4__.EntityObject3DProxy.get(grabbedEid).root
                     .position.copy(ray.direction)
                     .multiplyScalar(_components_grab__WEBPACK_IMPORTED_MODULE_5__.Grabbed.distance[grabbedEid])

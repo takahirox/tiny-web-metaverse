@@ -10,34 +10,27 @@ import {
   EntityObject3DProxy
 } from "../components/entity_object3d";
 import { Grabbed } from "../components/grab";
-import {
-  MousePosition,
-  MousePositionProxy
-} from "../components/mouse";
+import { Pointer, PointerProxy } from "../components/pointer";
 import { InScene } from "../components/scene";
 import { TransformUpdated } from "../components/transform";
 
 const ray = new Ray();
 
 const cameraQuery = defineQuery([PerspectiveCameraComponent, SceneCamera]);
-const mouseQuery = defineQuery([MousePosition]);
+const pointerQuery = defineQuery([Pointer]);
 const grabbedQuery = defineQuery([EntityObject3D, Grabbed, InScene]);
 
-export const grabbedObjectsMouseTrackSystem = (world: IWorld) => {
-  const cameraEids = cameraQuery(world);
-  const mouseEids = mouseQuery(world);
-  const grabbedEids = grabbedQuery(world);
-
-  cameraEids.forEach(cameraEid => {
+export const grabbedObjectsPointerTrackSystem = (world: IWorld) => {
+  cameraQuery(world).forEach(cameraEid => {
     const camera = PerspectiveCameraProxy.get(cameraEid).camera;
 
-    mouseEids.forEach(mouseEid => {
-      const proxy = MousePositionProxy.get(mouseEid);
+    pointerQuery(world).forEach(pointerEid => {
+      const proxy = PointerProxy.get(pointerEid);
 
       ray.origin.setFromMatrixPosition(camera.matrixWorld);
       ray.direction.set(proxy.x, proxy.y, 0.5).unproject(camera).sub(ray.origin).normalize();
 
-      grabbedEids.forEach(grabbedEid => {
+      grabbedQuery(world).forEach(grabbedEid => {
         EntityObject3DProxy.get(grabbedEid).root
           .position.copy(ray.direction)
           .multiplyScalar(Grabbed.distance[grabbedEid])

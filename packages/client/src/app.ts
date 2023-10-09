@@ -113,7 +113,7 @@ import { gltfSystem } from "./systems/gltf";
 import { gltfAssetLoadSystem } from "./systems/gltf_asset_load";
 import { gltfSceneLoadSystem } from "./systems/gltf_scene_load";
 import { grabSystem } from "./systems/grab";
-import { grabbedObjectsMouseTrackSystem } from "./systems/grab_mouse_track";
+import { grabbedObjectsPointerTrackSystem } from "./systems/grab_pointer_track";
 import { clearInteractionSystem } from "./systems/interacted";
 import {
   keyEventHandleSystem,
@@ -261,7 +261,7 @@ export class App {
     this.registerSystem(touchInteractSystem, SystemOrder.BeforeMatricesUpdate);
     this.registerSystem(selectSystem, SystemOrder.BeforeMatricesUpdate);
     this.registerSystem(grabSystem, SystemOrder.BeforeMatricesUpdate);
-    this.registerSystem(grabbedObjectsMouseTrackSystem, SystemOrder.BeforeMatricesUpdate);
+    this.registerSystem(grabbedObjectsPointerTrackSystem, SystemOrder.BeforeMatricesUpdate);
     this.registerSystem(avatarKeyControlsSystem, SystemOrder.BeforeMatricesUpdate);
     this.registerSystem(avatarMouseControlsSystem, SystemOrder.BeforeMatricesUpdate);
 
