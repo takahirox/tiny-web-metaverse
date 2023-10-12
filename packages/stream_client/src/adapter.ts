@@ -36,7 +36,7 @@ export class StreamAdapter {
   // TODO: Avoid any
   private consumerInfoQueue: any[];
 
-  constructor(serverUrl: string = `ws://${window.location.hostname}:3000`) {
+  constructor(serverUrl: string = `${window.location.protocol === 'https:' ? 'wss' : 'ws'}://${window.location.hostname}:3000`) {
     Logger.info(`Server URL: ${serverUrl}.`);
 
     this.socket = socketIO.io(serverUrl, { autoConnect: false });

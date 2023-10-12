@@ -16,7 +16,7 @@ __webpack_require__.r(__webpack_exports__);
 
 class StateAdapter {
     constructor(params) {
-        const url = params.url || `ws://${window.location.hostname}:4000/socket`;
+        const url = params.url || `${window.location.protocol === 'https:' ? 'wss' : 'ws'}://${window.location.hostname}:4000/socket`;
         const topic = `room:${params.roomId}`;
         this.userId = params.userId;
         const socket = new phoenix__WEBPACK_IMPORTED_MODULE_0__.Socket(url, {});

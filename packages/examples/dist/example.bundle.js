@@ -23792,7 +23792,7 @@ const throwError = (error) => {
 };
 // TODO: Proper error handling
 class StreamAdapter {
-    constructor(serverUrl = `ws://${window.location.hostname}:3000`) {
+    constructor(serverUrl = `${window.location.protocol === 'https:' ? 'wss' : 'ws'}://${window.location.hostname}:3000`) {
         _logger__WEBPACK_IMPORTED_MODULE_2__.Logger.info(`Server URL: ${serverUrl}.`);
         this.socket = socket_io_client__WEBPACK_IMPORTED_MODULE_1__.io(serverUrl, { autoConnect: false });
         this.device = new mediasoup_client__WEBPACK_IMPORTED_MODULE_0__.Device();
@@ -24140,10 +24140,10 @@ class StreamAdapter {
 /*!***********************!*\
   !*** ./src/logger.ts ***!
   \***********************/
-/***/ ((__unused_webpack_module, __nested_webpack_exports__, __nested_webpack_require_630630__) => {
+/***/ ((__unused_webpack_module, __nested_webpack_exports__, __nested_webpack_require_630683__) => {
 
-__nested_webpack_require_630630__.r(__nested_webpack_exports__);
-/* harmony export */ __nested_webpack_require_630630__.d(__nested_webpack_exports__, {
+__nested_webpack_require_630683__.r(__nested_webpack_exports__);
+/* harmony export */ __nested_webpack_require_630683__.d(__nested_webpack_exports__, {
 /* harmony export */   LogLevel: () => (/* binding */ LogLevel),
 /* harmony export */   Logger: () => (/* binding */ Logger)
 /* harmony export */ });
@@ -24199,10 +24199,10 @@ Logger.level = LogLevel.debug;
 /*!*****************************!*\
   !*** ./src/socket_utils.ts ***!
   \*****************************/
-/***/ ((__unused_webpack_module, __nested_webpack_exports__, __nested_webpack_require_632538__) => {
+/***/ ((__unused_webpack_module, __nested_webpack_exports__, __nested_webpack_require_632591__) => {
 
-__nested_webpack_require_632538__.r(__nested_webpack_exports__);
-/* harmony export */ __nested_webpack_require_632538__.d(__nested_webpack_exports__, {
+__nested_webpack_require_632591__.r(__nested_webpack_exports__);
+/* harmony export */ __nested_webpack_require_632591__.d(__nested_webpack_exports__, {
 /* harmony export */   asyncEmit: () => (/* binding */ asyncEmit)
 /* harmony export */ });
 var __awaiter = ( false) || function (thisArg, _arguments, P, generator) {
@@ -24231,7 +24231,7 @@ const asyncEmit = (socket, eventName, data = {}) => __awaiter(void 0, void 0, vo
 /*!********************************************************!*\
   !*** ../../node_modules/ua-parser-js/src/ua-parser.js ***!
   \********************************************************/
-/***/ (function(module, exports, __nested_webpack_require_634109__) {
+/***/ (function(module, exports, __nested_webpack_require_634162__) {
 
 var __WEBPACK_AMD_DEFINE_RESULT__;/////////////////////////////////////////////////////////////////////////////////
 /* UAParser.js v1.0.35
@@ -25133,10 +25133,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;//////////////////////////////////////////////
         exports.UAParser = UAParser;
     } else {
         // requirejs env (optional)
-        if ("function" === FUNC_TYPE && __nested_webpack_require_634109__.amdO) {
+        if ("function" === FUNC_TYPE && __nested_webpack_require_634162__.amdO) {
             !(__WEBPACK_AMD_DEFINE_RESULT__ = (function () {
                 return UAParser;
-            }).call(exports, __nested_webpack_require_634109__, exports, module),
+            }).call(exports, __nested_webpack_require_634162__, exports, module),
 		__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
         } else if (typeof window !== UNDEF_TYPE) {
             // browser env
@@ -25174,10 +25174,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;//////////////////////////////////////////////
 /*!*****************************************************************!*\
   !*** ../../node_modules/@socket.io/component-emitter/index.mjs ***!
   \*****************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_682739__) => {
+/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_682792__) => {
 
-__nested_webpack_require_682739__.r(__nested_webpack_exports__);
-/* harmony export */ __nested_webpack_require_682739__.d(__nested_webpack_exports__, {
+__nested_webpack_require_682792__.r(__nested_webpack_exports__);
+/* harmony export */ __nested_webpack_require_682792__.d(__nested_webpack_exports__, {
 /* harmony export */   Emitter: () => (/* binding */ Emitter)
 /* harmony export */ });
 /**
@@ -25357,10 +25357,10 @@ Emitter.prototype.hasListeners = function(event){
 /*!*************************************************************************!*\
   !*** ../../node_modules/engine.io-client/build/esm/contrib/has-cors.js ***!
   \*************************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_686657__) => {
+/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_686710__) => {
 
-__nested_webpack_require_686657__.r(__nested_webpack_exports__);
-/* harmony export */ __nested_webpack_require_686657__.d(__nested_webpack_exports__, {
+__nested_webpack_require_686710__.r(__nested_webpack_exports__);
+/* harmony export */ __nested_webpack_require_686710__.d(__nested_webpack_exports__, {
 /* harmony export */   hasCORS: () => (/* binding */ hasCORS)
 /* harmony export */ });
 // imported from https://github.com/component/has-cors
@@ -25382,10 +25382,10 @@ const hasCORS = value;
 /*!************************************************************************!*\
   !*** ../../node_modules/engine.io-client/build/esm/contrib/parseqs.js ***!
   \************************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_687584__) => {
+/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_687637__) => {
 
-__nested_webpack_require_687584__.r(__nested_webpack_exports__);
-/* harmony export */ __nested_webpack_require_687584__.d(__nested_webpack_exports__, {
+__nested_webpack_require_687637__.r(__nested_webpack_exports__);
+/* harmony export */ __nested_webpack_require_687637__.d(__nested_webpack_exports__, {
 /* harmony export */   decode: () => (/* binding */ decode),
 /* harmony export */   encode: () => (/* binding */ encode)
 /* harmony export */ });
@@ -25431,10 +25431,10 @@ function decode(qs) {
 /*!*************************************************************************!*\
   !*** ../../node_modules/engine.io-client/build/esm/contrib/parseuri.js ***!
   \*************************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_689054__) => {
+/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_689107__) => {
 
-__nested_webpack_require_689054__.r(__nested_webpack_exports__);
-/* harmony export */ __nested_webpack_require_689054__.d(__nested_webpack_exports__, {
+__nested_webpack_require_689107__.r(__nested_webpack_exports__);
+/* harmony export */ __nested_webpack_require_689107__.d(__nested_webpack_exports__, {
 /* harmony export */   parse: () => (/* binding */ parse)
 /* harmony export */ });
 // imported from https://github.com/galkn/parseuri
@@ -25506,10 +25506,10 @@ function queryKey(uri, query) {
 /*!**********************************************************************!*\
   !*** ../../node_modules/engine.io-client/build/esm/contrib/yeast.js ***!
   \**********************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_692091__) => {
+/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_692144__) => {
 
-__nested_webpack_require_692091__.r(__nested_webpack_exports__);
-/* harmony export */ __nested_webpack_require_692091__.d(__nested_webpack_exports__, {
+__nested_webpack_require_692144__.r(__nested_webpack_exports__);
+/* harmony export */ __nested_webpack_require_692144__.d(__nested_webpack_exports__, {
 /* harmony export */   decode: () => (/* binding */ decode),
 /* harmony export */   encode: () => (/* binding */ encode),
 /* harmony export */   yeast: () => (/* binding */ yeast)
@@ -25572,10 +25572,10 @@ for (; i < length; i++)
 /*!***************************************************************************!*\
   !*** ../../node_modules/engine.io-client/build/esm/globalThis.browser.js ***!
   \***************************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_694120__) => {
+/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_694173__) => {
 
-__nested_webpack_require_694120__.r(__nested_webpack_exports__);
-/* harmony export */ __nested_webpack_require_694120__.d(__nested_webpack_exports__, {
+__nested_webpack_require_694173__.r(__nested_webpack_exports__);
+/* harmony export */ __nested_webpack_require_694173__.d(__nested_webpack_exports__, {
 /* harmony export */   globalThisShim: () => (/* binding */ globalThisShim)
 /* harmony export */ });
 const globalThisShim = (() => {
@@ -25597,10 +25597,10 @@ const globalThisShim = (() => {
 /*!**************************************************************!*\
   !*** ../../node_modules/engine.io-client/build/esm/index.js ***!
   \**************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_694942__) => {
+/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_694995__) => {
 
-__nested_webpack_require_694942__.r(__nested_webpack_exports__);
-/* harmony export */ __nested_webpack_require_694942__.d(__nested_webpack_exports__, {
+__nested_webpack_require_694995__.r(__nested_webpack_exports__);
+/* harmony export */ __nested_webpack_require_694995__.d(__nested_webpack_exports__, {
 /* harmony export */   Socket: () => (/* reexport safe */ _socket_js__WEBPACK_IMPORTED_MODULE_0__.Socket),
 /* harmony export */   Transport: () => (/* reexport safe */ _transport_js__WEBPACK_IMPORTED_MODULE_1__.Transport),
 /* harmony export */   installTimerFunctions: () => (/* reexport safe */ _util_js__WEBPACK_IMPORTED_MODULE_3__.installTimerFunctions),
@@ -25609,12 +25609,12 @@ __nested_webpack_require_694942__.r(__nested_webpack_exports__);
 /* harmony export */   protocol: () => (/* binding */ protocol),
 /* harmony export */   transports: () => (/* reexport safe */ _transports_index_js__WEBPACK_IMPORTED_MODULE_2__.transports)
 /* harmony export */ });
-/* harmony import */ var _socket_js__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_694942__(/*! ./socket.js */ "../../node_modules/engine.io-client/build/esm/socket.js");
-/* harmony import */ var _transport_js__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_694942__(/*! ./transport.js */ "../../node_modules/engine.io-client/build/esm/transport.js");
-/* harmony import */ var _transports_index_js__WEBPACK_IMPORTED_MODULE_2__ = __nested_webpack_require_694942__(/*! ./transports/index.js */ "../../node_modules/engine.io-client/build/esm/transports/index.js");
-/* harmony import */ var _util_js__WEBPACK_IMPORTED_MODULE_3__ = __nested_webpack_require_694942__(/*! ./util.js */ "../../node_modules/engine.io-client/build/esm/util.js");
-/* harmony import */ var _contrib_parseuri_js__WEBPACK_IMPORTED_MODULE_4__ = __nested_webpack_require_694942__(/*! ./contrib/parseuri.js */ "../../node_modules/engine.io-client/build/esm/contrib/parseuri.js");
-/* harmony import */ var _transports_websocket_constructor_js__WEBPACK_IMPORTED_MODULE_5__ = __nested_webpack_require_694942__(/*! ./transports/websocket-constructor.js */ "../../node_modules/engine.io-client/build/esm/transports/websocket-constructor.browser.js");
+/* harmony import */ var _socket_js__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_694995__(/*! ./socket.js */ "../../node_modules/engine.io-client/build/esm/socket.js");
+/* harmony import */ var _transport_js__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_694995__(/*! ./transport.js */ "../../node_modules/engine.io-client/build/esm/transport.js");
+/* harmony import */ var _transports_index_js__WEBPACK_IMPORTED_MODULE_2__ = __nested_webpack_require_694995__(/*! ./transports/index.js */ "../../node_modules/engine.io-client/build/esm/transports/index.js");
+/* harmony import */ var _util_js__WEBPACK_IMPORTED_MODULE_3__ = __nested_webpack_require_694995__(/*! ./util.js */ "../../node_modules/engine.io-client/build/esm/util.js");
+/* harmony import */ var _contrib_parseuri_js__WEBPACK_IMPORTED_MODULE_4__ = __nested_webpack_require_694995__(/*! ./contrib/parseuri.js */ "../../node_modules/engine.io-client/build/esm/contrib/parseuri.js");
+/* harmony import */ var _transports_websocket_constructor_js__WEBPACK_IMPORTED_MODULE_5__ = __nested_webpack_require_694995__(/*! ./transports/websocket-constructor.js */ "../../node_modules/engine.io-client/build/esm/transports/websocket-constructor.browser.js");
 
 
 const protocol = _socket_js__WEBPACK_IMPORTED_MODULE_0__.Socket.protocol;
@@ -25631,18 +25631,18 @@ const protocol = _socket_js__WEBPACK_IMPORTED_MODULE_0__.Socket.protocol;
 /*!***************************************************************!*\
   !*** ../../node_modules/engine.io-client/build/esm/socket.js ***!
   \***************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_697479__) => {
+/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_697532__) => {
 
-__nested_webpack_require_697479__.r(__nested_webpack_exports__);
-/* harmony export */ __nested_webpack_require_697479__.d(__nested_webpack_exports__, {
+__nested_webpack_require_697532__.r(__nested_webpack_exports__);
+/* harmony export */ __nested_webpack_require_697532__.d(__nested_webpack_exports__, {
 /* harmony export */   Socket: () => (/* binding */ Socket)
 /* harmony export */ });
-/* harmony import */ var _transports_index_js__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_697479__(/*! ./transports/index.js */ "../../node_modules/engine.io-client/build/esm/transports/index.js");
-/* harmony import */ var _util_js__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_697479__(/*! ./util.js */ "../../node_modules/engine.io-client/build/esm/util.js");
-/* harmony import */ var _contrib_parseqs_js__WEBPACK_IMPORTED_MODULE_2__ = __nested_webpack_require_697479__(/*! ./contrib/parseqs.js */ "../../node_modules/engine.io-client/build/esm/contrib/parseqs.js");
-/* harmony import */ var _contrib_parseuri_js__WEBPACK_IMPORTED_MODULE_3__ = __nested_webpack_require_697479__(/*! ./contrib/parseuri.js */ "../../node_modules/engine.io-client/build/esm/contrib/parseuri.js");
-/* harmony import */ var _socket_io_component_emitter__WEBPACK_IMPORTED_MODULE_4__ = __nested_webpack_require_697479__(/*! @socket.io/component-emitter */ "../../node_modules/@socket.io/component-emitter/index.mjs");
-/* harmony import */ var engine_io_parser__WEBPACK_IMPORTED_MODULE_5__ = __nested_webpack_require_697479__(/*! engine.io-parser */ "../../node_modules/engine.io-parser/build/esm/index.js");
+/* harmony import */ var _transports_index_js__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_697532__(/*! ./transports/index.js */ "../../node_modules/engine.io-client/build/esm/transports/index.js");
+/* harmony import */ var _util_js__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_697532__(/*! ./util.js */ "../../node_modules/engine.io-client/build/esm/util.js");
+/* harmony import */ var _contrib_parseqs_js__WEBPACK_IMPORTED_MODULE_2__ = __nested_webpack_require_697532__(/*! ./contrib/parseqs.js */ "../../node_modules/engine.io-client/build/esm/contrib/parseqs.js");
+/* harmony import */ var _contrib_parseuri_js__WEBPACK_IMPORTED_MODULE_3__ = __nested_webpack_require_697532__(/*! ./contrib/parseuri.js */ "../../node_modules/engine.io-client/build/esm/contrib/parseuri.js");
+/* harmony import */ var _socket_io_component_emitter__WEBPACK_IMPORTED_MODULE_4__ = __nested_webpack_require_697532__(/*! @socket.io/component-emitter */ "../../node_modules/@socket.io/component-emitter/index.mjs");
+/* harmony import */ var engine_io_parser__WEBPACK_IMPORTED_MODULE_5__ = __nested_webpack_require_697532__(/*! engine.io-parser */ "../../node_modules/engine.io-parser/build/esm/index.js");
 
 
 
@@ -26243,16 +26243,16 @@ Socket.protocol = engine_io_parser__WEBPACK_IMPORTED_MODULE_5__.protocol;
 /*!******************************************************************!*\
   !*** ../../node_modules/engine.io-client/build/esm/transport.js ***!
   \******************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_719028__) => {
+/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_719081__) => {
 
-__nested_webpack_require_719028__.r(__nested_webpack_exports__);
-/* harmony export */ __nested_webpack_require_719028__.d(__nested_webpack_exports__, {
+__nested_webpack_require_719081__.r(__nested_webpack_exports__);
+/* harmony export */ __nested_webpack_require_719081__.d(__nested_webpack_exports__, {
 /* harmony export */   Transport: () => (/* binding */ Transport)
 /* harmony export */ });
-/* harmony import */ var engine_io_parser__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_719028__(/*! engine.io-parser */ "../../node_modules/engine.io-parser/build/esm/index.js");
-/* harmony import */ var _socket_io_component_emitter__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_719028__(/*! @socket.io/component-emitter */ "../../node_modules/@socket.io/component-emitter/index.mjs");
-/* harmony import */ var _util_js__WEBPACK_IMPORTED_MODULE_2__ = __nested_webpack_require_719028__(/*! ./util.js */ "../../node_modules/engine.io-client/build/esm/util.js");
-/* harmony import */ var _contrib_parseqs_js__WEBPACK_IMPORTED_MODULE_3__ = __nested_webpack_require_719028__(/*! ./contrib/parseqs.js */ "../../node_modules/engine.io-client/build/esm/contrib/parseqs.js");
+/* harmony import */ var engine_io_parser__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_719081__(/*! engine.io-parser */ "../../node_modules/engine.io-parser/build/esm/index.js");
+/* harmony import */ var _socket_io_component_emitter__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_719081__(/*! @socket.io/component-emitter */ "../../node_modules/@socket.io/component-emitter/index.mjs");
+/* harmony import */ var _util_js__WEBPACK_IMPORTED_MODULE_2__ = __nested_webpack_require_719081__(/*! ./util.js */ "../../node_modules/engine.io-client/build/esm/util.js");
+/* harmony import */ var _contrib_parseqs_js__WEBPACK_IMPORTED_MODULE_3__ = __nested_webpack_require_719081__(/*! ./contrib/parseqs.js */ "../../node_modules/engine.io-client/build/esm/contrib/parseqs.js");
 
 
 
@@ -26402,15 +26402,15 @@ class Transport extends _socket_io_component_emitter__WEBPACK_IMPORTED_MODULE_1_
 /*!*************************************************************************!*\
   !*** ../../node_modules/engine.io-client/build/esm/transports/index.js ***!
   \*************************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_723892__) => {
+/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_723945__) => {
 
-__nested_webpack_require_723892__.r(__nested_webpack_exports__);
-/* harmony export */ __nested_webpack_require_723892__.d(__nested_webpack_exports__, {
+__nested_webpack_require_723945__.r(__nested_webpack_exports__);
+/* harmony export */ __nested_webpack_require_723945__.d(__nested_webpack_exports__, {
 /* harmony export */   transports: () => (/* binding */ transports)
 /* harmony export */ });
-/* harmony import */ var _polling_js__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_723892__(/*! ./polling.js */ "../../node_modules/engine.io-client/build/esm/transports/polling.js");
-/* harmony import */ var _websocket_js__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_723892__(/*! ./websocket.js */ "../../node_modules/engine.io-client/build/esm/transports/websocket.js");
-/* harmony import */ var _webtransport_js__WEBPACK_IMPORTED_MODULE_2__ = __nested_webpack_require_723892__(/*! ./webtransport.js */ "../../node_modules/engine.io-client/build/esm/transports/webtransport.js");
+/* harmony import */ var _polling_js__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_723945__(/*! ./polling.js */ "../../node_modules/engine.io-client/build/esm/transports/polling.js");
+/* harmony import */ var _websocket_js__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_723945__(/*! ./websocket.js */ "../../node_modules/engine.io-client/build/esm/transports/websocket.js");
+/* harmony import */ var _webtransport_js__WEBPACK_IMPORTED_MODULE_2__ = __nested_webpack_require_723945__(/*! ./webtransport.js */ "../../node_modules/engine.io-client/build/esm/transports/webtransport.js");
 
 
 
@@ -26427,20 +26427,20 @@ const transports = {
 /*!***************************************************************************!*\
   !*** ../../node_modules/engine.io-client/build/esm/transports/polling.js ***!
   \***************************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_725301__) => {
+/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_725354__) => {
 
-__nested_webpack_require_725301__.r(__nested_webpack_exports__);
-/* harmony export */ __nested_webpack_require_725301__.d(__nested_webpack_exports__, {
+__nested_webpack_require_725354__.r(__nested_webpack_exports__);
+/* harmony export */ __nested_webpack_require_725354__.d(__nested_webpack_exports__, {
 /* harmony export */   Polling: () => (/* binding */ Polling),
 /* harmony export */   Request: () => (/* binding */ Request)
 /* harmony export */ });
-/* harmony import */ var _transport_js__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_725301__(/*! ../transport.js */ "../../node_modules/engine.io-client/build/esm/transport.js");
-/* harmony import */ var _contrib_yeast_js__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_725301__(/*! ../contrib/yeast.js */ "../../node_modules/engine.io-client/build/esm/contrib/yeast.js");
-/* harmony import */ var engine_io_parser__WEBPACK_IMPORTED_MODULE_2__ = __nested_webpack_require_725301__(/*! engine.io-parser */ "../../node_modules/engine.io-parser/build/esm/index.js");
-/* harmony import */ var _xmlhttprequest_js__WEBPACK_IMPORTED_MODULE_3__ = __nested_webpack_require_725301__(/*! ./xmlhttprequest.js */ "../../node_modules/engine.io-client/build/esm/transports/xmlhttprequest.browser.js");
-/* harmony import */ var _socket_io_component_emitter__WEBPACK_IMPORTED_MODULE_4__ = __nested_webpack_require_725301__(/*! @socket.io/component-emitter */ "../../node_modules/@socket.io/component-emitter/index.mjs");
-/* harmony import */ var _util_js__WEBPACK_IMPORTED_MODULE_5__ = __nested_webpack_require_725301__(/*! ../util.js */ "../../node_modules/engine.io-client/build/esm/util.js");
-/* harmony import */ var _globalThis_js__WEBPACK_IMPORTED_MODULE_6__ = __nested_webpack_require_725301__(/*! ../globalThis.js */ "../../node_modules/engine.io-client/build/esm/globalThis.browser.js");
+/* harmony import */ var _transport_js__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_725354__(/*! ../transport.js */ "../../node_modules/engine.io-client/build/esm/transport.js");
+/* harmony import */ var _contrib_yeast_js__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_725354__(/*! ../contrib/yeast.js */ "../../node_modules/engine.io-client/build/esm/contrib/yeast.js");
+/* harmony import */ var engine_io_parser__WEBPACK_IMPORTED_MODULE_2__ = __nested_webpack_require_725354__(/*! engine.io-parser */ "../../node_modules/engine.io-parser/build/esm/index.js");
+/* harmony import */ var _xmlhttprequest_js__WEBPACK_IMPORTED_MODULE_3__ = __nested_webpack_require_725354__(/*! ./xmlhttprequest.js */ "../../node_modules/engine.io-client/build/esm/transports/xmlhttprequest.browser.js");
+/* harmony import */ var _socket_io_component_emitter__WEBPACK_IMPORTED_MODULE_4__ = __nested_webpack_require_725354__(/*! @socket.io/component-emitter */ "../../node_modules/@socket.io/component-emitter/index.mjs");
+/* harmony import */ var _util_js__WEBPACK_IMPORTED_MODULE_5__ = __nested_webpack_require_725354__(/*! ../util.js */ "../../node_modules/engine.io-client/build/esm/util.js");
+/* harmony import */ var _globalThis_js__WEBPACK_IMPORTED_MODULE_6__ = __nested_webpack_require_725354__(/*! ../globalThis.js */ "../../node_modules/engine.io-client/build/esm/globalThis.browser.js");
 
 
 
@@ -26839,16 +26839,16 @@ function unloadHandler() {
 /*!*************************************************************************************************!*\
   !*** ../../node_modules/engine.io-client/build/esm/transports/websocket-constructor.browser.js ***!
   \*************************************************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_738869__) => {
+/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_738922__) => {
 
-__nested_webpack_require_738869__.r(__nested_webpack_exports__);
-/* harmony export */ __nested_webpack_require_738869__.d(__nested_webpack_exports__, {
+__nested_webpack_require_738922__.r(__nested_webpack_exports__);
+/* harmony export */ __nested_webpack_require_738922__.d(__nested_webpack_exports__, {
 /* harmony export */   WebSocket: () => (/* binding */ WebSocket),
 /* harmony export */   defaultBinaryType: () => (/* binding */ defaultBinaryType),
 /* harmony export */   nextTick: () => (/* binding */ nextTick),
 /* harmony export */   usingBrowserWebSocket: () => (/* binding */ usingBrowserWebSocket)
 /* harmony export */ });
-/* harmony import */ var _globalThis_js__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_738869__(/*! ../globalThis.js */ "../../node_modules/engine.io-client/build/esm/globalThis.browser.js");
+/* harmony import */ var _globalThis_js__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_738922__(/*! ../globalThis.js */ "../../node_modules/engine.io-client/build/esm/globalThis.browser.js");
 
 const nextTick = (() => {
     const isPromiseAvailable = typeof Promise === "function" && typeof Promise.resolve === "function";
@@ -26870,17 +26870,17 @@ const defaultBinaryType = "arraybuffer";
 /*!*****************************************************************************!*\
   !*** ../../node_modules/engine.io-client/build/esm/transports/websocket.js ***!
   \*****************************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_740467__) => {
+/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_740520__) => {
 
-__nested_webpack_require_740467__.r(__nested_webpack_exports__);
-/* harmony export */ __nested_webpack_require_740467__.d(__nested_webpack_exports__, {
+__nested_webpack_require_740520__.r(__nested_webpack_exports__);
+/* harmony export */ __nested_webpack_require_740520__.d(__nested_webpack_exports__, {
 /* harmony export */   WS: () => (/* binding */ WS)
 /* harmony export */ });
-/* harmony import */ var _transport_js__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_740467__(/*! ../transport.js */ "../../node_modules/engine.io-client/build/esm/transport.js");
-/* harmony import */ var _contrib_yeast_js__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_740467__(/*! ../contrib/yeast.js */ "../../node_modules/engine.io-client/build/esm/contrib/yeast.js");
-/* harmony import */ var _util_js__WEBPACK_IMPORTED_MODULE_2__ = __nested_webpack_require_740467__(/*! ../util.js */ "../../node_modules/engine.io-client/build/esm/util.js");
-/* harmony import */ var _websocket_constructor_js__WEBPACK_IMPORTED_MODULE_3__ = __nested_webpack_require_740467__(/*! ./websocket-constructor.js */ "../../node_modules/engine.io-client/build/esm/transports/websocket-constructor.browser.js");
-/* harmony import */ var engine_io_parser__WEBPACK_IMPORTED_MODULE_4__ = __nested_webpack_require_740467__(/*! engine.io-parser */ "../../node_modules/engine.io-parser/build/esm/index.js");
+/* harmony import */ var _transport_js__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_740520__(/*! ../transport.js */ "../../node_modules/engine.io-client/build/esm/transport.js");
+/* harmony import */ var _contrib_yeast_js__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_740520__(/*! ../contrib/yeast.js */ "../../node_modules/engine.io-client/build/esm/contrib/yeast.js");
+/* harmony import */ var _util_js__WEBPACK_IMPORTED_MODULE_2__ = __nested_webpack_require_740520__(/*! ../util.js */ "../../node_modules/engine.io-client/build/esm/util.js");
+/* harmony import */ var _websocket_constructor_js__WEBPACK_IMPORTED_MODULE_3__ = __nested_webpack_require_740520__(/*! ./websocket-constructor.js */ "../../node_modules/engine.io-client/build/esm/transports/websocket-constructor.browser.js");
+/* harmony import */ var engine_io_parser__WEBPACK_IMPORTED_MODULE_4__ = __nested_webpack_require_740520__(/*! engine.io-parser */ "../../node_modules/engine.io-parser/build/esm/index.js");
 
 
 
@@ -27041,15 +27041,15 @@ class WS extends _transport_js__WEBPACK_IMPORTED_MODULE_0__.Transport {
 /*!********************************************************************************!*\
   !*** ../../node_modules/engine.io-client/build/esm/transports/webtransport.js ***!
   \********************************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_747791__) => {
+/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_747844__) => {
 
-__nested_webpack_require_747791__.r(__nested_webpack_exports__);
-/* harmony export */ __nested_webpack_require_747791__.d(__nested_webpack_exports__, {
+__nested_webpack_require_747844__.r(__nested_webpack_exports__);
+/* harmony export */ __nested_webpack_require_747844__.d(__nested_webpack_exports__, {
 /* harmony export */   WT: () => (/* binding */ WT)
 /* harmony export */ });
-/* harmony import */ var _transport_js__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_747791__(/*! ../transport.js */ "../../node_modules/engine.io-client/build/esm/transport.js");
-/* harmony import */ var _websocket_constructor_js__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_747791__(/*! ./websocket-constructor.js */ "../../node_modules/engine.io-client/build/esm/transports/websocket-constructor.browser.js");
-/* harmony import */ var engine_io_parser__WEBPACK_IMPORTED_MODULE_2__ = __nested_webpack_require_747791__(/*! engine.io-parser */ "../../node_modules/engine.io-parser/build/esm/index.js");
+/* harmony import */ var _transport_js__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_747844__(/*! ../transport.js */ "../../node_modules/engine.io-client/build/esm/transport.js");
+/* harmony import */ var _websocket_constructor_js__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_747844__(/*! ./websocket-constructor.js */ "../../node_modules/engine.io-client/build/esm/transports/websocket-constructor.browser.js");
+/* harmony import */ var engine_io_parser__WEBPACK_IMPORTED_MODULE_2__ = __nested_webpack_require_747844__(/*! engine.io-parser */ "../../node_modules/engine.io-parser/build/esm/index.js");
 
 
 
@@ -27146,15 +27146,15 @@ class WT extends _transport_js__WEBPACK_IMPORTED_MODULE_0__.Transport {
 /*!******************************************************************************************!*\
   !*** ../../node_modules/engine.io-client/build/esm/transports/xmlhttprequest.browser.js ***!
   \******************************************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_752395__) => {
+/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_752448__) => {
 
-__nested_webpack_require_752395__.r(__nested_webpack_exports__);
-/* harmony export */ __nested_webpack_require_752395__.d(__nested_webpack_exports__, {
+__nested_webpack_require_752448__.r(__nested_webpack_exports__);
+/* harmony export */ __nested_webpack_require_752448__.d(__nested_webpack_exports__, {
 /* harmony export */   XHR: () => (/* binding */ XHR),
 /* harmony export */   createCookieJar: () => (/* binding */ createCookieJar)
 /* harmony export */ });
-/* harmony import */ var _contrib_has_cors_js__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_752395__(/*! ../contrib/has-cors.js */ "../../node_modules/engine.io-client/build/esm/contrib/has-cors.js");
-/* harmony import */ var _globalThis_js__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_752395__(/*! ../globalThis.js */ "../../node_modules/engine.io-client/build/esm/globalThis.browser.js");
+/* harmony import */ var _contrib_has_cors_js__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_752448__(/*! ../contrib/has-cors.js */ "../../node_modules/engine.io-client/build/esm/contrib/has-cors.js");
+/* harmony import */ var _globalThis_js__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_752448__(/*! ../globalThis.js */ "../../node_modules/engine.io-client/build/esm/globalThis.browser.js");
 // browser shim for xmlhttprequest module
 
 
@@ -27183,15 +27183,15 @@ function createCookieJar() { }
 /*!*************************************************************!*\
   !*** ../../node_modules/engine.io-client/build/esm/util.js ***!
   \*************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_754020__) => {
+/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_754073__) => {
 
-__nested_webpack_require_754020__.r(__nested_webpack_exports__);
-/* harmony export */ __nested_webpack_require_754020__.d(__nested_webpack_exports__, {
+__nested_webpack_require_754073__.r(__nested_webpack_exports__);
+/* harmony export */ __nested_webpack_require_754073__.d(__nested_webpack_exports__, {
 /* harmony export */   byteLength: () => (/* binding */ byteLength),
 /* harmony export */   installTimerFunctions: () => (/* binding */ installTimerFunctions),
 /* harmony export */   pick: () => (/* binding */ pick)
 /* harmony export */ });
-/* harmony import */ var _globalThis_js__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_754020__(/*! ./globalThis.js */ "../../node_modules/engine.io-client/build/esm/globalThis.browser.js");
+/* harmony import */ var _globalThis_js__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_754073__(/*! ./globalThis.js */ "../../node_modules/engine.io-client/build/esm/globalThis.browser.js");
 
 function pick(obj, ...attr) {
     return attr.reduce((acc, k) => {
@@ -27252,10 +27252,10 @@ function utf8Length(str) {
 /*!****************************************************************!*\
   !*** ../../node_modules/engine.io-parser/build/esm/commons.js ***!
   \****************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_756891__) => {
+/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_756944__) => {
 
-__nested_webpack_require_756891__.r(__nested_webpack_exports__);
-/* harmony export */ __nested_webpack_require_756891__.d(__nested_webpack_exports__, {
+__nested_webpack_require_756944__.r(__nested_webpack_exports__);
+/* harmony export */ __nested_webpack_require_756944__.d(__nested_webpack_exports__, {
 /* harmony export */   ERROR_PACKET: () => (/* binding */ ERROR_PACKET),
 /* harmony export */   PACKET_TYPES: () => (/* binding */ PACKET_TYPES),
 /* harmony export */   PACKET_TYPES_REVERSE: () => (/* binding */ PACKET_TYPES_REVERSE)
@@ -27282,10 +27282,10 @@ const ERROR_PACKET = { type: "error", data: "parser error" };
 /*!***********************************************************************************!*\
   !*** ../../node_modules/engine.io-parser/build/esm/contrib/base64-arraybuffer.js ***!
   \***********************************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_758197__) => {
+/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_758250__) => {
 
-__nested_webpack_require_758197__.r(__nested_webpack_exports__);
-/* harmony export */ __nested_webpack_require_758197__.d(__nested_webpack_exports__, {
+__nested_webpack_require_758250__.r(__nested_webpack_exports__);
+/* harmony export */ __nested_webpack_require_758250__.d(__nested_webpack_exports__, {
 /* harmony export */   decode: () => (/* binding */ decode),
 /* harmony export */   encode: () => (/* binding */ encode)
 /* harmony export */ });
@@ -27340,14 +27340,14 @@ const decode = (base64) => {
 /*!*****************************************************************************!*\
   !*** ../../node_modules/engine.io-parser/build/esm/decodePacket.browser.js ***!
   \*****************************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_760687__) => {
+/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_760740__) => {
 
-__nested_webpack_require_760687__.r(__nested_webpack_exports__);
-/* harmony export */ __nested_webpack_require_760687__.d(__nested_webpack_exports__, {
+__nested_webpack_require_760740__.r(__nested_webpack_exports__);
+/* harmony export */ __nested_webpack_require_760740__.d(__nested_webpack_exports__, {
 /* harmony export */   decodePacket: () => (/* binding */ decodePacket)
 /* harmony export */ });
-/* harmony import */ var _commons_js__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_760687__(/*! ./commons.js */ "../../node_modules/engine.io-parser/build/esm/commons.js");
-/* harmony import */ var _contrib_base64_arraybuffer_js__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_760687__(/*! ./contrib/base64-arraybuffer.js */ "../../node_modules/engine.io-parser/build/esm/contrib/base64-arraybuffer.js");
+/* harmony import */ var _commons_js__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_760740__(/*! ./commons.js */ "../../node_modules/engine.io-parser/build/esm/commons.js");
+/* harmony import */ var _contrib_base64_arraybuffer_js__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_760740__(/*! ./contrib/base64-arraybuffer.js */ "../../node_modules/engine.io-parser/build/esm/contrib/base64-arraybuffer.js");
 
 
 const withNativeArrayBuffer = typeof ArrayBuffer === "function";
@@ -27418,14 +27418,14 @@ const mapBinary = (data, binaryType) => {
 /*!*****************************************************************************!*\
   !*** ../../node_modules/engine.io-parser/build/esm/encodePacket.browser.js ***!
   \*****************************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_763744__) => {
+/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_763797__) => {
 
-__nested_webpack_require_763744__.r(__nested_webpack_exports__);
-/* harmony export */ __nested_webpack_require_763744__.d(__nested_webpack_exports__, {
+__nested_webpack_require_763797__.r(__nested_webpack_exports__);
+/* harmony export */ __nested_webpack_require_763797__.d(__nested_webpack_exports__, {
 /* harmony export */   encodePacket: () => (/* binding */ encodePacket),
 /* harmony export */   encodePacketToBinary: () => (/* binding */ encodePacketToBinary)
 /* harmony export */ });
-/* harmony import */ var _commons_js__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_763744__(/*! ./commons.js */ "../../node_modules/engine.io-parser/build/esm/commons.js");
+/* harmony import */ var _commons_js__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_763797__(/*! ./commons.js */ "../../node_modules/engine.io-parser/build/esm/commons.js");
 
 const withNativeBlob = typeof Blob === "function" ||
     (typeof Blob !== "undefined" &&
@@ -27505,10 +27505,10 @@ function encodePacketToBinary(packet, callback) {
 /*!**************************************************************!*\
   !*** ../../node_modules/engine.io-parser/build/esm/index.js ***!
   \**************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_766845__) => {
+/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_766898__) => {
 
-__nested_webpack_require_766845__.r(__nested_webpack_exports__);
-/* harmony export */ __nested_webpack_require_766845__.d(__nested_webpack_exports__, {
+__nested_webpack_require_766898__.r(__nested_webpack_exports__);
+/* harmony export */ __nested_webpack_require_766898__.d(__nested_webpack_exports__, {
 /* harmony export */   decodePacket: () => (/* reexport safe */ _decodePacket_js__WEBPACK_IMPORTED_MODULE_1__.decodePacket),
 /* harmony export */   decodePacketFromBinary: () => (/* binding */ decodePacketFromBinary),
 /* harmony export */   decodePayload: () => (/* binding */ decodePayload),
@@ -27517,8 +27517,8 @@ __nested_webpack_require_766845__.r(__nested_webpack_exports__);
 /* harmony export */   encodePayload: () => (/* binding */ encodePayload),
 /* harmony export */   protocol: () => (/* binding */ protocol)
 /* harmony export */ });
-/* harmony import */ var _encodePacket_js__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_766845__(/*! ./encodePacket.js */ "../../node_modules/engine.io-parser/build/esm/encodePacket.browser.js");
-/* harmony import */ var _decodePacket_js__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_766845__(/*! ./decodePacket.js */ "../../node_modules/engine.io-parser/build/esm/decodePacket.browser.js");
+/* harmony import */ var _encodePacket_js__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_766898__(/*! ./encodePacket.js */ "../../node_modules/engine.io-parser/build/esm/encodePacket.browser.js");
+/* harmony import */ var _decodePacket_js__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_766898__(/*! ./decodePacket.js */ "../../node_modules/engine.io-parser/build/esm/decodePacket.browser.js");
 
 
 const SEPARATOR = String.fromCharCode(30); // see https://en.wikipedia.org/wiki/Delimiter#ASCII_delimited_text
@@ -27570,10 +27570,10 @@ const protocol = 4;
 /*!***********************************************************************!*\
   !*** ../../node_modules/socket.io-client/build/esm/contrib/backo2.js ***!
   \***********************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_770217__) => {
+/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_770270__) => {
 
-__nested_webpack_require_770217__.r(__nested_webpack_exports__);
-/* harmony export */ __nested_webpack_require_770217__.d(__nested_webpack_exports__, {
+__nested_webpack_require_770270__.r(__nested_webpack_exports__);
+/* harmony export */ __nested_webpack_require_770270__.d(__nested_webpack_exports__, {
 /* harmony export */   Backoff: () => (/* binding */ Backoff)
 /* harmony export */ });
 /**
@@ -27650,10 +27650,10 @@ Backoff.prototype.setJitter = function (jitter) {
 /*!**************************************************************!*\
   !*** ../../node_modules/socket.io-client/build/esm/index.js ***!
   \**************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_772164__) => {
+/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_772217__) => {
 
-__nested_webpack_require_772164__.r(__nested_webpack_exports__);
-/* harmony export */ __nested_webpack_require_772164__.d(__nested_webpack_exports__, {
+__nested_webpack_require_772217__.r(__nested_webpack_exports__);
+/* harmony export */ __nested_webpack_require_772217__.d(__nested_webpack_exports__, {
 /* harmony export */   Manager: () => (/* reexport safe */ _manager_js__WEBPACK_IMPORTED_MODULE_1__.Manager),
 /* harmony export */   Socket: () => (/* reexport safe */ _socket_js__WEBPACK_IMPORTED_MODULE_2__.Socket),
 /* harmony export */   connect: () => (/* binding */ lookup),
@@ -27661,10 +27661,10 @@ __nested_webpack_require_772164__.r(__nested_webpack_exports__);
 /* harmony export */   io: () => (/* binding */ lookup),
 /* harmony export */   protocol: () => (/* reexport safe */ socket_io_parser__WEBPACK_IMPORTED_MODULE_3__.protocol)
 /* harmony export */ });
-/* harmony import */ var _url_js__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_772164__(/*! ./url.js */ "../../node_modules/socket.io-client/build/esm/url.js");
-/* harmony import */ var _manager_js__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_772164__(/*! ./manager.js */ "../../node_modules/socket.io-client/build/esm/manager.js");
-/* harmony import */ var _socket_js__WEBPACK_IMPORTED_MODULE_2__ = __nested_webpack_require_772164__(/*! ./socket.js */ "../../node_modules/socket.io-client/build/esm/socket.js");
-/* harmony import */ var socket_io_parser__WEBPACK_IMPORTED_MODULE_3__ = __nested_webpack_require_772164__(/*! socket.io-parser */ "../../node_modules/socket.io-parser/build/esm/index.js");
+/* harmony import */ var _url_js__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_772217__(/*! ./url.js */ "../../node_modules/socket.io-client/build/esm/url.js");
+/* harmony import */ var _manager_js__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_772217__(/*! ./manager.js */ "../../node_modules/socket.io-client/build/esm/manager.js");
+/* harmony import */ var _socket_js__WEBPACK_IMPORTED_MODULE_2__ = __nested_webpack_require_772217__(/*! ./socket.js */ "../../node_modules/socket.io-client/build/esm/socket.js");
+/* harmony import */ var socket_io_parser__WEBPACK_IMPORTED_MODULE_3__ = __nested_webpack_require_772217__(/*! socket.io-parser */ "../../node_modules/socket.io-parser/build/esm/index.js");
 
 
 
@@ -27730,18 +27730,18 @@ Object.assign(lookup, {
 /*!****************************************************************!*\
   !*** ../../node_modules/socket.io-client/build/esm/manager.js ***!
   \****************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_775307__) => {
+/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_775360__) => {
 
-__nested_webpack_require_775307__.r(__nested_webpack_exports__);
-/* harmony export */ __nested_webpack_require_775307__.d(__nested_webpack_exports__, {
+__nested_webpack_require_775360__.r(__nested_webpack_exports__);
+/* harmony export */ __nested_webpack_require_775360__.d(__nested_webpack_exports__, {
 /* harmony export */   Manager: () => (/* binding */ Manager)
 /* harmony export */ });
-/* harmony import */ var engine_io_client__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_775307__(/*! engine.io-client */ "../../node_modules/engine.io-client/build/esm/index.js");
-/* harmony import */ var _socket_js__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_775307__(/*! ./socket.js */ "../../node_modules/socket.io-client/build/esm/socket.js");
-/* harmony import */ var socket_io_parser__WEBPACK_IMPORTED_MODULE_2__ = __nested_webpack_require_775307__(/*! socket.io-parser */ "../../node_modules/socket.io-parser/build/esm/index.js");
-/* harmony import */ var _on_js__WEBPACK_IMPORTED_MODULE_3__ = __nested_webpack_require_775307__(/*! ./on.js */ "../../node_modules/socket.io-client/build/esm/on.js");
-/* harmony import */ var _contrib_backo2_js__WEBPACK_IMPORTED_MODULE_4__ = __nested_webpack_require_775307__(/*! ./contrib/backo2.js */ "../../node_modules/socket.io-client/build/esm/contrib/backo2.js");
-/* harmony import */ var _socket_io_component_emitter__WEBPACK_IMPORTED_MODULE_5__ = __nested_webpack_require_775307__(/*! @socket.io/component-emitter */ "../../node_modules/@socket.io/component-emitter/index.mjs");
+/* harmony import */ var engine_io_client__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_775360__(/*! engine.io-client */ "../../node_modules/engine.io-client/build/esm/index.js");
+/* harmony import */ var _socket_js__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_775360__(/*! ./socket.js */ "../../node_modules/socket.io-client/build/esm/socket.js");
+/* harmony import */ var socket_io_parser__WEBPACK_IMPORTED_MODULE_2__ = __nested_webpack_require_775360__(/*! socket.io-parser */ "../../node_modules/socket.io-parser/build/esm/index.js");
+/* harmony import */ var _on_js__WEBPACK_IMPORTED_MODULE_3__ = __nested_webpack_require_775360__(/*! ./on.js */ "../../node_modules/socket.io-client/build/esm/on.js");
+/* harmony import */ var _contrib_backo2_js__WEBPACK_IMPORTED_MODULE_4__ = __nested_webpack_require_775360__(/*! ./contrib/backo2.js */ "../../node_modules/socket.io-client/build/esm/contrib/backo2.js");
+/* harmony import */ var _socket_io_component_emitter__WEBPACK_IMPORTED_MODULE_5__ = __nested_webpack_require_775360__(/*! @socket.io/component-emitter */ "../../node_modules/@socket.io/component-emitter/index.mjs");
 
 
 
@@ -28108,10 +28108,10 @@ class Manager extends _socket_io_component_emitter__WEBPACK_IMPORTED_MODULE_5__.
 /*!***********************************************************!*\
   !*** ../../node_modules/socket.io-client/build/esm/on.js ***!
   \***********************************************************/
-/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_787528__) => {
+/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_787581__) => {
 
-__nested_webpack_require_787528__.r(__nested_webpack_exports__);
-/* harmony export */ __nested_webpack_require_787528__.d(__nested_webpack_exports__, {
+__nested_webpack_require_787581__.r(__nested_webpack_exports__);
+/* harmony export */ __nested_webpack_require_787581__.d(__nested_webpack_exports__, {
 /* harmony export */   on: () => (/* binding */ on)
 /* harmony export */ });
 function on(obj, ev, fn) {
@@ -28128,15 +28128,15 @@ function on(obj, ev, fn) {
 /*!***************************************************************!*\
   !*** ../../node_modules/socket.io-client/build/esm/socket.js ***!
   \***************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_788208__) => {
+/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_788261__) => {
 
-__nested_webpack_require_788208__.r(__nested_webpack_exports__);
-/* harmony export */ __nested_webpack_require_788208__.d(__nested_webpack_exports__, {
+__nested_webpack_require_788261__.r(__nested_webpack_exports__);
+/* harmony export */ __nested_webpack_require_788261__.d(__nested_webpack_exports__, {
 /* harmony export */   Socket: () => (/* binding */ Socket)
 /* harmony export */ });
-/* harmony import */ var socket_io_parser__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_788208__(/*! socket.io-parser */ "../../node_modules/socket.io-parser/build/esm/index.js");
-/* harmony import */ var _on_js__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_788208__(/*! ./on.js */ "../../node_modules/socket.io-client/build/esm/on.js");
-/* harmony import */ var _socket_io_component_emitter__WEBPACK_IMPORTED_MODULE_2__ = __nested_webpack_require_788208__(/*! @socket.io/component-emitter */ "../../node_modules/@socket.io/component-emitter/index.mjs");
+/* harmony import */ var socket_io_parser__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_788261__(/*! socket.io-parser */ "../../node_modules/socket.io-parser/build/esm/index.js");
+/* harmony import */ var _on_js__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_788261__(/*! ./on.js */ "../../node_modules/socket.io-client/build/esm/on.js");
+/* harmony import */ var _socket_io_component_emitter__WEBPACK_IMPORTED_MODULE_2__ = __nested_webpack_require_788261__(/*! @socket.io/component-emitter */ "../../node_modules/@socket.io/component-emitter/index.mjs");
 
 
 
@@ -28983,13 +28983,13 @@ class Socket extends _socket_io_component_emitter__WEBPACK_IMPORTED_MODULE_2__.E
 /*!************************************************************!*\
   !*** ../../node_modules/socket.io-client/build/esm/url.js ***!
   \************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_813737__) => {
+/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_813790__) => {
 
-__nested_webpack_require_813737__.r(__nested_webpack_exports__);
-/* harmony export */ __nested_webpack_require_813737__.d(__nested_webpack_exports__, {
+__nested_webpack_require_813790__.r(__nested_webpack_exports__);
+/* harmony export */ __nested_webpack_require_813790__.d(__nested_webpack_exports__, {
 /* harmony export */   url: () => (/* binding */ url)
 /* harmony export */ });
-/* harmony import */ var engine_io_client__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_813737__(/*! engine.io-client */ "../../node_modules/engine.io-client/build/esm/index.js");
+/* harmony import */ var engine_io_client__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_813790__(/*! engine.io-client */ "../../node_modules/engine.io-client/build/esm/index.js");
 
 /**
  * URL parser.
@@ -29057,14 +29057,14 @@ function url(uri, path = "", loc) {
 /*!***************************************************************!*\
   !*** ../../node_modules/socket.io-parser/build/esm/binary.js ***!
   \***************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_816203__) => {
+/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_816256__) => {
 
-__nested_webpack_require_816203__.r(__nested_webpack_exports__);
-/* harmony export */ __nested_webpack_require_816203__.d(__nested_webpack_exports__, {
+__nested_webpack_require_816256__.r(__nested_webpack_exports__);
+/* harmony export */ __nested_webpack_require_816256__.d(__nested_webpack_exports__, {
 /* harmony export */   deconstructPacket: () => (/* binding */ deconstructPacket),
 /* harmony export */   reconstructPacket: () => (/* binding */ reconstructPacket)
 /* harmony export */ });
-/* harmony import */ var _is_binary_js__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_816203__(/*! ./is-binary.js */ "../../node_modules/socket.io-parser/build/esm/is-binary.js");
+/* harmony import */ var _is_binary_js__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_816256__(/*! ./is-binary.js */ "../../node_modules/socket.io-parser/build/esm/is-binary.js");
 
 /**
  * Replaces every Buffer | ArrayBuffer | Blob | File in packet with a numbered placeholder.
@@ -29156,18 +29156,18 @@ function _reconstructPacket(data, buffers) {
 /*!**************************************************************!*\
   !*** ../../node_modules/socket.io-parser/build/esm/index.js ***!
   \**************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_819785__) => {
+/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_819838__) => {
 
-__nested_webpack_require_819785__.r(__nested_webpack_exports__);
-/* harmony export */ __nested_webpack_require_819785__.d(__nested_webpack_exports__, {
+__nested_webpack_require_819838__.r(__nested_webpack_exports__);
+/* harmony export */ __nested_webpack_require_819838__.d(__nested_webpack_exports__, {
 /* harmony export */   Decoder: () => (/* binding */ Decoder),
 /* harmony export */   Encoder: () => (/* binding */ Encoder),
 /* harmony export */   PacketType: () => (/* binding */ PacketType),
 /* harmony export */   protocol: () => (/* binding */ protocol)
 /* harmony export */ });
-/* harmony import */ var _socket_io_component_emitter__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_819785__(/*! @socket.io/component-emitter */ "../../node_modules/@socket.io/component-emitter/index.mjs");
-/* harmony import */ var _binary_js__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_819785__(/*! ./binary.js */ "../../node_modules/socket.io-parser/build/esm/binary.js");
-/* harmony import */ var _is_binary_js__WEBPACK_IMPORTED_MODULE_2__ = __nested_webpack_require_819785__(/*! ./is-binary.js */ "../../node_modules/socket.io-parser/build/esm/is-binary.js");
+/* harmony import */ var _socket_io_component_emitter__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_819838__(/*! @socket.io/component-emitter */ "../../node_modules/@socket.io/component-emitter/index.mjs");
+/* harmony import */ var _binary_js__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_819838__(/*! ./binary.js */ "../../node_modules/socket.io-parser/build/esm/binary.js");
+/* harmony import */ var _is_binary_js__WEBPACK_IMPORTED_MODULE_2__ = __nested_webpack_require_819838__(/*! ./is-binary.js */ "../../node_modules/socket.io-parser/build/esm/is-binary.js");
 
 
 
@@ -29487,10 +29487,10 @@ class BinaryReconstructor {
 /*!******************************************************************!*\
   !*** ../../node_modules/socket.io-parser/build/esm/is-binary.js ***!
   \******************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_831127__) => {
+/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_831180__) => {
 
-__nested_webpack_require_831127__.r(__nested_webpack_exports__);
-/* harmony export */ __nested_webpack_require_831127__.d(__nested_webpack_exports__, {
+__nested_webpack_require_831180__.r(__nested_webpack_exports__);
+/* harmony export */ __nested_webpack_require_831180__.d(__nested_webpack_exports__, {
 /* harmony export */   hasBinary: () => (/* binding */ hasBinary),
 /* harmony export */   isBinary: () => (/* binding */ isBinary)
 /* harmony export */ });
@@ -29554,7 +29554,7 @@ function hasBinary(obj, toJSON) {
 /******/ var __webpack_module_cache__ = {};
 /******/ 
 /******/ // The require function
-/******/ function __nested_webpack_require_833207__(moduleId) {
+/******/ function __nested_webpack_require_833260__(moduleId) {
 /******/ 	// Check if module is in cache
 /******/ 	var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 	if (cachedModule !== undefined) {
@@ -29568,7 +29568,7 @@ function hasBinary(obj, toJSON) {
 /******/ 	};
 /******/ 
 /******/ 	// Execute the module function
-/******/ 	__webpack_modules__[moduleId].call(module.exports, module, module.exports, __nested_webpack_require_833207__);
+/******/ 	__webpack_modules__[moduleId].call(module.exports, module, module.exports, __nested_webpack_require_833260__);
 /******/ 
 /******/ 	// Return the exports of the module
 /******/ 	return module.exports;
@@ -29577,17 +29577,17 @@ function hasBinary(obj, toJSON) {
 /************************************************************************/
 /******/ /* webpack/runtime/amd options */
 /******/ (() => {
-/******/ 	__nested_webpack_require_833207__.amdO = {};
+/******/ 	__nested_webpack_require_833260__.amdO = {};
 /******/ })();
 /******/ 
 /******/ /* webpack/runtime/compat get default export */
 /******/ (() => {
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__nested_webpack_require_833207__.n = (module) => {
+/******/ 	__nested_webpack_require_833260__.n = (module) => {
 /******/ 		var getter = module && module.__esModule ?
 /******/ 			() => (module['default']) :
 /******/ 			() => (module);
-/******/ 		__nested_webpack_require_833207__.d(getter, { a: getter });
+/******/ 		__nested_webpack_require_833260__.d(getter, { a: getter });
 /******/ 		return getter;
 /******/ 	};
 /******/ })();
@@ -29595,9 +29595,9 @@ function hasBinary(obj, toJSON) {
 /******/ /* webpack/runtime/define property getters */
 /******/ (() => {
 /******/ 	// define getter functions for harmony exports
-/******/ 	__nested_webpack_require_833207__.d = (exports, definition) => {
+/******/ 	__nested_webpack_require_833260__.d = (exports, definition) => {
 /******/ 		for(var key in definition) {
-/******/ 			if(__nested_webpack_require_833207__.o(definition, key) && !__nested_webpack_require_833207__.o(exports, key)) {
+/******/ 			if(__nested_webpack_require_833260__.o(definition, key) && !__nested_webpack_require_833260__.o(exports, key)) {
 /******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
 /******/ 			}
 /******/ 		}
@@ -29606,7 +29606,7 @@ function hasBinary(obj, toJSON) {
 /******/ 
 /******/ /* webpack/runtime/global */
 /******/ (() => {
-/******/ 	__nested_webpack_require_833207__.g = (function() {
+/******/ 	__nested_webpack_require_833260__.g = (function() {
 /******/ 		if (typeof globalThis === 'object') return globalThis;
 /******/ 		try {
 /******/ 			return this || new Function('return this')();
@@ -29618,13 +29618,13 @@ function hasBinary(obj, toJSON) {
 /******/ 
 /******/ /* webpack/runtime/hasOwnProperty shorthand */
 /******/ (() => {
-/******/ 	__nested_webpack_require_833207__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	__nested_webpack_require_833260__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ })();
 /******/ 
 /******/ /* webpack/runtime/make namespace object */
 /******/ (() => {
 /******/ 	// define __esModule on exports
-/******/ 	__nested_webpack_require_833207__.r = (exports) => {
+/******/ 	__nested_webpack_require_833260__.r = (exports) => {
 /******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
 /******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 		}
@@ -29639,11 +29639,11 @@ var __nested_webpack_exports__ = {};
 /*!**********************!*\
   !*** ./src/index.ts ***!
   \**********************/
-__nested_webpack_require_833207__.r(__nested_webpack_exports__);
-/* harmony export */ __nested_webpack_require_833207__.d(__nested_webpack_exports__, {
+__nested_webpack_require_833260__.r(__nested_webpack_exports__);
+/* harmony export */ __nested_webpack_require_833260__.d(__nested_webpack_exports__, {
 /* harmony export */   StreamAdapter: () => (/* reexport safe */ _adapter__WEBPACK_IMPORTED_MODULE_0__.StreamAdapter)
 /* harmony export */ });
-/* harmony import */ var _adapter__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_833207__(/*! ./adapter */ "./src/adapter.ts");
+/* harmony import */ var _adapter__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_833260__(/*! ./adapter */ "./src/adapter.ts");
 
 
 })();
@@ -88434,7 +88434,7 @@ __nested_webpack_require_208__.r(__nested_webpack_exports__);
 
 class StateAdapter {
     constructor(params) {
-        const url = params.url || `ws://${window.location.hostname}:4000/socket`;
+        const url = params.url || `${window.location.protocol === 'https:' ? 'wss' : 'ws'}://${window.location.hostname}:4000/socket`;
         const topic = `room:${params.roomId}`;
         this.userId = params.userId;
         const socket = new phoenix__WEBPACK_IMPORTED_MODULE_0__.Socket(url, {});
@@ -88481,10 +88481,10 @@ class StateAdapter {
 /*!**********************************************************!*\
   !*** ../../node_modules/phoenix/priv/static/phoenix.mjs ***!
   \**********************************************************/
-/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_2410__) => {
+/***/ ((__unused_webpack___webpack_module__, __nested_webpack_exports__, __nested_webpack_require_2463__) => {
 
-__nested_webpack_require_2410__.r(__nested_webpack_exports__);
-/* harmony export */ __nested_webpack_require_2410__.d(__nested_webpack_exports__, {
+__nested_webpack_require_2463__.r(__nested_webpack_exports__);
+/* harmony export */ __nested_webpack_require_2463__.d(__nested_webpack_exports__, {
 /* harmony export */   Channel: () => (/* binding */ Channel),
 /* harmony export */   LongPoll: () => (/* binding */ LongPoll),
 /* harmony export */   Presence: () => (/* binding */ Presence),
@@ -89649,7 +89649,7 @@ var Socket = class {
 /******/ var __webpack_module_cache__ = {};
 /******/ 
 /******/ // The require function
-/******/ function __nested_webpack_require_38835__(moduleId) {
+/******/ function __nested_webpack_require_38888__(moduleId) {
 /******/ 	// Check if module is in cache
 /******/ 	var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 	if (cachedModule !== undefined) {
@@ -89663,7 +89663,7 @@ var Socket = class {
 /******/ 	};
 /******/ 
 /******/ 	// Execute the module function
-/******/ 	__webpack_modules__[moduleId](module, module.exports, __nested_webpack_require_38835__);
+/******/ 	__webpack_modules__[moduleId](module, module.exports, __nested_webpack_require_38888__);
 /******/ 
 /******/ 	// Return the exports of the module
 /******/ 	return module.exports;
@@ -89673,9 +89673,9 @@ var Socket = class {
 /******/ /* webpack/runtime/define property getters */
 /******/ (() => {
 /******/ 	// define getter functions for harmony exports
-/******/ 	__nested_webpack_require_38835__.d = (exports, definition) => {
+/******/ 	__nested_webpack_require_38888__.d = (exports, definition) => {
 /******/ 		for(var key in definition) {
-/******/ 			if(__nested_webpack_require_38835__.o(definition, key) && !__nested_webpack_require_38835__.o(exports, key)) {
+/******/ 			if(__nested_webpack_require_38888__.o(definition, key) && !__nested_webpack_require_38888__.o(exports, key)) {
 /******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
 /******/ 			}
 /******/ 		}
@@ -89684,13 +89684,13 @@ var Socket = class {
 /******/ 
 /******/ /* webpack/runtime/hasOwnProperty shorthand */
 /******/ (() => {
-/******/ 	__nested_webpack_require_38835__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	__nested_webpack_require_38888__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ })();
 /******/ 
 /******/ /* webpack/runtime/make namespace object */
 /******/ (() => {
 /******/ 	// define __esModule on exports
-/******/ 	__nested_webpack_require_38835__.r = (exports) => {
+/******/ 	__nested_webpack_require_38888__.r = (exports) => {
 /******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
 /******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 		}
@@ -89705,11 +89705,11 @@ var __nested_webpack_exports__ = {};
 /*!**********************!*\
   !*** ./src/index.ts ***!
   \**********************/
-__nested_webpack_require_38835__.r(__nested_webpack_exports__);
-/* harmony export */ __nested_webpack_require_38835__.d(__nested_webpack_exports__, {
+__nested_webpack_require_38888__.r(__nested_webpack_exports__);
+/* harmony export */ __nested_webpack_require_38888__.d(__nested_webpack_exports__, {
 /* harmony export */   StateAdapter: () => (/* reexport safe */ _adapter__WEBPACK_IMPORTED_MODULE_0__.StateAdapter)
 /* harmony export */ });
-/* harmony import */ var _adapter__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_38835__(/*! ./adapter */ "./src/adapter.ts");
+/* harmony import */ var _adapter__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_38888__(/*! ./adapter */ "./src/adapter.ts");
 
 
 })();
