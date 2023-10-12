@@ -5,7 +5,7 @@ Tiny Web Metaverse project is for open, simple, easy, flexible, and extensible
 
 ## Online Demo
 
-[Online Demo](http://ec2-43-207-158-110.ap-northeast-1.compute.amazonaws.com:8080)
+[Online Demo](https://tiny-web-metaverse.net)
 
 * Unsecure severs yet [#37](https://github.com/takahirox/tiny-web-metaverse/issues/37)
 * No audio support yet [#39](https://github.com/takahirox/tiny-web-metaverse/issues/39)
