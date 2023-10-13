@@ -7,11 +7,6 @@ Tiny Web Metaverse project is for open, simple, easy, flexible, and extensible
 
 [Online Demo](https://tiny-web-metaverse.net)
 
-* Unsecure severs yet [#37](https://github.com/takahirox/tiny-web-metaverse/issues/37)
-* No audio support yet [#39](https://github.com/takahirox/tiny-web-metaverse/issues/39)
-
-Note: Audio is supported on local test
-
 ## Screenshot
 
 T.B.D.
@@ -84,10 +79,6 @@ And access http://localhost:8080 on your browser.
 
 ## Deploy Demo to AWS ECS with Docker
 
-Note:
-
-* No audio support yet [#39](https://github.com/takahirox/tiny-web-metaverse/issues/39)
-
 Prerequirements:
 
 * [Make an AWS account](https://aws.amazon.com/)
@@ -109,7 +100,6 @@ Rule 1:
 - Port range: 3000
 - Type: Custom TCP Rule
 - Protocol: TCP
-- Port Range: 8080
 - Source: 0.0.0.0/0
 - Description: stream_server
 
@@ -119,7 +109,6 @@ Rule 2:
 - Port range: 4000
 - Type: Custom TCP Rule
 - Protocol: TCP
-- Port Range: 8080
 - Source: 0.0.0.0/0
 - Description: state_server
 
@@ -127,7 +116,6 @@ Rule 3:
 - Port range: 8080
 - Type: Custom TCP Rule
 - Protocol: TCP
-- Port Range: 8080
 - Source: 0.0.0.0/0
 - Description: examples
 
