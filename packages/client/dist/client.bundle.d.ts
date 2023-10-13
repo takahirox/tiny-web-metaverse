@@ -147,6 +147,14 @@ export declare const Grabbable: import("bitecs").ComponentType<import("bitecs").
 export declare const Grabbed: import("bitecs").ComponentType<{
 	distance: "f32";
 }>;
+export declare const FirstSourceInteractable: import("bitecs").ComponentType<import("bitecs").ISchema>;
+export declare const FirstSourceInteracted: import("bitecs").ComponentType<import("bitecs").ISchema>;
+export declare const FirstSourceInteractionTriggerEvent: import("bitecs").ComponentType<import("bitecs").ISchema>;
+export declare const FirstSourceInteractionLeaveEvent: import("bitecs").ComponentType<import("bitecs").ISchema>;
+export declare const SecondSourceInteractable: import("bitecs").ComponentType<import("bitecs").ISchema>;
+export declare const SecondSourceInteracted: import("bitecs").ComponentType<import("bitecs").ISchema>;
+export declare const SecondSourceInteractionTriggerEvent: import("bitecs").ComponentType<import("bitecs").ISchema>;
+export declare const SecondSourceInteractionLeaveEvent: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare enum KeyEventType {
 	Down = 0,
 	Up = 1
@@ -308,10 +316,6 @@ export declare class MouseMoveEventProxy {
 	free(): void;
 	get events(): MouseMoveEventValue[];
 }
-export type MousePositionValue = {
-	x: number;
-	y: number;
-};
 export declare const MousePosition: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare const PreviousMousePosition: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare class MousePositionProxy {
@@ -492,6 +496,19 @@ export declare const NetworkedPosition: import("bitecs").ComponentType<import("b
 export declare const NetworkedQuaternion: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare const NetworkedScale: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare const NetworkedMixerAnimation: import("bitecs").ComponentType<import("bitecs").ISchema>;
+export declare const Pointer: import("bitecs").ComponentType<import("bitecs").ISchema>;
+export declare class PointerProxy {
+	private static instance;
+	private eid;
+	private map;
+	private constructor();
+	static get(eid: number): PointerProxy;
+	allocate(): void;
+	update(x: number, y: number): void;
+	free(): void;
+	get x(): number;
+	get y(): number;
+}
 export declare const Prefabs: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare class PrefabsProxy {
 	private static instance;
@@ -509,6 +526,7 @@ export declare const Raycastable: import("bitecs").ComponentType<import("bitecs"
 export declare const Raycasted: import("bitecs").ComponentType<{
 	distance: "f32";
 }>;
+export declare const RaycastedNearest: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare const RaycasterComponent: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare class RaycasterProxy {
 	private static instance;
@@ -737,6 +755,96 @@ export declare class TimeProxy {
 	get elapsed(): number;
 	set elapsed(elapsed: number);
 }
+export declare enum TouchEventType {
+	Cancel = 0,
+	End = 1,
+	Start = 2
+}
+export type TouchEventValue = {
+	type: TouchEventType;
+	x: number;
+	y: number;
+};
+export declare const TouchEvent: import("bitecs").ComponentType<import("bitecs").ISchema>;
+export declare const TouchEventListener: import("bitecs").ComponentType<import("bitecs").ISchema>;
+export declare const TouchHold: import("bitecs").ComponentType<import("bitecs").ISchema>;
+export declare class TouchEventProxy {
+	private static instance;
+	private eid;
+	private map;
+	private constructor();
+	static get(eid: number): TouchEventProxy;
+	allocate(): void;
+	add(type: TouchEventType, x: number, y: number): void;
+	free(): void;
+	get events(): TouchEventValue[];
+}
+export declare const TouchMoveEvent: import("bitecs").ComponentType<import("bitecs").ISchema>;
+export declare const TouchMoveEventListener: import("bitecs").ComponentType<import("bitecs").ISchema>;
+export type TouchMoveEventValue = {
+	x: number;
+	y: number;
+};
+export declare class TouchMoveEventProxy {
+	private static instance;
+	private eid;
+	private map;
+	private constructor();
+	static get(eid: number): TouchMoveEventProxy;
+	allocate(): void;
+	add(x: number, y: number): void;
+	free(): void;
+	get events(): TouchMoveEventValue[];
+}
+export declare const TouchEventHandler: import("bitecs").ComponentType<import("bitecs").ISchema>;
+export declare const TouchEventHandlerReady: import("bitecs").ComponentType<import("bitecs").ISchema>;
+export declare class TouchEventHandlerProxy {
+	private static instance;
+	private eid;
+	private targets;
+	private listeners;
+	private constructor();
+	static get(eid: number): TouchEventHandlerProxy;
+	init(target: HTMLElement): void;
+	allocate(touchstartListener: (event: TouchEvent) => void, touchendListener: (event: TouchEvent) => void, touchcancelListener: (event: TouchEvent) => void): void;
+	free(): void;
+	get target(): HTMLElement;
+	get touchcancelListener(): (event: TouchEvent) => void;
+	get touchendListener(): (event: TouchEvent) => void;
+	get touchstartListener(): (event: TouchEvent) => void;
+	get alive(): boolean;
+	get listenersAlive(): boolean;
+}
+export declare const TouchMoveEventHandler: import("bitecs").ComponentType<import("bitecs").ISchema>;
+export declare const TouchMoveEventHandlerReady: import("bitecs").ComponentType<import("bitecs").ISchema>;
+export declare class TouchMoveEventHandlerProxy {
+	private static instance;
+	private eid;
+	private targets;
+	private listeners;
+	private constructor();
+	static get(eid: number): TouchMoveEventHandlerProxy;
+	init(target: HTMLElement): void;
+	allocate(listener: (event: TouchEvent) => void): void;
+	free(): void;
+	get listener(): (event: TouchEvent) => void;
+	get target(): HTMLElement;
+	get alive(): boolean;
+	get listenersAlive(): boolean;
+}
+export declare const TouchPosition: import("bitecs").ComponentType<import("bitecs").ISchema>;
+export declare class TouchPositionProxy {
+	private static instance;
+	private eid;
+	private map;
+	private constructor();
+	static get(eid: number): TouchPositionProxy;
+	allocate(): void;
+	free(): void;
+	update(x: number, y: number): void;
+	get x(): number;
+	get y(): number;
+}
 export declare const TransformUpdated: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare const UserId: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare class UserIdProxy {
@@ -819,7 +927,8 @@ export declare const gltfSystem: (world: IWorld) => void;
 export declare const gltfAssetLoadSystem: (world: IWorld) => void;
 export declare const gltfSceneLoadSystem: (world: IWorld) => void;
 export declare const grabSystem: (world: IWorld) => void;
-export declare const grabbedObjectsMouseTrackSystem: (world: IWorld) => void;
+export declare const grabbedObjectsPointerTrackSystem: (world: IWorld) => void;
+export declare const clearInteractionSystem: (world: IWorld) => void;
 export declare const keyEventHandleSystem: (world: IWorld) => void;
 export declare const keyEventClearSystem: (world: IWorld) => void;
 export declare const lazilyActivateAnimationSystem: (world: IWorld) => void;
@@ -833,9 +942,9 @@ export declare const mouseButtonEventHandleSystem: (world: IWorld) => void;
 export declare const mouseButtonEventClearSystem: (world: IWorld) => void;
 export declare const mouseMoveEventHandleSystem: (world: IWorld) => void;
 export declare const mouseMoveEventClearSystem: (world: IWorld) => void;
+export declare const mousePositionToPointerSystem: (world: IWorld) => void;
 export declare const mousePositionTrackSystem: (world: IWorld) => void;
-export declare const mouseRaycastSystem: (world: IWorld) => void;
-export declare const mouseSelectSystem: (world: IWorld) => void;
+export declare const mouseInteractSystem: (world: IWorld) => void;
 export declare const networkedSystem: (world: IWorld) => void;
 export declare const networkedEntitySystem: (world: IWorld) => void;
 export declare const networkEventHandleSystem: (world: IWorld) => void;
@@ -843,18 +952,27 @@ export declare const networkEventClearSystem: (world: IWorld) => void;
 export declare const networkSendSystem: (world: IWorld) => void;
 export declare const perspectiveCameraSystem: (world: IWorld) => void;
 export declare const prefabsSystem: (world: IWorld) => void;
+export declare const raycastSystem: (world: IWorld) => void;
 export declare const clearRaycastedSystem: (world: IWorld) => void;
 export declare const raycasterSystem: (world: IWorld) => void;
 export declare const renderSystem: (world: IWorld) => void;
 export declare const rendererSystem: (world: IWorld) => void;
 export declare const sceneSystem: (world: IWorld) => void;
 export declare const sceneEnvironmentMapLoadSystem: (world: IWorld) => void;
+export declare const selectSystem: (world: IWorld) => void;
 export declare const selectedEventClearSystem: (world: IWorld) => void;
 export declare const streamConnectionSystem: (world: IWorld) => void;
 export declare const streamEventHandleSystem: (world: IWorld) => void;
 export declare const streamEventClearSystem: (world: IWorld) => void;
 export declare const streamRemotePeerRegisterSystem: (world: IWorld) => void;
 export declare const timeSystem: (world: IWorld) => void;
+export declare const touchEventHandleSystem: (world: IWorld) => void;
+export declare const touchEventClearSystem: (world: IWorld) => void;
+export declare const touchInteractSystem: (world: IWorld) => void;
+export declare const touchMoveEventHandleSystem: (world: IWorld) => void;
+export declare const touchMoveEventClearSystem: (world: IWorld) => void;
+export declare const touchPositionToPointerSystem: (world: IWorld) => void;
+export declare const touchPositionTrackSystem: (world: IWorld) => void;
 export declare const clearTransformUpdatedSystem: (world: IWorld) => void;
 export declare const updateMatricesSystem: (world: IWorld) => void;
 export declare const windowResizeEventHandleSystem: (world: IWorld) => void;

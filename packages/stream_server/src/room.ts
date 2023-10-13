@@ -90,6 +90,11 @@ export class Room {
   exit(peerId: string): void {
     this.mustBeInRoom(peerId);
 
+    this.closeProducerTransport(peerId);
+    this.closeConsumerTransport(peerId);
+    this.closeProducers(peerId);
+    this.closeConsumers(peerId);
+
     this.peers.get(peerId)!.dispose();
     this.peers.delete(peerId);
   }
@@ -102,6 +107,11 @@ export class Room {
 
   leave(peerId: string): void {
     this.mustBeInRoom(peerId);
+
+    this.closeProducerTransport(peerId);
+    this.closeConsumerTransport(peerId);
+    this.closeProducers(peerId);
+    this.closeConsumers(peerId);
 
     this.peers.get(peerId)!.leave();
     this.peers.delete(peerId);
@@ -126,11 +136,28 @@ export class Room {
 
     const transport = await this.createWebRtcTransport();
 
-    // TODO: What if the peer has already left the room?
+    // TODO: What if the peer has already left and entered again the room?
+
+    if (!this.peers.has(peerId) || !this.peers.get(peerId)!.joined) {
+      transport.close();
+      throw new Error(`Peer ${peerId} has already been left while waiting for producer transport creation.`);
+    }
 
     this.producerTransports.set(transport.id, transport);
     this.peers.get(peerId)!.setProducerTransportId(transport.id);
     return getTransportParams(transport);
+  }
+
+  private closeProducerTransport(peerId: string): void {
+    this.mustBeInRoom(peerId);
+
+    const peer = this.peers.get(peerId)!;
+    if (peer.producerTransportId !== null) {
+      const transportId = peer.producerTransportId;
+      const transport = this.producerTransports.get(transportId);
+      transport.close();
+      peer.setProducerTransportId(null);
+    }
   }
 
   async createConsumerTransport(peerId: string): Promise<TransportParams> {
@@ -138,11 +165,28 @@ export class Room {
 
     const transport = await this.createWebRtcTransport();
 
-    // TODO: What if the peer has already left the room?
+    // TODO: What if the peer has already left and entered again the room?
+
+    if (!this.peers.has(peerId) || !this.peers.get(peerId)!.joined) {
+      transport.close();
+      throw new Error(`Peer ${peerId} has already been left while waiting for consumer transport creation.`);
+    }
 
     this.consumerTransports.set(transport.id, transport);
     this.peers.get(peerId)!.setConsumerTransportId(transport.id);
     return getTransportParams(transport);
+  }
+
+  private closeConsumerTransport(peerId: string): void {
+    this.mustBeInRoom(peerId);
+
+    const peer = this.peers.get(peerId)!;
+    if (peer.consumerTransportId !== null) {
+      const transportId = peer.consumerTransportId;
+      const transport = this.consumerTransports.get(transportId);
+      transport.close();
+      peer.setConsumerTransportId(null);
+    }
   }
 
   async connectProducerTransport(
@@ -206,11 +250,25 @@ export class Room {
       rtpParameters
     });
 
-    // TODO: What if the peer has already left the room?
+    if (!this.peers.has(peerId) || !this.peers.get(peerId)!.joined) {
+      producer.close();
+      throw new Error(`Peer ${peerId} has already left while waiting for producer creation.`);
+    }
 
     this.producers.set(producer.id, producer);
     peer.addProducerId(producer.id);
     return producer.id;
+  }
+
+  private closeProducers(peerId: string): void {
+    this.mustBeInRoom(peerId);
+
+    const peer = this.peers.get(peerId);
+    for (const producerId of peer.producerIds) {
+      const producer = this.producers.get(producerId);
+      producer.close();
+    }
+    peer.clearProducerIds();
   }
 
   async consume(
@@ -242,11 +300,31 @@ export class Room {
       paused: true
     });
 
-    // TODO: What if the peer, transport, or room is already closed?
+    if (!this.peers.has(producerPeerId) || !this.peers.get(producerPeerId).joined) {
+      throw new Error(`Producer peer ${producerPeerId} has already left while waiting for consumer creation.`);
+    }
+
+    if (!this.peers.has(consumerPeerId) || !this.peers.get(consumerPeerId).joined) {
+      throw new Error(`Consumer peer ${consumerPeerId} has already left while waiting for consumer creation.`);
+    }
+
+    // TODO: Record producerPeerId - consumer association and
+    //       close condumer when it's producer peer is left.
 
     this.consumers.set(consumer.id, consumer);
     consumerPeer.addConsumerId(consumer.id);
     return getConsumerParams(consumerPeerId, producerPeerId, producerId, consumer);
+  }
+
+  private closeConsumers(peerId: string): void {
+    this.mustBeInRoom(peerId);
+
+    const peer = this.peers.get(peerId);
+    for (const consumerId of peer.consumerIds) {
+      const consumer = this.consumers.get(consumerId);
+      consumer.close();
+    }
+    peer.clearConsumerIds();
   }
 
   async resumeConsumer(consumerId: string): Promise<void> {

@@ -6,7 +6,7 @@ export class Peer {
   private _joined: boolean;
   private _consumerTransportId: null | string;
   private _producerTransportId: null | string;
-  private consumerIds: Set<string>;
+  private _consumerIds: Set<string>;
   private _producerIds: Set<string>;
 
   constructor(id: string) {
@@ -14,7 +14,7 @@ export class Peer {
 
     this._rtpCapabilities = null;
     this._joined = false;
-    this.consumerIds = new Set();
+    this._consumerIds = new Set();
     this._consumerTransportId = null;
     this._producerIds = new Set();
     this._producerTransportId = null;
@@ -45,6 +45,14 @@ export class Peer {
     return ids;
   }
 
+  get consumerIds(): string[] {
+    const ids = [];
+    for (const id of this._consumerIds.values()) {
+      ids.push(id);
+    }
+    return ids;
+  }
+
   join(rtpCapabilities: mediasoup.types.RtpCapabilities): void {
     if (this.joined === true) {
       throw new Error(`Peer ${this.id} has already joined.`);
@@ -66,24 +74,32 @@ export class Peer {
   }
 
   setConsumerTransportId(id: string): void {
-    if (this._consumerTransportId !== null) {
+    if (id !== null && this.consumerTransportId !== null) {
       throw new Error(`Consumer transport is already set.`);
+    } else if (id === null && this.consumerTransportId === null) {
+      throw new Error(`Consumer transport is already unset.`);
     }
     this._consumerTransportId = id;
   }
 
   setProducerTransportId(id: string): void {
-    if (this.producerTransportId !== null) {
+    if (id !== null && this.producerTransportId !== null) {
       throw new Error(`Producer transport is already set.`);
+    } else if (id === null && this.producerTransportId === null) {
+      throw new Error(`Producer transport is already unset.`);
     }
     this._producerTransportId = id;
   }
 
   addConsumerId(id: string): void {
-    if (this.consumerIds.has(id)) {
+    if (this._consumerIds.has(id)) {
       throw new Error(`Consumer ${id} is already registered.`);
     }
-    this.consumerIds.add(id);
+    this._consumerIds.add(id);
+  }
+
+  clearConsumerIds(): void {
+    this._consumerIds.clear();
   }
 
   addProducerId(id: string): void {
@@ -91,5 +107,9 @@ export class Peer {
       throw new Error(`Producer ${id} is already registered.`);
     }
     this._producerIds.add(id);
+  }
+
+  clearProducerIds(): void {
+    this._producerIds.clear(); 
   }
 }

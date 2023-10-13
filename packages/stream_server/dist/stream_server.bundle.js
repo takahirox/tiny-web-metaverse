@@ -14739,7 +14739,7 @@ class Peer {
         this.id = id;
         this._rtpCapabilities = null;
         this._joined = false;
-        this.consumerIds = new Set();
+        this._consumerIds = new Set();
         this._consumerTransportId = null;
         this._producerIds = new Set();
         this._producerTransportId = null;
@@ -14764,6 +14764,13 @@ class Peer {
         }
         return ids;
     }
+    get consumerIds() {
+        const ids = [];
+        for (const id of this._consumerIds.values()) {
+            ids.push(id);
+        }
+        return ids;
+    }
     join(rtpCapabilities) {
         if (this.joined === true) {
             throw new Error(`Peer ${this.id} has already joined.`);
@@ -14782,28 +14789,40 @@ class Peer {
         // TODO: Implement
     }
     setConsumerTransportId(id) {
-        if (this._consumerTransportId !== null) {
+        if (id !== null && this.consumerTransportId !== null) {
             throw new Error(`Consumer transport is already set.`);
+        }
+        else if (id === null && this.consumerTransportId === null) {
+            throw new Error(`Consumer transport is already unset.`);
         }
         this._consumerTransportId = id;
     }
     setProducerTransportId(id) {
-        if (this.producerTransportId !== null) {
+        if (id !== null && this.producerTransportId !== null) {
             throw new Error(`Producer transport is already set.`);
+        }
+        else if (id === null && this.producerTransportId === null) {
+            throw new Error(`Producer transport is already unset.`);
         }
         this._producerTransportId = id;
     }
     addConsumerId(id) {
-        if (this.consumerIds.has(id)) {
+        if (this._consumerIds.has(id)) {
             throw new Error(`Consumer ${id} is already registered.`);
         }
-        this.consumerIds.add(id);
+        this._consumerIds.add(id);
+    }
+    clearConsumerIds() {
+        this._consumerIds.clear();
     }
     addProducerId(id) {
         if (this._producerIds.has(id)) {
             throw new Error(`Producer ${id} is already registered.`);
         }
         this._producerIds.add(id);
+    }
+    clearProducerIds() {
+        this._producerIds.clear();
     }
 }
 
@@ -14898,6 +14917,10 @@ class Room {
     }
     exit(peerId) {
         this.mustBeInRoom(peerId);
+        this.closeProducerTransport(peerId);
+        this.closeConsumerTransport(peerId);
+        this.closeProducers(peerId);
+        this.closeConsumers(peerId);
         this.peers.get(peerId).dispose();
         this.peers.delete(peerId);
     }
@@ -14907,6 +14930,10 @@ class Room {
     }
     leave(peerId) {
         this.mustBeInRoom(peerId);
+        this.closeProducerTransport(peerId);
+        this.closeConsumerTransport(peerId);
+        this.closeProducers(peerId);
+        this.closeConsumers(peerId);
         this.peers.get(peerId).leave();
         this.peers.delete(peerId);
     }
@@ -14928,21 +14955,49 @@ class Room {
         return __awaiter(this, void 0, void 0, function* () {
             this.mustBeInRoom(peerId);
             const transport = yield this.createWebRtcTransport();
-            // TODO: What if the peer has already left the room?
+            // TODO: What if the peer has already left and entered again the room?
+            if (!this.peers.has(peerId) || !this.peers.get(peerId).joined) {
+                transport.close();
+                throw new Error(`Peer ${peerId} has already been left while waiting for producer transport creation.`);
+            }
             this.producerTransports.set(transport.id, transport);
             this.peers.get(peerId).setProducerTransportId(transport.id);
             return (0,_message__WEBPACK_IMPORTED_MODULE_1__.getTransportParams)(transport);
         });
     }
+    closeProducerTransport(peerId) {
+        this.mustBeInRoom(peerId);
+        const peer = this.peers.get(peerId);
+        if (peer.producerTransportId !== null) {
+            const transportId = peer.producerTransportId;
+            const transport = this.producerTransports.get(transportId);
+            transport.close();
+            peer.setProducerTransportId(null);
+        }
+    }
     createConsumerTransport(peerId) {
         return __awaiter(this, void 0, void 0, function* () {
             this.mustBeInRoom(peerId);
             const transport = yield this.createWebRtcTransport();
-            // TODO: What if the peer has already left the room?
+            // TODO: What if the peer has already left and entered again the room?
+            if (!this.peers.has(peerId) || !this.peers.get(peerId).joined) {
+                transport.close();
+                throw new Error(`Peer ${peerId} has already been left while waiting for consumer transport creation.`);
+            }
             this.consumerTransports.set(transport.id, transport);
             this.peers.get(peerId).setConsumerTransportId(transport.id);
             return (0,_message__WEBPACK_IMPORTED_MODULE_1__.getTransportParams)(transport);
         });
+    }
+    closeConsumerTransport(peerId) {
+        this.mustBeInRoom(peerId);
+        const peer = this.peers.get(peerId);
+        if (peer.consumerTransportId !== null) {
+            const transportId = peer.consumerTransportId;
+            const transport = this.consumerTransports.get(transportId);
+            transport.close();
+            peer.setConsumerTransportId(null);
+        }
     }
     connectProducerTransport(peerId, dtlsParameters) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -14985,11 +15040,23 @@ class Room {
                 kind,
                 rtpParameters
             });
-            // TODO: What if the peer has already left the room?
+            if (!this.peers.has(peerId) || !this.peers.get(peerId).joined) {
+                producer.close();
+                throw new Error(`Peer ${peerId} has already left while waiting for producer creation.`);
+            }
             this.producers.set(producer.id, producer);
             peer.addProducerId(producer.id);
             return producer.id;
         });
+    }
+    closeProducers(peerId) {
+        this.mustBeInRoom(peerId);
+        const peer = this.peers.get(peerId);
+        for (const producerId of peer.producerIds) {
+            const producer = this.producers.get(producerId);
+            producer.close();
+        }
+        peer.clearProducerIds();
     }
     consume(consumerPeerId, producerPeerId, producerId) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -15011,11 +15078,27 @@ class Room {
                 rtpCapabilities: consumerPeer.rtpCapabilities,
                 paused: true
             });
-            // TODO: What if the peer, transport, or room is already closed?
+            if (!this.peers.has(producerPeerId) || !this.peers.get(producerPeerId).joined) {
+                throw new Error(`Producer peer ${producerPeerId} has already left while waiting for consumer creation.`);
+            }
+            if (!this.peers.has(consumerPeerId) || !this.peers.get(consumerPeerId).joined) {
+                throw new Error(`Consumer peer ${consumerPeerId} has already left while waiting for consumer creation.`);
+            }
+            // TODO: Record producerPeerId - consumer association and
+            //       close condumer when it's producer peer is left.
             this.consumers.set(consumer.id, consumer);
             consumerPeer.addConsumerId(consumer.id);
             return (0,_message__WEBPACK_IMPORTED_MODULE_1__.getConsumerParams)(consumerPeerId, producerPeerId, producerId, consumer);
         });
+    }
+    closeConsumers(peerId) {
+        this.mustBeInRoom(peerId);
+        const peer = this.peers.get(peerId);
+        for (const consumerId of peer.consumerIds) {
+            const consumer = this.consumers.get(consumerId);
+            consumer.close();
+        }
+        peer.clearConsumerIds();
     }
     resumeConsumer(consumerId) {
         return __awaiter(this, void 0, void 0, function* () {
