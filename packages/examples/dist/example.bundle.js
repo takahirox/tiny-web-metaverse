@@ -1052,6 +1052,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   F32_EPSILON: () => (/* binding */ F32_EPSILON),
 /* harmony export */   INITIAL_VERSION: () => (/* binding */ INITIAL_VERSION),
+/* harmony export */   LOCAL_VERSION: () => (/* binding */ LOCAL_VERSION),
 /* harmony export */   NETWORK_INTERVAL: () => (/* binding */ NETWORK_INTERVAL),
 /* harmony export */   NULL_EID: () => (/* binding */ NULL_EID),
 /* harmony export */   SystemOrder: () => (/* binding */ SystemOrder),
@@ -1060,6 +1061,7 @@ __webpack_require__.r(__webpack_exports__);
 const NULL_EID = 0;
 //
 const INITIAL_VERSION = 0;
+const LOCAL_VERSION = -1;
 const SystemOrder = Object.freeze({
     Time: 0,
     EventHandling: 100,
@@ -4842,7 +4844,8 @@ const networkSendSystem = (world) => {
                         if ((0,_utils_serializer__WEBPACK_IMPORTED_MODULE_4__.hasComponentKey)(world, component)) {
                             const name = (0,_utils_serializer__WEBPACK_IMPORTED_MODULE_4__.getComponentKey)(world, component);
                             const data = (0,_utils_serializer__WEBPACK_IMPORTED_MODULE_4__.getSerializers)(world, name).serializer(world, networkedEid);
-                            networkedProxy.initNetworkedComponent(name, data, myUserId, timeProxy.elapsed, _common__WEBPACK_IMPORTED_MODULE_3__.INITIAL_VERSION);
+                            networkedProxy.initNetworkedComponent(name, data, myUserId, timeProxy.elapsed, _common__WEBPACK_IMPORTED_MODULE_3__.INITIAL_VERSION // TODO: LOCAL_VERSION instead?
+                            );
                             components.push({
                                 name,
                                 data: JSON.stringify(data)
@@ -4883,6 +4886,7 @@ const networkSendSystem = (world) => {
                                     name,
                                     data: JSON.stringify(data)
                                 });
+                                networkedProxy.updateNetworkedComponent(name, data, myUserId, timeProxy.elapsed, _common__WEBPACK_IMPORTED_MODULE_3__.LOCAL_VERSION);
                             }
                         }
                         else {
@@ -5029,7 +5033,7 @@ const networkedEntitySystem = (world) => {
                             const networkedComponent = networkedProxy.getNetworkedComponent(c.component_name);
                             if (c.version > networkedComponent.version) {
                                 const data = JSON.parse(c.data);
-                                if (c.owner !== userId) {
+                                if (c.owner !== userId || networkedComponent.owner !== userId) {
                                     const updatedAt = timeProxy.elapsed - c.elapsed_time;
                                     (0,_utils_serializer__WEBPACK_IMPORTED_MODULE_6__.getSerializers)(world, c.component_name)
                                         .networkDeserializer(world, eid, data, updatedAt);

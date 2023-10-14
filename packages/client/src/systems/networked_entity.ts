@@ -120,7 +120,7 @@ export const networkedEntitySystem = (world: IWorld) => {
               const networkedComponent = networkedProxy.getNetworkedComponent(c.component_name);
               if (c.version > networkedComponent.version) {
                 const data = JSON.parse(c.data);
-                if (c.owner !== userId) {
+                if (c.owner !== userId || networkedComponent.owner !== userId) {
                   const updatedAt = timeProxy.elapsed - c.elapsed_time;
                   getSerializers(world, c.component_name)
                     .networkDeserializer(world, eid, data, updatedAt);

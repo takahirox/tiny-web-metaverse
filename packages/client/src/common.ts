@@ -4,6 +4,7 @@ export const NULL_EID = 0;
 
 //
 export const INITIAL_VERSION = 0;
+export const LOCAL_VERSION = -1;
 
 export const SystemOrder = Object.freeze({
   Time: 0,

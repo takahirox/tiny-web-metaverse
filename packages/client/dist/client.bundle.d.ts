@@ -6,6 +6,7 @@ import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 
 export declare const NULL_EID = 0;
 export declare const INITIAL_VERSION = 0;
+export declare const LOCAL_VERSION = -1;
 export declare const SystemOrder: Readonly<{
 	Time: 0;
 	EventHandling: 100;

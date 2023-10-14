@@ -7,6 +7,7 @@ import {
 } from "bitecs";
 import {
   INITIAL_VERSION,
+  LOCAL_VERSION,
   NETWORK_INTERVAL
 } from "../common";
 import {
@@ -78,7 +79,7 @@ export const networkSendSystem = (world: IWorld) => {
                 data,
                 myUserId,
                 timeProxy.elapsed,
-                INITIAL_VERSION
+                INITIAL_VERSION // TODO: LOCAL_VERSION instead?
               );
               components.push({
                 name,
@@ -134,6 +135,13 @@ export const networkSendSystem = (world: IWorld) => {
                   name,
                   data: JSON.stringify(data)
                 });
+                networkedProxy.updateNetworkedComponent(
+                  name,
+                  data,
+                  myUserId,
+                  timeProxy.elapsed,
+                  LOCAL_VERSION
+                );
               }
             } else {
               // TODO: Send add component message?
