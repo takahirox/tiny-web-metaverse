@@ -7,7 +7,7 @@ Tiny Web Metaverse project is for open, simple, easy, flexible, and extensible
 
 [Online Demo](https://tiny-web-metaverse.net)
 
-Share the URL (https://tiny-web-metaverse.net/?room_id=xxx) with your friends
+Click to enter a room, and then share the URL (with `?room_id=xxx`) with your friends
 to meet up with in a room.
 
 ## Screenshot
