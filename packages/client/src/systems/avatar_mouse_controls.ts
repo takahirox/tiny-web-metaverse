@@ -39,7 +39,7 @@ const mouseQuery = defineQuery([MousePosition, PreviousMousePosition]);
 const raycastedQuery = defineQuery([Raycasted, RaycastedNearest]);
 const grabbedQuery = defineQuery([Grabbed]);
 
-// TODO: Consider to reuse Three.js PointerLockControls
+// TODO: Consider to reuse Three.js PointerLockControls?
 
 // TODO: Make them configurable?
 const MIN_POLAR_ANGLE = 0; // radians
@@ -93,6 +93,7 @@ export const avatarMouseControlsSystem = (world: IWorld) => {
         const dy = mouseProxy.y - previousProxy.y;
 
         // TODO: Configurable rotation speed
+        // TODO: Add LinearRotation component?
         euler.setFromQuaternion(avatar.quaternion);
         euler.y += dx;
         euler.x -= dy;

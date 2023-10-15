@@ -3,6 +3,8 @@ import {
   addEntity
 } from "bitecs";
 import {
+  avatarVirtualJoystickSystem,
+  clearVirtualJoystickEventSystem,
   gltfMixerAnimationSystem,
   imageSystem,
   imageLoadSystem,
@@ -10,7 +12,12 @@ import {
   NetworkedVideo,
   videoSystem,
   videoLoadSystem,
-  videoSerializers
+  videoSerializers,
+  VirtualJoystick,
+  VirtualJoystickLeft,
+  VirtualJoystickProxy,
+  VirtualJoystickRight,
+  virtualJoystickUISystem
 } from "@tiny-web-metaverse/addons/src";
 import {
   App,
@@ -45,6 +52,7 @@ import { colorSystem } from "./systems/color";
 import { userEventSystem } from "./systems/user";
 import { updateJoinDialogSystem } from "./ui/join_dialog";
 import { updateSidebarSystem } from "./ui/side_bar";
+import { isMobile, isTablet } from "./utils/platform_detect";
 
 const sceneAssetUrl = 'assets/scenes/hello_webxr.glb';
 const envTextureUrl = 'assets/textures/royal_esplanade_1k.hdr';
@@ -76,16 +84,24 @@ const run = async (): Promise<void> => {
 
   document.body.appendChild(canvas);
 
+  app.registerSystem(virtualJoystickUISystem, SystemOrder.EventHandling);
+
   app.registerSystem(imageSystem, SystemOrder.Setup);
   app.registerSystem(imageLoadSystem, SystemOrder.Setup);
   app.registerSystem(videoSystem, SystemOrder.Setup);
   app.registerSystem(videoLoadSystem, SystemOrder.Setup);
+
   app.registerSystem(gltfMixerAnimationSystem, SystemOrder.Setup + 1);
   app.registerSystem(lazilyUpdateVideoStateSystem, SystemOrder.Setup + 1);
+
   app.registerSystem(updateJoinDialogSystem, SystemOrder.BeforeMatricesUpdate);
   app.registerSystem(updateSidebarSystem, SystemOrder.BeforeMatricesUpdate);
+  app.registerSystem(avatarVirtualJoystickSystem, SystemOrder.BeforeMatricesUpdate);
+
   app.registerSystem(colorSystem, SystemOrder.Render - 1);
   app.registerSystem(userEventSystem, SystemOrder.Render - 1);
+
+  app.registerSystem(clearVirtualJoystickEventSystem, SystemOrder.TearDown);
 
   const world = app.getWorld();
 
@@ -110,6 +126,18 @@ const run = async (): Promise<void> => {
   const envMapLoaderEid = addEntity(world);
   addComponent(world, SceneEnvironmentMapLoader, envMapLoaderEid);
   SceneEnvironmentMapLoaderProxy.get(envMapLoaderEid).allocate(envTextureUrl);
+
+  if (isMobile() || isTablet()) {
+    const virtualJoystickLeftEid = addEntity(world);
+    addComponent(world, VirtualJoystick, virtualJoystickLeftEid);
+    VirtualJoystickProxy.get(virtualJoystickLeftEid).allocate();
+    addComponent(world, VirtualJoystickLeft, virtualJoystickLeftEid);
+
+    const virtualJoystickRightEid = addEntity(world);
+    addComponent(world, VirtualJoystick, virtualJoystickRightEid);
+    VirtualJoystickProxy.get(virtualJoystickRightEid).allocate();
+    addComponent(world, VirtualJoystickRight, virtualJoystickRightEid);
+  }
 
   const mouseButtonEventEid = addEntity(world);
   addComponent(world, MouseButtonEventListener, mouseButtonEventEid);

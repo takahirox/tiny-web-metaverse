@@ -4,7 +4,8 @@
     "url": "https://github.com/takahirox/tiny-web-metaverse/issues"
   },
   "dependencies": {
-    "@tiny-web-metaverse/client": "^0.0.1"
+    "@tiny-web-metaverse/client": "^0.0.1",
+    "nipplejs": "^0.10.1"
   },
   "description": "Tiny Web metaverse addons",
   "exports": {

@@ -2965,7 +2965,7 @@ const avatarQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_compon
 const mouseQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_mouse__WEBPACK_IMPORTED_MODULE_6__.MousePosition, _components_mouse__WEBPACK_IMPORTED_MODULE_6__.PreviousMousePosition]);
 const raycastedQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_raycast__WEBPACK_IMPORTED_MODULE_7__.Raycasted, _components_raycast__WEBPACK_IMPORTED_MODULE_7__.RaycastedNearest]);
 const grabbedQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_grab__WEBPACK_IMPORTED_MODULE_8__.Grabbed]);
-// TODO: Consider to reuse Three.js PointerLockControls
+// TODO: Consider to reuse Three.js PointerLockControls?
 // TODO: Make them configurable?
 const MIN_POLAR_ANGLE = 0; // radians
 const MAX_POLAR_ANGLE = Math.PI; // radians
@@ -3010,6 +3010,7 @@ const avatarMouseControlsSystem = (world) => {
                 const dx = mouseProxy.x - previousProxy.x;
                 const dy = mouseProxy.y - previousProxy.y;
                 // TODO: Configurable rotation speed
+                // TODO: Add LinearRotation component?
                 euler.setFromQuaternion(avatar.quaternion);
                 euler.y += dx;
                 euler.x -= dy;

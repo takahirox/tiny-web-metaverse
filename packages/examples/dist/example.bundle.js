@@ -1,6 +1,15 @@
 /******/ (() => { // webpackBootstrap
-/******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
+
+/***/ "../../node_modules/nipplejs/dist/nipplejs.js":
+/*!****************************************************!*\
+  !*** ../../node_modules/nipplejs/dist/nipplejs.js ***!
+  \****************************************************/
+/***/ ((module) => {
+
+!function(t,i){ true?module.exports=i():0}(window,(function(){return function(t){var i={};function e(o){if(i[o])return i[o].exports;var n=i[o]={i:o,l:!1,exports:{}};return t[o].call(n.exports,n,n.exports,e),n.l=!0,n.exports}return e.m=t,e.c=i,e.d=function(t,i,o){e.o(t,i)||Object.defineProperty(t,i,{enumerable:!0,get:o})},e.r=function(t){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(t,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(t,"__esModule",{value:!0})},e.t=function(t,i){if(1&i&&(t=e(t)),8&i)return t;if(4&i&&"object"==typeof t&&t&&t.__esModule)return t;var o=Object.create(null);if(e.r(o),Object.defineProperty(o,"default",{enumerable:!0,value:t}),2&i&&"string"!=typeof t)for(var n in t)e.d(o,n,function(i){return t[i]}.bind(null,n));return o},e.n=function(t){var i=t&&t.__esModule?function(){return t.default}:function(){return t};return e.d(i,"a",i),i},e.o=function(t,i){return Object.prototype.hasOwnProperty.call(t,i)},e.p="",e(e.s=0)}([function(t,i,e){"use strict";e.r(i);var o,n=function(t,i){var e=i.x-t.x,o=i.y-t.y;return Math.sqrt(e*e+o*o)},s=function(t){return t*(Math.PI/180)},r=function(t){return t*(180/Math.PI)},d=new Map,a=function(t){d.has(t)&&clearTimeout(d.get(t)),d.set(t,setTimeout(t,100))},p=function(t,i,e){for(var o,n=i.split(/[ ,]+/g),s=0;s<n.length;s+=1)o=n[s],t.addEventListener?t.addEventListener(o,e,!1):t.attachEvent&&t.attachEvent(o,e)},c=function(t,i,e){for(var o,n=i.split(/[ ,]+/g),s=0;s<n.length;s+=1)o=n[s],t.removeEventListener?t.removeEventListener(o,e):t.detachEvent&&t.detachEvent(o,e)},l=function(t){return t.preventDefault(),t.type.match(/^touch/)?t.changedTouches:t},h=function(){return{x:void 0!==window.pageXOffset?window.pageXOffset:(document.documentElement||document.body.parentNode||document.body).scrollLeft,y:void 0!==window.pageYOffset?window.pageYOffset:(document.documentElement||document.body.parentNode||document.body).scrollTop}},u=function(t,i){i.top||i.right||i.bottom||i.left?(t.style.top=i.top,t.style.right=i.right,t.style.bottom=i.bottom,t.style.left=i.left):(t.style.left=i.x+"px",t.style.top=i.y+"px")},f=function(t,i,e){var o=y(t);for(var n in o)if(o.hasOwnProperty(n))if("string"==typeof i)o[n]=i+" "+e;else{for(var s="",r=0,d=i.length;r<d;r+=1)s+=i[r]+" "+e+", ";o[n]=s.slice(0,-2)}return o},y=function(t){var i={};i[t]="";return["webkit","Moz","o"].forEach((function(e){i[e+t.charAt(0).toUpperCase()+t.slice(1)]=""})),i},m=function(t,i){for(var e in i)i.hasOwnProperty(e)&&(t[e]=i[e]);return t},v=function(t,i){if(t.length)for(var e=0,o=t.length;e<o;e+=1)i(t[e]);else i(t)},g=!!("ontouchstart"in window),b=!!window.PointerEvent,x=!!window.MSPointerEvent,O={start:"mousedown",move:"mousemove",end:"mouseup"},w={};function _(){}b?o={start:"pointerdown",move:"pointermove",end:"pointerup, pointercancel"}:x?o={start:"MSPointerDown",move:"MSPointerMove",end:"MSPointerUp"}:g?(o={start:"touchstart",move:"touchmove",end:"touchend, touchcancel"},w=O):o=O,_.prototype.on=function(t,i){var e,o=t.split(/[ ,]+/g);this._handlers_=this._handlers_||{};for(var n=0;n<o.length;n+=1)e=o[n],this._handlers_[e]=this._handlers_[e]||[],this._handlers_[e].push(i);return this},_.prototype.off=function(t,i){return this._handlers_=this._handlers_||{},void 0===t?this._handlers_={}:void 0===i?this._handlers_[t]=null:this._handlers_[t]&&this._handlers_[t].indexOf(i)>=0&&this._handlers_[t].splice(this._handlers_[t].indexOf(i),1),this},_.prototype.trigger=function(t,i){var e,o=this,n=t.split(/[ ,]+/g);o._handlers_=o._handlers_||{};for(var s=0;s<n.length;s+=1)e=n[s],o._handlers_[e]&&o._handlers_[e].length&&o._handlers_[e].forEach((function(t){t.call(o,{type:e,target:o},i)}))},_.prototype.config=function(t){this.options=this.defaults||{},t&&(this.options=function(t,i){var e={};for(var o in t)t.hasOwnProperty(o)&&i.hasOwnProperty(o)?e[o]=i[o]:t.hasOwnProperty(o)&&(e[o]=t[o]);return e}(this.options,t))},_.prototype.bindEvt=function(t,i){var e=this;return e._domHandlers_=e._domHandlers_||{},e._domHandlers_[i]=function(){"function"==typeof e["on"+i]?e["on"+i].apply(e,arguments):console.warn('[WARNING] : Missing "on'+i+'" handler.')},p(t,o[i],e._domHandlers_[i]),w[i]&&p(t,w[i],e._domHandlers_[i]),e},_.prototype.unbindEvt=function(t,i){return this._domHandlers_=this._domHandlers_||{},c(t,o[i],this._domHandlers_[i]),w[i]&&c(t,w[i],this._domHandlers_[i]),delete this._domHandlers_[i],this};var T=_;function k(t,i){return this.identifier=i.identifier,this.position=i.position,this.frontPosition=i.frontPosition,this.collection=t,this.defaults={size:100,threshold:.1,color:"white",fadeTime:250,dataOnly:!1,restJoystick:!0,restOpacity:.5,mode:"dynamic",zone:document.body,lockX:!1,lockY:!1,shape:"circle"},this.config(i),"dynamic"===this.options.mode&&(this.options.restOpacity=0),this.id=k.id,k.id+=1,this.buildEl().stylize(),this.instance={el:this.ui.el,on:this.on.bind(this),off:this.off.bind(this),show:this.show.bind(this),hide:this.hide.bind(this),add:this.addToDom.bind(this),remove:this.removeFromDom.bind(this),destroy:this.destroy.bind(this),setPosition:this.setPosition.bind(this),resetDirection:this.resetDirection.bind(this),computeDirection:this.computeDirection.bind(this),trigger:this.trigger.bind(this),position:this.position,frontPosition:this.frontPosition,ui:this.ui,identifier:this.identifier,id:this.id,options:this.options},this.instance}k.prototype=new T,k.constructor=k,k.id=0,k.prototype.buildEl=function(t){return this.ui={},this.options.dataOnly||(this.ui.el=document.createElement("div"),this.ui.back=document.createElement("div"),this.ui.front=document.createElement("div"),this.ui.el.className="nipple collection_"+this.collection.id,this.ui.back.className="back",this.ui.front.className="front",this.ui.el.setAttribute("id","nipple_"+this.collection.id+"_"+this.id),this.ui.el.appendChild(this.ui.back),this.ui.el.appendChild(this.ui.front)),this},k.prototype.stylize=function(){if(this.options.dataOnly)return this;var t=this.options.fadeTime+"ms",i=function(t,i){var e=y(t);for(var o in e)e.hasOwnProperty(o)&&(e[o]=i);return e}("borderRadius","50%"),e=f("transition","opacity",t),o={};return o.el={position:"absolute",opacity:this.options.restOpacity,display:"block",zIndex:999},o.back={position:"absolute",display:"block",width:this.options.size+"px",height:this.options.size+"px",marginLeft:-this.options.size/2+"px",marginTop:-this.options.size/2+"px",background:this.options.color,opacity:".5"},o.front={width:this.options.size/2+"px",height:this.options.size/2+"px",position:"absolute",display:"block",marginLeft:-this.options.size/4+"px",marginTop:-this.options.size/4+"px",background:this.options.color,opacity:".5",transform:"translate(0px, 0px)"},m(o.el,e),"circle"===this.options.shape&&m(o.back,i),m(o.front,i),this.applyStyles(o),this},k.prototype.applyStyles=function(t){for(var i in this.ui)if(this.ui.hasOwnProperty(i))for(var e in t[i])this.ui[i].style[e]=t[i][e];return this},k.prototype.addToDom=function(){return this.options.dataOnly||document.body.contains(this.ui.el)||this.options.zone.appendChild(this.ui.el),this},k.prototype.removeFromDom=function(){return this.options.dataOnly||!document.body.contains(this.ui.el)||this.options.zone.removeChild(this.ui.el),this},k.prototype.destroy=function(){clearTimeout(this.removeTimeout),clearTimeout(this.showTimeout),clearTimeout(this.restTimeout),this.trigger("destroyed",this.instance),this.removeFromDom(),this.off()},k.prototype.show=function(t){var i=this;return i.options.dataOnly||(clearTimeout(i.removeTimeout),clearTimeout(i.showTimeout),clearTimeout(i.restTimeout),i.addToDom(),i.restCallback(),setTimeout((function(){i.ui.el.style.opacity=1}),0),i.showTimeout=setTimeout((function(){i.trigger("shown",i.instance),"function"==typeof t&&t.call(this)}),i.options.fadeTime)),i},k.prototype.hide=function(t){var i=this;if(i.options.dataOnly)return i;if(i.ui.el.style.opacity=i.options.restOpacity,clearTimeout(i.removeTimeout),clearTimeout(i.showTimeout),clearTimeout(i.restTimeout),i.removeTimeout=setTimeout((function(){var e="dynamic"===i.options.mode?"none":"block";i.ui.el.style.display=e,"function"==typeof t&&t.call(i),i.trigger("hidden",i.instance)}),i.options.fadeTime),i.options.restJoystick){var e=i.options.restJoystick,o={};o.x=!0===e||!1!==e.x?0:i.instance.frontPosition.x,o.y=!0===e||!1!==e.y?0:i.instance.frontPosition.y,i.setPosition(t,o)}return i},k.prototype.setPosition=function(t,i){var e=this;e.frontPosition={x:i.x,y:i.y};var o=e.options.fadeTime+"ms",n={};n.front=f("transition",["transform"],o);var s={front:{}};s.front={transform:"translate("+e.frontPosition.x+"px,"+e.frontPosition.y+"px)"},e.applyStyles(n),e.applyStyles(s),e.restTimeout=setTimeout((function(){"function"==typeof t&&t.call(e),e.restCallback()}),e.options.fadeTime)},k.prototype.restCallback=function(){var t={};t.front=f("transition","none",""),this.applyStyles(t),this.trigger("rested",this.instance)},k.prototype.resetDirection=function(){this.direction={x:!1,y:!1,angle:!1}},k.prototype.computeDirection=function(t){var i,e,o,n=t.angle.radian,s=Math.PI/4,r=Math.PI/2;if(n>s&&n<3*s&&!t.lockX?i="up":n>-s&&n<=s&&!t.lockY?i="left":n>3*-s&&n<=-s&&!t.lockX?i="down":t.lockY||(i="right"),t.lockY||(e=n>-r&&n<r?"left":"right"),t.lockX||(o=n>0?"up":"down"),t.force>this.options.threshold){var d,a={};for(d in this.direction)this.direction.hasOwnProperty(d)&&(a[d]=this.direction[d]);var p={};for(d in this.direction={x:e,y:o,angle:i},t.direction=this.direction,a)a[d]===this.direction[d]&&(p[d]=!0);if(p.x&&p.y&&p.angle)return t;p.x&&p.y||this.trigger("plain",t),p.x||this.trigger("plain:"+e,t),p.y||this.trigger("plain:"+o,t),p.angle||this.trigger("dir dir:"+i,t)}else this.resetDirection();return t};var P=k;function E(t,i){this.nipples=[],this.idles=[],this.actives=[],this.ids=[],this.pressureIntervals={},this.manager=t,this.id=E.id,E.id+=1,this.defaults={zone:document.body,multitouch:!1,maxNumberOfNipples:10,mode:"dynamic",position:{top:0,left:0},catchDistance:200,size:100,threshold:.1,color:"white",fadeTime:250,dataOnly:!1,restJoystick:!0,restOpacity:.5,lockX:!1,lockY:!1,shape:"circle",dynamicPage:!1,follow:!1},this.config(i),"static"!==this.options.mode&&"semi"!==this.options.mode||(this.options.multitouch=!1),this.options.multitouch||(this.options.maxNumberOfNipples=1);var e=getComputedStyle(this.options.zone.parentElement);return e&&"flex"===e.display&&(this.parentIsFlex=!0),this.updateBox(),this.prepareNipples(),this.bindings(),this.begin(),this.nipples}E.prototype=new T,E.constructor=E,E.id=0,E.prototype.prepareNipples=function(){var t=this.nipples;t.on=this.on.bind(this),t.off=this.off.bind(this),t.options=this.options,t.destroy=this.destroy.bind(this),t.ids=this.ids,t.id=this.id,t.processOnMove=this.processOnMove.bind(this),t.processOnEnd=this.processOnEnd.bind(this),t.get=function(i){if(void 0===i)return t[0];for(var e=0,o=t.length;e<o;e+=1)if(t[e].identifier===i)return t[e];return!1}},E.prototype.bindings=function(){this.bindEvt(this.options.zone,"start"),this.options.zone.style.touchAction="none",this.options.zone.style.msTouchAction="none"},E.prototype.begin=function(){var t=this.options;if("static"===t.mode){var i=this.createNipple(t.position,this.manager.getIdentifier());i.add(),this.idles.push(i)}},E.prototype.createNipple=function(t,i){var e=this.manager.scroll,o={},n=this.options,s=this.parentIsFlex?e.x:e.x+this.box.left,r=this.parentIsFlex?e.y:e.y+this.box.top;if(t.x&&t.y)o={x:t.x-s,y:t.y-r};else if(t.top||t.right||t.bottom||t.left){var d=document.createElement("DIV");d.style.display="hidden",d.style.top=t.top,d.style.right=t.right,d.style.bottom=t.bottom,d.style.left=t.left,d.style.position="absolute",n.zone.appendChild(d);var a=d.getBoundingClientRect();n.zone.removeChild(d),o=t,t={x:a.left+e.x,y:a.top+e.y}}var p=new P(this,{color:n.color,size:n.size,threshold:n.threshold,fadeTime:n.fadeTime,dataOnly:n.dataOnly,restJoystick:n.restJoystick,restOpacity:n.restOpacity,mode:n.mode,identifier:i,position:t,zone:n.zone,frontPosition:{x:0,y:0},shape:n.shape});return n.dataOnly||(u(p.ui.el,o),u(p.ui.front,p.frontPosition)),this.nipples.push(p),this.trigger("added "+p.identifier+":added",p),this.manager.trigger("added "+p.identifier+":added",p),this.bindNipple(p),p},E.prototype.updateBox=function(){this.box=this.options.zone.getBoundingClientRect()},E.prototype.bindNipple=function(t){var i,e=this,o=function(t,o){i=t.type+" "+o.id+":"+t.type,e.trigger(i,o)};t.on("destroyed",e.onDestroyed.bind(e)),t.on("shown hidden rested dir plain",o),t.on("dir:up dir:right dir:down dir:left",o),t.on("plain:up plain:right plain:down plain:left",o)},E.prototype.pressureFn=function(t,i,e){var o=this,n=0;clearInterval(o.pressureIntervals[e]),o.pressureIntervals[e]=setInterval(function(){var e=t.force||t.pressure||t.webkitForce||0;e!==n&&(i.trigger("pressure",e),o.trigger("pressure "+i.identifier+":pressure",e),n=e)}.bind(o),100)},E.prototype.onstart=function(t){var i=this,e=i.options,o=t;t=l(t),i.updateBox();return v(t,(function(n){i.actives.length<e.maxNumberOfNipples?i.processOnStart(n):o.type.match(/^touch/)&&(Object.keys(i.manager.ids).forEach((function(e){if(Object.values(o.touches).findIndex((function(t){return t.identifier===e}))<0){var n=[t[0]];n.identifier=e,i.processOnEnd(n)}})),i.actives.length<e.maxNumberOfNipples&&i.processOnStart(n))})),i.manager.bindDocument(),!1},E.prototype.processOnStart=function(t){var i,e=this,o=e.options,s=e.manager.getIdentifier(t),r=t.force||t.pressure||t.webkitForce||0,d={x:t.pageX,y:t.pageY},a=e.getOrCreate(s,d);a.identifier!==s&&e.manager.removeIdentifier(a.identifier),a.identifier=s;var p=function(i){i.trigger("start",i),e.trigger("start "+i.id+":start",i),i.show(),r>0&&e.pressureFn(t,i,i.identifier),e.processOnMove(t)};if((i=e.idles.indexOf(a))>=0&&e.idles.splice(i,1),e.actives.push(a),e.ids.push(a.identifier),"semi"!==o.mode)p(a);else{if(!(n(d,a.position)<=o.catchDistance))return a.destroy(),void e.processOnStart(t);p(a)}return a},E.prototype.getOrCreate=function(t,i){var e,o=this.options;return/(semi|static)/.test(o.mode)?(e=this.idles[0])?(this.idles.splice(0,1),e):"semi"===o.mode?this.createNipple(i,t):(console.warn("Coudln't find the needed nipple."),!1):e=this.createNipple(i,t)},E.prototype.processOnMove=function(t){var i=this.options,e=this.manager.getIdentifier(t),o=this.nipples.get(e),d=this.manager.scroll;if(function(t){return isNaN(t.buttons)?0!==t.pressure:0!==t.buttons}(t)){if(!o)return console.error("Found zombie joystick with ID "+e),void this.manager.removeIdentifier(e);if(i.dynamicPage){var a=o.el.getBoundingClientRect();o.position={x:d.x+a.left,y:d.y+a.top}}o.identifier=e;var p=o.options.size/2,c={x:t.pageX,y:t.pageY};i.lockX&&(c.y=o.position.y),i.lockY&&(c.x=o.position.x);var l,h,u,f,y,m,v,g,b,x,O=n(c,o.position),w=(l=c,h=o.position,u=h.x-l.x,f=h.y-l.y,r(Math.atan2(f,u))),_=s(w),T=O/p,k={distance:O,position:c};if("circle"===o.options.shape?(y=Math.min(O,p),v=o.position,g=y,x={x:0,y:0},b=s(b=w),x.x=v.x-g*Math.cos(b),x.y=v.y-g*Math.sin(b),m=x):(m=function(t,i,e){return{x:Math.min(Math.max(t.x,i.x-e),i.x+e),y:Math.min(Math.max(t.y,i.y-e),i.y+e)}}(c,o.position,p),y=n(m,o.position)),i.follow){if(O>p){var P=c.x-m.x,E=c.y-m.y;o.position.x+=P,o.position.y+=E,o.el.style.top=o.position.y-(this.box.top+d.y)+"px",o.el.style.left=o.position.x-(this.box.left+d.x)+"px",O=n(c,o.position)}}else c=m,O=y;var I=c.x-o.position.x,z=c.y-o.position.y;o.frontPosition={x:I,y:z},i.dataOnly||(o.ui.front.style.transform="translate("+I+"px,"+z+"px)");var D={identifier:o.identifier,position:c,force:T,pressure:t.force||t.pressure||t.webkitForce||0,distance:O,angle:{radian:_,degree:w},vector:{x:I/p,y:-z/p},raw:k,instance:o,lockX:i.lockX,lockY:i.lockY};(D=o.computeDirection(D)).angle={radian:s(180-w),degree:180-w},o.trigger("move",D),this.trigger("move "+o.id+":move",D)}else this.processOnEnd(t)},E.prototype.processOnEnd=function(t){var i=this,e=i.options,o=i.manager.getIdentifier(t),n=i.nipples.get(o),s=i.manager.removeIdentifier(n.identifier);n&&(e.dataOnly||n.hide((function(){"dynamic"===e.mode&&(n.trigger("removed",n),i.trigger("removed "+n.id+":removed",n),i.manager.trigger("removed "+n.id+":removed",n),n.destroy())})),clearInterval(i.pressureIntervals[n.identifier]),n.resetDirection(),n.trigger("end",n),i.trigger("end "+n.id+":end",n),i.ids.indexOf(n.identifier)>=0&&i.ids.splice(i.ids.indexOf(n.identifier),1),i.actives.indexOf(n)>=0&&i.actives.splice(i.actives.indexOf(n),1),/(semi|static)/.test(e.mode)?i.idles.push(n):i.nipples.indexOf(n)>=0&&i.nipples.splice(i.nipples.indexOf(n),1),i.manager.unbindDocument(),/(semi|static)/.test(e.mode)&&(i.manager.ids[s.id]=s.identifier))},E.prototype.onDestroyed=function(t,i){this.nipples.indexOf(i)>=0&&this.nipples.splice(this.nipples.indexOf(i),1),this.actives.indexOf(i)>=0&&this.actives.splice(this.actives.indexOf(i),1),this.idles.indexOf(i)>=0&&this.idles.splice(this.idles.indexOf(i),1),this.ids.indexOf(i.identifier)>=0&&this.ids.splice(this.ids.indexOf(i.identifier),1),this.manager.removeIdentifier(i.identifier),this.manager.unbindDocument()},E.prototype.destroy=function(){for(var t in this.unbindEvt(this.options.zone,"start"),this.nipples.forEach((function(t){t.destroy()})),this.pressureIntervals)this.pressureIntervals.hasOwnProperty(t)&&clearInterval(this.pressureIntervals[t]);this.trigger("destroyed",this.nipples),this.manager.unbindDocument(),this.off()};var I=E;function z(t){var i=this;i.ids={},i.index=0,i.collections=[],i.scroll=h(),i.config(t),i.prepareCollections();var e=function(){var t;i.collections.forEach((function(e){e.forEach((function(e){t=e.el.getBoundingClientRect(),e.position={x:i.scroll.x+t.left,y:i.scroll.y+t.top}}))}))};p(window,"resize",(function(){a(e)}));var o=function(){i.scroll=h()};return p(window,"scroll",(function(){a(o)})),i.collections}z.prototype=new T,z.constructor=z,z.prototype.prepareCollections=function(){var t=this;t.collections.create=t.create.bind(t),t.collections.on=t.on.bind(t),t.collections.off=t.off.bind(t),t.collections.destroy=t.destroy.bind(t),t.collections.get=function(i){var e;return t.collections.every((function(t){return!(e=t.get(i))})),e}},z.prototype.create=function(t){return this.createCollection(t)},z.prototype.createCollection=function(t){var i=new I(this,t);return this.bindCollection(i),this.collections.push(i),i},z.prototype.bindCollection=function(t){var i,e=this,o=function(t,o){i=t.type+" "+o.id+":"+t.type,e.trigger(i,o)};t.on("destroyed",e.onDestroyed.bind(e)),t.on("shown hidden rested dir plain",o),t.on("dir:up dir:right dir:down dir:left",o),t.on("plain:up plain:right plain:down plain:left",o)},z.prototype.bindDocument=function(){this.binded||(this.bindEvt(document,"move").bindEvt(document,"end"),this.binded=!0)},z.prototype.unbindDocument=function(t){Object.keys(this.ids).length&&!0!==t||(this.unbindEvt(document,"move").unbindEvt(document,"end"),this.binded=!1)},z.prototype.getIdentifier=function(t){var i;return t?void 0===(i=void 0===t.identifier?t.pointerId:t.identifier)&&(i=this.latest||0):i=this.index,void 0===this.ids[i]&&(this.ids[i]=this.index,this.index+=1),this.latest=i,this.ids[i]},z.prototype.removeIdentifier=function(t){var i={};for(var e in this.ids)if(this.ids[e]===t){i.id=e,i.identifier=this.ids[e],delete this.ids[e];break}return i},z.prototype.onmove=function(t){return this.onAny("move",t),!1},z.prototype.onend=function(t){return this.onAny("end",t),!1},z.prototype.oncancel=function(t){return this.onAny("end",t),!1},z.prototype.onAny=function(t,i){var e,o=this,n="processOn"+t.charAt(0).toUpperCase()+t.slice(1);i=l(i);var s=function(t,i,e){e.ids.indexOf(i)>=0&&(e[n](t),t._found_=!0)};return v(i,(function(t){e=o.getIdentifier(t),v(o.collections,s.bind(null,t,e)),t._found_||o.removeIdentifier(e)})),!1},z.prototype.destroy=function(){this.unbindDocument(!0),this.ids={},this.index=0,this.collections.forEach((function(t){t.destroy()})),this.off()},z.prototype.onDestroyed=function(t,i){if(this.collections.indexOf(i)<0)return!1;this.collections.splice(this.collections.indexOf(i),1)};var D=new z;i.default={create:function(t){return D.create(t)},factory:D}}]).default}));
+
+/***/ }),
 
 /***/ "../addons/src/components/image.ts":
 /*!*****************************************!*\
@@ -8,6 +17,7 @@
   \*****************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   ImageComponent: () => (/* binding */ ImageComponent),
@@ -71,6 +81,7 @@ ImageLoaderProxy.instance = new ImageLoaderProxy();
   \*****************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   LazyVideoStateUpdate: () => (/* binding */ LazyVideoStateUpdate),
@@ -161,43 +172,170 @@ const NetworkedVideo = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)()
 
 /***/ }),
 
+/***/ "../addons/src/components/virtual_joystick.ts":
+/*!****************************************************!*\
+  !*** ../addons/src/components/virtual_joystick.ts ***!
+  \****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   VirtualJoystick: () => (/* binding */ VirtualJoystick),
+/* harmony export */   VirtualJoystickEvent: () => (/* binding */ VirtualJoystickEvent),
+/* harmony export */   VirtualJoystickEventListener: () => (/* binding */ VirtualJoystickEventListener),
+/* harmony export */   VirtualJoystickEventProxy: () => (/* binding */ VirtualJoystickEventProxy),
+/* harmony export */   VirtualJoystickEventType: () => (/* binding */ VirtualJoystickEventType),
+/* harmony export */   VirtualJoystickLeft: () => (/* binding */ VirtualJoystickLeft),
+/* harmony export */   VirtualJoystickProxy: () => (/* binding */ VirtualJoystickProxy),
+/* harmony export */   VirtualJoystickRight: () => (/* binding */ VirtualJoystickRight),
+/* harmony export */   VirtualJoystickType: () => (/* binding */ VirtualJoystickType)
+/* harmony export */ });
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/common.ts");
+
+
+const VirtualJoystick = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const VirtualJoystickLeft = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const VirtualJoystickRight = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+class VirtualJoystickProxy {
+    constructor() {
+        this.eid = _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
+        this.map = new Map();
+    }
+    static get(eid) {
+        VirtualJoystickProxy.instance.eid = eid;
+        return VirtualJoystickProxy.instance;
+    }
+    allocate() {
+        this.map.set(this.eid, { active: false, distance: 0.0, x: 0.0, y: 0.0 });
+    }
+    activate(active) {
+        this.map.get(this.eid).active = active;
+    }
+    update(x, y, distance) {
+        const data = this.map.get(this.eid);
+        data.x = x;
+        data.y = y;
+        data.distance = distance;
+    }
+    free() {
+        this.map.delete(this.eid);
+    }
+    get active() {
+        return this.map.get(this.eid).active;
+    }
+    get distance() {
+        return this.map.get(this.eid).distance;
+    }
+    get x() {
+        return this.map.get(this.eid).x;
+    }
+    get y() {
+        return this.map.get(this.eid).y;
+    }
+}
+VirtualJoystickProxy.instance = new VirtualJoystickProxy();
+var VirtualJoystickType;
+(function (VirtualJoystickType) {
+    VirtualJoystickType[VirtualJoystickType["Left"] = 0] = "Left";
+    VirtualJoystickType[VirtualJoystickType["Right"] = 1] = "Right";
+})(VirtualJoystickType || (VirtualJoystickType = {}));
+;
+var VirtualJoystickEventType;
+(function (VirtualJoystickEventType) {
+    VirtualJoystickEventType[VirtualJoystickEventType["End"] = 0] = "End";
+    VirtualJoystickEventType[VirtualJoystickEventType["Move"] = 1] = "Move";
+    VirtualJoystickEventType[VirtualJoystickEventType["Start"] = 2] = "Start";
+})(VirtualJoystickEventType || (VirtualJoystickEventType = {}));
+;
+const VirtualJoystickEvent = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+class VirtualJoystickEventProxy {
+    constructor() {
+        this.eid = _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
+        this.map = new Map();
+    }
+    static get(eid) {
+        VirtualJoystickEventProxy.instance.eid = eid;
+        return VirtualJoystickEventProxy.instance;
+    }
+    allocate() {
+        this.map.set(this.eid, []);
+    }
+    add(stick, type, data) {
+        this.map.get(this.eid).push({ data, stick, type });
+    }
+    free() {
+        this.map.delete(this.eid);
+    }
+    get events() {
+        return this.map.get(this.eid);
+    }
+}
+VirtualJoystickEventProxy.instance = new VirtualJoystickEventProxy();
+const VirtualJoystickEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+
+
+/***/ }),
+
 /***/ "../addons/src/index.ts":
 /*!******************************!*\
   !*** ../addons/src/index.ts ***!
   \******************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   ImageComponent: () => (/* reexport safe */ _components_image__WEBPACK_IMPORTED_MODULE_0__.ImageComponent),
 /* harmony export */   ImageLoader: () => (/* reexport safe */ _components_image__WEBPACK_IMPORTED_MODULE_0__.ImageLoader),
 /* harmony export */   ImageLoaderProxy: () => (/* reexport safe */ _components_image__WEBPACK_IMPORTED_MODULE_0__.ImageLoaderProxy),
 /* harmony export */   ImageProxy: () => (/* reexport safe */ _components_image__WEBPACK_IMPORTED_MODULE_0__.ImageProxy),
-/* harmony export */   LazyVideoStateUpdate: () => (/* reexport safe */ _components_video__WEBPACK_IMPORTED_MODULE_1__.LazyVideoStateUpdate),
-/* harmony export */   LazyVideoStateUpdateProxy: () => (/* reexport safe */ _components_video__WEBPACK_IMPORTED_MODULE_1__.LazyVideoStateUpdateProxy),
-/* harmony export */   NetworkedVideo: () => (/* reexport safe */ _components_video__WEBPACK_IMPORTED_MODULE_1__.NetworkedVideo),
-/* harmony export */   Video: () => (/* reexport safe */ _components_video__WEBPACK_IMPORTED_MODULE_1__.Video),
-/* harmony export */   VideoLoader: () => (/* reexport safe */ _components_video__WEBPACK_IMPORTED_MODULE_1__.VideoLoader),
-/* harmony export */   VideoLoaderProxy: () => (/* reexport safe */ _components_video__WEBPACK_IMPORTED_MODULE_1__.VideoLoaderProxy),
-/* harmony export */   VideoProxy: () => (/* reexport safe */ _components_video__WEBPACK_IMPORTED_MODULE_1__.VideoProxy),
-/* harmony export */   VideoStateUpdated: () => (/* reexport safe */ _components_video__WEBPACK_IMPORTED_MODULE_1__.VideoStateUpdated),
-/* harmony export */   gltfMixerAnimationSystem: () => (/* reexport safe */ _systems_gltf_mixer_animation__WEBPACK_IMPORTED_MODULE_3__.gltfMixerAnimationSystem),
-/* harmony export */   imageLoadSystem: () => (/* reexport safe */ _systems_image_loader__WEBPACK_IMPORTED_MODULE_5__.imageLoadSystem),
-/* harmony export */   imageSystem: () => (/* reexport safe */ _systems_image__WEBPACK_IMPORTED_MODULE_4__.imageSystem),
-/* harmony export */   lazilyUpdateVideoStateSystem: () => (/* reexport safe */ _systems_lazily_update_video_state__WEBPACK_IMPORTED_MODULE_6__.lazilyUpdateVideoStateSystem),
-/* harmony export */   videoLoadSystem: () => (/* reexport safe */ _systems_video_loader__WEBPACK_IMPORTED_MODULE_8__.videoLoadSystem),
-/* harmony export */   videoSerializers: () => (/* reexport safe */ _serializations_video__WEBPACK_IMPORTED_MODULE_2__.videoSerializers),
-/* harmony export */   videoSystem: () => (/* reexport safe */ _systems_video__WEBPACK_IMPORTED_MODULE_7__.videoSystem)
+/* harmony export */   LazyVideoStateUpdate: () => (/* reexport safe */ _components_video__WEBPACK_IMPORTED_MODULE_2__.LazyVideoStateUpdate),
+/* harmony export */   LazyVideoStateUpdateProxy: () => (/* reexport safe */ _components_video__WEBPACK_IMPORTED_MODULE_2__.LazyVideoStateUpdateProxy),
+/* harmony export */   NetworkedVideo: () => (/* reexport safe */ _components_video__WEBPACK_IMPORTED_MODULE_2__.NetworkedVideo),
+/* harmony export */   Video: () => (/* reexport safe */ _components_video__WEBPACK_IMPORTED_MODULE_2__.Video),
+/* harmony export */   VideoLoader: () => (/* reexport safe */ _components_video__WEBPACK_IMPORTED_MODULE_2__.VideoLoader),
+/* harmony export */   VideoLoaderProxy: () => (/* reexport safe */ _components_video__WEBPACK_IMPORTED_MODULE_2__.VideoLoaderProxy),
+/* harmony export */   VideoProxy: () => (/* reexport safe */ _components_video__WEBPACK_IMPORTED_MODULE_2__.VideoProxy),
+/* harmony export */   VideoStateUpdated: () => (/* reexport safe */ _components_video__WEBPACK_IMPORTED_MODULE_2__.VideoStateUpdated),
+/* harmony export */   VirtualJoystick: () => (/* reexport safe */ _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_1__.VirtualJoystick),
+/* harmony export */   VirtualJoystickEvent: () => (/* reexport safe */ _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_1__.VirtualJoystickEvent),
+/* harmony export */   VirtualJoystickEventListener: () => (/* reexport safe */ _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_1__.VirtualJoystickEventListener),
+/* harmony export */   VirtualJoystickEventProxy: () => (/* reexport safe */ _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_1__.VirtualJoystickEventProxy),
+/* harmony export */   VirtualJoystickEventType: () => (/* reexport safe */ _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_1__.VirtualJoystickEventType),
+/* harmony export */   VirtualJoystickLeft: () => (/* reexport safe */ _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_1__.VirtualJoystickLeft),
+/* harmony export */   VirtualJoystickProxy: () => (/* reexport safe */ _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_1__.VirtualJoystickProxy),
+/* harmony export */   VirtualJoystickRight: () => (/* reexport safe */ _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_1__.VirtualJoystickRight),
+/* harmony export */   VirtualJoystickType: () => (/* reexport safe */ _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_1__.VirtualJoystickType),
+/* harmony export */   avatarVirtualJoystickSystem: () => (/* reexport safe */ _systems_avatar_virtual_joystick_controls__WEBPACK_IMPORTED_MODULE_4__.avatarVirtualJoystickSystem),
+/* harmony export */   clearVirtualJoystickEventSystem: () => (/* reexport safe */ _systems_virtual_joystick_event__WEBPACK_IMPORTED_MODULE_11__.clearVirtualJoystickEventSystem),
+/* harmony export */   gltfMixerAnimationSystem: () => (/* reexport safe */ _systems_gltf_mixer_animation__WEBPACK_IMPORTED_MODULE_5__.gltfMixerAnimationSystem),
+/* harmony export */   imageLoadSystem: () => (/* reexport safe */ _systems_image_loader__WEBPACK_IMPORTED_MODULE_7__.imageLoadSystem),
+/* harmony export */   imageSystem: () => (/* reexport safe */ _systems_image__WEBPACK_IMPORTED_MODULE_6__.imageSystem),
+/* harmony export */   lazilyUpdateVideoStateSystem: () => (/* reexport safe */ _systems_lazily_update_video_state__WEBPACK_IMPORTED_MODULE_8__.lazilyUpdateVideoStateSystem),
+/* harmony export */   videoLoadSystem: () => (/* reexport safe */ _systems_video_loader__WEBPACK_IMPORTED_MODULE_10__.videoLoadSystem),
+/* harmony export */   videoSerializers: () => (/* reexport safe */ _serializations_video__WEBPACK_IMPORTED_MODULE_3__.videoSerializers),
+/* harmony export */   videoSystem: () => (/* reexport safe */ _systems_video__WEBPACK_IMPORTED_MODULE_9__.videoSystem),
+/* harmony export */   virtualJoystickUISystem: () => (/* reexport safe */ _ui_virtual_joystick__WEBPACK_IMPORTED_MODULE_12__.virtualJoystickUISystem)
 /* harmony export */ });
 /* harmony import */ var _components_image__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/image */ "../addons/src/components/image.ts");
-/* harmony import */ var _components_video__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/video */ "../addons/src/components/video.ts");
-/* harmony import */ var _serializations_video__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./serializations/video */ "../addons/src/serializations/video.ts");
-/* harmony import */ var _systems_gltf_mixer_animation__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./systems/gltf_mixer_animation */ "../addons/src/systems/gltf_mixer_animation.ts");
-/* harmony import */ var _systems_image__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./systems/image */ "../addons/src/systems/image.ts");
-/* harmony import */ var _systems_image_loader__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./systems/image_loader */ "../addons/src/systems/image_loader.ts");
-/* harmony import */ var _systems_lazily_update_video_state__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./systems/lazily_update_video_state */ "../addons/src/systems/lazily_update_video_state.ts");
-/* harmony import */ var _systems_video__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./systems/video */ "../addons/src/systems/video.ts");
-/* harmony import */ var _systems_video_loader__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./systems/video_loader */ "../addons/src/systems/video_loader.ts");
+/* harmony import */ var _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/virtual_joystick */ "../addons/src/components/virtual_joystick.ts");
+/* harmony import */ var _components_video__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/video */ "../addons/src/components/video.ts");
+/* harmony import */ var _serializations_video__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./serializations/video */ "../addons/src/serializations/video.ts");
+/* harmony import */ var _systems_avatar_virtual_joystick_controls__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./systems/avatar_virtual_joystick_controls */ "../addons/src/systems/avatar_virtual_joystick_controls.ts");
+/* harmony import */ var _systems_gltf_mixer_animation__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./systems/gltf_mixer_animation */ "../addons/src/systems/gltf_mixer_animation.ts");
+/* harmony import */ var _systems_image__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./systems/image */ "../addons/src/systems/image.ts");
+/* harmony import */ var _systems_image_loader__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./systems/image_loader */ "../addons/src/systems/image_loader.ts");
+/* harmony import */ var _systems_lazily_update_video_state__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./systems/lazily_update_video_state */ "../addons/src/systems/lazily_update_video_state.ts");
+/* harmony import */ var _systems_video__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./systems/video */ "../addons/src/systems/video.ts");
+/* harmony import */ var _systems_video_loader__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./systems/video_loader */ "../addons/src/systems/video_loader.ts");
+/* harmony import */ var _systems_virtual_joystick_event__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./systems/virtual_joystick_event */ "../addons/src/systems/virtual_joystick_event.ts");
+/* harmony import */ var _ui_virtual_joystick__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./ui/virtual_joystick */ "../addons/src/ui/virtual_joystick.ts");
+
+
+
+
 
 
 
@@ -217,6 +355,7 @@ __webpack_require__.r(__webpack_exports__);
   \*********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   videoSerializers: () => (/* binding */ videoSerializers)
@@ -301,12 +440,101 @@ const videoSerializers = {
 
 /***/ }),
 
+/***/ "../addons/src/systems/avatar_virtual_joystick_controls.ts":
+/*!*****************************************************************!*\
+  !*** ../addons/src/systems/avatar_virtual_joystick_controls.ts ***!
+  \*****************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   avatarVirtualJoystickSystem: () => (/* binding */ avatarVirtualJoystickSystem)
+/* harmony export */ });
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/avatar.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/entity_object3d.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/network.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/linear_move.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/transform.ts");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "../../node_modules/three/build/three.module.js");
+/* harmony import */ var _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/virtual_joystick */ "../addons/src/components/virtual_joystick.ts");
+
+
+
+
+const euler = new three__WEBPACK_IMPORTED_MODULE_2__.Euler(0, 0, 0, 'YXZ');
+// TODO: Make them configurable?
+const MIN_POLAR_ANGLE = 0; // radians
+const MAX_POLAR_ANGLE = Math.PI; // radians
+const PI_2 = Math.PI / 2;
+const leftQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_virtual_joystick__WEBPACK_IMPORTED_MODULE_1__.VirtualJoystick, _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_1__.VirtualJoystickLeft]);
+const rightQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_virtual_joystick__WEBPACK_IMPORTED_MODULE_1__.VirtualJoystick, _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_1__.VirtualJoystickRight]);
+const avatarQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_3__.Avatar, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_4__.EntityObject3D, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_5__.Local]);
+// TODO: Avatar can be controled with other operation (eg: Key or mouse).
+//       Avoid the Avatar controls conflicts if possible.
+const avatarVirtualJoystickSystem = (world) => {
+    leftQuery(world).forEach(eid => {
+        const proxy = _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_1__.VirtualJoystickProxy.get(eid);
+        // TODO: Optimize and simplify
+        avatarQuery(world).forEach(avatarEid => {
+            (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_6__.LinearMoveBackward, avatarEid);
+            (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_6__.LinearMoveForward, avatarEid);
+            (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_6__.LinearMoveLeft, avatarEid);
+            (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_6__.LinearMoveRight, avatarEid);
+            if (!proxy.active) {
+                return;
+            }
+            // TODO: Configurable movement speed
+            if (proxy.x > 0.0) {
+                (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_6__.LinearMoveRight, avatarEid);
+                _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_6__.LinearMoveRight.speed[avatarEid] = proxy.x;
+            }
+            else if (proxy.x < 0.0) {
+                (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_6__.LinearMoveLeft, avatarEid);
+                _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_6__.LinearMoveLeft.speed[avatarEid] = -proxy.x;
+            }
+            if (proxy.y > 0.0) {
+                (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_6__.LinearMoveForward, avatarEid);
+                _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_6__.LinearMoveForward.speed[avatarEid] = proxy.y;
+            }
+            else if (proxy.y < 0.0) {
+                (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_6__.LinearMoveBackward, avatarEid);
+                _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_6__.LinearMoveBackward.speed[avatarEid] = -proxy.y;
+            }
+        });
+    });
+    rightQuery(world).forEach(eid => {
+        const proxy = _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_1__.VirtualJoystickProxy.get(eid);
+        if (!proxy.active) {
+            return;
+        }
+        avatarQuery(world).forEach(avatarEid => {
+            const avatar = _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_4__.EntityObject3DProxy.get(avatarEid).root;
+            // TODO: Configurable rotation speed
+            // TODO: Add LinearRotation component?
+            const dx = proxy.x * 0.01;
+            const dy = proxy.y * 0.01;
+            euler.setFromQuaternion(avatar.quaternion);
+            euler.y -= dx;
+            euler.x += dy;
+            euler.x = Math.max(PI_2 - MAX_POLAR_ANGLE, Math.min(PI_2 - MIN_POLAR_ANGLE, euler.x));
+            avatar.quaternion.setFromEuler(euler);
+            (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_7__.TransformUpdated, avatarEid);
+        });
+    });
+};
+
+
+/***/ }),
+
 /***/ "../addons/src/systems/gltf_mixer_animation.ts":
 /*!*****************************************************!*\
   !*** ../addons/src/systems/gltf_mixer_animation.ts ***!
   \*****************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   gltfMixerAnimationSystem: () => (/* binding */ gltfMixerAnimationSystem)
@@ -351,6 +579,7 @@ const gltfMixerAnimationSystem = (world) => {
   \**************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   imageSystem: () => (/* binding */ imageSystem)
@@ -378,6 +607,7 @@ const imageSystem = (world) => {
   \*********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   imageLoadSystem: () => (/* binding */ imageLoadSystem)
@@ -461,6 +691,7 @@ const imageLoadSystem = (world) => {
   \**********************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   lazilyUpdateVideoStateSystem: () => (/* binding */ lazilyUpdateVideoStateSystem)
@@ -516,6 +747,7 @@ const lazilyUpdateVideoStateSystem = (world) => {
   \**************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   videoSystem: () => (/* binding */ videoSystem)
@@ -543,6 +775,7 @@ const videoSystem = (world) => {
   \*********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   videoLoadSystem: () => (/* binding */ videoLoadSystem)
@@ -629,12 +862,195 @@ const videoLoadSystem = (world) => {
 
 /***/ }),
 
+/***/ "../addons/src/systems/virtual_joystick_event.ts":
+/*!*******************************************************!*\
+  !*** ../addons/src/systems/virtual_joystick_event.ts ***!
+  \*******************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   clearVirtualJoystickEventSystem: () => (/* binding */ clearVirtualJoystickEventSystem)
+/* harmony export */ });
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/virtual_joystick */ "../addons/src/components/virtual_joystick.ts");
+
+
+const eventQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_virtual_joystick__WEBPACK_IMPORTED_MODULE_1__.VirtualJoystickEvent]);
+const clearVirtualJoystickEventSystem = (world) => {
+    eventQuery(world).forEach(eid => {
+        _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_1__.VirtualJoystickEventProxy.get(eid).free();
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_1__.VirtualJoystickEvent, eid);
+    });
+};
+
+
+/***/ }),
+
+/***/ "../addons/src/ui/virtual_joystick.ts":
+/*!********************************************!*\
+  !*** ../addons/src/ui/virtual_joystick.ts ***!
+  \********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   virtualJoystickUISystem: () => (/* binding */ virtualJoystickUISystem)
+/* harmony export */ });
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var nipplejs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! nipplejs */ "../../node_modules/nipplejs/dist/nipplejs.js");
+/* harmony import */ var nipplejs__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(nipplejs__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/virtual_joystick */ "../addons/src/components/virtual_joystick.ts");
+
+
+
+// UI + Event handler + VirtualJoystick component activation & update
+// TODO: Configurable?
+const COLOR = 'lightblue';
+const DIV_WIDTH = '150px';
+const DIV_HEIGHT = '150px';
+const MODE = 'static';
+const STICK_SIZE = 100;
+const STICK_HALF_SIZE = STICK_SIZE * 0.5;
+const parentElement = document.body;
+const eventQueue = [];
+// TODO: Add comment about append and remove children here
+const leftJoystickDiv = document.createElement('div');
+leftJoystickDiv.style.position = 'absolute';
+leftJoystickDiv.style.left = '0';
+leftJoystickDiv.style.bottom = '0';
+leftJoystickDiv.style.width = DIV_WIDTH;
+leftJoystickDiv.style.height = DIV_HEIGHT;
+parentElement.appendChild(leftJoystickDiv);
+const rightJoystickDiv = document.createElement('div');
+rightJoystickDiv.style.position = 'absolute';
+rightJoystickDiv.style.right = '0';
+rightJoystickDiv.style.bottom = '0';
+rightJoystickDiv.style.width = DIV_WIDTH;
+rightJoystickDiv.style.height = DIV_HEIGHT;
+parentElement.appendChild(rightJoystickDiv);
+const leftJoystick = nipplejs__WEBPACK_IMPORTED_MODULE_1___default().create({
+    color: COLOR,
+    mode: MODE,
+    position: { left: '50%', top: '50%' },
+    size: STICK_SIZE,
+    zone: leftJoystickDiv
+});
+const addMoveEvent = (stick, x, y, distance) => {
+    eventQueue.push({
+        data: {
+            distance: distance / STICK_HALF_SIZE,
+            x: x,
+            y: y
+        },
+        stick,
+        type: _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_2__.VirtualJoystickEventType.Move,
+    });
+};
+const addStartEvent = (stick) => {
+    eventQueue.push({ stick, type: _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_2__.VirtualJoystickEventType.Start });
+};
+const addEndEvent = (stick) => {
+    eventQueue.push({ stick, type: _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_2__.VirtualJoystickEventType.End });
+};
+leftJoystick.on('move', (_, { distance, vector }) => {
+    addMoveEvent(_components_virtual_joystick__WEBPACK_IMPORTED_MODULE_2__.VirtualJoystickType.Left, vector.x, vector.y, distance);
+});
+leftJoystick.on('start', () => {
+    addStartEvent(_components_virtual_joystick__WEBPACK_IMPORTED_MODULE_2__.VirtualJoystickType.Left);
+});
+leftJoystick.on('end', () => {
+    addEndEvent(_components_virtual_joystick__WEBPACK_IMPORTED_MODULE_2__.VirtualJoystickType.Left);
+});
+const rightJoystick = nipplejs__WEBPACK_IMPORTED_MODULE_1___default().create({
+    color: COLOR,
+    mode: MODE,
+    position: { left: '50%', top: '50%' },
+    size: STICK_SIZE,
+    zone: rightJoystickDiv
+});
+rightJoystick.on('move', (_, { distance, vector }) => {
+    addMoveEvent(_components_virtual_joystick__WEBPACK_IMPORTED_MODULE_2__.VirtualJoystickType.Right, vector.x, vector.y, distance);
+});
+rightJoystick.on('start', () => {
+    addStartEvent(_components_virtual_joystick__WEBPACK_IMPORTED_MODULE_2__.VirtualJoystickType.Right);
+});
+rightJoystick.on('end', () => {
+    addEndEvent(_components_virtual_joystick__WEBPACK_IMPORTED_MODULE_2__.VirtualJoystickType.Right);
+});
+parentElement.removeChild(leftJoystickDiv);
+parentElement.removeChild(rightJoystickDiv);
+// TODO: Rename?
+const addEvent = (world, eid, stick, type, data) => {
+    if (!(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_2__.VirtualJoystickEvent, eid)) {
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_2__.VirtualJoystickEvent, eid);
+        _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_2__.VirtualJoystickEventProxy.get(eid).allocate();
+    }
+    _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_2__.VirtualJoystickEventProxy.get(eid).add(stick, type, data);
+};
+const leftStickQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_virtual_joystick__WEBPACK_IMPORTED_MODULE_2__.VirtualJoystick, _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_2__.VirtualJoystickLeft]);
+const enterLeftStickQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)(leftStickQuery);
+const exitLeftStickQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)(leftStickQuery);
+const rightStickQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_virtual_joystick__WEBPACK_IMPORTED_MODULE_2__.VirtualJoystick, _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_2__.VirtualJoystickRight]);
+const enterRightStickQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)(rightStickQuery);
+const exitRightStickQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)(rightStickQuery);
+const listenerQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_virtual_joystick__WEBPACK_IMPORTED_MODULE_2__.VirtualJoystickEventListener]);
+const virtualJoystickUISystem = (world) => {
+    // Assumes up to one right/left virtual stick entity for each
+    exitLeftStickQuery(world).forEach(() => {
+        parentElement.removeChild(leftJoystickDiv);
+    });
+    exitRightStickQuery(world).forEach(() => {
+        parentElement.removeChild(rightJoystickDiv);
+    });
+    enterLeftStickQuery(world).forEach(() => {
+        parentElement.appendChild(leftJoystickDiv);
+    });
+    enterRightStickQuery(world).forEach(() => {
+        parentElement.appendChild(rightJoystickDiv);
+    });
+    // TODO: Optimize and simplify
+    const leftStickEids = leftStickQuery(world);
+    const rightStickEids = rightStickQuery(world);
+    for (const e of eventQueue) {
+        if ((e.stick === _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_2__.VirtualJoystickType.Left && leftStickEids.length > 0) ||
+            (e.stick === _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_2__.VirtualJoystickType.Right && rightStickEids.length > 0)) {
+            listenerQuery(world).forEach(eid => {
+                addEvent(world, eid, e.stick, e.type, e.data);
+            });
+            const eids = e.stick === _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_2__.VirtualJoystickType.Left ? leftStickEids : rightStickEids;
+            if (e.type === _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_2__.VirtualJoystickEventType.Move) {
+                eids.forEach(eid => {
+                    _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_2__.VirtualJoystickProxy.get(eid).update(e.data.x, e.data.y, e.data.distance);
+                });
+            }
+            else if (e.type === _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_2__.VirtualJoystickEventType.Start) {
+                eids.forEach(eid => {
+                    _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_2__.VirtualJoystickProxy.get(eid).activate(true);
+                });
+            }
+            else if (e.type === _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_2__.VirtualJoystickEventType.End) {
+                eids.forEach(eid => {
+                    _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_2__.VirtualJoystickProxy.get(eid).activate(false);
+                });
+            }
+        }
+    }
+    eventQueue.length = 0;
+};
+
+
+/***/ }),
+
 /***/ "../client/src/app.ts":
 /*!****************************!*\
   !*** ../client/src/app.ts ***!
   \****************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   App: () => (/* binding */ App)
@@ -1048,6 +1464,7 @@ class App {
   \*******************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   F32_EPSILON: () => (/* binding */ F32_EPSILON),
@@ -1093,6 +1510,7 @@ const TIME_EPSILON = 2.0;
   \******************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Avatar: () => (/* binding */ Avatar)
@@ -1110,6 +1528,7 @@ const Avatar = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
   \*********************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   AvatarMouseControls: () => (/* binding */ AvatarMouseControls),
@@ -1153,6 +1572,7 @@ AvatarMouseControlsProxy.instance = new AvatarMouseControlsProxy();
   \******************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   FpsCamera: () => (/* binding */ FpsCamera),
@@ -1197,6 +1617,7 @@ const FpsCamera = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
   \******************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Canvas: () => (/* binding */ Canvas),
@@ -1237,6 +1658,7 @@ CanvasProxy.instance = new CanvasProxy();
   \***************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   EntityObject3D: () => (/* binding */ EntityObject3D),
@@ -1305,6 +1727,7 @@ EntityObject3DProxy.instance = new EntityObject3DProxy();
   \****************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   GltfAssetLoader: () => (/* binding */ GltfAssetLoader),
@@ -1391,6 +1814,7 @@ GltfSceneLoaderProxy.instance = new GltfSceneLoaderProxy();
   \****************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Grabbable: () => (/* binding */ Grabbable),
@@ -1413,6 +1837,7 @@ const Grabbed = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({
   \********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   FirstSourceInteractable: () => (/* binding */ FirstSourceInteractable),
@@ -1448,6 +1873,7 @@ const SecondSourceInteractionLeaveEvent = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__
   \********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   KeyEvent: () => (/* binding */ KeyEvent),
@@ -1536,6 +1962,7 @@ KeyEventHandlerProxy.instance = new KeyEventHandlerProxy();
   \***********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   LinearMoveBackward: () => (/* binding */ LinearMoveBackward),
@@ -1559,6 +1986,7 @@ const LinearMoveRight = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)(
   \****************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   LinearRotate: () => (/* binding */ LinearRotate),
@@ -1596,6 +2024,7 @@ const LinearScale = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({
   \************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   MicConnectedEvent: () => (/* binding */ MicConnectedEvent),
@@ -1617,6 +2046,7 @@ const MicConnectedEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineC
   \***************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   ActiveAnimations: () => (/* binding */ ActiveAnimations),
@@ -1728,6 +2158,7 @@ LazyActiveAnimationsProxy.instance = new LazyActiveAnimationsProxy();
   \*****************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   MouseButtonEvent: () => (/* binding */ MouseButtonEvent),
@@ -1968,6 +2399,7 @@ MouseMoveEventHandlerProxy.instance = new MouseMoveEventHandlerProxy();
   \*******************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   ComponentNetworkEventListener: () => (/* binding */ ComponentNetworkEventListener),
@@ -2215,6 +2647,7 @@ const NetworkedMixerAnimation = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineCom
   \*******************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Pointer: () => (/* binding */ Pointer),
@@ -2263,6 +2696,7 @@ PointerProxy.instance = new PointerProxy();
   \******************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Prefabs: () => (/* binding */ Prefabs),
@@ -2309,6 +2743,7 @@ PrefabsProxy.instance = new PrefabsProxy();
   \*******************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Raycastable: () => (/* binding */ Raycastable),
@@ -2357,6 +2792,7 @@ RaycasterProxy.instance = new RaycasterProxy();
   \********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Renderer: () => (/* binding */ Renderer),
@@ -2397,6 +2833,7 @@ RendererProxy.instance = new RendererProxy();
   \*******************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   RoomId: () => (/* binding */ RoomId),
@@ -2437,6 +2874,7 @@ RoomIdProxy.instance = new RoomIdProxy();
   \*****************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   InScene: () => (/* binding */ InScene),
@@ -2504,6 +2942,7 @@ SceneEnvironmentMapLoaderProxy.instance = new SceneEnvironmentMapLoaderProxy();
   \******************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Selectable: () => (/* binding */ Selectable),
@@ -2560,6 +2999,7 @@ const SelectedEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineCompo
   \**********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   ComponentKeys: () => (/* binding */ ComponentKeys),
@@ -2653,6 +3093,7 @@ ComponentKeysProxy.instance = new ComponentKeysProxy();
   \******************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   ConnectedStreamEventListener: () => (/* binding */ ConnectedStreamEventListener),
@@ -2788,6 +3229,7 @@ const StreamRemotePeerRegister = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineCo
   \****************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Time: () => (/* binding */ Time),
@@ -2846,6 +3288,7 @@ TimeProxy.instance = new TimeProxy();
   \*****************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   TouchEvent: () => (/* binding */ TouchEvent),
@@ -3048,6 +3491,7 @@ TouchPositionProxy.instance = new TouchPositionProxy();
   \*********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   TransformUpdated: () => (/* binding */ TransformUpdated)
@@ -3065,6 +3509,7 @@ const TransformUpdated = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)
   \*******************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   UserId: () => (/* binding */ UserId),
@@ -3105,6 +3550,7 @@ UserIdProxy.instance = new UserIdProxy();
   \*************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   WindowResizeEvent: () => (/* binding */ WindowResizeEvent),
@@ -3157,6 +3603,7 @@ WindowResizeEventHandlerProxy.instance = new WindowResizeEventHandlerProxy();
   \*******************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   mixerAnimationSerializers: () => (/* binding */ mixerAnimationSerializers)
@@ -3302,6 +3749,7 @@ const mixerAnimationSerializers = {
   \*************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   positionSerializers: () => (/* binding */ positionSerializers),
@@ -3488,6 +3936,7 @@ const scaleSerializers = {
   \****************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   avatarKeyControlsSystem: () => (/* binding */ avatarKeyControlsSystem)
@@ -3563,6 +4012,7 @@ const avatarKeyControlsSystem = (world) => {
   \******************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   avatarMouseControlsSystem: () => (/* binding */ avatarMouseControlsSystem)
@@ -3594,7 +4044,7 @@ const avatarQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_compon
 const mouseQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_mouse__WEBPACK_IMPORTED_MODULE_6__.MousePosition, _components_mouse__WEBPACK_IMPORTED_MODULE_6__.PreviousMousePosition]);
 const raycastedQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_raycast__WEBPACK_IMPORTED_MODULE_7__.Raycasted, _components_raycast__WEBPACK_IMPORTED_MODULE_7__.RaycastedNearest]);
 const grabbedQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_grab__WEBPACK_IMPORTED_MODULE_8__.Grabbed]);
-// TODO: Consider to reuse Three.js PointerLockControls
+// TODO: Consider to reuse Three.js PointerLockControls?
 // TODO: Make them configurable?
 const MIN_POLAR_ANGLE = 0; // radians
 const MAX_POLAR_ANGLE = Math.PI; // radians
@@ -3639,6 +4089,7 @@ const avatarMouseControlsSystem = (world) => {
                 const dx = mouseProxy.x - previousProxy.x;
                 const dy = mouseProxy.y - previousProxy.y;
                 // TODO: Configurable rotation speed
+                // TODO: Add LinearRotation component?
                 euler.setFromQuaternion(avatar.quaternion);
                 euler.y += dx;
                 euler.x -= dy;
@@ -3659,6 +4110,7 @@ const avatarMouseControlsSystem = (world) => {
   \***************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   canvasSystem: () => (/* binding */ canvasSystem)
@@ -3683,6 +4135,7 @@ const canvasSystem = (world) => {
   \************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   entityObject3DSystem: () => (/* binding */ entityObject3DSystem)
@@ -3707,6 +4160,7 @@ const entityObject3DSystem = (world) => {
   \*******************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   fpsCameraSystem: () => (/* binding */ fpsCameraSystem)
@@ -3750,6 +4204,7 @@ const fpsCameraSystem = (world) => {
   \*************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   gltfSystem: () => (/* binding */ gltfSystem)
@@ -3774,6 +4229,7 @@ const gltfSystem = (world) => {
   \************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   gltfAssetLoadSystem: () => (/* binding */ gltfAssetLoadSystem)
@@ -3848,6 +4304,7 @@ const gltfAssetLoadSystem = (world) => {
   \************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   gltfSceneLoadSystem: () => (/* binding */ gltfSceneLoadSystem)
@@ -3909,6 +4366,7 @@ const gltfSceneLoadSystem = (world) => {
   \*************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   grabSystem: () => (/* binding */ grabSystem)
@@ -3944,6 +4402,7 @@ const grabSystem = (world) => {
   \***************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   grabbedObjectsPointerTrackSystem: () => (/* binding */ grabbedObjectsPointerTrackSystem)
@@ -3995,6 +4454,7 @@ const grabbedObjectsPointerTrackSystem = (world) => {
   \*******************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   clearInteractionSystem: () => (/* binding */ clearInteractionSystem)
@@ -4039,6 +4499,7 @@ const clearInteractionSystem = (world) => {
   \***********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   keyEventClearSystem: () => (/* binding */ keyEventClearSystem),
@@ -4105,6 +4566,7 @@ const keyEventClearSystem = (world) => {
   \**********************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   lazilyActivateAnimationSystem: () => (/* binding */ lazilyActivateAnimationSystem)
@@ -4164,6 +4626,7 @@ const lazilyActivateAnimationSystem = (world) => {
   \********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   linearMoveSystem: () => (/* binding */ linearMoveSystem)
@@ -4219,6 +4682,7 @@ const linearMoveSystem = (world) => {
   \*************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   linearTransformSystem: () => (/* binding */ linearTransformSystem)
@@ -4303,6 +4767,7 @@ const linearTransformSystem = (world) => {
   \*********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   micEventClearSystem: () => (/* binding */ micEventClearSystem),
@@ -4376,6 +4841,7 @@ const micEventClearSystem = (world) => {
   \************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   clearActiveAnimationsUpdatedSystem: () => (/* binding */ clearActiveAnimationsUpdatedSystem),
@@ -4431,6 +4897,7 @@ const clearActiveAnimationsUpdatedSystem = (world) => {
   \***************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   mouseButtonEventClearSystem: () => (/* binding */ mouseButtonEventClearSystem),
@@ -4514,6 +4981,7 @@ const mouseButtonEventClearSystem = (world) => {
   \***********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   mouseInteractSystem: () => (/* binding */ mouseInteractSystem)
@@ -4573,6 +5041,7 @@ const mouseInteractSystem = (world) => {
   \*************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   mouseMoveEventClearSystem: () => (/* binding */ mouseMoveEventClearSystem),
@@ -4635,6 +5104,7 @@ const mouseMoveEventClearSystem = (world) => {
   \**********************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   mousePositionToPointerSystem: () => (/* binding */ mousePositionToPointerSystem)
@@ -4667,6 +5137,7 @@ const mousePositionToPointerSystem = (world) => {
   \*****************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   mousePositionTrackSystem: () => (/* binding */ mousePositionTrackSystem)
@@ -4700,6 +5171,7 @@ const mousePositionTrackSystem = (world) => {
   \**********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   networkEventClearSystem: () => (/* binding */ networkEventClearSystem),
@@ -4794,6 +5266,7 @@ const networkEventClearSystem = (world) => {
   \*********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   networkSendSystem: () => (/* binding */ networkSendSystem)
@@ -4914,6 +5387,7 @@ const networkSendSystem = (world) => {
   \******************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   networkedSystem: () => (/* binding */ networkedSystem)
@@ -4938,6 +5412,7 @@ const networkedSystem = (world) => {
   \*************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   networkedEntitySystem: () => (/* binding */ networkedEntitySystem)
@@ -5070,6 +5545,7 @@ const networkedEntitySystem = (world) => {
   \***************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   perspectiveCameraSystem: () => (/* binding */ perspectiveCameraSystem)
@@ -5109,6 +5585,7 @@ const perspectiveCameraSystem = (world) => {
   \***************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   prefabsSystem: () => (/* binding */ prefabsSystem)
@@ -5133,6 +5610,7 @@ const prefabsSystem = (world) => {
   \****************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   clearRaycastedSystem: () => (/* binding */ clearRaycastedSystem),
@@ -5224,6 +5702,7 @@ const clearRaycastedSystem = (world) => {
   \******************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   raycasterSystem: () => (/* binding */ raycasterSystem)
@@ -5248,6 +5727,7 @@ const raycasterSystem = (world) => {
   \***************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   renderSystem: () => (/* binding */ renderSystem)
@@ -5288,6 +5768,7 @@ const renderSystem = (world) => {
   \*****************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   rendererSystem: () => (/* binding */ rendererSystem)
@@ -5321,6 +5802,7 @@ const rendererSystem = (world) => {
   \**************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   sceneSystem: () => (/* binding */ sceneSystem)
@@ -5361,6 +5843,7 @@ const sceneSystem = (world) => {
   \***********************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   sceneEnvironmentMapLoadSystem: () => (/* binding */ sceneEnvironmentMapLoadSystem)
@@ -5420,6 +5903,7 @@ const sceneEnvironmentMapLoadSystem = (world) => {
   \***************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   selectSystem: () => (/* binding */ selectSystem),
@@ -5474,6 +5958,7 @@ const selectedEventClearSystem = (world) => {
   \**************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   streamConnectionSystem: () => (/* binding */ streamConnectionSystem)
@@ -5613,6 +6098,7 @@ const streamConnectionSystem = (world) => {
   \*********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   streamEventClearSystem: () => (/* binding */ streamEventClearSystem),
@@ -5729,6 +6215,7 @@ const streamEventClearSystem = (world) => {
   \****************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   streamRemotePeerRegisterSystem: () => (/* binding */ streamRemotePeerRegisterSystem)
@@ -5881,6 +6368,7 @@ const streamRemotePeerRegisterSystem = (world) => {
   \*************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   timeSystem: () => (/* binding */ timeSystem)
@@ -5909,6 +6397,7 @@ const timeSystem = (world) => {
   \********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   touchEventClearSystem: () => (/* binding */ touchEventClearSystem),
@@ -6000,6 +6489,7 @@ const touchEventClearSystem = (world) => {
   \***********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   touchInteractSystem: () => (/* binding */ touchInteractSystem)
@@ -6040,6 +6530,7 @@ const touchInteractSystem = (world) => {
   \*************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   touchMoveEventClearSystem: () => (/* binding */ touchMoveEventClearSystem),
@@ -6105,6 +6596,7 @@ const touchMoveEventClearSystem = (world) => {
   \**********************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   touchPositionToPointerSystem: () => (/* binding */ touchPositionToPointerSystem)
@@ -6149,6 +6641,7 @@ const touchPositionToPointerSystem = (world) => {
   \*****************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   touchPositionTrackSystem: () => (/* binding */ touchPositionTrackSystem)
@@ -6176,6 +6669,7 @@ const touchPositionTrackSystem = (world) => {
   \******************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   clearTransformUpdatedSystem: () => (/* binding */ clearTransformUpdatedSystem)
@@ -6200,6 +6694,7 @@ const clearTransformUpdatedSystem = (world) => {
   \************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   updateMatricesSystem: () => (/* binding */ updateMatricesSystem)
@@ -6224,6 +6719,7 @@ const updateMatricesSystem = (world) => {
   \****************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   windowResizeEventClearSystem: () => (/* binding */ windowResizeEventClearSystem),
@@ -6276,6 +6772,7 @@ const windowResizeEventClearSystem = (world) => {
   \*************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   hasComponents: () => (/* binding */ hasComponents),
@@ -6308,6 +6805,7 @@ const hasComponents = (world, components, eid) => {
   \*******************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   loadGltfBitecs: () => (/* binding */ loadGltfBitecs)
@@ -6347,6 +6845,7 @@ function* loadGltfBitecs(world, eid, url) {
   \****************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   toGenerator: () => (/* binding */ toGenerator)
@@ -6380,6 +6879,7 @@ function* toGenerator(pending) {
   \**********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   addObject3D: () => (/* binding */ addObject3D),
@@ -6472,6 +6972,7 @@ const swapRootObject3D = (newRoot, eid) => {
   \**********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   addAnimation: () => (/* binding */ addAnimation)
@@ -6497,6 +6998,7 @@ const addAnimation = (world, eid, action) => {
   \**************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   createNetworkedEntity: () => (/* binding */ createNetworkedEntity)
@@ -6547,6 +7049,7 @@ prefabParams = {}) => {
   \*************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   deregisterPrefab: () => (/* binding */ deregisterPrefab),
@@ -6581,6 +7084,7 @@ const getPrefab = (world, key) => {
   \*****************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   deregisterSerializers: () => (/* binding */ deregisterSerializers),
@@ -6629,6 +7133,7 @@ const hasComponentKey = (world, component) => {
   \************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   collectClips: () => (/* binding */ collectClips),
@@ -6707,6 +7212,7 @@ const collectClips = (root) => {
   \***********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   getTimeProxy: () => (/* binding */ getTimeProxy)
@@ -6730,6 +7236,7 @@ const getTimeProxy = (world) => {
   \***************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   JoinDialog: () => (/* binding */ JoinDialog)
@@ -6747,6 +7254,7 @@ const JoinDialog = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
   \************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   SideBar: () => (/* binding */ SideBar)
@@ -6764,6 +7272,7 @@ const SideBar = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
   \**********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   UserEventHandler: () => (/* binding */ UserEventHandler)
@@ -6781,6 +7290,7 @@ const UserEventHandler = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)
   \*******************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   AvatarPrefab: () => (/* binding */ AvatarPrefab)
@@ -6821,6 +7331,7 @@ const AvatarPrefab = (world) => {
   \*****************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   CubePrefab: () => (/* binding */ CubePrefab)
@@ -6865,6 +7376,7 @@ const CubePrefab = (world) => {
   \*****************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   DuckPrefab: () => (/* binding */ DuckPrefab)
@@ -6912,6 +7424,7 @@ const DuckPrefab = (world) => {
   \****************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   FoxPrefab: () => (/* binding */ FoxPrefab)
@@ -6965,6 +7478,7 @@ const FoxPrefab = (world) => {
   \******************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   ImagePrefab: () => (/* binding */ ImagePrefab)
@@ -7013,6 +7527,7 @@ const ImagePrefab = (world) => {
   \******************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   VideoPrefab: () => (/* binding */ VideoPrefab)
@@ -7062,6 +7577,7 @@ const VideoPrefab = (world) => {
   \******************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   colorSystem: () => (/* binding */ colorSystem)
@@ -7115,6 +7631,7 @@ const colorSystem = (world) => {
   \*****************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   userEventSystem: () => (/* binding */ userEventSystem)
@@ -7151,6 +7668,7 @@ const userEventSystem = (world) => {
   \*******************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   updateJoinDialogSystem: () => (/* binding */ updateJoinDialogSystem)
@@ -7232,6 +7750,7 @@ const updateJoinDialogSystem = (world) => {
   \****************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   updateSidebarSystem: () => (/* binding */ updateSidebarSystem)
@@ -7669,12 +8188,59 @@ const updateSidebarSystem = (world) => {
 
 /***/ }),
 
+/***/ "./src/utils/platform_detect.ts":
+/*!**************************************!*\
+  !*** ./src/utils/platform_detect.ts ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   isMobile: () => (/* binding */ isMobile),
+/* harmony export */   isTablet: () => (/* binding */ isTablet)
+/* harmony export */ });
+// TODO: More proper detection
+const isMobile = () => {
+    if ('userAgentData' in navigator) {
+        if (navigator.userAgentData.mobile) {
+            return true;
+        }
+    }
+    if ('userAgent' in navigator) {
+        const userAgent = navigator.userAgent;
+        if (userAgent.includes('iPhone') ||
+            (userAgent.includes('Android') && userAgent.includes('Mobile'))) {
+            return true;
+        }
+    }
+    return false;
+};
+const isTablet = () => {
+    // Is this correct?
+    if (!isMobile()) {
+        return false;
+    }
+    if ('userAgent' in navigator) {
+        const userAgent = navigator.userAgent;
+        // Is this Android device detection correct?
+        if (userAgent.includes('iPad') || userAgent.includes('Android')) {
+            return true;
+        }
+    }
+    return false;
+};
+
+
+/***/ }),
+
 /***/ "../stream_client/dist/stream_client.bundle.js":
 /*!*****************************************************!*\
   !*** ../stream_client/dist/stream_client.bundle.js ***!
   \*****************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   StreamAdapter: () => (/* binding */ __webpack_exports__StreamAdapter)
@@ -29664,6 +30230,7 @@ var __webpack_exports__StreamAdapter = __nested_webpack_exports__.StreamAdapter;
   \************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Changed: () => (/* binding */ Changed),
@@ -30743,6 +31310,7 @@ var Types = TYPES_ENUM;
   \******************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   ACESFilmicToneMapping: () => (/* binding */ ACESFilmicToneMapping),
@@ -82201,6 +82769,7 @@ if ( typeof window !== 'undefined' ) {
   \*******************************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   GLTFLoader: () => (/* binding */ GLTFLoader)
@@ -86589,6 +87158,7 @@ function addPrimitiveAttributes( geometry, primitiveDef, parser ) {
   \*******************************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   RGBELoader: () => (/* binding */ RGBELoader)
@@ -87065,6 +87635,7 @@ class RGBELoader extends three__WEBPACK_IMPORTED_MODULE_0__.DataTextureLoader {
   \**************************************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   computeMikkTSpaceTangents: () => (/* binding */ computeMikkTSpaceTangents),
@@ -88418,6 +88989,7 @@ function mergeBufferAttributes( attributes ) {
   \***************************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   StateAdapter: () => (/* binding */ __webpack_exports__StateAdapter)
@@ -89752,6 +90324,18 @@ var __webpack_exports__StateAdapter = __nested_webpack_exports__.StateAdapter;
 /******/ 	}
 /******/ 	
 /************************************************************************/
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__webpack_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
+/******/ 			__webpack_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
@@ -89782,27 +90366,28 @@ var __webpack_exports__StateAdapter = __nested_webpack_exports__.StateAdapter;
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+// This entry need to be wrapped in an IIFE because it need to be in strict mode.
 (() => {
+"use strict";
 /*!**********************!*\
   !*** ./src/index.ts ***!
   \**********************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @tiny-web-metaverse/addons/src */ "../addons/src/index.ts");
-/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/app.ts");
-/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/common.ts");
-/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/utils/prefab.ts");
-/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/utils/serializer.ts");
-/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/scene.ts");
-/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/gltf.ts");
-/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/utils/network.ts");
-/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/network.ts");
-/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/entity_object3d.ts");
-/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/keyboard.ts");
-/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/mouse.ts");
-/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/select.ts");
-/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/stream.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/app.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/common.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/utils/prefab.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/utils/serializer.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/scene.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/gltf.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/utils/network.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/network.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/entity_object3d.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/keyboard.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/mouse.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/select.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/stream.ts");
 /* harmony import */ var _components_join_dialog__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/join_dialog */ "./src/components/join_dialog.ts");
 /* harmony import */ var _components_side_bar__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/side_bar */ "./src/components/side_bar.ts");
 /* harmony import */ var _components_user_event_handler__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/user_event_handler */ "./src/components/user_event_handler.ts");
@@ -89816,6 +90401,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _systems_user__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./systems/user */ "./src/systems/user.ts");
 /* harmony import */ var _ui_join_dialog__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./ui/join_dialog */ "./src/ui/join_dialog.ts");
 /* harmony import */ var _ui_side_bar__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./ui/side_bar */ "./src/ui/side_bar.ts");
+/* harmony import */ var _utils_platform_detect__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./utils/platform_detect */ "./src/utils/platform_detect.ts");
 var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -89825,6 +90411,7 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+
 
 
 
@@ -89861,56 +90448,69 @@ const run = () => __awaiter(void 0, void 0, void 0, function* () {
     yield reloadWithRoomIdIfNeeded();
     const roomId = url.searchParams.get('room_id');
     const canvas = createCanvas();
-    const app = new _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_15__.App({ canvas, roomId });
+    const app = new _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_16__.App({ canvas, roomId });
     document.body.appendChild(canvas);
-    app.registerSystem(_tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_1__.imageSystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_16__.SystemOrder.Setup);
-    app.registerSystem(_tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_1__.imageLoadSystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_16__.SystemOrder.Setup);
-    app.registerSystem(_tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_1__.videoSystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_16__.SystemOrder.Setup);
-    app.registerSystem(_tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_1__.videoLoadSystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_16__.SystemOrder.Setup);
-    app.registerSystem(_tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_1__.gltfMixerAnimationSystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_16__.SystemOrder.Setup + 1);
-    app.registerSystem(_tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_1__.lazilyUpdateVideoStateSystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_16__.SystemOrder.Setup + 1);
-    app.registerSystem(_ui_join_dialog__WEBPACK_IMPORTED_MODULE_13__.updateJoinDialogSystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_16__.SystemOrder.BeforeMatricesUpdate);
-    app.registerSystem(_ui_side_bar__WEBPACK_IMPORTED_MODULE_14__.updateSidebarSystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_16__.SystemOrder.BeforeMatricesUpdate);
-    app.registerSystem(_systems_color__WEBPACK_IMPORTED_MODULE_11__.colorSystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_16__.SystemOrder.Render - 1);
-    app.registerSystem(_systems_user__WEBPACK_IMPORTED_MODULE_12__.userEventSystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_16__.SystemOrder.Render - 1);
+    app.registerSystem(_tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_1__.virtualJoystickUISystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__.SystemOrder.EventHandling);
+    app.registerSystem(_tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_1__.imageSystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__.SystemOrder.Setup);
+    app.registerSystem(_tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_1__.imageLoadSystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__.SystemOrder.Setup);
+    app.registerSystem(_tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_1__.videoSystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__.SystemOrder.Setup);
+    app.registerSystem(_tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_1__.videoLoadSystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__.SystemOrder.Setup);
+    app.registerSystem(_tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_1__.gltfMixerAnimationSystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__.SystemOrder.Setup + 1);
+    app.registerSystem(_tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_1__.lazilyUpdateVideoStateSystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__.SystemOrder.Setup + 1);
+    app.registerSystem(_ui_join_dialog__WEBPACK_IMPORTED_MODULE_13__.updateJoinDialogSystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__.SystemOrder.BeforeMatricesUpdate);
+    app.registerSystem(_ui_side_bar__WEBPACK_IMPORTED_MODULE_14__.updateSidebarSystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__.SystemOrder.BeforeMatricesUpdate);
+    app.registerSystem(_tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_1__.avatarVirtualJoystickSystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__.SystemOrder.BeforeMatricesUpdate);
+    app.registerSystem(_systems_color__WEBPACK_IMPORTED_MODULE_11__.colorSystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__.SystemOrder.Render - 1);
+    app.registerSystem(_systems_user__WEBPACK_IMPORTED_MODULE_12__.userEventSystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__.SystemOrder.Render - 1);
+    app.registerSystem(_tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_1__.clearVirtualJoystickEventSystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__.SystemOrder.TearDown);
     const world = app.getWorld();
-    (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__.registerPrefab)(world, 'avatar', _prefabs_avatar__WEBPACK_IMPORTED_MODULE_5__.AvatarPrefab);
-    (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__.registerPrefab)(world, 'cube', _prefabs_cube__WEBPACK_IMPORTED_MODULE_6__.CubePrefab);
-    (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__.registerPrefab)(world, 'duck', _prefabs_duck__WEBPACK_IMPORTED_MODULE_7__.DuckPrefab);
-    (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__.registerPrefab)(world, 'fox', _prefabs_fox__WEBPACK_IMPORTED_MODULE_8__.FoxPrefab);
-    (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__.registerPrefab)(world, 'image', _prefabs_image__WEBPACK_IMPORTED_MODULE_9__.ImagePrefab);
-    (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__.registerPrefab)(world, 'video', _prefabs_video__WEBPACK_IMPORTED_MODULE_10__.VideoPrefab);
-    (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_18__.registerSerializers)(world, 'video', _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_1__.NetworkedVideo, _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_1__.videoSerializers);
+    (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_18__.registerPrefab)(world, 'avatar', _prefabs_avatar__WEBPACK_IMPORTED_MODULE_5__.AvatarPrefab);
+    (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_18__.registerPrefab)(world, 'cube', _prefabs_cube__WEBPACK_IMPORTED_MODULE_6__.CubePrefab);
+    (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_18__.registerPrefab)(world, 'duck', _prefabs_duck__WEBPACK_IMPORTED_MODULE_7__.DuckPrefab);
+    (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_18__.registerPrefab)(world, 'fox', _prefabs_fox__WEBPACK_IMPORTED_MODULE_8__.FoxPrefab);
+    (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_18__.registerPrefab)(world, 'image', _prefabs_image__WEBPACK_IMPORTED_MODULE_9__.ImagePrefab);
+    (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_18__.registerPrefab)(world, 'video', _prefabs_video__WEBPACK_IMPORTED_MODULE_10__.VideoPrefab);
+    (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_19__.registerSerializers)(world, 'video', _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_1__.NetworkedVideo, _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_1__.videoSerializers);
     const sceneEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
-    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_19__.InScene, sceneEid);
-    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_20__.GltfSceneLoader, sceneEid);
-    _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_20__.GltfSceneLoaderProxy.get(sceneEid).allocate(sceneAssetUrl);
-    const avatarEid = (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_21__.createNetworkedEntity)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_22__.NetworkedType.Local, 'avatar');
-    _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_23__.EntityObject3DProxy.get(avatarEid).root.position.set(0.0, 0.25, 2.0);
-    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_24__.KeyEventListener, avatarEid);
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_20__.InScene, sceneEid);
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_21__.GltfSceneLoader, sceneEid);
+    _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_21__.GltfSceneLoaderProxy.get(sceneEid).allocate(sceneAssetUrl);
+    const avatarEid = (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_22__.createNetworkedEntity)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_23__.NetworkedType.Local, 'avatar');
+    _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_24__.EntityObject3DProxy.get(avatarEid).root.position.set(0.0, 0.25, 2.0);
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_25__.KeyEventListener, avatarEid);
     const envMapLoaderEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
-    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_19__.SceneEnvironmentMapLoader, envMapLoaderEid);
-    _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_19__.SceneEnvironmentMapLoaderProxy.get(envMapLoaderEid).allocate(envTextureUrl);
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_20__.SceneEnvironmentMapLoader, envMapLoaderEid);
+    _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_20__.SceneEnvironmentMapLoaderProxy.get(envMapLoaderEid).allocate(envTextureUrl);
+    if ((0,_utils_platform_detect__WEBPACK_IMPORTED_MODULE_15__.isMobile)() || (0,_utils_platform_detect__WEBPACK_IMPORTED_MODULE_15__.isTablet)()) {
+        const virtualJoystickLeftEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_1__.VirtualJoystick, virtualJoystickLeftEid);
+        _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_1__.VirtualJoystickProxy.get(virtualJoystickLeftEid).allocate();
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_1__.VirtualJoystickLeft, virtualJoystickLeftEid);
+        const virtualJoystickRightEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_1__.VirtualJoystick, virtualJoystickRightEid);
+        _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_1__.VirtualJoystickProxy.get(virtualJoystickRightEid).allocate();
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_1__.VirtualJoystickRight, virtualJoystickRightEid);
+    }
     const mouseButtonEventEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
-    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_25__.MouseButtonEventListener, mouseButtonEventEid);
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_26__.MouseButtonEventListener, mouseButtonEventEid);
     const userEventHandlerEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
     (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_user_event_handler__WEBPACK_IMPORTED_MODULE_4__.UserEventHandler, userEventHandlerEid);
-    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_22__.UserNetworkEventListener, userEventHandlerEid);
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_23__.UserNetworkEventListener, userEventHandlerEid);
     const sideBarEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
     (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_side_bar__WEBPACK_IMPORTED_MODULE_3__.SideBar, sideBarEid);
-    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_26__.SelectedEventListener, sideBarEid);
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_27__.SelectedEventListener, sideBarEid);
     const joinDialogEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
     (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_join_dialog__WEBPACK_IMPORTED_MODULE_2__.JoinDialog, joinDialogEid);
-    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_27__.ConnectedStreamEventListener, joinDialogEid);
-    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_27__.JoinedStreamEventListener, joinDialogEid);
-    const cubeEid = (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_21__.createNetworkedEntity)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_22__.NetworkedType.Shared, 'cube');
-    _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_23__.EntityObject3DProxy.get(cubeEid).root.position.set((Math.random() - 0.5) * 10.0, 0.25, (Math.random() - 0.5) * 10.0);
-    const duckEid = (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_21__.createNetworkedEntity)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_22__.NetworkedType.Shared, 'duck');
-    _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_23__.EntityObject3DProxy.get(duckEid).root.position.set((Math.random() - 0.5) * 10.0, 0.1, (Math.random() - 0.5) * 10.0);
-    const foxEid = (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_21__.createNetworkedEntity)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_22__.NetworkedType.Shared, 'fox');
-    _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_23__.EntityObject3DProxy.get(foxEid).root.position.set((Math.random() - 0.5) * 10.0, 0.1, (Math.random() - 0.5) * 10.0);
-    const imageEid = (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_21__.createNetworkedEntity)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_22__.NetworkedType.Shared, 'image');
-    _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_23__.EntityObject3DProxy.get(imageEid).root.position.set((Math.random() - 0.5) * 10.0, 0.5, (Math.random() - 0.5) * 10.0);
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_28__.ConnectedStreamEventListener, joinDialogEid);
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_28__.JoinedStreamEventListener, joinDialogEid);
+    const cubeEid = (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_22__.createNetworkedEntity)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_23__.NetworkedType.Shared, 'cube');
+    _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_24__.EntityObject3DProxy.get(cubeEid).root.position.set((Math.random() - 0.5) * 10.0, 0.25, (Math.random() - 0.5) * 10.0);
+    const duckEid = (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_22__.createNetworkedEntity)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_23__.NetworkedType.Shared, 'duck');
+    _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_24__.EntityObject3DProxy.get(duckEid).root.position.set((Math.random() - 0.5) * 10.0, 0.1, (Math.random() - 0.5) * 10.0);
+    const foxEid = (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_22__.createNetworkedEntity)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_23__.NetworkedType.Shared, 'fox');
+    _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_24__.EntityObject3DProxy.get(foxEid).root.position.set((Math.random() - 0.5) * 10.0, 0.1, (Math.random() - 0.5) * 10.0);
+    const imageEid = (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_22__.createNetworkedEntity)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_23__.NetworkedType.Shared, 'image');
+    _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_24__.EntityObject3DProxy.get(imageEid).root.position.set((Math.random() - 0.5) * 10.0, 0.5, (Math.random() - 0.5) * 10.0);
     // Commenting out because of bad performance
     /*
       const videoEid = createNetworkedEntity(world, NetworkedType.Shared, 'video');
