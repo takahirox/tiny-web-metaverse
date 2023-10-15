@@ -8218,7 +8218,7 @@ const isMobile = () => {
 };
 const isTablet = () => {
     // Is this correct?
-    if (!isMobile()) {
+    if (isMobile()) {
         return false;
     }
     if ('userAgent' in navigator) {

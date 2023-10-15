@@ -20,7 +20,7 @@ export const isMobile = (): boolean => {
 
 export const isTablet = (): boolean => {
   // Is this correct?
-  if (!isMobile()) {
+  if (isMobile()) {
     return false;
   }
 
