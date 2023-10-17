@@ -1,7 +1,7 @@
 # tiny-web-metaverse
 
-Tiny Web Metaverse project is for open, simple, easy, flexible, and extensible
-3D virtual space platform for the web.
+Tiny Web Metaverse project is for open, simple, easy, hostable, flexible, and
+extensible 3D virtual space platform for the web.
 
 ## Online Demo
 

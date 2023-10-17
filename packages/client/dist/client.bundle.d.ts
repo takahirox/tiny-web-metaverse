@@ -53,6 +53,34 @@ export declare class App {
 	start(): void;
 	getWorld(): IWorld;
 }
+export declare const AudioContextComponent: import("bitecs").ComponentType<import("bitecs").ISchema>;
+export declare const AudioContextSuspended: import("bitecs").ComponentType<import("bitecs").ISchema>;
+export declare const AudioContextResuming: import("bitecs").ComponentType<import("bitecs").ISchema>;
+export declare class AudioContextProxy {
+	private static instance;
+	private eid;
+	private map;
+	private constructor();
+	static get(eid: number): AudioContextProxy;
+	allocate(context: AudioContext): void;
+	free(): void;
+	get context(): AudioContext;
+}
+export declare const AudioSource: import("bitecs").ComponentType<import("bitecs").ISchema>;
+export type AudioSourceNode = MediaStreamAudioSourceNode | MediaElementAudioSourceNode;
+export declare class AudioSourceProxy {
+	private static instance;
+	private eid;
+	private map;
+	private constructor();
+	static get(eid: number): AudioSourceProxy;
+	allocate(source: AudioSourceNode, gain: GainNode, panner: PannerNode): void;
+	free(): void;
+	get gain(): GainNode;
+	get source(): AudioSourceNode;
+	get panner(): PannerNode;
+}
+export declare const AudioDestination: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare const Avatar: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare const AvatarMouseControls: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare class AvatarMouseControlsProxy {
@@ -722,7 +750,6 @@ export declare const NewConsumerStreamEventListener: import("bitecs").ComponentT
 export declare const NewPeerStreamEventListener: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare const StreamRemotePeers: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export type StreamRemotePeersValue = Map<string, {
-	audio?: HTMLAudioElement;
 	id: string;
 	joined: boolean;
 }>;
@@ -919,6 +946,7 @@ export declare const scaleSerializers: {
 	networkDeserializer: (world: IWorld, eid: number, data: SerializedScale) => void;
 	serializer: (world: IWorld, eid: number) => SerializedScale;
 };
+export declare const resumeAudioContextSystem: (world: IWorld) => void;
 export declare const avatarKeyControlsSystem: (world: IWorld) => void;
 export declare const avatarMouseControlsSystem: (world: IWorld) => void;
 export declare const canvasSystem: (world: IWorld) => void;
@@ -952,6 +980,7 @@ export declare const networkEventHandleSystem: (world: IWorld) => void;
 export declare const networkEventClearSystem: (world: IWorld) => void;
 export declare const networkSendSystem: (world: IWorld) => void;
 export declare const perspectiveCameraSystem: (world: IWorld) => void;
+export declare const positionalAudioSystem: (world: IWorld) => void;
 export declare const prefabsSystem: (world: IWorld) => void;
 export declare const raycastSystem: (world: IWorld) => void;
 export declare const clearRaycastedSystem: (world: IWorld) => void;
@@ -978,6 +1007,10 @@ export declare const clearTransformUpdatedSystem: (world: IWorld) => void;
 export declare const updateMatricesSystem: (world: IWorld) => void;
 export declare const windowResizeEventHandleSystem: (world: IWorld) => void;
 export declare const windowResizeEventClearSystem: (world: IWorld) => void;
+export declare const getAudioContextProxy: (world: IWorld) => AudioContextProxy;
+export declare const addAudioSourceWithAudioSourceNode: (world: IWorld, eid: number, source: MediaStreamAudioSourceNode | MediaElementAudioSourceNode) => void;
+export declare const addAudioSourceWithElement: (world: IWorld, eid: number, audio: HTMLAudioElement) => void;
+export declare const addAudioSourceWithStream: (world: IWorld, eid: number, stream: MediaStream) => void;
 export declare const removeEntityIfNoComponent: (world: IWorld, eid: number) => boolean;
 export declare const hasComponents: (world: IWorld, components: Component[], eid: number) => boolean;
 export declare function loadGltfBitecs(world: IWorld, eid: number, url: string): Generator<void, GLTF>;
@@ -986,6 +1019,8 @@ export declare const addObject3D: (world: IWorld, obj: Object3D, eid: number) =>
 export declare const removeObject3D: (world: IWorld, obj: Object3D, eid: number) => void;
 export declare const hasObject3D: (world: IWorld, obj: Object3D, eid: number) => boolean;
 export declare const addAnimation: (world: IWorld, eid: number, action: AnimationAction) => void;
+export declare const getMyUserId: (world: IWorld) => string;
+export declare const getRoomId: (world: IWorld) => string;
 export declare const createNetworkedEntity: (world: IWorld, type: NetworkedType.Local | NetworkedType.Shared, prefabName: string, prefabParams?: any) => number;
 export declare const registerPrefab: (world: IWorld, key: string, prefab: Prefab) => void;
 export declare const deregisterPrefab: (world: IWorld, key: string) => void;
@@ -996,6 +1031,7 @@ export declare const getSerializers: (world: IWorld, key: string) => SerializerF
 export declare const hasSerializers: (world: IWorld, key: string) => boolean;
 export declare const getComponentKey: (world: IWorld, component: IComponent) => string;
 export declare const hasComponentKey: (world: IWorld, component: IComponent) => boolean;
+export declare const getStreamClientProxy: (world: IWorld) => StreamClientProxy;
 export declare function loadGltf(url: string): Generator<void, GLTF>;
 export declare const resizeObject3D: (obj: Object3D, targetSize?: number) => Object3D;
 export declare const recenterObject3D: (obj: Object3D) => Object3D;

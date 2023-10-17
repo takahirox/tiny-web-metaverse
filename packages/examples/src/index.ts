@@ -21,6 +21,7 @@ import {
 } from "@tiny-web-metaverse/addons/src";
 import {
   App,
+  AudioDestination,
   ConnectedStreamEventListener,
   createNetworkedEntity,
   GltfSceneLoader,
@@ -122,6 +123,7 @@ const run = async (): Promise<void> => {
   const avatarEid = createNetworkedEntity(world, NetworkedType.Local, 'avatar');
   EntityObject3DProxy.get(avatarEid).root.position.set(0.0, 0.25, 2.0);
   addComponent(world, KeyEventListener, avatarEid);
+  addComponent(world, AudioDestination, avatarEid);
 
   const envMapLoaderEid = addEntity(world);
   addComponent(world, SceneEnvironmentMapLoader, envMapLoaderEid);

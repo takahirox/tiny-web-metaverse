@@ -5,7 +5,6 @@ import {
   IWorld,
   removeComponent
 } from "bitecs";
-import { RoomId, RoomIdProxy } from "../components/room_id";
 import {
   StreamClient,
   StreamClientProxy,
@@ -13,9 +12,10 @@ import {
   StreamJoinRequestor,
   StreamLeaveRequestor
 } from "../components/stream";
-import { UserId, UserIdProxy } from "../components/user_id";
 import { removeEntityIfNoComponent } from "../utils/bitecs";
 import { toGenerator } from "../utils/coroutine";
+import { getMyUserId, getRoomId } from "../utils/network";
+import { getStreamClientProxy } from "../utils/stream";
 
 const connectRequestQuery = defineQuery([StreamConnectRequestor]);
 const connectRequestEnterQuery = enterQuery(connectRequestQuery);
@@ -30,18 +30,15 @@ const leaveRequestEnterQuery = enterQuery(leaveRequestQuery);
 const leaveRequestExitQuery = exitQuery(leaveRequestQuery);
 
 const adapterQuery = defineQuery([StreamClient]);
-const roomIdQuery = defineQuery([RoomId]);
-const userIdQuery = defineQuery([UserId]);
 
 const connectGenerators = new Map<number, Generator>();
 const joinGenerators = new Map<number, Generator>();
 const leaveGenerators = new Map<number, Generator>();
 
 function* connect(world: IWorld): Generator<void, void> {
-  // Assumes always single adapter, roomId, userId entities exist
-  const adapter = StreamClientProxy.get(adapterQuery(world)[0]).adapter;
-  const roomId = RoomIdProxy.get(roomIdQuery(world)[0]).roomId;
-  const userId = UserIdProxy.get(userIdQuery(world)[0]).userId;
+  const adapter = getStreamClientProxy(world).adapter;
+  const roomId = getRoomId(world);
+  const userId = getMyUserId(world);
 
   // TODO: What if adapter entity or component is removed
   //       before done?

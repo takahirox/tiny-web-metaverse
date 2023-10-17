@@ -7,6 +7,7 @@ import {
   NetworkedType,
   Shared
 } from "../components/network";
+import { RoomId, RoomIdProxy } from "../components/room_id";
 import { UserId, UserIdProxy } from "../components/user_id";
 import { getPrefab } from "../utils/prefab";
 
@@ -14,7 +15,18 @@ const generateUUID = (): string => {
   return MathUtils.generateUUID();
 };
 
-const userIdQuery = defineQuery([UserId]);
+const localUserIdQuery = defineQuery([Local, UserId]);
+const roomIdQuery = defineQuery([RoomId]);
+
+export const getMyUserId = (world: IWorld): string => {
+  // Assumes always single local user id entity exists
+  return UserIdProxy.get(localUserIdQuery(world)[0]).userId;
+};
+
+export const getRoomId = (world: IWorld): string => {
+  // Assumes always single room id entity exists
+  return RoomIdProxy.get(roomIdQuery(world)[0]).roomId;
+};
 
 // For creating local or shared networked entity from local client.
 // Networked entity created by remote clients are set up in networked entity system.
@@ -29,7 +41,7 @@ export const createNetworkedEntity = (
   const eid = prefab(world, prefabParams);
 
   // Assumes always single user id entity exists
-  const userId = UserIdProxy.get(userIdQuery(world)[0]).userId;
+  const userId = getMyUserId(world);
 
   if (type === NetworkedType.Local) {
     addComponent(world, Local, eid);

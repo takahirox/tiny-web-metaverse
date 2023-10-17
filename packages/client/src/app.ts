@@ -13,9 +13,17 @@ import {
   Scene,
   WebGLRenderer
 } from "three";
+
 import { StateAdapter } from "@tiny-web-metaverse/state_client";
 import { StreamAdapter } from "@tiny-web-metaverse/stream_client";
+
 import { System, SystemOrder } from "./common";
+
+import {
+  AudioContextComponent,
+  AudioContextProxy,
+  AudioContextSuspended
+} from "./components/audio_effect";
 import {
   AvatarMouseControls,
   AvatarMouseControlsProxy
@@ -43,6 +51,7 @@ import { KeyEventHandler } from "./components/keyboard";
 import {
   ComponentNetworkEventListener,
   EntityNetworkEventListener,
+  Local,
   NetworkedEntityManager,
   NetworkedEntityManagerProxy,
   NetworkedMixerAnimation,
@@ -98,12 +107,15 @@ import {
   WindowResizeEventListener,
   WindowSize
 } from "./components/window_resize";
+
 import {
   positionSerializers,
   quaternionSerializers,
   scaleSerializers
 } from "./serializations/transform";
 import { mixerAnimationSerializers } from "./serializations/mixer_animation";
+
+import { resumeAudioContextSystem } from "./systems/audio_context";
 import { avatarKeyControlsSystem } from "./systems/avatar_key_controls";
 import { avatarMouseControlsSystem } from "./systems/avatar_mouse_controls";
 import { canvasSystem } from "./systems/canvas";
@@ -143,6 +155,7 @@ import { networkSendSystem } from "./systems/network_send";
 import { networkedSystem } from "./systems/networked";
 import { networkedEntitySystem } from "./systems/networked_entity";
 import { perspectiveCameraSystem } from "./systems/perspective_camera";
+import { positionalAudioSystem } from "./systems/positional_audio";
 import { prefabsSystem } from "./systems/prefab";
 import { clearRaycastedSystem, raycastSystem } from "./systems/raycast";
 import { raycasterSystem } from "./systems/raycaster";
@@ -172,6 +185,7 @@ import {
   windowResizeEventHandleSystem,
   windowResizeEventClearSystem
 } from "./systems/window_resize_event";
+
 import { addObject3D } from "./utils/entity_object3d";
 import { registerSerializers } from "./utils/serializer";
 
@@ -230,7 +244,6 @@ export class App {
     this.registerSystem(networkEventHandleSystem, SystemOrder.EventHandling);
     this.registerSystem(streamEventHandleSystem, SystemOrder.EventHandling);
     this.registerSystem(streamConnectionSystem, SystemOrder.EventHandling);
-    this.registerSystem(streamRemotePeerRegisterSystem, SystemOrder.EventHandling);
 
     this.registerSystem(mousePositionTrackSystem, SystemOrder.EventHandling + 1);
     this.registerSystem(touchPositionTrackSystem, SystemOrder.EventHandling + 1);
@@ -252,6 +265,8 @@ export class App {
     this.registerSystem(mixerAnimationSystem, SystemOrder.Setup);
     this.registerSystem(networkedSystem, SystemOrder.Setup);
     this.registerSystem(networkedEntitySystem, SystemOrder.Setup);
+    this.registerSystem(streamRemotePeerRegisterSystem, SystemOrder.Setup);
+    this.registerSystem(resumeAudioContextSystem, SystemOrder.Setup);
     this.registerSystem(lazilyActivateAnimationSystem, SystemOrder.Setup + 1);
 
     this.registerSystem(linearMoveSystem, SystemOrder.BeforeMatricesUpdate);
@@ -269,6 +284,8 @@ export class App {
     this.registerSystem(networkSendSystem, SystemOrder.MatricesUpdate - 1);
 
     this.registerSystem(updateMatricesSystem, SystemOrder.MatricesUpdate);
+
+    this.registerSystem(positionalAudioSystem, SystemOrder.MatricesUpdate + 1);
 
     this.registerSystem(renderSystem, SystemOrder.Render);
 
@@ -294,6 +311,15 @@ export class App {
     addComponent(this.world, Time, timeEid);
     TimeProxy.get(timeEid).allocate(new Clock(), 0, 0);
 
+    const audioContext = new AudioContext();
+    const audioContextEid = addEntity(this.world);
+    addComponent(this.world, AudioContextComponent, audioContextEid);
+    AudioContextProxy.get(audioContextEid).allocate(audioContext);
+
+    if (audioContext.state === 'suspended') {
+      addComponent(this.world, AudioContextSuspended, audioContextEid);
+    }
+
     const prefabsEid = addEntity(this.world);
     addComponent(this.world, Prefabs, prefabsEid);
     PrefabsProxy.get(prefabsEid).allocate();
@@ -313,6 +339,7 @@ export class App {
     const userIdEid = addEntity(this.world);
     addComponent(this.world, UserId, userIdEid);
     UserIdProxy.get(userIdEid).allocate(userId);
+    addComponent(this.world, Local, userIdEid);
 
     const streamRemotePeersEid = addEntity(this.world);
     addComponent(this.world, StreamRemotePeers, streamRemotePeersEid);

@@ -104,7 +104,6 @@ export const NewPeerStreamEventListener = defineComponent();
 export const StreamRemotePeers = defineComponent();
 
 type StreamRemotePeersValue = Map<string /* id */, {
-  audio?: HTMLAudioElement,
   id: string,
   joined: boolean
 }>;

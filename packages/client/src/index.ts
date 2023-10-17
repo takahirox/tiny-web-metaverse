@@ -1,6 +1,7 @@
 export * from "./app";
 export * from "./common";
 
+export * from "./components/audio_effect";
 export * from "./components/avatar";
 export * from "./components/avatar_mouse_controls";
 export * from "./components/camera";
@@ -34,6 +35,7 @@ export * from "./components/window_resize";
 export * from "./serializations/mixer_animation";
 export * from "./serializations/transform";
 
+export * from "./systems/audio_context";
 export * from "./systems/avatar_key_controls";
 export * from "./systems/avatar_mouse_controls";
 export * from "./systems/canvas";
@@ -61,6 +63,7 @@ export * from "./systems/networked_entity";
 export * from "./systems/network_event";
 export * from "./systems/network_send";
 export * from "./systems/perspective_camera";
+export * from "./systems/positional_audio";
 export * from "./systems/prefab";
 export * from "./systems/raycast";
 export * from "./systems/raycaster";
@@ -82,6 +85,7 @@ export * from "./systems/transform";
 export * from "./systems/update_matrices";
 export * from "./systems/window_resize_event";
 
+export * from "./utils/audio_effect";
 export * from "./utils/bitecs";
 export * from "./utils/bitecs_three";
 export * from "./utils/coroutine";
@@ -90,6 +94,7 @@ export * from "./utils/mixer_animation";
 export * from "./utils/network";
 export * from "./utils/prefab";
 export * from "./utils/serializer";
+export * from "./utils/stream";
 export * from "./utils/three";
 export * from "./utils/time";
 
