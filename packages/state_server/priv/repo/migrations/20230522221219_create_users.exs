@@ -5,6 +5,7 @@ defmodule Server.Repo.Migrations.CreateUsers do
     create table(:users) do
       add :room_id, :string
       add :user_id, :string
+      add :username, :string
       add :version, :integer, default: 1, null: false
 
       timestamps()

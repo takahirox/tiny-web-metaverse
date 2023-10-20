@@ -18,11 +18,12 @@ class StateAdapter {
     constructor(params) {
         const url = params.url || `${window.location.protocol === 'https:' ? 'wss' : 'ws'}://${window.location.hostname}:4000/socket`;
         const topic = `room:${params.roomId}`;
+        const username = params.username || 'anonymous';
         this.userId = params.userId;
         const socket = new phoenix__WEBPACK_IMPORTED_MODULE_0__.Socket(url, {});
         socket.connect();
         // TODO: Resolve user id conflicts. Generate UUID in server side?
-        this.channel = socket.channel(topic, { user_id: this.userId });
+        this.channel = socket.channel(topic, { user_id: this.userId, username });
         this.channel.join()
             .receive('ok', res => {
             console.log('Adapter: Joined successfully', res);
@@ -51,6 +52,7 @@ class StateAdapter {
         this.eventListenerMap.delete(name);
     }
     // TODO: Avoid any
+    // TODO: Check the completion if possible?
     push(name, data) {
         this.channel.push(name, data);
     }

@@ -4,11 +4,13 @@ import {
 } from "bitecs";
 import {
   avatarVirtualJoystickSystem,
+  billboardSystem,
   clearVirtualJoystickEventSystem,
   gltfMixerAnimationSystem,
   imageSystem,
   imageLoadSystem,
   lazilyUpdateVideoStateSystem,
+  nametagSystem,
   NetworkedVideo,
   videoSystem,
   videoLoadSystem,
@@ -17,7 +19,8 @@ import {
   VirtualJoystickLeft,
   VirtualJoystickProxy,
   VirtualJoystickRight,
-  virtualJoystickUISystem
+  virtualJoystickUISystem,
+  textSystem
 } from "@tiny-web-metaverse/addons/src";
 import {
   App,
@@ -98,6 +101,10 @@ const run = async (): Promise<void> => {
   app.registerSystem(updateJoinDialogSystem, SystemOrder.BeforeMatricesUpdate);
   app.registerSystem(updateSidebarSystem, SystemOrder.BeforeMatricesUpdate);
   app.registerSystem(avatarVirtualJoystickSystem, SystemOrder.BeforeMatricesUpdate);
+  app.registerSystem(textSystem, SystemOrder.BeforeMatricesUpdate);
+
+  app.registerSystem(nametagSystem, SystemOrder.MatricesUpdate - 1);
+  app.registerSystem(billboardSystem, SystemOrder.MatricesUpdate - 1);
 
   app.registerSystem(colorSystem, SystemOrder.Render - 1);
   app.registerSystem(userEventSystem, SystemOrder.Render - 1);

@@ -95,8 +95,8 @@ export const avatarMouseControlsSystem = (world: IWorld) => {
         // TODO: Configurable rotation speed
         // TODO: Add LinearRotation component?
         euler.setFromQuaternion(avatar.quaternion);
-        euler.y += dx;
-        euler.x -= dy;
+        euler.y -= dx;
+        euler.x += dy;
         euler.x = Math.max(PI_2 - MAX_POLAR_ANGLE, Math.min(PI_2 - MIN_POLAR_ANGLE, euler.x));
         avatar.quaternion.setFromEuler(euler);
       });

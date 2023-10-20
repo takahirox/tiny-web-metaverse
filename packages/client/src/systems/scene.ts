@@ -23,7 +23,7 @@ const inSceneExitQuery = exitQuery(inSceneQuery);
 export const sceneSystem = (world: IWorld): void => {
   sceneExitQuery(world).forEach(eid => {
     // TODO: Remove all the children?
-    SceneProxy.get(eid).free(); 
+    SceneProxy.get(eid).free();
   });
 
   sceneQuery(world).forEach(eid => {

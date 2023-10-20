@@ -44,6 +44,7 @@ export declare class App {
 		canvas: HTMLCanvasElement;
 		roomId: string;
 		userId?: string;
+		username?: string;
 	});
 	private init;
 	registerSystem(system: System, orderPriority?: number): void;
@@ -417,6 +418,7 @@ declare class StateAdapter {
 		roomId: string;
 		url?: string;
 		userId: string;
+		username?: string;
 	});
 	addEventListener(name: string, callback: Callback): void;
 	removeEventListener(name: string): void;
@@ -424,6 +426,7 @@ declare class StateAdapter {
 }
 export declare enum NetworkMessageType {
 	AddComponent = "add_component",
+	Broadcast = "broadcast",
 	CreateEntity = "create_entity",
 	RemoveEntity = "remove_entity",
 	RemoveComponent = "remove_component",
@@ -431,7 +434,8 @@ export declare enum NetworkMessageType {
 	UpdateComponent = "update_component",
 	UserJoined = "user_joined",
 	UserLeft = "user_left",
-	UserList = "user_list"
+	UsernameChange = "username_change",
+	UsersList = "users_list"
 }
 export declare enum NetworkedType {
 	Local = "local",
@@ -525,6 +529,29 @@ export declare const NetworkedPosition: import("bitecs").ComponentType<import("b
 export declare const NetworkedQuaternion: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare const NetworkedScale: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare const NetworkedMixerAnimation: import("bitecs").ComponentType<import("bitecs").ISchema>;
+export declare const Peers: import("bitecs").ComponentType<import("bitecs").ISchema>;
+export declare class PeersProxy {
+	private static instance;
+	private eid;
+	private map;
+	private constructor();
+	static get(eid: number): PeersProxy;
+	allocate(): void;
+	free(): void;
+	get peers(): Map<string, string>;
+}
+export declare const PeersManager: import("bitecs").ComponentType<import("bitecs").ISchema>;
+export declare const UsernameChangeRequestor: import("bitecs").ComponentType<import("bitecs").ISchema>;
+export declare class UsernameChangeRequestorProxy {
+	private static instance;
+	private eid;
+	private map;
+	private constructor();
+	static get(eid: number): UsernameChangeRequestorProxy;
+	allocate(username: string): void;
+	free(): void;
+	get username(): string;
+}
 export declare const Pointer: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare class PointerProxy {
 	private static instance;
@@ -979,6 +1006,7 @@ export declare const networkedEntitySystem: (world: IWorld) => void;
 export declare const networkEventHandleSystem: (world: IWorld) => void;
 export declare const networkEventClearSystem: (world: IWorld) => void;
 export declare const networkSendSystem: (world: IWorld) => void;
+export declare const peerSystem: (world: IWorld) => void;
 export declare const perspectiveCameraSystem: (world: IWorld) => void;
 export declare const positionalAudioSystem: (world: IWorld) => void;
 export declare const prefabsSystem: (world: IWorld) => void;
@@ -1021,7 +1049,9 @@ export declare const hasObject3D: (world: IWorld, obj: Object3D, eid: number) =>
 export declare const addAnimation: (world: IWorld, eid: number, action: AnimationAction) => void;
 export declare const getMyUserId: (world: IWorld) => string;
 export declare const getRoomId: (world: IWorld) => string;
+export declare const getStateAdapter: (world: IWorld) => StateAdapter;
 export declare const createNetworkedEntity: (world: IWorld, type: NetworkedType.Local | NetworkedType.Shared, prefabName: string, prefabParams?: any) => number;
+export declare const getPeersProxy: (world: IWorld) => PeersProxy;
 export declare const registerPrefab: (world: IWorld, key: string, prefab: Prefab) => void;
 export declare const deregisterPrefab: (world: IWorld, key: string) => void;
 export declare const getPrefab: (world: IWorld, key: string) => Prefab;

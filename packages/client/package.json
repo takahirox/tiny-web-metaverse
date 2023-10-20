@@ -23,13 +23,13 @@
     "type": "git",
     "url": "git+https://github.com/takahirox/tiny-web-metaverse.git"
   },
-  "sideEffects": false,
   "scripts": {
     "build": "webpack && npm run type",
     "test": "echo \"Error: no test specified\" && exit 1",
     "type": "dts-bundle-generator -o ./dist/client.bundle.d.ts ./src/index.ts",
     "watch": "webpack --watch"
   },
+  "sideEffects": false,
   "type": "module",
   "types": "./dist/client.bundle.d.ts",
   "version": "0.0.1"

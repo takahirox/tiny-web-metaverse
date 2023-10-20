@@ -1,11 +1,14 @@
 import { addComponent, defineQuery, IWorld } from "bitecs";
 import { MathUtils } from "three";
+import { StateAdapter } from "@tiny-web-metaverse/state_client";
 import {
   Local,
   Networked,
   NetworkedProxy,
   NetworkedType,
-  Shared
+  Shared,
+  StateClient,
+  StateClientProxy
 } from "../components/network";
 import { RoomId, RoomIdProxy } from "../components/room_id";
 import { UserId, UserIdProxy } from "../components/user_id";
@@ -17,6 +20,7 @@ const generateUUID = (): string => {
 
 const localUserIdQuery = defineQuery([Local, UserId]);
 const roomIdQuery = defineQuery([RoomId]);
+const clientQuery = defineQuery([StateClient]);
 
 export const getMyUserId = (world: IWorld): string => {
   // Assumes always single local user id entity exists
@@ -26,6 +30,11 @@ export const getMyUserId = (world: IWorld): string => {
 export const getRoomId = (world: IWorld): string => {
   // Assumes always single room id entity exists
   return RoomIdProxy.get(roomIdQuery(world)[0]).roomId;
+};
+
+export const getStateAdapter = (world: IWorld): StateAdapter => {
+  // Assumes always single state client entity exists
+  return StateClientProxy.get(clientQuery(world)[0]).adapter;
 };
 
 // For creating local or shared networked entity from local client.

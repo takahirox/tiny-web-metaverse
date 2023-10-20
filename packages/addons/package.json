@@ -5,7 +5,8 @@
   },
   "dependencies": {
     "@tiny-web-metaverse/client": "^0.0.1",
-    "nipplejs": "^0.10.1"
+    "nipplejs": "^0.10.1",
+    "troika-three-text": "^0.49.0"
   },
   "description": "Tiny Web metaverse addons",
   "exports": {
@@ -17,17 +18,20 @@
   },
   "homepage": "https://github.com/takahirox/tiny-web-metaverse#readme",
   "license": "MIT",
-  "main": "./dist/addons.bundle.js",
+  "module": "./dist/addons.bundle.js",
   "name": "@tiny-web-metaverse/addons",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/takahirox/tiny-web-metaverse.git"
   },
   "scripts": {
-    "build": "webpack",
-    "server": "webpack serve",
+    "build": "webpack && npm run type",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "type": "dts-bundle-generator -o ./dist/addon.bundle.d.ts ./src/index.ts",
     "watch": "webpack --watch"
   },
+  "sideEffects": false,
+  "type": "module",
+  "types": "./dist/addon.bundle.d.ts",
   "version": "0.0.1"
 }

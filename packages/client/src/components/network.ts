@@ -4,6 +4,7 @@ import { NULL_EID } from "../common";
 
 export enum NetworkMessageType {
   AddComponent = 'add_component',
+  Broadcast = 'broadcast',
   CreateEntity = 'create_entity',
   RemoveEntity = 'remove_entity',
   RemoveComponent = 'remove_component',
@@ -11,7 +12,8 @@ export enum NetworkMessageType {
   UpdateComponent = 'update_component',
   UserJoined = 'user_joined',
   UserLeft = 'user_left',
-  UserList = 'user_list'
+  UsernameChange = 'username_change',
+  UsersList = 'users_list'
 };
 
 export enum NetworkedType {

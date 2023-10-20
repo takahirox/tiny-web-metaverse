@@ -9,6 +9,7 @@ export declare class StateAdapter {
 		roomId: string;
 		url?: string;
 		userId: string;
+		username?: string;
 	});
 	addEventListener(name: string, callback: Callback): void;
 	removeEventListener(name: string): void;

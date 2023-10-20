@@ -86,7 +86,9 @@ const swapRootObject3D = (newRoot: Object3D, eid: number): Object3D => {
     newRoot.add(oldRoot.children[0]);
   }
 
-  //
+  // TODO: Write comment
+  // TODO: Move visibility, too?
+
   proxy.root = newRoot;
 
   oldRoot.matrixWorld.identity();

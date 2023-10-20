@@ -64,6 +64,7 @@ import {
   StateClientProxy,
   UserNetworkEventListener
 } from "./components/network";
+import { Peers, PeersManager, PeersProxy } from "./components/peer";
 import { Pointer, PointerProxy } from "./components/pointer";
 import { Prefabs, PrefabsProxy } from "./components/prefab";
 import { RaycasterComponent, RaycasterProxy } from "./components/raycast";
@@ -181,6 +182,7 @@ import { touchPositionToPointerSystem } from "./systems/touch_position_to_pointe
 import { touchPositionTrackSystem } from "./systems/touch_position_track";
 import { clearTransformUpdatedSystem } from "./systems/transform";
 import { updateMatricesSystem } from "./systems/update_matrices";
+import { peerSystem } from "./systems/peer";
 import {
   windowResizeEventHandleSystem,
   windowResizeEventClearSystem
@@ -204,14 +206,16 @@ export class App {
   constructor(params: {
     canvas: HTMLCanvasElement,
     roomId: string,
-    userId?: string
+    userId?: string,
+    username?: string
   }) {
     const roomId = params.roomId;
     const userId = params.userId || MathUtils.generateUUID();
+    const username = params.username;
     const canvas = params.canvas;
 
     // TODO: Custom server URL support
-    this.networkAdapter = new StateAdapter({ roomId, userId });
+    this.networkAdapter = new StateAdapter({ roomId, userId, username });
     this.streamAdapter = new StreamAdapter();
 
     this.systems = [];
@@ -245,6 +249,7 @@ export class App {
     this.registerSystem(streamEventHandleSystem, SystemOrder.EventHandling);
     this.registerSystem(streamConnectionSystem, SystemOrder.EventHandling);
 
+    this.registerSystem(peerSystem, SystemOrder.EventHandling + 1);
     this.registerSystem(mousePositionTrackSystem, SystemOrder.EventHandling + 1);
     this.registerSystem(touchPositionTrackSystem, SystemOrder.EventHandling + 1);
 
@@ -319,6 +324,10 @@ export class App {
     if (audioContext.state === 'suspended') {
       addComponent(this.world, AudioContextSuspended, audioContextEid);
     }
+
+    const peersEid = addEntity(this.world);
+    addComponent(this.world, Peers, peersEid);
+    PeersProxy.get(peersEid).allocate();
 
     const prefabsEid = addEntity(this.world);
     addComponent(this.world, Prefabs, prefabsEid);
@@ -400,6 +409,10 @@ export class App {
     addComponent(this.world, ComponentNetworkEventListener, networkedEntityManagerEid);
     addComponent(this.world, EntityNetworkEventListener, networkedEntityManagerEid);
     addComponent(this.world, UserNetworkEventListener, networkedEntityManagerEid);
+
+    const peerManagerEid = addEntity(this.world);
+    addComponent(this.world, PeersManager, peerManagerEid);
+    addComponent(this.world, UserNetworkEventListener, peerManagerEid);
 
     const pointerEid = addEntity(this.world);
     addComponent(this.world, Pointer, pointerEid);

@@ -12,7 +12,9 @@ import {
   StreamEvent,
   StreamEventProxy,
   StreamMessageType,
-  StreamJoinRequestor
+  StreamJoinRequestor,
+  UsernameChangeRequestor,
+  UsernameChangeRequestorProxy
 } from "@tiny-web-metaverse/client/src";
 import { JoinDialog } from "../components/join_dialog";
 
@@ -26,13 +28,23 @@ plane.style.zIndex = '9999';
 plane.style.background = '#fff';
 plane.style.opacity = '0.5';
 
+const joinForm = document.createElement('form');
+joinForm.style.position = 'absolute';
+joinForm.style.top = '50%';
+joinForm.style.left = '50%';
+joinForm.style.transform = 'translate(-50%, -50%)';
+joinForm.style.zIndex = '10000';
+
+const usernameForm = document.createElement('input');
+usernameForm.id = 'usernameForm';
+usernameForm.type = 'text';
+usernameForm.value = 'Your name';
+usernameForm.style.marginRight = '1em';
+joinForm.appendChild(usernameForm);
+
 const button = document.createElement('button');
 button.innerText = ' Join ';
-button.style.position = 'absolute';
-button.style.top = '50%';
-button.style.left = '50%';
-button.style.transform = 'translate(-50%, -50%)';
-button.style.zIndex = '10000';
+joinForm.appendChild(button);
 
 let onClick : () => void | null = null;
 
@@ -41,24 +53,36 @@ const joinDialogEnterQuery = enterQuery(joinDialogQuery);
 const joinDialogExitQuery = exitQuery(joinDialogQuery);
 const eventQuery = defineQuery([JoinDialog, StreamEvent]);
 
+const MAX_USERNAME_LENGTH = 16;
+const clampUsernameIfNeeded = (str: string): string => {
+  if (str.length <= MAX_USERNAME_LENGTH) {
+    return str;
+  }
+  return str.slice(0, MAX_USERNAME_LENGTH - 3) + '...';
+};
+
 const show = (world: IWorld): void => {
   onClick = () => {
     button.disabled = true;
     addComponent(world, StreamConnectRequestor, addEntity(world));
+
+    const eid = addEntity(world);
+    addComponent(world, UsernameChangeRequestor, eid);
+    UsernameChangeRequestorProxy.get(eid).allocate(clampUsernameIfNeeded(usernameForm.value));
   };
 
   button.disabled = false;
   button.addEventListener('click', onClick);
 
   document.body.appendChild(plane);
-  document.body.appendChild(button);
+  document.body.appendChild(joinForm);
 };
 
 const hide = (): void => {
   button.removeEventListener('click', onClick);
 
   document.body.removeChild(plane);
-  document.body.removeChild(button);
+  document.body.removeChild(joinForm);
 
   onClick = null;
 };

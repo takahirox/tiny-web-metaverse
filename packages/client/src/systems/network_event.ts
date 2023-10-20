@@ -54,6 +54,8 @@ export const networkEventHandleSystem = (world: IWorld) => {
 
       adapter.removeEventListener(NetworkMessageType.UserJoined);
       adapter.removeEventListener(NetworkMessageType.UserLeft);
+      adapter.removeEventListener(NetworkMessageType.UsersList);
+      adapter.removeEventListener(NetworkMessageType.UsernameChange);
       adapter.removeEventListener(NetworkMessageType.CreateEntity);
       adapter.removeEventListener(NetworkMessageType.RemoveEntity);
       adapter.removeEventListener(NetworkMessageType.AddComponent);
@@ -82,6 +84,18 @@ export const networkEventHandleSystem = (world: IWorld) => {
       adapter.addEventListener(NetworkMessageType.UserLeft, (payload) => {
         userListenerQuery(world).forEach(eid => {
           addEvent(world, eid, NetworkMessageType.UserLeft, payload);
+        });
+      });
+
+      adapter.addEventListener(NetworkMessageType.UsersList, (payload) => {
+        userListenerQuery(world).forEach(eid => {
+          addEvent(world, eid, NetworkMessageType.UsersList, payload);
+        });
+      });
+
+      adapter.addEventListener(NetworkMessageType.UsernameChange, (payload) => {
+        userListenerQuery(world).forEach(eid => {
+          addEvent(world, eid, NetworkMessageType.UsernameChange, payload);
         });
       });
 

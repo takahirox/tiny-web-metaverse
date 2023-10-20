@@ -4,6 +4,7 @@ import {
   IWorld
 } from "bitecs";
 import { Mesh, MeshBasicMaterial, SphereGeometry } from "three";
+import { addNametagComponent } from "@tiny-web-metaverse/addons/src";
 import {
   addObject3D,
   Avatar,
@@ -42,6 +43,10 @@ export const AvatarPrefab = (world: IWorld): number => {
   avatarObject.add(rightEyeObject);
 
   addObject3D(world, avatarObject, eid);
+
+  const nametagEid = addEntity(world);
+  addNametagComponent(world, nametagEid, eid);
+  addComponent(world, InScene, nametagEid);
 
   return eid;
 };

@@ -9,10 +9,11 @@ defmodule ServerWeb.RoomChannel do
   # A user has joined a room.
   # Adds a new row to users table and sends an :after_join process message to
   # self for remained joinning processing.
-  def join("room:" <> room_id, %{"user_id" => user_id}, socket) do
+  def join("room:" <> room_id, %{"user_id" => user_id, "username" => username}, socket) do
     %Server.User{
       room_id: room_id,
-      user_id: user_id
+      user_id: user_id,
+      username: username
     }
       |> Server.Repo.insert(on_conflict: :raise)
       |> case do
@@ -22,6 +23,7 @@ defmodule ServerWeb.RoomChannel do
                socket
                  |> assign(:room_id, room_id)
                  |> assign(:user_id, user_id)
+                 |> assign(:username, username)
              }
            {:error, _changeset} ->
              {:error, %{reason: "Failed to insert a user"}}
@@ -77,10 +79,33 @@ defmodule ServerWeb.RoomChannel do
     # Broadcasts a new user's info.
     # TODO: Error handling
     broadcast!(socket, "user_joined", %{
-      data: socket.assigns.user_id
+      data: %{
+        user_id: socket.assigns.user_id,
+        username: socket.assigns.username
+      }
     })
 
     current_timestamp = NaiveDateTime.utc_now()
+
+    # Sends users list
+    import Ecto.Query, only: [from: 2]
+    users = from(u in Server.User,
+      select: map(u, [
+	    :user_id,
+        :username
+      ])
+    )
+      |> Server.Repo.all()
+      |> Enum.map(fn res ->
+           %{
+             user_id: res[:user_id],
+             username: res[:username]
+           }
+         end)
+
+    push(socket, "users_list", %{
+      data: users
+    })
 
     # Sends existing networked entities' info to the new user's client.
     # TODO: Using join would be more efficient?
@@ -137,6 +162,36 @@ defmodule ServerWeb.RoomChannel do
             }
           })
         end)
+
+    {:noreply, socket}
+  end
+
+  def handle_in("username_change", %{
+    "username" => username
+  }, socket) do
+    import Ecto.Query, only: [from: 2]
+    from(
+      u in Server.User,
+      where: u.user_id == ^socket.assigns.user_id and
+             u.room_id == ^socket.assigns.room_id,
+      update: [
+        set: [
+          username: ^username,
+          updated_at: ^NaiveDateTime.utc_now()
+        ],
+        inc: [version: 1]
+      ]
+    )
+      |> Server.Repo.update_all([])
+
+    # Broadcasts the new username
+    # TODO: Send version?
+    broadcast!(socket, "username_change", %{
+      data: %{
+        user_id: socket.assigns.user_id,
+        username: username
+      }
+    })
 
     {:noreply, socket}
   end
@@ -318,5 +373,12 @@ defmodule ServerWeb.RoomChannel do
     })
 
     {:noreply, socket}
+  end
+
+  def handle_in("broadcast", %{"data" => data}, socket) do
+    broadcast!(socket, "broadcast", %{
+      data: data,
+      user_id: socket.assigns.user_id
+    })
   end
 end

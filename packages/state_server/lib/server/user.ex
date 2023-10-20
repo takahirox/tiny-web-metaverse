@@ -5,6 +5,7 @@ defmodule Server.User do
   schema "users" do
     field :room_id, :string
     field :user_id, :string
+    field :username, :string
     field :version, :integer, default: 1
 
     timestamps()
@@ -13,8 +14,8 @@ defmodule Server.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:user_id, :room_id])
-    |> validate_required([:user_id, :room_id])
+    |> cast(attrs, [:user_id, :username, :room_id])
+    |> validate_required([:user_id, :username, :room_id])
     |> unique_constraint(:user_id)
   end
 end

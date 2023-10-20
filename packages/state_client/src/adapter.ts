@@ -12,17 +12,19 @@ export class StateAdapter {
   constructor(params: {
     roomId: string,
     url?: string,
-    userId: string
+    userId: string,
+    username?: string
   }) {
     const url = params.url || `${window.location.protocol === 'https:' ? 'wss' : 'ws'}://${window.location.hostname}:4000/socket`;
     const topic = `room:${params.roomId}`;
+    const username = params.username || 'anonymous';
     this.userId = params.userId;
 
     const socket = new Socket(url, {});
     socket.connect();
 
     // TODO: Resolve user id conflicts. Generate UUID in server side?
-    this.channel = socket.channel(topic, {user_id: this.userId});
+    this.channel = socket.channel(topic, {user_id: this.userId, username});
     this.channel.join()
       .receive('ok', res => {
         console.log('Adapter: Joined successfully', res);
@@ -55,6 +57,7 @@ export class StateAdapter {
   }
 
   // TODO: Avoid any
+  // TODO: Check the completion if possible?
   push(name: string, data: any): void {
     this.channel.push(name, data);
   }
