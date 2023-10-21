@@ -305,6 +305,7 @@ export const TextMessageNetworkEventListener = defineComponent();
 export const UserNetworkEventListener = defineComponent();
 export const EntityNetworkEventListener = defineComponent();
 export const ComponentNetworkEventListener = defineComponent();
+export const BroadcastNetworkEventListener = defineComponent();
 
 export const NetworkEventSender = defineComponent({
   lastSendTime: Types.f32
@@ -316,3 +317,34 @@ export const NetworkedQuaternion = defineComponent();
 export const NetworkedScale = defineComponent();
 
 export const NetworkedMixerAnimation = defineComponent();
+
+export const BroadcastRequestor = defineComponent();
+
+export class BroadcastRequestorProxy {
+  private static instance: BroadcastRequestorProxy = new BroadcastRequestorProxy();
+  private eid: number;
+  // TODO: Avoid any if possible
+  private map: Map<number, any>;
+
+  private constructor() {
+    this.eid = NULL_EID;
+    this.map = new Map();
+  }
+
+  static get(eid: number): BroadcastRequestorProxy {
+    BroadcastRequestorProxy.instance.eid = eid;
+    return BroadcastRequestorProxy.instance;
+  }
+
+  allocate(data: any): void {
+    this.map.set(this.eid, data);
+  }
+
+  free(): void {
+    this.map.delete(this.eid);
+  }
+
+  get data(): any {
+    return this.map.get(this.eid)!;
+  }
+}

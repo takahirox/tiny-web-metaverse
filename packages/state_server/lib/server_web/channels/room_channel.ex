@@ -375,10 +375,14 @@ defmodule ServerWeb.RoomChannel do
     {:noreply, socket}
   end
 
+  # TODO: Write comment
+  # TODO: More secure, for example limit data amount
   def handle_in("broadcast", %{"data" => data}, socket) do
     broadcast!(socket, "broadcast", %{
       data: data,
       user_id: socket.assigns.user_id
     })
+
+    {:noreply, socket}
   end
 end

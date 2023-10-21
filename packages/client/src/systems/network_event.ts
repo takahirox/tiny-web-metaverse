@@ -8,6 +8,7 @@ import {
   removeComponent
 } from "bitecs";
 import {
+  BroadcastNetworkEventListener,
   ComponentNetworkEventListener,
   EntityNetworkEventListener,
   NetworkEvent,
@@ -27,6 +28,7 @@ const receiverExitQuery = exitQuery(receiverQuery);
 const userListenerQuery = defineQuery([UserNetworkEventListener]);
 const entityListenerQuery = defineQuery([EntityNetworkEventListener]);
 const componentListenerQuery = defineQuery([ComponentNetworkEventListener]);
+const broadcastListenerQuery = defineQuery([BroadcastNetworkEventListener]);
 const eventQuery = defineQuery([NetworkEvent]);
 const adapterQuery = defineQuery([StateClient]);
 
@@ -114,6 +116,12 @@ export const networkEventHandleSystem = (world: IWorld) => {
       adapter.addEventListener(NetworkMessageType.UpdateComponent, (payload) => {
         componentListenerQuery(world).forEach(eid => {
           addEvent(world, eid, NetworkMessageType.UpdateComponent, payload);
+        });
+      });
+
+      adapter.addEventListener(NetworkMessageType.Broadcast, (payload) => {
+        broadcastListenerQuery(world).forEach(eid => {
+          addEvent(world, eid, NetworkMessageType.Broadcast, payload);
         });
       });
     });

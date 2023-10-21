@@ -23,7 +23,7 @@ import {
 
 // TODO: Configurable?
 
-const COLOR = 'lightblue';
+const COLOR = '#ffcccb';
 const DIV_WIDTH = '150px';
 const DIV_HEIGHT = '150px';
 const MODE = 'static';

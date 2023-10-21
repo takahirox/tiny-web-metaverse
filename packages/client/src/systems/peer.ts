@@ -31,10 +31,28 @@ export const peerSystem = (world: IWorld) => {
       if (e.type === NetworkMessageType.UsersList) {
         const usersList = e.data;
         for (const user of usersList) {
-          peers.set(user.user_id, user.username);
+          peers.set(user.user_id, {joined: true, previousUsername: '', username: user.username});
+        }
+      } else if (e.type === NetworkMessageType.UserJoined) {
+        peers.set(e.data.user_id, {joined: true, previousUsername: '', username: e.data.username});
+      } else if (e.type === NetworkMessageType.UserLeft) {
+        const userId = e.data.user_id;
+        if (peers.has(userId)) {
+          peers.get(userId).joined = false;
+        } else {
+          // TODO: What if data arrives out of order?
+          console.warn(`Unknown peer ${userId}`);
         }
       } else if (e.type === NetworkMessageType.UsernameChange) {
-        peers.set(e.data.user_id, e.data.username);
+        const userId = e.data.user_id;
+        if (peers.has(userId)) {
+          const peer = peers.get(userId);
+          peer.previousUsername = peer.username;
+          peer.username = e.data.username;
+        } else {
+          // TODO: What if data arrives out of order?
+          console.warn(`Unknown peer ${userId}`);
+        }
       }
     }
   });

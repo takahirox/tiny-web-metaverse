@@ -196,6 +196,10 @@ type RegisteredSystem = {
   orderPriority: number;
 };
 
+const createAnonymousName = (): string => {
+  return 'Anonymous' + Math.floor(Math.random() * 10000).toString();
+};
+
 export class App {
   private systems: RegisteredSystem[];
   private world: IWorld;
@@ -211,7 +215,7 @@ export class App {
   }) {
     const roomId = params.roomId;
     const userId = params.userId || MathUtils.generateUUID();
-    const username = params.username;
+    const username = params.username || createAnonymousName();
     const canvas = params.canvas;
 
     // TODO: Custom server URL support

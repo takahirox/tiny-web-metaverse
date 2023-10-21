@@ -49,5 +49,5 @@ export const getAvatarUsername = (world: IWorld, eid: number): string | null => 
     return null;
   }
 
-  return peers.get(userId)!;
+  return peers.get(userId)!.username;
 };

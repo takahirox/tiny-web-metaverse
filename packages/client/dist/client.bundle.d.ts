@@ -522,6 +522,7 @@ export declare const TextMessageNetworkEventListener: import("bitecs").Component
 export declare const UserNetworkEventListener: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare const EntityNetworkEventListener: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare const ComponentNetworkEventListener: import("bitecs").ComponentType<import("bitecs").ISchema>;
+export declare const BroadcastNetworkEventListener: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare const NetworkEventSender: import("bitecs").ComponentType<{
 	lastSendTime: "f32";
 }>;
@@ -529,7 +530,23 @@ export declare const NetworkedPosition: import("bitecs").ComponentType<import("b
 export declare const NetworkedQuaternion: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare const NetworkedScale: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare const NetworkedMixerAnimation: import("bitecs").ComponentType<import("bitecs").ISchema>;
+export declare const BroadcastRequestor: import("bitecs").ComponentType<import("bitecs").ISchema>;
+export declare class BroadcastRequestorProxy {
+	private static instance;
+	private eid;
+	private map;
+	private constructor();
+	static get(eid: number): BroadcastRequestorProxy;
+	allocate(data: any): void;
+	free(): void;
+	get data(): any;
+}
 export declare const Peers: import("bitecs").ComponentType<import("bitecs").ISchema>;
+export type PeerValue = {
+	joined: boolean;
+	previousUsername: string;
+	username: string;
+};
 export declare class PeersProxy {
 	private static instance;
 	private eid;
@@ -538,7 +555,7 @@ export declare class PeersProxy {
 	static get(eid: number): PeersProxy;
 	allocate(): void;
 	free(): void;
-	get peers(): Map<string, string>;
+	get peers(): Map<string, PeerValue>;
 }
 export declare const PeersManager: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare const UsernameChangeRequestor: import("bitecs").ComponentType<import("bitecs").ISchema>;
@@ -1052,6 +1069,7 @@ export declare const getRoomId: (world: IWorld) => string;
 export declare const getStateAdapter: (world: IWorld) => StateAdapter;
 export declare const createNetworkedEntity: (world: IWorld, type: NetworkedType.Local | NetworkedType.Shared, prefabName: string, prefabParams?: any) => number;
 export declare const getPeersProxy: (world: IWorld) => PeersProxy;
+export declare const getAvatarUsername: (world: IWorld, eid: number) => string | null;
 export declare const registerPrefab: (world: IWorld, key: string, prefab: Prefab) => void;
 export declare const deregisterPrefab: (world: IWorld, key: string) => void;
 export declare const getPrefab: (world: IWorld, key: string) => Prefab;

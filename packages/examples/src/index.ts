@@ -20,11 +20,14 @@ import {
   VirtualJoystickProxy,
   VirtualJoystickRight,
   virtualJoystickUISystem,
+  TextChat,
+  textChatUISystem,
   textSystem
 } from "@tiny-web-metaverse/addons/src";
 import {
   App,
   AudioDestination,
+  BroadcastNetworkEventListener,
   ConnectedStreamEventListener,
   createNetworkedEntity,
   GltfSceneLoader,
@@ -43,19 +46,24 @@ import {
   SystemOrder,
   UserNetworkEventListener
 } from "@tiny-web-metaverse/client/src";
+
 import { JoinDialog } from "./components/join_dialog";
 import { SideBar } from "./components/side_bar";
 import { UserEventHandler } from "./components/user_event_handler";
+
 import { AvatarPrefab } from "./prefabs/avatar";
 import { CubePrefab } from "./prefabs/cube";
 import { DuckPrefab } from "./prefabs/duck";
 import { FoxPrefab } from "./prefabs/fox";
 import { ImagePrefab } from "./prefabs/image";
 import { VideoPrefab } from "./prefabs/video";
+
 import { colorSystem } from "./systems/color";
 import { userEventSystem } from "./systems/user";
+
 import { updateJoinDialogSystem } from "./ui/join_dialog";
 import { updateSidebarSystem } from "./ui/side_bar";
+
 import { isMobile, isTablet } from "./utils/platform_detect";
 
 const sceneAssetUrl = 'assets/scenes/hello_webxr.glb';
@@ -90,6 +98,7 @@ const run = async (): Promise<void> => {
 
   app.registerSystem(virtualJoystickUISystem, SystemOrder.EventHandling);
 
+  app.registerSystem(textChatUISystem, SystemOrder.Setup);
   app.registerSystem(imageSystem, SystemOrder.Setup);
   app.registerSystem(imageLoadSystem, SystemOrder.Setup);
   app.registerSystem(videoSystem, SystemOrder.Setup);
@@ -147,6 +156,11 @@ const run = async (): Promise<void> => {
     VirtualJoystickProxy.get(virtualJoystickRightEid).allocate();
     addComponent(world, VirtualJoystickRight, virtualJoystickRightEid);
   }
+
+  const textChatEid = addEntity(world);
+  addComponent(world, TextChat, textChatEid);
+  addComponent(world, BroadcastNetworkEventListener, textChatEid);
+  addComponent(world, UserNetworkEventListener, textChatEid);
 
   const mouseButtonEventEid = addEntity(world);
   addComponent(world, MouseButtonEventListener, mouseButtonEventEid);

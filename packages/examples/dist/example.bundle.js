@@ -4884,6 +4884,24 @@ TextProxy.instance = new TextProxy();
 
 /***/ }),
 
+/***/ "../addons/src/components/textchat.ts":
+/*!********************************************!*\
+  !*** ../addons/src/components/textchat.ts ***!
+  \********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   TextChat: () => (/* binding */ TextChat)
+/* harmony export */ });
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
+
+const TextChat = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+
+
+/***/ }),
+
 /***/ "../addons/src/components/video.ts":
 /*!*****************************************!*\
   !*** ../addons/src/components/video.ts ***!
@@ -5583,7 +5601,7 @@ const nametagSystem = (world) => {
             if (userId !== null) {
                 const peers = (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_8__.getPeersProxy)(world).peers;
                 if (peers.has(userId)) {
-                    const username = peers.get(userId);
+                    const username = peers.get(userId).username;
                     const text = _components_text__WEBPACK_IMPORTED_MODULE_3__.TextProxy.get(eid).text;
                     if (text.text !== username) {
                         text.text = username;
@@ -5798,6 +5816,265 @@ const clearVirtualJoystickEventSystem = (world) => {
 
 /***/ }),
 
+/***/ "../addons/src/ui/textchat.ts":
+/*!************************************!*\
+  !*** ../addons/src/ui/textchat.ts ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   textChatUISystem: () => (/* binding */ textChatUISystem)
+/* harmony export */ });
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/utils/audio_effect.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/utils/peer.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/network.ts");
+/* harmony import */ var _components_textchat__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/textchat */ "../addons/src/components/textchat.ts");
+/* harmony import */ var _utils_textchat__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils/textchat */ "../addons/src/utils/textchat.ts");
+
+
+
+
+// UI + Event handler + Sender
+// TODO: Configurable (via CSS)?
+// TODO: Movable?
+// TODO: WebXR support. How?
+const parentElement = document.body;
+const eventQueue = [];
+const OPAQUE = 0.8;
+const TRANSPARENT = 0.4;
+const chatDiv = document.createElement('div');
+chatDiv.style.alignItems = 'center';
+chatDiv.style.background = 'lightblue';
+chatDiv.style.borderRadius = '10px';
+chatDiv.style.display = 'flex';
+chatDiv.style.flexDirection = 'column';
+chatDiv.style.gap = '2px';
+chatDiv.style.height = 'min(400px, 60%)';
+chatDiv.style.left = '10px';
+chatDiv.style.opacity = `${TRANSPARENT}`;
+chatDiv.style.padding = '5px';
+chatDiv.style.placeContent = 'center';
+chatDiv.style.position = 'absolute';
+chatDiv.style.top = '10px';
+chatDiv.style.width = 'min(300px, 50%)';
+const toggleButton = document.createElement('button');
+toggleButton.innerText = ' Hide Chat ';
+toggleButton.style.visibility = 'visible';
+chatDiv.appendChild(toggleButton);
+const chatField = document.createElement('textarea');
+chatField.readOnly = true;
+chatField.style.background = 'lightblue';
+chatField.style.borderRadius = '4px';
+chatField.style.boxSizing = 'border-box';
+chatField.style.flex = '1';
+chatField.style.resize = 'none';
+chatField.style.width = '100%';
+chatDiv.appendChild(chatField);
+const inputForm = document.createElement('form');
+inputForm.style.display = 'flex';
+inputForm.style.flexDirection = 'row';
+inputForm.style.gap = '2px';
+inputForm.style.width = '100%';
+chatDiv.appendChild(inputForm);
+const textField = document.createElement('textarea');
+textField.style.borderRadius = '4px';
+textField.style.boxSizing = 'border-box';
+textField.style.height = '3em';
+textField.style.resize = 'none';
+textField.style.width = '100%';
+inputForm.appendChild(textField);
+const sendButton = document.createElement('button');
+sendButton.innerText = 'Send';
+inputForm.appendChild(sendButton);
+const SUBMIT_INTERVAL = 1000;
+sendButton.addEventListener('click', e => {
+    e.preventDefault();
+    const text = textField.value.trim();
+    if (!text) {
+        return;
+    }
+    eventQueue.push({ text });
+    textField.value = '';
+    sendButton.disabled = true;
+    // Prevent repeated posts
+    setTimeout(() => {
+        sendButton.disabled = false;
+    }, SUBMIT_INTERVAL);
+});
+// toggle
+let visibleChat = true;
+toggleButton.addEventListener('click', () => {
+    if (visibleChat) {
+        chatDiv.style.visibility = 'hidden';
+        toggleButton.innerText = ' Show Chat ';
+        visibleChat = false;
+    }
+    else {
+        chatDiv.style.visibility = 'visible';
+        toggleButton.innerText = ' Hide Chat ';
+        visibleChat = true;
+    }
+});
+// fadeout effect
+let fadeOutStartTime = null;
+let fadingOut = false;
+const FADEOUT_INTERVAL = 2000;
+let chatDivHovered = false;
+let textFieldFocused = false;
+let chatFieldFocused = false;
+const startFadeOutIfNeeded = () => {
+    if (chatDivHovered || textFieldFocused || chatFieldFocused) {
+        return;
+    }
+    fadingOut = true;
+    fadeOutStartTime = null;
+    requestAnimationFrame(fadeOut);
+};
+const stopFadeOut = () => {
+    fadingOut = false;
+    fadeOutStartTime = null;
+};
+const fadeOut = (timestamp) => {
+    if (!fadingOut) {
+        return;
+    }
+    if (fadeOutStartTime === null) {
+        fadeOutStartTime = timestamp;
+    }
+    const elapsed = timestamp - fadeOutStartTime;
+    if (elapsed >= FADEOUT_INTERVAL) {
+        chatDiv.style.opacity = `${TRANSPARENT}`;
+        stopFadeOut();
+    }
+    else {
+        chatDiv.style.opacity = `${OPAQUE - (OPAQUE - TRANSPARENT) * elapsed * (1.0 / FADEOUT_INTERVAL)}`;
+        requestAnimationFrame(fadeOut);
+    }
+};
+chatDiv.addEventListener('mouseover', () => {
+    chatDivHovered = true;
+    stopFadeOut();
+    chatDiv.style.opacity = `${OPAQUE}`;
+});
+chatDiv.addEventListener('mouseout', () => {
+    chatDivHovered = false;
+    startFadeOutIfNeeded();
+});
+chatField.addEventListener('focus', () => {
+    chatFieldFocused = true;
+    stopFadeOut();
+    chatDiv.style.opacity = `${OPAQUE}`;
+});
+chatField.addEventListener('focusout', () => {
+    chatFieldFocused = false;
+    startFadeOutIfNeeded();
+});
+textField.addEventListener('focus', () => {
+    textFieldFocused = true;
+    stopFadeOut();
+    chatDiv.style.opacity = `${OPAQUE}`;
+});
+textField.addEventListener('focusout', () => {
+    textFieldFocused = false;
+    startFadeOutIfNeeded();
+});
+textField.addEventListener('keypress', e => {
+    // 13: Enter key
+    if (e.keyCode === 13 && !e.shiftKey) {
+        e.preventDefault();
+        sendButton.click();
+    }
+});
+// beep
+// TODO: Improve
+let oscillator;
+let gain;
+const beep = (world) => {
+    // Disable for now
+    if (true) {
+        return;
+    }
+    if (oscillator || gain) {
+        return;
+    }
+    const context = (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_1__.getAudioContextProxy)(world).context;
+    oscillator = context.createOscillator();
+    gain = context.createGain();
+    oscillator.connect(gain);
+    gain.connect(context.destination);
+    oscillator.frequency.value = 660;
+    gain.gain.value = 0.01;
+    oscillator.start(context.currentTime);
+    oscillator.stop(context.currentTime + 0.05);
+    oscillator.addEventListener('ended', () => {
+        oscillator.disconnect(gain);
+        gain.disconnect(context.destination);
+        oscillator = null;
+        gain = null;
+    });
+};
+//
+const addText = (world, text) => {
+    chatField.value += '\n' + chatField.innerText + text;
+    chatField.scrollTop = chatField.scrollHeight;
+    beep(world);
+};
+//
+const getUsername = (world, userId) => {
+    const peers = (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_2__.getPeersProxy)(world).peers;
+    return peers.has(userId) ? peers.get(userId).username : userId;
+};
+const getPreviousUsername = (world, userId) => {
+    const peers = (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_2__.getPeersProxy)(world).peers;
+    return peers.has(userId) ? peers.get(userId).previousUsername : userId;
+};
+const chatQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_textchat__WEBPACK_IMPORTED_MODULE_3__.TextChat]);
+const enterChatQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)(chatQuery);
+const exitChatQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)(chatQuery);
+const receiverQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_textchat__WEBPACK_IMPORTED_MODULE_3__.TextChat, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_4__.NetworkEvent]);
+const textChatUISystem = (world) => {
+    // Assumes up to one sender entity
+    exitChatQuery(world).forEach(() => {
+        parentElement.removeChild(chatDiv);
+    });
+    enterChatQuery(world).forEach(() => {
+        parentElement.appendChild(chatDiv);
+    });
+    chatQuery(world).forEach(() => {
+        for (const e of eventQueue) {
+            (0,_utils_textchat__WEBPACK_IMPORTED_MODULE_5__.sendTextChat)(world, e.text);
+        }
+    });
+    eventQueue.length = 0;
+    receiverQuery(world).forEach(eid => {
+        for (const e of _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_4__.NetworkEventProxy.get(eid).events) {
+            if (e.type === _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_4__.NetworkMessageType.Broadcast) {
+                if ((0,_utils_textchat__WEBPACK_IMPORTED_MODULE_5__.isTextChat)(e.data)) {
+                    e.data.text = e.data.text.trim();
+                    const data = (0,_utils_textchat__WEBPACK_IMPORTED_MODULE_5__.parseReceivedTextChat)(e.data);
+                    addText(world, `${getUsername(world, data.userId)}: ${data.text}`);
+                }
+            }
+            else if (e.type === _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_4__.NetworkMessageType.UserJoined) {
+                addText(world, `${e.data.username} joined.`);
+            }
+            else if (e.type === _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_4__.NetworkMessageType.UserLeft) {
+                addText(world, `${getUsername(world, e.data)} left.`);
+            }
+            else if (e.type === _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_4__.NetworkMessageType.UsernameChange) {
+                const userId = e.data && e.data.user_id;
+                addText(world, `${getPreviousUsername(world, userId)} changed name to ${getUsername(world, userId)}.`);
+            }
+        }
+    });
+};
+
+
+/***/ }),
+
 /***/ "../addons/src/ui/virtual_joystick.ts":
 /*!********************************************!*\
   !*** ../addons/src/ui/virtual_joystick.ts ***!
@@ -5818,7 +6095,7 @@ __webpack_require__.r(__webpack_exports__);
 
 // UI + Event handler + VirtualJoystick component activation & update
 // TODO: Configurable?
-const COLOR = 'lightblue';
+const COLOR = '#ffcccb';
 const DIV_WIDTH = '150px';
 const DIV_HEIGHT = '150px';
 const MODE = 'static';
@@ -6020,6 +6297,57 @@ const addTextComponent = (world, eid, str) => {
 
 /***/ }),
 
+/***/ "../addons/src/utils/textchat.ts":
+/*!***************************************!*\
+  !*** ../addons/src/utils/textchat.ts ***!
+  \***************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   isTextChat: () => (/* binding */ isTextChat),
+/* harmony export */   parseReceivedTextChat: () => (/* binding */ parseReceivedTextChat),
+/* harmony export */   sendTextChat: () => (/* binding */ sendTextChat)
+/* harmony export */ });
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/network.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/utils/network.ts");
+
+
+const ACTION_NAME = 'textchat';
+// TODO: Configurable?
+const MAX_TEXT_LENGTH = 250;
+const clampTextIfNeeded = (text) => {
+    if (text.length <= MAX_TEXT_LENGTH) {
+        return text;
+    }
+    return text.slice(0, MAX_TEXT_LENGTH - 3) + '...';
+};
+const sendTextChat = (world, text) => {
+    const eid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_1__.BroadcastRequestor, eid);
+    _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_1__.BroadcastRequestorProxy.get(eid).allocate({
+        action: ACTION_NAME,
+        text: clampTextIfNeeded(text),
+        userId: (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_2__.getMyUserId)(world)
+    });
+};
+const isTextChat = (data) => {
+    return data && data.action === ACTION_NAME;
+};
+// TODO: Avoid any
+// TODO: Validation?
+const parseReceivedTextChat = (data) => {
+    return {
+        text: clampTextIfNeeded(data.text),
+        userId: data.userId
+    };
+};
+
+
+/***/ }),
+
 /***/ "../client/src/app.ts":
 /*!****************************!*\
   !*** ../client/src/app.ts ***!
@@ -6189,11 +6517,14 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+const createAnonymousName = () => {
+    return 'Anonymous' + Math.floor(Math.random() * 10000).toString();
+};
 class App {
     constructor(params) {
         const roomId = params.roomId;
         const userId = params.userId || three__WEBPACK_IMPORTED_MODULE_2__.MathUtils.generateUUID();
-        const username = params.username;
+        const username = params.username || createAnonymousName();
         const canvas = params.canvas;
         // TODO: Custom server URL support
         this.networkAdapter = new _tiny_web_metaverse_state_client__WEBPACK_IMPORTED_MODULE_3__.StateAdapter({ roomId, userId, username });
@@ -7482,6 +7813,9 @@ MouseMoveEventHandlerProxy.instance = new MouseMoveEventHandlerProxy();
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   BroadcastNetworkEventListener: () => (/* binding */ BroadcastNetworkEventListener),
+/* harmony export */   BroadcastRequestor: () => (/* binding */ BroadcastRequestor),
+/* harmony export */   BroadcastRequestorProxy: () => (/* binding */ BroadcastRequestorProxy),
 /* harmony export */   ComponentNetworkEventListener: () => (/* binding */ ComponentNetworkEventListener),
 /* harmony export */   EntityNetworkEventListener: () => (/* binding */ EntityNetworkEventListener),
 /* harmony export */   Local: () => (/* binding */ Local),
@@ -7711,6 +8045,7 @@ const TextMessageNetworkEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.d
 const UserNetworkEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 const EntityNetworkEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 const ComponentNetworkEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const BroadcastNetworkEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 const NetworkEventSender = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({
     lastSendTime: bitecs__WEBPACK_IMPORTED_MODULE_0__.Types.f32
 });
@@ -7719,6 +8054,27 @@ const NetworkedPosition = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent
 const NetworkedQuaternion = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 const NetworkedScale = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 const NetworkedMixerAnimation = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const BroadcastRequestor = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+class BroadcastRequestorProxy {
+    constructor() {
+        this.eid = _common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
+        this.map = new Map();
+    }
+    static get(eid) {
+        BroadcastRequestorProxy.instance.eid = eid;
+        return BroadcastRequestorProxy.instance;
+    }
+    allocate(data) {
+        this.map.set(this.eid, data);
+    }
+    free() {
+        this.map.delete(this.eid);
+    }
+    get data() {
+        return this.map.get(this.eid);
+    }
+}
+BroadcastRequestorProxy.instance = new BroadcastRequestorProxy();
 
 
 /***/ }),
@@ -10421,6 +10777,7 @@ const receiverExitQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)(rece
 const userListenerQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_1__.UserNetworkEventListener]);
 const entityListenerQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_1__.EntityNetworkEventListener]);
 const componentListenerQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_1__.ComponentNetworkEventListener]);
+const broadcastListenerQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_1__.BroadcastNetworkEventListener]);
 const eventQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkEvent]);
 const adapterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_1__.StateClient]);
 // TODO: Avoid any
@@ -10492,6 +10849,11 @@ const networkEventHandleSystem = (world) => {
                     addEvent(world, eid, _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkMessageType.UpdateComponent, payload);
                 });
             });
+            adapter.addEventListener(_components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkMessageType.Broadcast, (payload) => {
+                broadcastListenerQuery(world).forEach(eid => {
+                    addEvent(world, eid, _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkMessageType.Broadcast, payload);
+                });
+            });
         });
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkEventReceiverReady, eid);
     });
@@ -10520,8 +10882,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../common */ "../client/src/common.ts");
 /* harmony import */ var _components_network__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/network */ "../client/src/components/network.ts");
-/* harmony import */ var _utils_serializer__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/serializer */ "../client/src/utils/serializer.ts");
+/* harmony import */ var _utils_bitecs__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../utils/bitecs */ "../client/src/utils/bitecs.ts");
+/* harmony import */ var _utils_network__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/network */ "../client/src/utils/network.ts");
+/* harmony import */ var _utils_serializer__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils/serializer */ "../client/src/utils/serializer.ts");
 /* harmony import */ var _utils_time__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/time */ "../client/src/utils/time.ts");
+
+
 
 
 
@@ -10530,8 +10896,9 @@ __webpack_require__.r(__webpack_exports__);
 const senderQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkEventSender]);
 const networkedQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_1__.Networked]);
 const networkedEnterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)(networkedQuery);
-const adapterQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_1__.StateClient]);
 const managerQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkedEntityManager]);
+const broadcastorQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_1__.BroadcastRequestor]);
+const exitBroadcastorQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)(broadcastorQuery);
 const networkSendSystem = (world) => {
     senderQuery(world).forEach(senderEid => {
         const lastSendTime = _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkEventSender.lastSendTime[senderEid];
@@ -10543,84 +10910,93 @@ const networkSendSystem = (world) => {
             return;
         }
         _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkEventSender.lastSendTime[senderEid] = timeProxy.elapsed;
-        adapterQuery(world).forEach(adapterEid => {
-            const adapter = _components_network__WEBPACK_IMPORTED_MODULE_1__.StateClientProxy.get(adapterEid).adapter;
-            const myUserId = adapter.userId;
-            managerQuery(world).forEach(managerEid => {
-                // TODO: Implement exit
-                //
-                networkedEnterQuery(world).forEach(networkedEid => {
-                    // TODO: Possible to use non-Remote Query for optimization?
-                    if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_1__.Remote, networkedEid)) {
-                        return;
-                    }
-                    const networkedProxy = _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkedProxy.get(networkedEid);
-                    if (networkedProxy.creator !== myUserId) {
-                        return;
-                    }
-                    const components = [];
-                    for (const component of (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.getEntityComponents)(world, networkedEid)) {
-                        if ((0,_utils_serializer__WEBPACK_IMPORTED_MODULE_4__.hasComponentKey)(world, component)) {
-                            const name = (0,_utils_serializer__WEBPACK_IMPORTED_MODULE_4__.getComponentKey)(world, component);
-                            const data = (0,_utils_serializer__WEBPACK_IMPORTED_MODULE_4__.getSerializers)(world, name).serializer(world, networkedEid);
-                            networkedProxy.initNetworkedComponent(name, data, myUserId, timeProxy.elapsed, _common__WEBPACK_IMPORTED_MODULE_3__.INITIAL_VERSION // TODO: LOCAL_VERSION instead?
-                            );
-                            components.push({
-                                name,
-                                data: JSON.stringify(data)
-                            });
-                        }
-                    }
-                    const networkId = networkedProxy.networkId;
-                    adapter.push(_components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkMessageType.CreateEntity, {
-                        components,
-                        network_id: networkId,
-                        prefab: networkedProxy.prefabName,
-                        // TODO: Fix me
-                        prefab_params: JSON.stringify(networkedProxy.prefabParams),
-                        shared: networkedProxy.type === _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkedType.Shared
-                    });
-                    _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkedEntityManagerProxy
-                        .get(managerEid)
-                        .add(networkedEid, networkId, myUserId);
-                });
-            });
+        const adapter = (0,_utils_network__WEBPACK_IMPORTED_MODULE_4__.getStateAdapter)(world);
+        const myUserId = (0,_utils_network__WEBPACK_IMPORTED_MODULE_4__.getMyUserId)(world);
+        managerQuery(world).forEach(managerEid => {
+            // TODO: Implement exit
             //
-            networkedQuery(world).forEach(networkedEid => {
+            networkedEnterQuery(world).forEach(networkedEid => {
                 // TODO: Possible to use non-Remote Query for optimization?
                 if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_1__.Remote, networkedEid)) {
                     return;
                 }
                 const networkedProxy = _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkedProxy.get(networkedEid);
+                if (networkedProxy.creator !== myUserId) {
+                    return;
+                }
                 const components = [];
-                // TODO: More efficient lookup?
                 for (const component of (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.getEntityComponents)(world, networkedEid)) {
-                    if ((0,_utils_serializer__WEBPACK_IMPORTED_MODULE_4__.hasComponentKey)(world, component)) {
-                        const name = (0,_utils_serializer__WEBPACK_IMPORTED_MODULE_4__.getComponentKey)(world, component);
-                        if (networkedProxy.hasNetworkedComponent(name)) {
-                            const networkedComponent = networkedProxy.getNetworkedComponent(name);
-                            if ((0,_utils_serializer__WEBPACK_IMPORTED_MODULE_4__.getSerializers)(world, name).diffChecker(world, networkedEid, networkedComponent.cache, networkedComponent.updatedAt)) {
-                                const data = (0,_utils_serializer__WEBPACK_IMPORTED_MODULE_4__.getSerializers)(world, name).serializer(world, networkedEid);
-                                components.push({
-                                    name,
-                                    data: JSON.stringify(data)
-                                });
-                                networkedProxy.updateNetworkedComponent(name, data, myUserId, timeProxy.elapsed, _common__WEBPACK_IMPORTED_MODULE_3__.LOCAL_VERSION);
-                            }
-                        }
-                        else {
-                            // TODO: Send add component message?
-                        }
+                    if ((0,_utils_serializer__WEBPACK_IMPORTED_MODULE_5__.hasComponentKey)(world, component)) {
+                        const name = (0,_utils_serializer__WEBPACK_IMPORTED_MODULE_5__.getComponentKey)(world, component);
+                        const data = (0,_utils_serializer__WEBPACK_IMPORTED_MODULE_5__.getSerializers)(world, name).serializer(world, networkedEid);
+                        networkedProxy.initNetworkedComponent(name, data, myUserId, timeProxy.elapsed, _common__WEBPACK_IMPORTED_MODULE_3__.INITIAL_VERSION // TODO: LOCAL_VERSION instead?
+                        );
+                        components.push({
+                            name,
+                            data: JSON.stringify(data)
+                        });
                     }
                 }
-                if (components.length > 0) {
-                    adapter.push(_components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkMessageType.UpdateComponent, {
-                        components,
-                        network_id: networkedProxy.networkId
-                    });
-                }
+                const networkId = networkedProxy.networkId;
+                adapter.push(_components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkMessageType.CreateEntity, {
+                    components,
+                    network_id: networkId,
+                    prefab: networkedProxy.prefabName,
+                    // TODO: Fix me
+                    prefab_params: JSON.stringify(networkedProxy.prefabParams),
+                    shared: networkedProxy.type === _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkedType.Shared
+                });
+                _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkedEntityManagerProxy
+                    .get(managerEid)
+                    .add(networkedEid, networkId, myUserId);
             });
         });
+        //
+        networkedQuery(world).forEach(networkedEid => {
+            // TODO: Possible to use non-Remote Query for optimization?
+            if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_1__.Remote, networkedEid)) {
+                return;
+            }
+            const networkedProxy = _components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkedProxy.get(networkedEid);
+            const components = [];
+            // TODO: More efficient lookup?
+            for (const component of (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.getEntityComponents)(world, networkedEid)) {
+                if ((0,_utils_serializer__WEBPACK_IMPORTED_MODULE_5__.hasComponentKey)(world, component)) {
+                    const name = (0,_utils_serializer__WEBPACK_IMPORTED_MODULE_5__.getComponentKey)(world, component);
+                    if (networkedProxy.hasNetworkedComponent(name)) {
+                        const networkedComponent = networkedProxy.getNetworkedComponent(name);
+                        if ((0,_utils_serializer__WEBPACK_IMPORTED_MODULE_5__.getSerializers)(world, name).diffChecker(world, networkedEid, networkedComponent.cache, networkedComponent.updatedAt)) {
+                            const data = (0,_utils_serializer__WEBPACK_IMPORTED_MODULE_5__.getSerializers)(world, name).serializer(world, networkedEid);
+                            components.push({
+                                name,
+                                data: JSON.stringify(data)
+                            });
+                            networkedProxy.updateNetworkedComponent(name, data, myUserId, timeProxy.elapsed, _common__WEBPACK_IMPORTED_MODULE_3__.LOCAL_VERSION);
+                        }
+                    }
+                    else {
+                        // TODO: Send add component message?
+                    }
+                }
+            }
+            if (components.length > 0) {
+                adapter.push(_components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkMessageType.UpdateComponent, {
+                    components,
+                    network_id: networkedProxy.networkId
+                });
+            }
+        });
+    });
+    // TODO: Make another system for broadcasting?
+    broadcastorQuery(world).forEach(eid => {
+        (0,_utils_network__WEBPACK_IMPORTED_MODULE_4__.getStateAdapter)(world).push(_components_network__WEBPACK_IMPORTED_MODULE_1__.NetworkMessageType.Broadcast, {
+            data: _components_network__WEBPACK_IMPORTED_MODULE_1__.BroadcastRequestorProxy.get(eid).data
+        });
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_1__.BroadcastRequestor, eid);
+        (0,_utils_bitecs__WEBPACK_IMPORTED_MODULE_6__.removeEntityIfNoComponent)(world, eid);
+    });
+    exitBroadcastorQuery(world).forEach(eid => {
+        _components_network__WEBPACK_IMPORTED_MODULE_1__.BroadcastRequestorProxy.get(eid).free();
     });
 };
 
@@ -10819,11 +11195,33 @@ const peerSystem = (world) => {
             if (e.type === _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkMessageType.UsersList) {
                 const usersList = e.data;
                 for (const user of usersList) {
-                    peers.set(user.user_id, user.username);
+                    peers.set(user.user_id, { joined: true, previousUsername: '', username: user.username });
+                }
+            }
+            else if (e.type === _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkMessageType.UserJoined) {
+                peers.set(e.data.user_id, { joined: true, previousUsername: '', username: e.data.username });
+            }
+            else if (e.type === _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkMessageType.UserLeft) {
+                const userId = e.data.user_id;
+                if (peers.has(userId)) {
+                    peers.get(userId).joined = false;
+                }
+                else {
+                    // TODO: What if data arrives out of order?
+                    console.warn(`Unknown peer ${userId}`);
                 }
             }
             else if (e.type === _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkMessageType.UsernameChange) {
-                peers.set(e.data.user_id, e.data.username);
+                const userId = e.data.user_id;
+                if (peers.has(userId)) {
+                    const peer = peers.get(userId);
+                    peer.previousUsername = peer.username;
+                    peer.username = e.data.username;
+                }
+                else {
+                    // TODO: What if data arrives out of order?
+                    console.warn(`Unknown peer ${userId}`);
+                }
             }
         }
     });
@@ -12568,7 +12966,7 @@ const getAvatarUsername = (world, eid) => {
     if (!peers.has(userId)) {
         return null;
     }
-    return peers.get(userId);
+    return peers.get(userId).username;
 };
 
 
@@ -13278,7 +13676,8 @@ const clampUsernameIfNeeded = (str) => {
     return str.slice(0, MAX_USERNAME_LENGTH - 3) + '...';
 };
 const show = (world) => {
-    onClick = () => {
+    onClick = e => {
+        e.preventDefault();
         button.disabled = true;
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_2__.StreamConnectRequestor, (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world));
         const eid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
@@ -97810,34 +98209,36 @@ var __webpack_exports__ = {};
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! @tiny-web-metaverse/addons/src */ "../addons/src/ui/virtual_joystick.ts");
-/* harmony import */ var _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! @tiny-web-metaverse/addons/src */ "../addons/src/systems/image.ts");
-/* harmony import */ var _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! @tiny-web-metaverse/addons/src */ "../addons/src/systems/image_loader.ts");
-/* harmony import */ var _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! @tiny-web-metaverse/addons/src */ "../addons/src/systems/video.ts");
-/* harmony import */ var _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! @tiny-web-metaverse/addons/src */ "../addons/src/systems/video_loader.ts");
-/* harmony import */ var _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! @tiny-web-metaverse/addons/src */ "../addons/src/systems/gltf_mixer_animation.ts");
-/* harmony import */ var _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! @tiny-web-metaverse/addons/src */ "../addons/src/systems/lazily_update_video_state.ts");
-/* harmony import */ var _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! @tiny-web-metaverse/addons/src */ "../addons/src/systems/avatar_virtual_joystick_controls.ts");
-/* harmony import */ var _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! @tiny-web-metaverse/addons/src */ "../addons/src/systems/text.ts");
-/* harmony import */ var _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! @tiny-web-metaverse/addons/src */ "../addons/src/systems/nametag.ts");
-/* harmony import */ var _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! @tiny-web-metaverse/addons/src */ "../addons/src/systems/billboard.ts");
-/* harmony import */ var _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! @tiny-web-metaverse/addons/src */ "../addons/src/systems/virtual_joystick_event.ts");
-/* harmony import */ var _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! @tiny-web-metaverse/addons/src */ "../addons/src/components/video.ts");
-/* harmony import */ var _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! @tiny-web-metaverse/addons/src */ "../addons/src/serializations/video.ts");
-/* harmony import */ var _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! @tiny-web-metaverse/addons/src */ "../addons/src/components/virtual_joystick.ts");
+/* harmony import */ var _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! @tiny-web-metaverse/addons/src */ "../addons/src/ui/textchat.ts");
+/* harmony import */ var _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! @tiny-web-metaverse/addons/src */ "../addons/src/systems/image.ts");
+/* harmony import */ var _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! @tiny-web-metaverse/addons/src */ "../addons/src/systems/image_loader.ts");
+/* harmony import */ var _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! @tiny-web-metaverse/addons/src */ "../addons/src/systems/video.ts");
+/* harmony import */ var _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! @tiny-web-metaverse/addons/src */ "../addons/src/systems/video_loader.ts");
+/* harmony import */ var _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! @tiny-web-metaverse/addons/src */ "../addons/src/systems/gltf_mixer_animation.ts");
+/* harmony import */ var _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! @tiny-web-metaverse/addons/src */ "../addons/src/systems/lazily_update_video_state.ts");
+/* harmony import */ var _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! @tiny-web-metaverse/addons/src */ "../addons/src/systems/avatar_virtual_joystick_controls.ts");
+/* harmony import */ var _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! @tiny-web-metaverse/addons/src */ "../addons/src/systems/text.ts");
+/* harmony import */ var _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! @tiny-web-metaverse/addons/src */ "../addons/src/systems/nametag.ts");
+/* harmony import */ var _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! @tiny-web-metaverse/addons/src */ "../addons/src/systems/billboard.ts");
+/* harmony import */ var _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! @tiny-web-metaverse/addons/src */ "../addons/src/systems/virtual_joystick_event.ts");
+/* harmony import */ var _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! @tiny-web-metaverse/addons/src */ "../addons/src/components/video.ts");
+/* harmony import */ var _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! @tiny-web-metaverse/addons/src */ "../addons/src/serializations/video.ts");
+/* harmony import */ var _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! @tiny-web-metaverse/addons/src */ "../addons/src/components/virtual_joystick.ts");
+/* harmony import */ var _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_42__ = __webpack_require__(/*! @tiny-web-metaverse/addons/src */ "../addons/src/components/textchat.ts");
 /* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/app.ts");
 /* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/common.ts");
-/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/utils/prefab.ts");
-/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/utils/serializer.ts");
-/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/scene.ts");
-/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/gltf.ts");
-/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/utils/network.ts");
-/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/network.ts");
-/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/entity_object3d.ts");
-/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/keyboard.ts");
-/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/audio_effect.ts");
-/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_41__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/mouse.ts");
-/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_42__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/select.ts");
-/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_43__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/stream.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/utils/prefab.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/utils/serializer.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/scene.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_35__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/gltf.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_36__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/utils/network.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_37__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/network.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_38__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/entity_object3d.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_39__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/keyboard.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_40__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/audio_effect.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_43__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/mouse.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_44__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/select.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_45__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/stream.ts");
 /* harmony import */ var _components_join_dialog__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/join_dialog */ "./src/components/join_dialog.ts");
 /* harmony import */ var _components_side_bar__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/side_bar */ "./src/components/side_bar.ts");
 /* harmony import */ var _components_user_event_handler__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/user_event_handler */ "./src/components/user_event_handler.ts");
@@ -97901,70 +98302,75 @@ const run = () => __awaiter(void 0, void 0, void 0, function* () {
     const app = new _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_15__.App({ canvas, roomId });
     document.body.appendChild(canvas);
     app.registerSystem(_tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_16__.virtualJoystickUISystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__.SystemOrder.EventHandling);
-    app.registerSystem(_tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_18__.imageSystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__.SystemOrder.Setup);
-    app.registerSystem(_tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_19__.imageLoadSystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__.SystemOrder.Setup);
-    app.registerSystem(_tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_20__.videoSystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__.SystemOrder.Setup);
-    app.registerSystem(_tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_21__.videoLoadSystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__.SystemOrder.Setup);
-    app.registerSystem(_tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_22__.gltfMixerAnimationSystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__.SystemOrder.Setup + 1);
-    app.registerSystem(_tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_23__.lazilyUpdateVideoStateSystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__.SystemOrder.Setup + 1);
+    app.registerSystem(_tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_18__.textChatUISystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__.SystemOrder.Setup);
+    app.registerSystem(_tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_19__.imageSystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__.SystemOrder.Setup);
+    app.registerSystem(_tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_20__.imageLoadSystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__.SystemOrder.Setup);
+    app.registerSystem(_tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_21__.videoSystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__.SystemOrder.Setup);
+    app.registerSystem(_tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_22__.videoLoadSystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__.SystemOrder.Setup);
+    app.registerSystem(_tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_23__.gltfMixerAnimationSystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__.SystemOrder.Setup + 1);
+    app.registerSystem(_tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_24__.lazilyUpdateVideoStateSystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__.SystemOrder.Setup + 1);
     app.registerSystem(_ui_join_dialog__WEBPACK_IMPORTED_MODULE_12__.updateJoinDialogSystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__.SystemOrder.BeforeMatricesUpdate);
     app.registerSystem(_ui_side_bar__WEBPACK_IMPORTED_MODULE_13__.updateSidebarSystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__.SystemOrder.BeforeMatricesUpdate);
-    app.registerSystem(_tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_24__.avatarVirtualJoystickSystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__.SystemOrder.BeforeMatricesUpdate);
-    app.registerSystem(_tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_25__.textSystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__.SystemOrder.BeforeMatricesUpdate);
-    app.registerSystem(_tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_26__.nametagSystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__.SystemOrder.MatricesUpdate - 1);
-    app.registerSystem(_tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_27__.billboardSystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__.SystemOrder.MatricesUpdate - 1);
+    app.registerSystem(_tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_25__.avatarVirtualJoystickSystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__.SystemOrder.BeforeMatricesUpdate);
+    app.registerSystem(_tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_26__.textSystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__.SystemOrder.BeforeMatricesUpdate);
+    app.registerSystem(_tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_27__.nametagSystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__.SystemOrder.MatricesUpdate - 1);
+    app.registerSystem(_tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_28__.billboardSystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__.SystemOrder.MatricesUpdate - 1);
     app.registerSystem(_systems_color__WEBPACK_IMPORTED_MODULE_10__.colorSystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__.SystemOrder.Render - 1);
     app.registerSystem(_systems_user__WEBPACK_IMPORTED_MODULE_11__.userEventSystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__.SystemOrder.Render - 1);
-    app.registerSystem(_tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_28__.clearVirtualJoystickEventSystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__.SystemOrder.TearDown);
+    app.registerSystem(_tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_29__.clearVirtualJoystickEventSystem, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__.SystemOrder.TearDown);
     const world = app.getWorld();
-    (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_29__.registerPrefab)(world, 'avatar', _prefabs_avatar__WEBPACK_IMPORTED_MODULE_4__.AvatarPrefab);
-    (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_29__.registerPrefab)(world, 'cube', _prefabs_cube__WEBPACK_IMPORTED_MODULE_5__.CubePrefab);
-    (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_29__.registerPrefab)(world, 'duck', _prefabs_duck__WEBPACK_IMPORTED_MODULE_6__.DuckPrefab);
-    (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_29__.registerPrefab)(world, 'fox', _prefabs_fox__WEBPACK_IMPORTED_MODULE_7__.FoxPrefab);
-    (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_29__.registerPrefab)(world, 'image', _prefabs_image__WEBPACK_IMPORTED_MODULE_8__.ImagePrefab);
-    (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_29__.registerPrefab)(world, 'video', _prefabs_video__WEBPACK_IMPORTED_MODULE_9__.VideoPrefab);
-    (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_30__.registerSerializers)(world, 'video', _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_31__.NetworkedVideo, _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_32__.videoSerializers);
+    (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_30__.registerPrefab)(world, 'avatar', _prefabs_avatar__WEBPACK_IMPORTED_MODULE_4__.AvatarPrefab);
+    (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_30__.registerPrefab)(world, 'cube', _prefabs_cube__WEBPACK_IMPORTED_MODULE_5__.CubePrefab);
+    (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_30__.registerPrefab)(world, 'duck', _prefabs_duck__WEBPACK_IMPORTED_MODULE_6__.DuckPrefab);
+    (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_30__.registerPrefab)(world, 'fox', _prefabs_fox__WEBPACK_IMPORTED_MODULE_7__.FoxPrefab);
+    (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_30__.registerPrefab)(world, 'image', _prefabs_image__WEBPACK_IMPORTED_MODULE_8__.ImagePrefab);
+    (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_30__.registerPrefab)(world, 'video', _prefabs_video__WEBPACK_IMPORTED_MODULE_9__.VideoPrefab);
+    (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_31__.registerSerializers)(world, 'video', _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_32__.NetworkedVideo, _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_33__.videoSerializers);
     const sceneEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
-    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_33__.InScene, sceneEid);
-    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_34__.GltfSceneLoader, sceneEid);
-    _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_34__.GltfSceneLoaderProxy.get(sceneEid).allocate(sceneAssetUrl);
-    const avatarEid = (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_35__.createNetworkedEntity)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_36__.NetworkedType.Local, 'avatar');
-    _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_37__.EntityObject3DProxy.get(avatarEid).root.position.set(0.0, 0.25, 2.0);
-    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_38__.KeyEventListener, avatarEid);
-    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_39__.AudioDestination, avatarEid);
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_34__.InScene, sceneEid);
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_35__.GltfSceneLoader, sceneEid);
+    _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_35__.GltfSceneLoaderProxy.get(sceneEid).allocate(sceneAssetUrl);
+    const avatarEid = (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_36__.createNetworkedEntity)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_37__.NetworkedType.Local, 'avatar');
+    _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_38__.EntityObject3DProxy.get(avatarEid).root.position.set(0.0, 0.25, 2.0);
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_39__.KeyEventListener, avatarEid);
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_40__.AudioDestination, avatarEid);
     const envMapLoaderEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
-    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_33__.SceneEnvironmentMapLoader, envMapLoaderEid);
-    _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_33__.SceneEnvironmentMapLoaderProxy.get(envMapLoaderEid).allocate(envTextureUrl);
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_34__.SceneEnvironmentMapLoader, envMapLoaderEid);
+    _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_34__.SceneEnvironmentMapLoaderProxy.get(envMapLoaderEid).allocate(envTextureUrl);
     if ((0,_utils_platform_detect__WEBPACK_IMPORTED_MODULE_14__.isMobile)() || (0,_utils_platform_detect__WEBPACK_IMPORTED_MODULE_14__.isTablet)()) {
         const virtualJoystickLeftEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_40__.VirtualJoystick, virtualJoystickLeftEid);
-        _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_40__.VirtualJoystickProxy.get(virtualJoystickLeftEid).allocate();
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_40__.VirtualJoystickLeft, virtualJoystickLeftEid);
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_41__.VirtualJoystick, virtualJoystickLeftEid);
+        _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_41__.VirtualJoystickProxy.get(virtualJoystickLeftEid).allocate();
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_41__.VirtualJoystickLeft, virtualJoystickLeftEid);
         const virtualJoystickRightEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_40__.VirtualJoystick, virtualJoystickRightEid);
-        _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_40__.VirtualJoystickProxy.get(virtualJoystickRightEid).allocate();
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_40__.VirtualJoystickRight, virtualJoystickRightEid);
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_41__.VirtualJoystick, virtualJoystickRightEid);
+        _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_41__.VirtualJoystickProxy.get(virtualJoystickRightEid).allocate();
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_41__.VirtualJoystickRight, virtualJoystickRightEid);
     }
+    const textChatEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_addons_src__WEBPACK_IMPORTED_MODULE_42__.TextChat, textChatEid);
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_37__.BroadcastNetworkEventListener, textChatEid);
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_37__.UserNetworkEventListener, textChatEid);
     const mouseButtonEventEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
-    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_41__.MouseButtonEventListener, mouseButtonEventEid);
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_43__.MouseButtonEventListener, mouseButtonEventEid);
     const userEventHandlerEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
     (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_user_event_handler__WEBPACK_IMPORTED_MODULE_3__.UserEventHandler, userEventHandlerEid);
-    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_36__.UserNetworkEventListener, userEventHandlerEid);
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_37__.UserNetworkEventListener, userEventHandlerEid);
     const sideBarEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
     (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_side_bar__WEBPACK_IMPORTED_MODULE_2__.SideBar, sideBarEid);
-    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_42__.SelectedEventListener, sideBarEid);
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_44__.SelectedEventListener, sideBarEid);
     const joinDialogEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
     (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_join_dialog__WEBPACK_IMPORTED_MODULE_1__.JoinDialog, joinDialogEid);
-    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_43__.ConnectedStreamEventListener, joinDialogEid);
-    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_43__.JoinedStreamEventListener, joinDialogEid);
-    const cubeEid = (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_35__.createNetworkedEntity)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_36__.NetworkedType.Shared, 'cube');
-    _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_37__.EntityObject3DProxy.get(cubeEid).root.position.set((Math.random() - 0.5) * 10.0, 0.25, (Math.random() - 0.5) * 10.0);
-    const duckEid = (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_35__.createNetworkedEntity)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_36__.NetworkedType.Shared, 'duck');
-    _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_37__.EntityObject3DProxy.get(duckEid).root.position.set((Math.random() - 0.5) * 10.0, 0.1, (Math.random() - 0.5) * 10.0);
-    const foxEid = (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_35__.createNetworkedEntity)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_36__.NetworkedType.Shared, 'fox');
-    _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_37__.EntityObject3DProxy.get(foxEid).root.position.set((Math.random() - 0.5) * 10.0, 0.1, (Math.random() - 0.5) * 10.0);
-    const imageEid = (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_35__.createNetworkedEntity)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_36__.NetworkedType.Shared, 'image');
-    _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_37__.EntityObject3DProxy.get(imageEid).root.position.set((Math.random() - 0.5) * 10.0, 0.5, (Math.random() - 0.5) * 10.0);
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_45__.ConnectedStreamEventListener, joinDialogEid);
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_45__.JoinedStreamEventListener, joinDialogEid);
+    const cubeEid = (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_36__.createNetworkedEntity)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_37__.NetworkedType.Shared, 'cube');
+    _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_38__.EntityObject3DProxy.get(cubeEid).root.position.set((Math.random() - 0.5) * 10.0, 0.25, (Math.random() - 0.5) * 10.0);
+    const duckEid = (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_36__.createNetworkedEntity)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_37__.NetworkedType.Shared, 'duck');
+    _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_38__.EntityObject3DProxy.get(duckEid).root.position.set((Math.random() - 0.5) * 10.0, 0.1, (Math.random() - 0.5) * 10.0);
+    const foxEid = (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_36__.createNetworkedEntity)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_37__.NetworkedType.Shared, 'fox');
+    _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_38__.EntityObject3DProxy.get(foxEid).root.position.set((Math.random() - 0.5) * 10.0, 0.1, (Math.random() - 0.5) * 10.0);
+    const imageEid = (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_36__.createNetworkedEntity)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_37__.NetworkedType.Shared, 'image');
+    _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_38__.EntityObject3DProxy.get(imageEid).root.position.set((Math.random() - 0.5) * 10.0, 0.5, (Math.random() - 0.5) * 10.0);
     // Commenting out because of bad performance
     /*
       const videoEid = createNetworkedEntity(world, NetworkedType.Shared, 'video');

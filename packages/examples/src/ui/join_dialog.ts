@@ -46,7 +46,7 @@ const button = document.createElement('button');
 button.innerText = ' Join ';
 joinForm.appendChild(button);
 
-let onClick : () => void | null = null;
+let onClick : (e: Event) => void | null = null;
 
 const joinDialogQuery = defineQuery([JoinDialog]);
 const joinDialogEnterQuery = enterQuery(joinDialogQuery);
@@ -62,7 +62,9 @@ const clampUsernameIfNeeded = (str: string): string => {
 };
 
 const show = (world: IWorld): void => {
-  onClick = () => {
+  onClick = e => {
+    e.preventDefault();
+
     button.disabled = true;
     addComponent(world, StreamConnectRequestor, addEntity(world));
 

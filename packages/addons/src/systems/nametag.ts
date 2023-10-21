@@ -79,7 +79,7 @@ export const nametagSystem = (world: IWorld): void => {
       if (userId !== null) {
         const peers = getPeersProxy(world).peers;
         if (peers.has(userId)) {
-          const username = peers.get(userId)!;
+          const username = peers.get(userId)!.username;
           const text = TextProxy.get(eid).text;
           if (text.text !== username) {
             text.text = username;

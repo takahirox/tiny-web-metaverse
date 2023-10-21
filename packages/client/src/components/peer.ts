@@ -3,10 +3,16 @@ import { NULL_EID } from "../common";
 
 export const Peers = defineComponent();
 
+type PeerValue = {
+  joined: boolean,
+  previousUsername: string, // Ugh...
+  username: string
+};
+
 export class PeersProxy {
   private static instance: PeersProxy = new PeersProxy();
   private eid: number;
-  private map: Map<number, Map<string /* userId */, string /* username */>>;
+  private map: Map<number, Map<string /* userId */, PeerValue>>;
 
   private constructor() {
     this.eid = NULL_EID;
@@ -26,7 +32,7 @@ export class PeersProxy {
     this.map.delete(this.eid);
   }
 
-  get peers(): Map<string, string> {
+  get peers(): Map<string, PeerValue> {
     return this.map.get(this.eid)!;
   }
 }
