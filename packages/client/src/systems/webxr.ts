@@ -4,10 +4,15 @@ import {
   removeComponent
 } from "bitecs";
 import {
+  EntityObject3D,
+  EntityObject3DProxy
+} from "../components/entity_object3d";
+import {
   SceneComponent,
   SceneProxy
 } from "../components/scene";
 import {
+  InvisibleInAR,
   WebXRSessionEvent,
   WebXRSessionEventProxy,
   WebXRSessionEventType,
@@ -18,6 +23,7 @@ import { getXRSessionProxy } from "../utils/webxr";
 const managerQuery = defineQuery([WebXRSessionEvent, WebXRSessionManager]);
 const eventQuery = defineQuery([WebXRSessionEvent]);
 const sceneQuery = defineQuery([SceneComponent]);
+const invisibleQuery = defineQuery([EntityObject3D, InvisibleInAR]);
 
 export const webxrSessionManagementSystem = (world: IWorld): void => {
   // Assumes up to one manager entity
@@ -31,6 +37,7 @@ export const webxrSessionManagementSystem = (world: IWorld): void => {
         // in general because real-world enviroment should be preferred.
         // As hack and experiment, remove them here and restore when leaving
         // AR session.
+        // We do the same operation to the specified InvisibleInAR entities.
         // TODO: Implement more properly with ECS architecture
         if (e.mode === 'immersive-ar') {
           sceneQuery(world).forEach(sceneEid => {
@@ -44,6 +51,16 @@ export const webxrSessionManagementSystem = (world: IWorld): void => {
               scene.userData.originalEnvironment = scene.environment;
               scene.environment = null;
             }
+          });
+
+          // TODO: Fix me with more proper ECS approach
+          //       The current operation can be problematic because
+          //       visibility can be changed or root object can be
+          //       replaced while in AR mode.
+          invisibleQuery(world).forEach(objEid => {
+            const root = EntityObject3DProxy.get(objEid).root;
+            root.userData.originalVisible = root.visible;
+            root.visible = false;
           });
         }
       } else if (e.type === WebXRSessionEventType.End) {
@@ -61,6 +78,12 @@ export const webxrSessionManagementSystem = (world: IWorld): void => {
               scene.environment = scene.userData.originalEnvironment;
               delete scene.userData.originalEnvironment;
             }
+          });
+
+          invisibleQuery(world).forEach(objEid => {
+            const root = EntityObject3DProxy.get(objEid).root;
+            root.visible = root.userData.originalVisible;
+            delete root.userData.originalVisible;
           });
         }
       }

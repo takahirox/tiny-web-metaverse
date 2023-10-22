@@ -117,3 +117,5 @@ export class WebXRSessionEventProxy {
 
 export const WebXRSessionEventListener = defineComponent();
 export const WebXRSessionManager = defineComponent();
+
+export const InvisibleInAR = defineComponent();

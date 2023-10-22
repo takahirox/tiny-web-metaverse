@@ -987,6 +987,7 @@ export declare class WebXRSessionEventProxy {
 }
 export declare const WebXRSessionEventListener: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare const WebXRSessionManager: import("bitecs").ComponentType<import("bitecs").ISchema>;
+export declare const InvisibleInAR: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare const WindowResizeEvent: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare const WindowResizeEventListener: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare const WindowSize: import("bitecs").ComponentType<import("bitecs").ISchema>;

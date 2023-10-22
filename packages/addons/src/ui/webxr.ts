@@ -3,6 +3,8 @@
 // can't handle it.
 // Istead we have introduces this UI system that manages buttons that exceptionally
 // handle WebXR asynchronously outside of tick().
+// Creators may customize buttons so this system is placed in addons instead of
+// in client core.
 
 import {
   defineQuery,

@@ -6245,6 +6245,8 @@ __webpack_require__.r(__webpack_exports__);
 // can't handle it.
 // Istead we have introduces this UI system that manages buttons that exceptionally
 // handle WebXR asynchronously outside of tick().
+// Creators may customize buttons so this system is placed in addons instead of
+// in client core.
 var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -7702,6 +7704,7 @@ UserIdProxy.instance = new UserIdProxy();
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   InvisibleInAR: () => (/* binding */ InvisibleInAR),
 /* harmony export */   WebXRSessionEvent: () => (/* binding */ WebXRSessionEvent),
 /* harmony export */   WebXRSessionEventListener: () => (/* binding */ WebXRSessionEventListener),
 /* harmony export */   WebXRSessionEventProxy: () => (/* binding */ WebXRSessionEventProxy),
@@ -7796,6 +7799,7 @@ class WebXRSessionEventProxy {
 WebXRSessionEventProxy.instance = new WebXRSessionEventProxy();
 const WebXRSessionEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 const WebXRSessionManager = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const InvisibleInAR = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 
 
 /***/ }),

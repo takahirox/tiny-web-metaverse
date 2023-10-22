@@ -37,6 +37,7 @@ import {
   GltfSceneLoaderProxy,
   EntityObject3DProxy,
   InScene,
+  InvisibleInAR,
   JoinedStreamEventListener,
   KeyEventListener,
   MouseButtonEventListener,
@@ -135,10 +136,11 @@ const run = async (): Promise<void> => {
 
   registerSerializers(world, 'video', NetworkedVideo, videoSerializers);
 
-  const sceneEid = addEntity(world);
-  addComponent(world, InScene, sceneEid);
-  addComponent(world, GltfSceneLoader, sceneEid);
-  GltfSceneLoaderProxy.get(sceneEid).allocate(sceneAssetUrl);
+  const sceneObjectEid = addEntity(world);
+  addComponent(world, InScene, sceneObjectEid);
+  addComponent(world, GltfSceneLoader, sceneObjectEid);
+  GltfSceneLoaderProxy.get(sceneObjectEid).allocate(sceneAssetUrl);
+  addComponent(world, InvisibleInAR, sceneObjectEid);
 
   const avatarEid = createNetworkedEntity(world, NetworkedType.Local, 'avatar');
   EntityObject3DProxy.get(avatarEid).root.position.set(0.0, 0.25, 2.0);
