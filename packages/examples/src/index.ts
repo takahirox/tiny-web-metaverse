@@ -2,6 +2,7 @@ import {
   addComponent,
   addEntity
 } from "bitecs";
+import { AmbientLight } from "three";
 import {
   avatarVirtualJoystickSystem,
   billboardSystem,
@@ -28,6 +29,7 @@ import {
   WebXRVRButton
 } from "@tiny-web-metaverse/addons/src";
 import {
+  addObject3D,
   App,
   AudioDestination,
   BroadcastNetworkEventListener,
@@ -141,6 +143,11 @@ const run = async (): Promise<void> => {
   addComponent(world, GltfSceneLoader, sceneObjectEid);
   GltfSceneLoaderProxy.get(sceneObjectEid).allocate(sceneAssetUrl);
   addComponent(world, InvisibleInAR, sceneObjectEid);
+
+  const light = new AmbientLight(0x888888);
+  const lightEid = addEntity(world);
+  addComponent(world, InScene, lightEid);
+  addObject3D(world, light, lightEid);
 
   const avatarEid = createNetworkedEntity(world, NetworkedType.Local, 'avatar');
   EntityObject3DProxy.get(avatarEid).root.position.set(0.0, 0.25, 2.0);

@@ -62,6 +62,8 @@ export const webxrSessionManagementSystem = (world: IWorld): void => {
             root.userData.originalVisible = root.visible;
             root.visible = false;
           });
+
+          // TODO: Use lighting estimation
         }
       } else if (e.type === WebXRSessionEventType.End) {
         proxy.session = null;

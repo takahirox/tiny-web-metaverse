@@ -6350,6 +6350,7 @@ const webxrSessionManagementSystem = (world) => {
                         root.userData.originalVisible = root.visible;
                         root.visible = false;
                     });
+                    // TODO: Use lighting estimation
                 }
             }
             else if (e.type === _components_webxr__WEBPACK_IMPORTED_MODULE_1__.WebXRSessionEventType.End) {
