@@ -10,6 +10,7 @@ import {
 } from "bitecs";
 import {
   addWebXRSessionEvent,
+  getRendererProxy,
   WebXRSessionEventType
 } from "@tiny-web-metaverse/client/src";
 import { WebXRARButton, WebXRVRButton } from "../components/webxr";
@@ -135,13 +136,21 @@ const sessionInit = {
   ]
 };
 
-const onSessionStarted = (mode: XRSessionMode, session: XRSession): void => {
+const onSessionStarted = async (mode: XRSessionMode, session: XRSession): Promise<void> => {
   session.addEventListener('end', onSessionEnded);
 
   sessionEventQueue.push({
     session,
     type: WebXRSessionEventType.Start
   });
+
+  if (currentWorld !== null) {
+    await getRendererProxy(currentWorld).renderer.xr.setSession(session);
+  } else {
+    // TODO: Write comment
+    session.end();
+    return;
+  }
 
   if (mode === 'immersive-vr') {
     vrButton.innerText = 'STOP VR';
@@ -214,7 +223,12 @@ const arButtonQuery = defineQuery([WebXRARButton]);
 const enterArButtonQuery = enterQuery(arButtonQuery);
 const exitArButtonQuery = exitQuery(arButtonQuery);
 
+// TODO: Write comment
+let currentWorld: IWorld | null = null;
+
 export const webXrButtonsUISystem = (world: IWorld): void => {
+  currentWorld = world;
+
   // Assumes up to one button and webxr entity for each
 
   exitVrButtonQuery(world).forEach(() => {

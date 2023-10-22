@@ -6264,11 +6264,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/webxr.ts");
-/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/utils/webxr.ts");
-/* harmony import */ var _components_webxr__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/webxr */ "../addons/src/components/webxr.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/utils/bitecs_three.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/utils/webxr.ts");
+/* harmony import */ var _components_webxr__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/webxr */ "../addons/src/components/webxr.ts");
 // WebXR requestSession() needs to be called in user action (button click)
 // so this UI system that manages buttons for WebXR, rather than systems that
 // calls the function in tick(), is needed for WebXR app
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 
 
 
@@ -6363,12 +6373,20 @@ const sessionInit = {
         'layers'
     ]
 };
-const onSessionStarted = (mode, session) => {
+const onSessionStarted = (mode, session) => __awaiter(void 0, void 0, void 0, function* () {
     session.addEventListener('end', onSessionEnded);
     sessionEventQueue.push({
         session,
         type: _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_1__.WebXRSessionEventType.Start
     });
+    if (currentWorld !== null) {
+        yield (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_2__.getRendererProxy)(currentWorld).renderer.xr.setSession(session);
+    }
+    else {
+        // TODO: Write comment
+        session.end();
+        return;
+    }
     if (mode === 'immersive-vr') {
         vrButton.innerText = 'STOP VR';
         enableButton(vrButton);
@@ -6380,7 +6398,7 @@ const onSessionStarted = (mode, session) => {
         disableButton(vrButton);
     }
     currentSession = session;
-};
+});
 const onSessionEnded = () => {
     currentSession.removeEventListener('end', onSessionEnded);
     sessionEventQueue.push({
@@ -6421,13 +6439,16 @@ const onButtonClick = (mode) => {
 vrButton.addEventListener('click', () => onButtonClick('immersive-vr'));
 arButton.addEventListener('click', () => onButtonClick('immersive-ar'));
 //
-const vrButtonQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_webxr__WEBPACK_IMPORTED_MODULE_2__.WebXRVRButton]);
+const vrButtonQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_webxr__WEBPACK_IMPORTED_MODULE_3__.WebXRVRButton]);
 const enterVrButtonQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)(vrButtonQuery);
 const exitVrButtonQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)(vrButtonQuery);
-const arButtonQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_webxr__WEBPACK_IMPORTED_MODULE_2__.WebXRARButton]);
+const arButtonQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_webxr__WEBPACK_IMPORTED_MODULE_3__.WebXRARButton]);
 const enterArButtonQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)(arButtonQuery);
 const exitArButtonQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)(arButtonQuery);
+// TODO: Write comment
+let currentWorld = null;
 const webXrButtonsUISystem = (world) => {
+    currentWorld = world;
     // Assumes up to one button and webxr entity for each
     exitVrButtonQuery(world).forEach(() => {
         buttonsDiv.removeChild(vrButton);
@@ -6442,7 +6463,7 @@ const webXrButtonsUISystem = (world) => {
         buttonsDiv.appendChild(arButton);
     });
     for (const e of sessionEventQueue) {
-        (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_3__.addWebXRSessionEvent)(world, e.type, e.session);
+        (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_4__.addWebXRSessionEvent)(world, e.type, e.session);
     }
     sessionEventQueue.length = 0;
 };
@@ -12956,9 +12977,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var _components_webxr__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/webxr */ "../client/src/components/webxr.ts");
-/* harmony import */ var _utils_bitecs_three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/bitecs_three */ "../client/src/utils/bitecs_three.ts");
 /* harmony import */ var _utils_webxr__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/webxr */ "../client/src/utils/webxr.ts");
-
 
 
 
@@ -12967,20 +12986,14 @@ const eventQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_compone
 const webxrSessionManagementSystem = (world) => {
     // Assumes up to one manager entity
     managerQuery(world).forEach(eid => {
-        let lastSession = null;
         for (const e of _components_webxr__WEBPACK_IMPORTED_MODULE_1__.WebXRSessionEventProxy.get(eid).events) {
             const proxy = (0,_utils_webxr__WEBPACK_IMPORTED_MODULE_2__.getXRSessionProxy)(world);
             if (e.type === _components_webxr__WEBPACK_IMPORTED_MODULE_1__.WebXRSessionEventType.Start) {
                 proxy.session = e.session;
-                lastSession = e.session;
             }
             else if (e.type === _components_webxr__WEBPACK_IMPORTED_MODULE_1__.WebXRSessionEventType.End) {
                 proxy.session = null;
-                lastSession = null;
             }
-        }
-        if (lastSession !== null) {
-            (0,_utils_bitecs_three__WEBPACK_IMPORTED_MODULE_3__.getRendererProxy)(world).renderer.xr.setSession(lastSession);
         }
     });
 };

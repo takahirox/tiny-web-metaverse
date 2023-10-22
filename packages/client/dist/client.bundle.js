@@ -6302,9 +6302,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var _components_webxr__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/webxr */ "./src/components/webxr.ts");
-/* harmony import */ var _utils_bitecs_three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/bitecs_three */ "./src/utils/bitecs_three.ts");
 /* harmony import */ var _utils_webxr__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/webxr */ "./src/utils/webxr.ts");
-
 
 
 
@@ -6313,20 +6311,14 @@ const eventQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_compone
 const webxrSessionManagementSystem = (world) => {
     // Assumes up to one manager entity
     managerQuery(world).forEach(eid => {
-        let lastSession = null;
         for (const e of _components_webxr__WEBPACK_IMPORTED_MODULE_1__.WebXRSessionEventProxy.get(eid).events) {
             const proxy = (0,_utils_webxr__WEBPACK_IMPORTED_MODULE_2__.getXRSessionProxy)(world);
             if (e.type === _components_webxr__WEBPACK_IMPORTED_MODULE_1__.WebXRSessionEventType.Start) {
                 proxy.session = e.session;
-                lastSession = e.session;
             }
             else if (e.type === _components_webxr__WEBPACK_IMPORTED_MODULE_1__.WebXRSessionEventType.End) {
                 proxy.session = null;
-                lastSession = null;
             }
-        }
-        if (lastSession !== null) {
-            (0,_utils_bitecs_three__WEBPACK_IMPORTED_MODULE_3__.getRendererProxy)(world).renderer.xr.setSession(lastSession);
         }
     });
 };
