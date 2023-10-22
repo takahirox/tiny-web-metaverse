@@ -4876,6 +4876,23 @@ TextProxy.instance = new TextProxy();
 
 /***/ }),
 
+/***/ "./src/components/textchat.ts":
+/*!************************************!*\
+  !*** ./src/components/textchat.ts ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   TextChat: () => (/* binding */ TextChat)
+/* harmony export */ });
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
+
+const TextChat = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+
+
+/***/ }),
+
 /***/ "./src/components/video.ts":
 /*!*********************************!*\
   !*** ./src/components/video.ts ***!
@@ -5073,6 +5090,25 @@ class VirtualJoystickEventProxy {
 }
 VirtualJoystickEventProxy.instance = new VirtualJoystickEventProxy();
 const VirtualJoystickEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+
+
+/***/ }),
+
+/***/ "./src/components/webxr.ts":
+/*!*********************************!*\
+  !*** ./src/components/webxr.ts ***!
+  \*********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   WebXRARButton: () => (/* binding */ WebXRARButton),
+/* harmony export */   WebXRVRButton: () => (/* binding */ WebXRVRButton)
+/* harmony export */ });
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
+
+const WebXRVRButton = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const WebXRARButton = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 
 
 /***/ }),
@@ -5509,7 +5545,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
 /* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/entity_object3d.ts");
-/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/scene.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/avatar.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/network.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/scene.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/utils/network.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/utils/peer.ts");
 /* harmony import */ var _components_text__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/text */ "./src/components/text.ts");
 /* harmony import */ var _components_nametag__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/nametag */ "./src/components/nametag.ts");
 
@@ -5517,25 +5557,61 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const nametagQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_1__.EntityObject3D, _components_nametag__WEBPACK_IMPORTED_MODULE_2__.Nametag, _components_text__WEBPACK_IMPORTED_MODULE_3__.TextComponent]);
+const enterNametagQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)(nametagQuery);
+// TODO: Simplify if possible
 const nametagSystem = (world) => {
+    enterNametagQuery(world).forEach(eid => {
+        // Nametag for local avatar is not needed in general but
+        // it can be used in some cased for example selfie feature.
+        // So make it invisible for now. Make it visible when needed.
+        // Not sure if this is a good approach tho.
+        // TODO: Move this to nametag initialization?
+        const objectEid = _components_nametag__WEBPACK_IMPORTED_MODULE_2__.Nametag.objectEid[eid];
+        if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.entityExists)(world, objectEid) &&
+            (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_4__.Avatar, objectEid) &&
+            (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_5__.Local, objectEid)) {
+            _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_1__.EntityObject3DProxy.get(eid).root.visible = false;
+        }
+    });
     nametagQuery(world).forEach(eid => {
         const objectEid = _components_nametag__WEBPACK_IMPORTED_MODULE_2__.Nametag.objectEid[eid];
         // TODO: Can we somehow remove the dependency with another entity?
+        // TODO: It's good if we have a mechanism to efficiently detect
+        //       the dependent entity removal
         if (!(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.entityExists)(world, objectEid)) {
             // TODO: Remove resources properly
             (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_nametag__WEBPACK_IMPORTED_MODULE_2__.Nametag, eid);
             (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_text__WEBPACK_IMPORTED_MODULE_3__.TextComponent, eid);
-            if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_4__.InScene, eid)) {
-                (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_4__.InScene, eid);
+            if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_6__.InScene, eid)) {
+                (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_6__.InScene, eid);
             }
             return;
+        }
+        // TODO: Maybe inefficient here. Should be username change event driven?
+        // TODO: Simplify
+        if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_4__.Avatar, objectEid)) {
+            let userId = null;
+            if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_5__.Local, objectEid)) {
+                userId = (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_7__.getMyUserId)(world);
+            }
+            else if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_5__.Remote, objectEid) &&
+                (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_5__.Networked, objectEid)) {
+                userId = _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_5__.NetworkedProxy.get(objectEid).creator;
+            }
+            if (userId !== null) {
+                const peers = (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_8__.getPeersProxy)(world).peers;
+                if (peers.has(userId)) {
+                    const username = peers.get(userId).username;
+                    const text = _components_text__WEBPACK_IMPORTED_MODULE_3__.TextProxy.get(eid).text;
+                    if (text.text !== username) {
+                        text.text = username;
+                    }
+                }
+            }
         }
         if (!(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_1__.EntityObject3D, objectEid)) {
             return;
         }
-        //const text = TextProxy.get(eid).text;
-        // TODO: Update text if needed
-        //text.text = text.text;
         const obj = _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_1__.EntityObject3DProxy.get(objectEid).root;
         const root = _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_1__.EntityObject3DProxy.get(eid).root;
         root.position.copy(obj.position);
@@ -5736,6 +5812,264 @@ const clearVirtualJoystickEventSystem = (world) => {
 
 /***/ }),
 
+/***/ "./src/ui/textchat.ts":
+/*!****************************!*\
+  !*** ./src/ui/textchat.ts ***!
+  \****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   textChatUISystem: () => (/* binding */ textChatUISystem)
+/* harmony export */ });
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/utils/audio_effect.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/utils/peer.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/network.ts");
+/* harmony import */ var _components_textchat__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/textchat */ "./src/components/textchat.ts");
+/* harmony import */ var _utils_textchat__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils/textchat */ "./src/utils/textchat.ts");
+
+
+
+
+// UI + Event handler + Sender
+// TODO: Configurable (via CSS)?
+// TODO: Movable?
+// TODO: WebXR support. How?
+const parentElement = document.body;
+const eventQueue = [];
+const OPAQUE = 0.8;
+const TRANSPARENT = 0.4;
+const chatDiv = document.createElement('div');
+chatDiv.style.alignItems = 'center';
+chatDiv.style.background = 'lightblue';
+chatDiv.style.borderRadius = '10px';
+chatDiv.style.display = 'flex';
+chatDiv.style.flexDirection = 'column';
+chatDiv.style.gap = '2px';
+chatDiv.style.height = 'min(400px, 60%)';
+chatDiv.style.left = '10px';
+chatDiv.style.opacity = `${TRANSPARENT}`;
+chatDiv.style.padding = '5px';
+chatDiv.style.placeContent = 'center';
+chatDiv.style.position = 'absolute';
+chatDiv.style.top = '10px';
+chatDiv.style.width = 'min(300px, 50%)';
+const toggleButton = document.createElement('button');
+toggleButton.innerText = ' Hide Chat ';
+toggleButton.style.visibility = 'visible';
+chatDiv.appendChild(toggleButton);
+const chatField = document.createElement('textarea');
+chatField.readOnly = true;
+chatField.style.background = 'lightblue';
+chatField.style.borderRadius = '4px';
+chatField.style.boxSizing = 'border-box';
+chatField.style.flex = '1';
+chatField.style.resize = 'none';
+chatField.style.width = '100%';
+chatDiv.appendChild(chatField);
+const inputForm = document.createElement('form');
+inputForm.style.display = 'flex';
+inputForm.style.flexDirection = 'row';
+inputForm.style.gap = '2px';
+inputForm.style.width = '100%';
+chatDiv.appendChild(inputForm);
+const textField = document.createElement('textarea');
+textField.style.borderRadius = '4px';
+textField.style.boxSizing = 'border-box';
+textField.style.height = '3em';
+textField.style.resize = 'none';
+textField.style.width = '100%';
+inputForm.appendChild(textField);
+const sendButton = document.createElement('button');
+sendButton.innerText = 'Send';
+inputForm.appendChild(sendButton);
+const SUBMIT_INTERVAL = 1000;
+sendButton.addEventListener('click', e => {
+    e.preventDefault();
+    const text = textField.value.trim();
+    if (!text) {
+        return;
+    }
+    eventQueue.push({ text });
+    textField.value = '';
+    sendButton.disabled = true;
+    // Prevent repeated posts
+    setTimeout(() => {
+        sendButton.disabled = false;
+    }, SUBMIT_INTERVAL);
+});
+// toggle
+let visibleChat = true;
+toggleButton.addEventListener('click', () => {
+    if (visibleChat) {
+        chatDiv.style.visibility = 'hidden';
+        toggleButton.innerText = ' Show Chat ';
+        visibleChat = false;
+    }
+    else {
+        chatDiv.style.visibility = 'visible';
+        toggleButton.innerText = ' Hide Chat ';
+        visibleChat = true;
+    }
+});
+// fadeout effect
+let fadeOutStartTime = null;
+let fadingOut = false;
+const FADEOUT_INTERVAL = 2000;
+let chatDivHovered = false;
+let textFieldFocused = false;
+let chatFieldFocused = false;
+const startFadeOutIfNeeded = () => {
+    if (chatDivHovered || textFieldFocused || chatFieldFocused) {
+        return;
+    }
+    fadingOut = true;
+    fadeOutStartTime = null;
+    requestAnimationFrame(fadeOut);
+};
+const stopFadeOut = () => {
+    fadingOut = false;
+    fadeOutStartTime = null;
+};
+const fadeOut = (timestamp) => {
+    if (!fadingOut) {
+        return;
+    }
+    if (fadeOutStartTime === null) {
+        fadeOutStartTime = timestamp;
+    }
+    const elapsed = timestamp - fadeOutStartTime;
+    if (elapsed >= FADEOUT_INTERVAL) {
+        chatDiv.style.opacity = `${TRANSPARENT}`;
+        stopFadeOut();
+    }
+    else {
+        chatDiv.style.opacity = `${OPAQUE - (OPAQUE - TRANSPARENT) * elapsed * (1.0 / FADEOUT_INTERVAL)}`;
+        requestAnimationFrame(fadeOut);
+    }
+};
+chatDiv.addEventListener('mouseover', () => {
+    chatDivHovered = true;
+    stopFadeOut();
+    chatDiv.style.opacity = `${OPAQUE}`;
+});
+chatDiv.addEventListener('mouseout', () => {
+    chatDivHovered = false;
+    startFadeOutIfNeeded();
+});
+chatField.addEventListener('focus', () => {
+    chatFieldFocused = true;
+    stopFadeOut();
+    chatDiv.style.opacity = `${OPAQUE}`;
+});
+chatField.addEventListener('focusout', () => {
+    chatFieldFocused = false;
+    startFadeOutIfNeeded();
+});
+textField.addEventListener('focus', () => {
+    textFieldFocused = true;
+    stopFadeOut();
+    chatDiv.style.opacity = `${OPAQUE}`;
+});
+textField.addEventListener('focusout', () => {
+    textFieldFocused = false;
+    startFadeOutIfNeeded();
+});
+textField.addEventListener('keypress', e => {
+    // 13: Enter key
+    if (e.keyCode === 13 && !e.shiftKey) {
+        e.preventDefault();
+        sendButton.click();
+    }
+});
+// beep
+// TODO: Improve
+let oscillator;
+let gain;
+const beep = (world) => {
+    // Disable for now
+    if (true) {
+        return;
+    }
+    if (oscillator || gain) {
+        return;
+    }
+    const context = (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_1__.getAudioContextProxy)(world).context;
+    oscillator = context.createOscillator();
+    gain = context.createGain();
+    oscillator.connect(gain);
+    gain.connect(context.destination);
+    oscillator.frequency.value = 660;
+    gain.gain.value = 0.01;
+    oscillator.start(context.currentTime);
+    oscillator.stop(context.currentTime + 0.05);
+    oscillator.addEventListener('ended', () => {
+        oscillator.disconnect(gain);
+        gain.disconnect(context.destination);
+        oscillator = null;
+        gain = null;
+    });
+};
+//
+const addText = (world, text) => {
+    chatField.value += '\n' + chatField.innerText + text;
+    chatField.scrollTop = chatField.scrollHeight;
+    beep(world);
+};
+//
+const getUsername = (world, userId) => {
+    const peers = (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_2__.getPeersProxy)(world).peers;
+    return peers.has(userId) ? peers.get(userId).username : userId;
+};
+const getPreviousUsername = (world, userId) => {
+    const peers = (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_2__.getPeersProxy)(world).peers;
+    return peers.has(userId) ? peers.get(userId).previousUsername : userId;
+};
+const chatQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_textchat__WEBPACK_IMPORTED_MODULE_3__.TextChat]);
+const enterChatQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)(chatQuery);
+const exitChatQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)(chatQuery);
+const receiverQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_textchat__WEBPACK_IMPORTED_MODULE_3__.TextChat, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_4__.NetworkEvent]);
+const textChatUISystem = (world) => {
+    // Assumes up to one sender entity
+    exitChatQuery(world).forEach(() => {
+        parentElement.removeChild(chatDiv);
+    });
+    enterChatQuery(world).forEach(() => {
+        parentElement.appendChild(chatDiv);
+    });
+    chatQuery(world).forEach(() => {
+        for (const e of eventQueue) {
+            (0,_utils_textchat__WEBPACK_IMPORTED_MODULE_5__.sendTextChat)(world, e.text);
+        }
+    });
+    eventQueue.length = 0;
+    receiverQuery(world).forEach(eid => {
+        for (const e of _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_4__.NetworkEventProxy.get(eid).events) {
+            if (e.type === _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_4__.NetworkMessageType.Broadcast) {
+                if ((0,_utils_textchat__WEBPACK_IMPORTED_MODULE_5__.isTextChat)(e.data)) {
+                    e.data.text = e.data.text.trim();
+                    const data = (0,_utils_textchat__WEBPACK_IMPORTED_MODULE_5__.parseReceivedTextChat)(e.data);
+                    addText(world, `${getUsername(world, data.userId)}: ${data.text}`);
+                }
+            }
+            else if (e.type === _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_4__.NetworkMessageType.UserJoined) {
+                addText(world, `${e.data.username} joined.`);
+            }
+            else if (e.type === _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_4__.NetworkMessageType.UserLeft) {
+                addText(world, `${getUsername(world, e.data)} left.`);
+            }
+            else if (e.type === _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_4__.NetworkMessageType.UsernameChange) {
+                const userId = e.data && e.data.user_id;
+                addText(world, `${getPreviousUsername(world, userId)} changed name to ${getUsername(world, userId)}.`);
+            }
+        }
+    });
+};
+
+
+/***/ }),
+
 /***/ "./src/ui/virtual_joystick.ts":
 /*!************************************!*\
   !*** ./src/ui/virtual_joystick.ts ***!
@@ -5755,7 +6089,7 @@ __webpack_require__.r(__webpack_exports__);
 
 // UI + Event handler + VirtualJoystick component activation & update
 // TODO: Configurable?
-const COLOR = 'lightblue';
+const COLOR = '#ffcccb';
 const DIV_WIDTH = '150px';
 const DIV_HEIGHT = '150px';
 const MODE = 'static';
@@ -5891,6 +6225,204 @@ const virtualJoystickUISystem = (world) => {
 
 /***/ }),
 
+/***/ "./src/ui/webxr.ts":
+/*!*************************!*\
+  !*** ./src/ui/webxr.ts ***!
+  \*************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   webXrButtonsUISystem: () => (/* binding */ webXrButtonsUISystem)
+/* harmony export */ });
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/webxr.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/utils/webxr.ts");
+/* harmony import */ var _components_webxr__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/webxr */ "./src/components/webxr.ts");
+// WebXR requestSession() needs to be called in user action (button click)
+// so this UI system that manages buttons for WebXR, rather than systems that
+// calls the function in tick(), is needed for WebXR app
+
+
+
+// TODO: Configurable?
+const parentElement = document.body;
+const OPAQUE = 1.0;
+const TRANSPARENT = 0.5;
+const DISABLED = 0.2;
+const buttonsDiv = document.createElement('div');
+buttonsDiv.style.bottom = '20px';
+buttonsDiv.style.left = '50%';
+buttonsDiv.style.position = 'absolute';
+buttonsDiv.style.translate = 'calc(-50%)';
+parentElement.appendChild(buttonsDiv);
+// Style is from Three.js
+const stylizeButton = (button) => {
+    button.style.background = 'rgba(0.0, 0.0, 0.0, 0.1)';
+    button.style.border = '1px solid #fff';
+    button.style.borderRadius = '4px';
+    button.style.color = '#fff';
+    button.style.cursor = 'pointer';
+    button.style.display = 'none';
+    button.style.font = 'normal 13px sans-serif';
+    button.style.marginLeft = '1px';
+    button.style.marginRight = '1px';
+    button.style.opacity = '0.5';
+    button.style.outline = 'none';
+    button.style.padding = '12px 6px';
+    button.style.textAlign = 'center';
+    button.style.width = '100px';
+};
+const vrButton = document.createElement('button');
+vrButton.innerText = 'START VR';
+stylizeButton(vrButton);
+const arButton = document.createElement('button');
+arButton.innerText = 'START AR';
+stylizeButton(arButton);
+//
+const onSessionSupported = (supported, button) => {
+    if (supported) {
+        button.style.display = '';
+    }
+};
+if ('xr' in navigator) {
+    navigator.xr
+        .isSessionSupported('immersive-vr')
+        .then(supported => onSessionSupported(supported, vrButton));
+    navigator.xr
+        .isSessionSupported('immersive-ar')
+        .then(supported => onSessionSupported(supported, arButton));
+}
+//
+const hoveredButtons = new Set();
+const disableButton = (button) => {
+    button.disabled = true;
+    button.style.opacity = `${DISABLED}`;
+};
+const enableButton = (button) => {
+    button.disabled = false;
+    button.style.opacity = hoveredButtons.has(button) ? `${OPAQUE}` : `${TRANSPARENT}`;
+};
+const onMouseenter = (e) => {
+    const button = e.target;
+    hoveredButtons.add(button);
+    if (button.disabled) {
+        return;
+    }
+    button.style.opacity = `${OPAQUE}`;
+};
+const onMouseleave = (e) => {
+    const button = e.target;
+    hoveredButtons.delete(button);
+    if (button.disabled) {
+        return;
+    }
+    button.style.opacity = `${TRANSPARENT}`;
+};
+vrButton.addEventListener('mouseenter', onMouseenter);
+vrButton.addEventListener('mouseleave', onMouseleave);
+arButton.addEventListener('mouseenter', onMouseenter);
+arButton.addEventListener('mouseleave', onMouseleave);
+//
+const sessionEventQueue = [];
+let sessionRequesting = false;
+let currentSession = null;
+// TODO: Configurable
+const sessionInit = {
+    optionalFeatures: [
+        'local-floor',
+        'bounded-floor',
+        'hand-tracking',
+        'layers'
+    ]
+};
+const onSessionStarted = (mode, session) => {
+    session.addEventListener('end', onSessionEnded);
+    sessionEventQueue.push({
+        session,
+        type: _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_1__.WebXRSessionEventType.Start
+    });
+    if (mode === 'immersive-vr') {
+        vrButton.innerText = 'STOP VR';
+        enableButton(vrButton);
+        disableButton(arButton);
+    }
+    else {
+        arButton.innerText = 'STOP AR';
+        enableButton(arButton);
+        disableButton(vrButton);
+    }
+    currentSession = session;
+};
+const onSessionEnded = () => {
+    currentSession.removeEventListener('end', onSessionEnded);
+    sessionEventQueue.push({
+        session: currentSession,
+        type: _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_1__.WebXRSessionEventType.End
+    });
+    vrButton.innerText = 'START VR';
+    arButton.innerText = 'START AR';
+    enableButton(vrButton);
+    enableButton(arButton);
+    sessionRequesting = false;
+    currentSession = null;
+};
+const onButtonClick = (mode) => {
+    if (sessionRequesting) {
+        return;
+    }
+    sessionRequesting = true;
+    disableButton(vrButton);
+    disableButton(arButton);
+    if (currentSession === null) {
+        navigator.xr
+            .requestSession(mode, sessionInit)
+            .then(session => onSessionStarted(mode, session))
+            .catch(e => {
+            enableButton(vrButton);
+            enableButton(arButton);
+            console.error(e);
+        })
+            .finally(() => {
+            sessionRequesting = false;
+        });
+    }
+    else {
+        currentSession.end();
+    }
+};
+vrButton.addEventListener('click', () => onButtonClick('immersive-vr'));
+arButton.addEventListener('click', () => onButtonClick('immersive-ar'));
+//
+const vrButtonQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_webxr__WEBPACK_IMPORTED_MODULE_2__.WebXRVRButton]);
+const enterVrButtonQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)(vrButtonQuery);
+const exitVrButtonQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)(vrButtonQuery);
+const arButtonQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_webxr__WEBPACK_IMPORTED_MODULE_2__.WebXRARButton]);
+const enterArButtonQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)(arButtonQuery);
+const exitArButtonQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)(arButtonQuery);
+const webXrButtonsUISystem = (world) => {
+    // Assumes up to one button and webxr entity for each
+    exitVrButtonQuery(world).forEach(() => {
+        buttonsDiv.removeChild(vrButton);
+    });
+    enterVrButtonQuery(world).forEach(() => {
+        buttonsDiv.appendChild(vrButton);
+    });
+    exitArButtonQuery(world).forEach(() => {
+        buttonsDiv.removeChild(arButton);
+    });
+    enterArButtonQuery(world).forEach(() => {
+        buttonsDiv.appendChild(arButton);
+    });
+    for (const e of sessionEventQueue) {
+        (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_3__.addWebXRSessionEvent)(world, e.type, e.session);
+    }
+    sessionEventQueue.length = 0;
+};
+
+
+/***/ }),
+
 /***/ "./src/utils/nametag.ts":
 /*!******************************!*\
   !*** ./src/utils/nametag.ts ***!
@@ -5902,9 +6434,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   addNametagComponent: () => (/* binding */ addNametagComponent)
 /* harmony export */ });
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/utils/peer.ts");
 /* harmony import */ var _components_billboard__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/billboard */ "./src/components/billboard.ts");
 /* harmony import */ var _components_nametag__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/nametag */ "./src/components/nametag.ts");
-/* harmony import */ var _utils_text__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/text */ "./src/utils/text.ts");
+/* harmony import */ var _text__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./text */ "./src/utils/text.ts");
+
 
 
 
@@ -5913,7 +6447,8 @@ const addNametagComponent = (world, eid, objectEid) => {
     (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_nametag__WEBPACK_IMPORTED_MODULE_1__.Nametag, eid);
     _components_nametag__WEBPACK_IMPORTED_MODULE_1__.Nametag.objectEid[eid] = objectEid;
     (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_billboard__WEBPACK_IMPORTED_MODULE_2__.Billboard, eid);
-    (0,_utils_text__WEBPACK_IMPORTED_MODULE_3__.addTextComponent)(world, eid, 'Takahiro');
+    const name = (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_3__.getAvatarUsername)(world, objectEid);
+    (0,_text__WEBPACK_IMPORTED_MODULE_4__.addTextComponent)(world, eid, name !== null ? name : '');
 };
 
 
@@ -5943,9 +6478,60 @@ const addTextComponent = (world, eid, str) => {
     const text = new troika_three_text__WEBPACK_IMPORTED_MODULE_2__.Text();
     text.text = str;
     text.anchorX = 'center';
+    text.strokeWidth = 0.001;
     text.textAlign = 'center';
     _components_text__WEBPACK_IMPORTED_MODULE_1__.TextProxy.get(eid).allocate(text);
     (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_3__.addObject3D)(world, text, eid);
+};
+
+
+/***/ }),
+
+/***/ "./src/utils/textchat.ts":
+/*!*******************************!*\
+  !*** ./src/utils/textchat.ts ***!
+  \*******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   isTextChat: () => (/* binding */ isTextChat),
+/* harmony export */   parseReceivedTextChat: () => (/* binding */ parseReceivedTextChat),
+/* harmony export */   sendTextChat: () => (/* binding */ sendTextChat)
+/* harmony export */ });
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/network.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/utils/network.ts");
+
+
+const ACTION_NAME = 'textchat';
+// TODO: Configurable?
+const MAX_TEXT_LENGTH = 250;
+const clampTextIfNeeded = (text) => {
+    if (text.length <= MAX_TEXT_LENGTH) {
+        return text;
+    }
+    return text.slice(0, MAX_TEXT_LENGTH - 3) + '...';
+};
+const sendTextChat = (world, text) => {
+    const eid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_1__.BroadcastRequestor, eid);
+    _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_1__.BroadcastRequestorProxy.get(eid).allocate({
+        action: ACTION_NAME,
+        text: clampTextIfNeeded(text),
+        userId: (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_2__.getMyUserId)(world)
+    });
+};
+const isTextChat = (data) => {
+    return data && data.action === ACTION_NAME;
+};
+// TODO: Avoid any
+// TODO: Validation?
+const parseReceivedTextChat = (data) => {
+    return {
+        text: clampTextIfNeeded(data.text),
+        userId: data.userId
+    };
 };
 
 
@@ -5992,6 +6578,81 @@ const F32_EPSILON = 0.00001;
 // TODO: This is very arbitrary number. Think of better number.
 // TODO: Configurable?
 const TIME_EPSILON = 2.0;
+
+
+/***/ }),
+
+/***/ "../client/src/components/audio_effect.ts":
+/*!************************************************!*\
+  !*** ../client/src/components/audio_effect.ts ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   AudioContextComponent: () => (/* binding */ AudioContextComponent),
+/* harmony export */   AudioContextProxy: () => (/* binding */ AudioContextProxy),
+/* harmony export */   AudioContextResuming: () => (/* binding */ AudioContextResuming),
+/* harmony export */   AudioContextSuspended: () => (/* binding */ AudioContextSuspended),
+/* harmony export */   AudioDestination: () => (/* binding */ AudioDestination),
+/* harmony export */   AudioSource: () => (/* binding */ AudioSource),
+/* harmony export */   AudioSourceProxy: () => (/* binding */ AudioSourceProxy)
+/* harmony export */ });
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../common */ "../client/src/common.ts");
+
+
+const AudioContextComponent = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const AudioContextSuspended = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const AudioContextResuming = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+class AudioContextProxy {
+    constructor() {
+        this.eid = _common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
+        this.map = new Map();
+    }
+    static get(eid) {
+        AudioContextProxy.instance.eid = eid;
+        return AudioContextProxy.instance;
+    }
+    allocate(context) {
+        this.map.set(this.eid, context);
+    }
+    free() {
+        this.map.delete(this.eid);
+    }
+    get context() {
+        return this.map.get(this.eid);
+    }
+}
+AudioContextProxy.instance = new AudioContextProxy();
+const AudioSource = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+class AudioSourceProxy {
+    constructor() {
+        this.eid = _common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
+        this.map = new Map();
+    }
+    static get(eid) {
+        AudioSourceProxy.instance.eid = eid;
+        return AudioSourceProxy.instance;
+    }
+    allocate(source, gain, panner) {
+        this.map.set(this.eid, { gain, panner, source });
+    }
+    free() {
+        this.map.delete(this.eid);
+    }
+    get gain() {
+        return this.map.get(this.eid).gain;
+    }
+    get source() {
+        return this.map.get(this.eid).source;
+    }
+    get panner() {
+        return this.map.get(this.eid).panner;
+    }
+}
+AudioSourceProxy.instance = new AudioSourceProxy();
+const AudioDestination = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 
 
 /***/ }),
@@ -6353,6 +7014,9 @@ LazyActiveAnimationsProxy.instance = new LazyActiveAnimationsProxy();
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   BroadcastNetworkEventListener: () => (/* binding */ BroadcastNetworkEventListener),
+/* harmony export */   BroadcastRequestor: () => (/* binding */ BroadcastRequestor),
+/* harmony export */   BroadcastRequestorProxy: () => (/* binding */ BroadcastRequestorProxy),
 /* harmony export */   ComponentNetworkEventListener: () => (/* binding */ ComponentNetworkEventListener),
 /* harmony export */   EntityNetworkEventListener: () => (/* binding */ EntityNetworkEventListener),
 /* harmony export */   Local: () => (/* binding */ Local),
@@ -6582,6 +7246,7 @@ const TextMessageNetworkEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.d
 const UserNetworkEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 const EntityNetworkEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 const ComponentNetworkEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const BroadcastNetworkEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 const NetworkEventSender = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({
     lastSendTime: bitecs__WEBPACK_IMPORTED_MODULE_0__.Types.f32
 });
@@ -6590,6 +7255,178 @@ const NetworkedPosition = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent
 const NetworkedQuaternion = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 const NetworkedScale = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 const NetworkedMixerAnimation = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const BroadcastRequestor = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+class BroadcastRequestorProxy {
+    constructor() {
+        this.eid = _common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
+        this.map = new Map();
+    }
+    static get(eid) {
+        BroadcastRequestorProxy.instance.eid = eid;
+        return BroadcastRequestorProxy.instance;
+    }
+    allocate(data) {
+        this.map.set(this.eid, data);
+    }
+    free() {
+        this.map.delete(this.eid);
+    }
+    get data() {
+        return this.map.get(this.eid);
+    }
+}
+BroadcastRequestorProxy.instance = new BroadcastRequestorProxy();
+
+
+/***/ }),
+
+/***/ "../client/src/components/peer.ts":
+/*!****************************************!*\
+  !*** ../client/src/components/peer.ts ***!
+  \****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Peers: () => (/* binding */ Peers),
+/* harmony export */   PeersManager: () => (/* binding */ PeersManager),
+/* harmony export */   PeersProxy: () => (/* binding */ PeersProxy),
+/* harmony export */   UsernameChangeRequestor: () => (/* binding */ UsernameChangeRequestor),
+/* harmony export */   UsernameChangeRequestorProxy: () => (/* binding */ UsernameChangeRequestorProxy)
+/* harmony export */ });
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../common */ "../client/src/common.ts");
+
+
+const Peers = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+class PeersProxy {
+    constructor() {
+        this.eid = _common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
+        this.map = new Map();
+    }
+    static get(eid) {
+        PeersProxy.instance.eid = eid;
+        return PeersProxy.instance;
+    }
+    allocate() {
+        this.map.set(this.eid, new Map());
+    }
+    free() {
+        this.map.delete(this.eid);
+    }
+    get peers() {
+        return this.map.get(this.eid);
+    }
+}
+PeersProxy.instance = new PeersProxy();
+const PeersManager = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const UsernameChangeRequestor = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+class UsernameChangeRequestorProxy {
+    constructor() {
+        this.eid = _common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
+        this.map = new Map();
+    }
+    static get(eid) {
+        UsernameChangeRequestorProxy.instance.eid = eid;
+        return UsernameChangeRequestorProxy.instance;
+    }
+    allocate(username) {
+        this.map.set(this.eid, username);
+    }
+    free() {
+        this.map.delete(this.eid);
+    }
+    get username() {
+        return this.map.get(this.eid);
+    }
+}
+UsernameChangeRequestorProxy.instance = new UsernameChangeRequestorProxy();
+
+
+/***/ }),
+
+/***/ "../client/src/components/prefab.ts":
+/*!******************************************!*\
+  !*** ../client/src/components/prefab.ts ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Prefabs: () => (/* binding */ Prefabs),
+/* harmony export */   PrefabsProxy: () => (/* binding */ PrefabsProxy)
+/* harmony export */ });
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../common */ "../client/src/common.ts");
+
+
+const Prefabs = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+class PrefabsProxy {
+    constructor() {
+        this.eid = _common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
+        this.map = new Map();
+    }
+    static get(eid) {
+        PrefabsProxy.instance.eid = eid;
+        return PrefabsProxy.instance;
+    }
+    allocate() {
+        this.map.set(this.eid, new Map());
+    }
+    free() {
+        this.map.delete(this.eid);
+    }
+    register(key, prefab) {
+        this.map.get(this.eid).set(key, prefab);
+    }
+    deregister(key) {
+        this.map.get(this.eid).delete(key);
+    }
+    get(key) {
+        return this.map.get(this.eid).get(key);
+    }
+}
+PrefabsProxy.instance = new PrefabsProxy();
+
+
+/***/ }),
+
+/***/ "../client/src/components/room_id.ts":
+/*!*******************************************!*\
+  !*** ../client/src/components/room_id.ts ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   RoomId: () => (/* binding */ RoomId),
+/* harmony export */   RoomIdProxy: () => (/* binding */ RoomIdProxy)
+/* harmony export */ });
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../common */ "../client/src/common.ts");
+
+
+const RoomId = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+class RoomIdProxy {
+    constructor() {
+        this.eid = _common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
+        this.map = new Map();
+    }
+    static get(eid) {
+        RoomIdProxy.instance.eid = eid;
+        return RoomIdProxy.instance;
+    }
+    allocate(roomId) {
+        this.map.set(this.eid, roomId);
+    }
+    free() {
+        this.map.delete(this.eid);
+    }
+    get roomId() {
+        return this.map.get(this.eid);
+    }
+}
+RoomIdProxy.instance = new RoomIdProxy();
 
 
 /***/ }),
@@ -6677,10 +7514,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 // f32 types might cause precision problem??
-const Time = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({
-    delta: bitecs__WEBPACK_IMPORTED_MODULE_0__.Types.f32,
-    elapsed: bitecs__WEBPACK_IMPORTED_MODULE_0__.Types.f32
-});
+const Time = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 class TimeProxy {
     constructor() {
         this.eid = _common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
@@ -6690,28 +7524,29 @@ class TimeProxy {
         TimeProxy.instance.eid = eid;
         return TimeProxy.instance;
     }
-    allocate(clock, delta, elapsed) {
-        Time.delta[this.eid] = delta;
-        Time.elapsed[this.eid] = elapsed;
-        this.map.set(this.eid, clock);
+    allocate() {
+        this.map.set(this.eid, { delta: 0.0, elapsed: 0.0, timestamp: 0.0 });
     }
     free() {
         this.map.delete(this.eid);
     }
-    get clock() {
-        return this.map.get(this.eid);
-    }
     get delta() {
-        return Time.delta[this.eid];
+        return this.map.get(this.eid).delta;
     }
     set delta(delta) {
-        Time.delta[this.eid] = delta;
+        this.map.get(this.eid).delta = delta;
     }
     get elapsed() {
-        return Time.elapsed[this.eid];
+        return this.map.get(this.eid).elapsed;
     }
     set elapsed(elapsed) {
-        Time.elapsed[this.eid] = elapsed;
+        this.map.get(this.eid).elapsed = elapsed;
+    }
+    get timestamp() {
+        return this.map.get(this.eid).timestamp;
+    }
+    set timestamp(timestamp) {
+        this.map.get(this.eid).timestamp = timestamp;
     }
 }
 TimeProxy.instance = new TimeProxy();
@@ -6772,6 +7607,155 @@ class UserIdProxy {
     }
 }
 UserIdProxy.instance = new UserIdProxy();
+
+
+/***/ }),
+
+/***/ "../client/src/components/webxr.ts":
+/*!*****************************************!*\
+  !*** ../client/src/components/webxr.ts ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   WebXRSessionEvent: () => (/* binding */ WebXRSessionEvent),
+/* harmony export */   WebXRSessionEventListener: () => (/* binding */ WebXRSessionEventListener),
+/* harmony export */   WebXRSessionEventProxy: () => (/* binding */ WebXRSessionEventProxy),
+/* harmony export */   WebXRSessionEventType: () => (/* binding */ WebXRSessionEventType),
+/* harmony export */   WebXRSessionManager: () => (/* binding */ WebXRSessionManager),
+/* harmony export */   XRFrameComponent: () => (/* binding */ XRFrameComponent),
+/* harmony export */   XRFrameProxy: () => (/* binding */ XRFrameProxy),
+/* harmony export */   XRSessionComponent: () => (/* binding */ XRSessionComponent),
+/* harmony export */   XRSessionProxy: () => (/* binding */ XRSessionProxy)
+/* harmony export */ });
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../common */ "../client/src/common.ts");
+
+
+const XRSessionComponent = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+class XRSessionProxy {
+    constructor() {
+        this.eid = _common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
+        this.map = new Map();
+    }
+    static get(eid) {
+        XRSessionProxy.instance.eid = eid;
+        return XRSessionProxy.instance;
+    }
+    allocate() {
+        this.map.set(this.eid, null);
+    }
+    free() {
+        this.map.delete(this.eid);
+    }
+    get session() {
+        return this.map.get(this.eid);
+    }
+    set session(session) {
+        this.map.set(this.eid, session);
+    }
+}
+XRSessionProxy.instance = new XRSessionProxy();
+const XRFrameComponent = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+class XRFrameProxy {
+    constructor() {
+        this.eid = _common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
+        this.map = new Map();
+    }
+    static get(eid) {
+        XRFrameProxy.instance.eid = eid;
+        return XRFrameProxy.instance;
+    }
+    allocate() {
+        this.map.set(this.eid, null);
+    }
+    free() {
+        this.map.delete(this.eid);
+    }
+    get frame() {
+        return this.map.get(this.eid);
+    }
+    set frame(frame) {
+        this.map.set(this.eid, frame);
+    }
+}
+XRFrameProxy.instance = new XRFrameProxy();
+var WebXRSessionEventType;
+(function (WebXRSessionEventType) {
+    WebXRSessionEventType[WebXRSessionEventType["End"] = 0] = "End";
+    WebXRSessionEventType[WebXRSessionEventType["Start"] = 1] = "Start";
+})(WebXRSessionEventType || (WebXRSessionEventType = {}));
+;
+const WebXRSessionEvent = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+class WebXRSessionEventProxy {
+    constructor() {
+        this.eid = _common__WEBPACK_IMPORTED_MODULE_1__.NULL_EID;
+        this.map = new Map();
+    }
+    static get(eid) {
+        WebXRSessionEventProxy.instance.eid = eid;
+        return WebXRSessionEventProxy.instance;
+    }
+    allocate() {
+        this.map.set(this.eid, []);
+    }
+    add(type, session) {
+        this.map.get(this.eid).push({ session, type });
+    }
+    free() {
+        this.map.delete(this.eid);
+    }
+    get events() {
+        return this.map.get(this.eid);
+    }
+}
+WebXRSessionEventProxy.instance = new WebXRSessionEventProxy();
+const WebXRSessionEventListener = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+const WebXRSessionManager = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
+
+
+/***/ }),
+
+/***/ "../client/src/utils/audio_effect.ts":
+/*!*******************************************!*\
+  !*** ../client/src/utils/audio_effect.ts ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   addAudioSourceWithAudioSourceNode: () => (/* binding */ addAudioSourceWithAudioSourceNode),
+/* harmony export */   addAudioSourceWithElement: () => (/* binding */ addAudioSourceWithElement),
+/* harmony export */   addAudioSourceWithStream: () => (/* binding */ addAudioSourceWithStream),
+/* harmony export */   getAudioContextProxy: () => (/* binding */ getAudioContextProxy)
+/* harmony export */ });
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var _components_audio_effect__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/audio_effect */ "../client/src/components/audio_effect.ts");
+
+
+const contextQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_audio_effect__WEBPACK_IMPORTED_MODULE_1__.AudioContextComponent]);
+const getAudioContextProxy = (world) => {
+    // Assumes always only single audio context entity exists
+    return _components_audio_effect__WEBPACK_IMPORTED_MODULE_1__.AudioContextProxy.get(contextQuery(world)[0]);
+};
+const addAudioSourceWithAudioSourceNode = (world, eid, source) => {
+    const context = getAudioContextProxy(world).context;
+    const gain = context.createGain();
+    const panner = context.createPanner();
+    source.connect(gain);
+    gain.connect(panner);
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_audio_effect__WEBPACK_IMPORTED_MODULE_1__.AudioSource, eid);
+    _components_audio_effect__WEBPACK_IMPORTED_MODULE_1__.AudioSourceProxy.get(eid).allocate(source, gain, panner);
+};
+const addAudioSourceWithElement = (world, eid, audio) => {
+    const context = getAudioContextProxy(world).context;
+    addAudioSourceWithAudioSourceNode(world, eid, context.createMediaElementSource(audio));
+};
+const addAudioSourceWithStream = (world, eid, stream) => {
+    const context = getAudioContextProxy(world).context;
+    addAudioSourceWithAudioSourceNode(world, eid, context.createMediaStreamSource(stream));
+};
 
 
 /***/ }),
@@ -6923,7 +7907,8 @@ const swapRootObject3D = (newRoot, eid) => {
     while (oldRoot.children.length > 0) {
         newRoot.add(oldRoot.children[0]);
     }
-    //
+    // TODO: Write comment
+    // TODO: Move visibility, too?
     proxy.root = newRoot;
     oldRoot.matrixWorld.identity();
     oldRoot.matrix.identity().decompose(oldRoot.position, oldRoot.quaternion, oldRoot.scale);
@@ -6958,6 +7943,160 @@ const addAnimation = (world, eid, action) => {
 
 /***/ }),
 
+/***/ "../client/src/utils/network.ts":
+/*!**************************************!*\
+  !*** ../client/src/utils/network.ts ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   createNetworkedEntity: () => (/* binding */ createNetworkedEntity),
+/* harmony export */   getMyUserId: () => (/* binding */ getMyUserId),
+/* harmony export */   getRoomId: () => (/* binding */ getRoomId),
+/* harmony export */   getStateAdapter: () => (/* binding */ getStateAdapter)
+/* harmony export */ });
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! three */ "../../node_modules/three/build/three.module.js");
+/* harmony import */ var _components_network__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/network */ "../client/src/components/network.ts");
+/* harmony import */ var _components_room_id__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/room_id */ "../client/src/components/room_id.ts");
+/* harmony import */ var _components_user_id__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/user_id */ "../client/src/components/user_id.ts");
+/* harmony import */ var _utils_prefab__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../utils/prefab */ "../client/src/utils/prefab.ts");
+
+
+
+
+
+
+const generateUUID = () => {
+    return three__WEBPACK_IMPORTED_MODULE_1__.MathUtils.generateUUID();
+};
+const localUserIdQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_2__.Local, _components_user_id__WEBPACK_IMPORTED_MODULE_3__.UserId]);
+const roomIdQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_room_id__WEBPACK_IMPORTED_MODULE_4__.RoomId]);
+const clientQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_network__WEBPACK_IMPORTED_MODULE_2__.StateClient]);
+const getMyUserId = (world) => {
+    // Assumes always single local user id entity exists
+    return _components_user_id__WEBPACK_IMPORTED_MODULE_3__.UserIdProxy.get(localUserIdQuery(world)[0]).userId;
+};
+const getRoomId = (world) => {
+    // Assumes always single room id entity exists
+    return _components_room_id__WEBPACK_IMPORTED_MODULE_4__.RoomIdProxy.get(roomIdQuery(world)[0]).roomId;
+};
+const getStateAdapter = (world) => {
+    // Assumes always single state client entity exists
+    return _components_network__WEBPACK_IMPORTED_MODULE_2__.StateClientProxy.get(clientQuery(world)[0]).adapter;
+};
+// For creating local or shared networked entity from local client.
+// Networked entity created by remote clients are set up in networked entity system.
+const createNetworkedEntity = (world, type, prefabName, 
+// TODO: Avoid any
+prefabParams = {}) => {
+    const prefab = (0,_utils_prefab__WEBPACK_IMPORTED_MODULE_5__.getPrefab)(world, prefabName);
+    const eid = prefab(world, prefabParams);
+    // Assumes always single user id entity exists
+    const userId = getMyUserId(world);
+    if (type === _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedType.Local) {
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_2__.Local, eid);
+    }
+    else if (type === _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedType.Shared) {
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_2__.Shared, eid);
+    }
+    else {
+        throw new Error(`Invalid networked type ${type}`);
+    }
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_2__.Networked, eid);
+    _components_network__WEBPACK_IMPORTED_MODULE_2__.NetworkedProxy.get(eid).allocate(generateUUID(), type, userId, prefabName, prefabParams);
+    return eid;
+};
+
+
+/***/ }),
+
+/***/ "../client/src/utils/peer.ts":
+/*!***********************************!*\
+  !*** ../client/src/utils/peer.ts ***!
+  \***********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   getAvatarUsername: () => (/* binding */ getAvatarUsername),
+/* harmony export */   getPeersProxy: () => (/* binding */ getPeersProxy)
+/* harmony export */ });
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var _components_avatar__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/avatar */ "../client/src/components/avatar.ts");
+/* harmony import */ var _components_network__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/network */ "../client/src/components/network.ts");
+/* harmony import */ var _components_peer__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/peer */ "../client/src/components/peer.ts");
+/* harmony import */ var _network__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./network */ "../client/src/utils/network.ts");
+
+
+
+
+
+const peersQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_peer__WEBPACK_IMPORTED_MODULE_1__.Peers]);
+const getPeersProxy = (world) => {
+    // Assumes always single peers entity
+    return _components_peer__WEBPACK_IMPORTED_MODULE_1__.PeersProxy.get(peersQuery(world)[0]);
+};
+// TODO: Move this function somewhere else because it has many dependencies?
+const getAvatarUsername = (world, eid) => {
+    if (!(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_avatar__WEBPACK_IMPORTED_MODULE_2__.Avatar, eid)) {
+        return null;
+    }
+    let userId = null;
+    if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_3__.Local, eid)) {
+        userId = (0,_network__WEBPACK_IMPORTED_MODULE_4__.getMyUserId)(world);
+    }
+    if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_3__.Remote, eid) && (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_network__WEBPACK_IMPORTED_MODULE_3__.Networked, eid)) {
+        userId = _components_network__WEBPACK_IMPORTED_MODULE_3__.NetworkedProxy.get(eid).creator;
+    }
+    if (userId === null) {
+        return null;
+    }
+    const peers = getPeersProxy(world).peers;
+    if (!peers.has(userId)) {
+        return null;
+    }
+    return peers.get(userId).username;
+};
+
+
+/***/ }),
+
+/***/ "../client/src/utils/prefab.ts":
+/*!*************************************!*\
+  !*** ../client/src/utils/prefab.ts ***!
+  \*************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   deregisterPrefab: () => (/* binding */ deregisterPrefab),
+/* harmony export */   getPrefab: () => (/* binding */ getPrefab),
+/* harmony export */   registerPrefab: () => (/* binding */ registerPrefab)
+/* harmony export */ });
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var _components_prefab__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/prefab */ "../client/src/components/prefab.ts");
+
+
+const prefabsQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_prefab__WEBPACK_IMPORTED_MODULE_1__.Prefabs]);
+const registerPrefab = (world, key, prefab) => {
+    // Assumes always single prefabs entity exists
+    const proxy = _components_prefab__WEBPACK_IMPORTED_MODULE_1__.PrefabsProxy.get(prefabsQuery(world)[0]);
+    proxy.register(key, prefab);
+};
+const deregisterPrefab = (world, key) => {
+    const proxy = _components_prefab__WEBPACK_IMPORTED_MODULE_1__.PrefabsProxy.get(prefabsQuery(world)[0]);
+    proxy.deregister(key);
+};
+const getPrefab = (world, key) => {
+    const proxy = _components_prefab__WEBPACK_IMPORTED_MODULE_1__.PrefabsProxy.get(prefabsQuery(world)[0]);
+    return proxy.get(key);
+};
+
+
+/***/ }),
+
 /***/ "../client/src/utils/time.ts":
 /*!***********************************!*\
   !*** ../client/src/utils/time.ts ***!
@@ -6977,6 +8116,84 @@ const getTimeProxy = (world) => {
     // Assumes always single time entity exists
     return _components_time__WEBPACK_IMPORTED_MODULE_1__.TimeProxy.get(timeQuery(world)[0]);
 };
+
+
+/***/ }),
+
+/***/ "../client/src/utils/webxr.ts":
+/*!************************************!*\
+  !*** ../client/src/utils/webxr.ts ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   addWebXRSessionEvent: () => (/* binding */ addWebXRSessionEvent),
+/* harmony export */   getXRFrameProxy: () => (/* binding */ getXRFrameProxy),
+/* harmony export */   getXRSessionProxy: () => (/* binding */ getXRSessionProxy),
+/* harmony export */   isSessionSupported: () => (/* binding */ isSessionSupported),
+/* harmony export */   requestSession: () => (/* binding */ requestSession)
+/* harmony export */ });
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var _coroutine__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./coroutine */ "../client/src/utils/coroutine.ts");
+/* harmony import */ var _components_webxr__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/webxr */ "../client/src/components/webxr.ts");
+
+
+
+const frameQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_webxr__WEBPACK_IMPORTED_MODULE_1__.XRFrameComponent]);
+const sessionQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_webxr__WEBPACK_IMPORTED_MODULE_1__.XRSessionComponent]);
+const listenerQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_webxr__WEBPACK_IMPORTED_MODULE_1__.WebXRSessionEventListener]);
+const getXRFrameProxy = (world) => {
+    // Assumes always single xr frame entity exists
+    return _components_webxr__WEBPACK_IMPORTED_MODULE_1__.XRFrameProxy.get(frameQuery(world)[0]);
+};
+const getXRSessionProxy = (world) => {
+    // Assumes always single xr session entity exists
+    return _components_webxr__WEBPACK_IMPORTED_MODULE_1__.XRSessionProxy.get(sessionQuery(world)[0]);
+};
+const addWebXRSessionEvent = (world, type, session) => {
+    listenerQuery(world).forEach(eid => {
+        if (!(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_webxr__WEBPACK_IMPORTED_MODULE_1__.WebXRSessionEvent, eid)) {
+            (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_webxr__WEBPACK_IMPORTED_MODULE_1__.WebXRSessionEvent, eid);
+            _components_webxr__WEBPACK_IMPORTED_MODULE_1__.WebXRSessionEventProxy.get(eid).allocate();
+        }
+        _components_webxr__WEBPACK_IMPORTED_MODULE_1__.WebXRSessionEventProxy.get(eid).add(type, session);
+    });
+};
+function* isSessionSupported(mode) {
+    return yield* (0,_coroutine__WEBPACK_IMPORTED_MODULE_2__.toGenerator)(new Promise(resolve => {
+        if (!('xr' in navigator)) {
+            resolve(false);
+            return;
+        }
+        navigator.xr
+            .isSessionSupported(mode)
+            .then(resolve)
+            .catch(e => {
+            // Resolve as unsupported if fails. Is this correct?
+            console.error(e);
+            resolve(false);
+        });
+    }));
+}
+;
+function* requestSession(mode, sessionInit = {
+    // Not deeply thought yet...
+    optionalFeatures: [
+        'local-floor',
+        'bounded-floor',
+        'hand-tracking',
+        'layers'
+    ]
+}) {
+    return yield* (0,_coroutine__WEBPACK_IMPORTED_MODULE_2__.toGenerator)(new Promise((resolve, reject) => {
+        navigator.xr
+            .requestSession(mode, sessionInit)
+            .then(resolve)
+            .catch(reject);
+    }));
+}
+;
 
 
 /***/ }),
@@ -61451,63 +62668,81 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   ImageLoader: () => (/* reexport safe */ _components_image__WEBPACK_IMPORTED_MODULE_1__.ImageLoader),
 /* harmony export */   ImageLoaderProxy: () => (/* reexport safe */ _components_image__WEBPACK_IMPORTED_MODULE_1__.ImageLoaderProxy),
 /* harmony export */   ImageProxy: () => (/* reexport safe */ _components_image__WEBPACK_IMPORTED_MODULE_1__.ImageProxy),
-/* harmony export */   LazyVideoStateUpdate: () => (/* reexport safe */ _components_video__WEBPACK_IMPORTED_MODULE_5__.LazyVideoStateUpdate),
-/* harmony export */   LazyVideoStateUpdateProxy: () => (/* reexport safe */ _components_video__WEBPACK_IMPORTED_MODULE_5__.LazyVideoStateUpdateProxy),
+/* harmony export */   LazyVideoStateUpdate: () => (/* reexport safe */ _components_video__WEBPACK_IMPORTED_MODULE_6__.LazyVideoStateUpdate),
+/* harmony export */   LazyVideoStateUpdateProxy: () => (/* reexport safe */ _components_video__WEBPACK_IMPORTED_MODULE_6__.LazyVideoStateUpdateProxy),
 /* harmony export */   Nametag: () => (/* reexport safe */ _components_nametag__WEBPACK_IMPORTED_MODULE_2__.Nametag),
-/* harmony export */   NetworkedVideo: () => (/* reexport safe */ _components_video__WEBPACK_IMPORTED_MODULE_5__.NetworkedVideo),
+/* harmony export */   NetworkedVideo: () => (/* reexport safe */ _components_video__WEBPACK_IMPORTED_MODULE_6__.NetworkedVideo),
+/* harmony export */   TextChat: () => (/* reexport safe */ _components_textchat__WEBPACK_IMPORTED_MODULE_4__.TextChat),
 /* harmony export */   TextComponent: () => (/* reexport safe */ _components_text__WEBPACK_IMPORTED_MODULE_3__.TextComponent),
 /* harmony export */   TextProxy: () => (/* reexport safe */ _components_text__WEBPACK_IMPORTED_MODULE_3__.TextProxy),
-/* harmony export */   Video: () => (/* reexport safe */ _components_video__WEBPACK_IMPORTED_MODULE_5__.Video),
-/* harmony export */   VideoLoader: () => (/* reexport safe */ _components_video__WEBPACK_IMPORTED_MODULE_5__.VideoLoader),
-/* harmony export */   VideoLoaderProxy: () => (/* reexport safe */ _components_video__WEBPACK_IMPORTED_MODULE_5__.VideoLoaderProxy),
-/* harmony export */   VideoProxy: () => (/* reexport safe */ _components_video__WEBPACK_IMPORTED_MODULE_5__.VideoProxy),
-/* harmony export */   VideoStateUpdated: () => (/* reexport safe */ _components_video__WEBPACK_IMPORTED_MODULE_5__.VideoStateUpdated),
-/* harmony export */   VirtualJoystick: () => (/* reexport safe */ _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_4__.VirtualJoystick),
-/* harmony export */   VirtualJoystickEvent: () => (/* reexport safe */ _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_4__.VirtualJoystickEvent),
-/* harmony export */   VirtualJoystickEventListener: () => (/* reexport safe */ _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_4__.VirtualJoystickEventListener),
-/* harmony export */   VirtualJoystickEventProxy: () => (/* reexport safe */ _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_4__.VirtualJoystickEventProxy),
-/* harmony export */   VirtualJoystickEventType: () => (/* reexport safe */ _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_4__.VirtualJoystickEventType),
-/* harmony export */   VirtualJoystickLeft: () => (/* reexport safe */ _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_4__.VirtualJoystickLeft),
-/* harmony export */   VirtualJoystickProxy: () => (/* reexport safe */ _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_4__.VirtualJoystickProxy),
-/* harmony export */   VirtualJoystickRight: () => (/* reexport safe */ _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_4__.VirtualJoystickRight),
-/* harmony export */   VirtualJoystickType: () => (/* reexport safe */ _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_4__.VirtualJoystickType),
-/* harmony export */   addNametagComponent: () => (/* reexport safe */ _utils_nametag__WEBPACK_IMPORTED_MODULE_19__.addNametagComponent),
-/* harmony export */   addTextComponent: () => (/* reexport safe */ _utils_text__WEBPACK_IMPORTED_MODULE_20__.addTextComponent),
-/* harmony export */   avatarVirtualJoystickSystem: () => (/* reexport safe */ _systems_avatar_virtual_joystick_controls__WEBPACK_IMPORTED_MODULE_7__.avatarVirtualJoystickSystem),
-/* harmony export */   billboardSystem: () => (/* reexport safe */ _systems_billboard__WEBPACK_IMPORTED_MODULE_8__.billboardSystem),
-/* harmony export */   clearVirtualJoystickEventSystem: () => (/* reexport safe */ _systems_virtual_joystick_event__WEBPACK_IMPORTED_MODULE_17__.clearVirtualJoystickEventSystem),
-/* harmony export */   gltfMixerAnimationSystem: () => (/* reexport safe */ _systems_gltf_mixer_animation__WEBPACK_IMPORTED_MODULE_9__.gltfMixerAnimationSystem),
-/* harmony export */   imageLoadSystem: () => (/* reexport safe */ _systems_image_loader__WEBPACK_IMPORTED_MODULE_11__.imageLoadSystem),
-/* harmony export */   imageSystem: () => (/* reexport safe */ _systems_image__WEBPACK_IMPORTED_MODULE_10__.imageSystem),
-/* harmony export */   lazilyUpdateVideoStateSystem: () => (/* reexport safe */ _systems_lazily_update_video_state__WEBPACK_IMPORTED_MODULE_12__.lazilyUpdateVideoStateSystem),
-/* harmony export */   nametagSystem: () => (/* reexport safe */ _systems_nametag__WEBPACK_IMPORTED_MODULE_13__.nametagSystem),
-/* harmony export */   textSystem: () => (/* reexport safe */ _systems_text__WEBPACK_IMPORTED_MODULE_14__.textSystem),
-/* harmony export */   videoLoadSystem: () => (/* reexport safe */ _systems_video_loader__WEBPACK_IMPORTED_MODULE_16__.videoLoadSystem),
-/* harmony export */   videoSerializers: () => (/* reexport safe */ _serializations_video__WEBPACK_IMPORTED_MODULE_6__.videoSerializers),
-/* harmony export */   videoSystem: () => (/* reexport safe */ _systems_video__WEBPACK_IMPORTED_MODULE_15__.videoSystem),
-/* harmony export */   virtualJoystickUISystem: () => (/* reexport safe */ _ui_virtual_joystick__WEBPACK_IMPORTED_MODULE_18__.virtualJoystickUISystem)
+/* harmony export */   Video: () => (/* reexport safe */ _components_video__WEBPACK_IMPORTED_MODULE_6__.Video),
+/* harmony export */   VideoLoader: () => (/* reexport safe */ _components_video__WEBPACK_IMPORTED_MODULE_6__.VideoLoader),
+/* harmony export */   VideoLoaderProxy: () => (/* reexport safe */ _components_video__WEBPACK_IMPORTED_MODULE_6__.VideoLoaderProxy),
+/* harmony export */   VideoProxy: () => (/* reexport safe */ _components_video__WEBPACK_IMPORTED_MODULE_6__.VideoProxy),
+/* harmony export */   VideoStateUpdated: () => (/* reexport safe */ _components_video__WEBPACK_IMPORTED_MODULE_6__.VideoStateUpdated),
+/* harmony export */   VirtualJoystick: () => (/* reexport safe */ _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_5__.VirtualJoystick),
+/* harmony export */   VirtualJoystickEvent: () => (/* reexport safe */ _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_5__.VirtualJoystickEvent),
+/* harmony export */   VirtualJoystickEventListener: () => (/* reexport safe */ _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_5__.VirtualJoystickEventListener),
+/* harmony export */   VirtualJoystickEventProxy: () => (/* reexport safe */ _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_5__.VirtualJoystickEventProxy),
+/* harmony export */   VirtualJoystickEventType: () => (/* reexport safe */ _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_5__.VirtualJoystickEventType),
+/* harmony export */   VirtualJoystickLeft: () => (/* reexport safe */ _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_5__.VirtualJoystickLeft),
+/* harmony export */   VirtualJoystickProxy: () => (/* reexport safe */ _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_5__.VirtualJoystickProxy),
+/* harmony export */   VirtualJoystickRight: () => (/* reexport safe */ _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_5__.VirtualJoystickRight),
+/* harmony export */   VirtualJoystickType: () => (/* reexport safe */ _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_5__.VirtualJoystickType),
+/* harmony export */   WebXRARButton: () => (/* reexport safe */ _components_webxr__WEBPACK_IMPORTED_MODULE_7__.WebXRARButton),
+/* harmony export */   WebXRVRButton: () => (/* reexport safe */ _components_webxr__WEBPACK_IMPORTED_MODULE_7__.WebXRVRButton),
+/* harmony export */   addNametagComponent: () => (/* reexport safe */ _utils_nametag__WEBPACK_IMPORTED_MODULE_23__.addNametagComponent),
+/* harmony export */   addTextComponent: () => (/* reexport safe */ _utils_text__WEBPACK_IMPORTED_MODULE_24__.addTextComponent),
+/* harmony export */   avatarVirtualJoystickSystem: () => (/* reexport safe */ _systems_avatar_virtual_joystick_controls__WEBPACK_IMPORTED_MODULE_9__.avatarVirtualJoystickSystem),
+/* harmony export */   billboardSystem: () => (/* reexport safe */ _systems_billboard__WEBPACK_IMPORTED_MODULE_10__.billboardSystem),
+/* harmony export */   clearVirtualJoystickEventSystem: () => (/* reexport safe */ _systems_virtual_joystick_event__WEBPACK_IMPORTED_MODULE_19__.clearVirtualJoystickEventSystem),
+/* harmony export */   gltfMixerAnimationSystem: () => (/* reexport safe */ _systems_gltf_mixer_animation__WEBPACK_IMPORTED_MODULE_11__.gltfMixerAnimationSystem),
+/* harmony export */   imageLoadSystem: () => (/* reexport safe */ _systems_image_loader__WEBPACK_IMPORTED_MODULE_13__.imageLoadSystem),
+/* harmony export */   imageSystem: () => (/* reexport safe */ _systems_image__WEBPACK_IMPORTED_MODULE_12__.imageSystem),
+/* harmony export */   isTextChat: () => (/* reexport safe */ _utils_textchat__WEBPACK_IMPORTED_MODULE_25__.isTextChat),
+/* harmony export */   lazilyUpdateVideoStateSystem: () => (/* reexport safe */ _systems_lazily_update_video_state__WEBPACK_IMPORTED_MODULE_14__.lazilyUpdateVideoStateSystem),
+/* harmony export */   nametagSystem: () => (/* reexport safe */ _systems_nametag__WEBPACK_IMPORTED_MODULE_15__.nametagSystem),
+/* harmony export */   parseReceivedTextChat: () => (/* reexport safe */ _utils_textchat__WEBPACK_IMPORTED_MODULE_25__.parseReceivedTextChat),
+/* harmony export */   sendTextChat: () => (/* reexport safe */ _utils_textchat__WEBPACK_IMPORTED_MODULE_25__.sendTextChat),
+/* harmony export */   textChatUISystem: () => (/* reexport safe */ _ui_textchat__WEBPACK_IMPORTED_MODULE_20__.textChatUISystem),
+/* harmony export */   textSystem: () => (/* reexport safe */ _systems_text__WEBPACK_IMPORTED_MODULE_16__.textSystem),
+/* harmony export */   videoLoadSystem: () => (/* reexport safe */ _systems_video_loader__WEBPACK_IMPORTED_MODULE_18__.videoLoadSystem),
+/* harmony export */   videoSerializers: () => (/* reexport safe */ _serializations_video__WEBPACK_IMPORTED_MODULE_8__.videoSerializers),
+/* harmony export */   videoSystem: () => (/* reexport safe */ _systems_video__WEBPACK_IMPORTED_MODULE_17__.videoSystem),
+/* harmony export */   virtualJoystickUISystem: () => (/* reexport safe */ _ui_virtual_joystick__WEBPACK_IMPORTED_MODULE_21__.virtualJoystickUISystem),
+/* harmony export */   webXrButtonsUISystem: () => (/* reexport safe */ _ui_webxr__WEBPACK_IMPORTED_MODULE_22__.webXrButtonsUISystem)
 /* harmony export */ });
 /* harmony import */ var _components_billboard__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/billboard */ "./src/components/billboard.ts");
 /* harmony import */ var _components_image__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/image */ "./src/components/image.ts");
 /* harmony import */ var _components_nametag__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/nametag */ "./src/components/nametag.ts");
 /* harmony import */ var _components_text__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/text */ "./src/components/text.ts");
-/* harmony import */ var _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/virtual_joystick */ "./src/components/virtual_joystick.ts");
-/* harmony import */ var _components_video__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/video */ "./src/components/video.ts");
-/* harmony import */ var _serializations_video__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./serializations/video */ "./src/serializations/video.ts");
-/* harmony import */ var _systems_avatar_virtual_joystick_controls__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./systems/avatar_virtual_joystick_controls */ "./src/systems/avatar_virtual_joystick_controls.ts");
-/* harmony import */ var _systems_billboard__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./systems/billboard */ "./src/systems/billboard.ts");
-/* harmony import */ var _systems_gltf_mixer_animation__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./systems/gltf_mixer_animation */ "./src/systems/gltf_mixer_animation.ts");
-/* harmony import */ var _systems_image__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./systems/image */ "./src/systems/image.ts");
-/* harmony import */ var _systems_image_loader__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./systems/image_loader */ "./src/systems/image_loader.ts");
-/* harmony import */ var _systems_lazily_update_video_state__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./systems/lazily_update_video_state */ "./src/systems/lazily_update_video_state.ts");
-/* harmony import */ var _systems_nametag__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./systems/nametag */ "./src/systems/nametag.ts");
-/* harmony import */ var _systems_text__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./systems/text */ "./src/systems/text.ts");
-/* harmony import */ var _systems_video__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./systems/video */ "./src/systems/video.ts");
-/* harmony import */ var _systems_video_loader__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./systems/video_loader */ "./src/systems/video_loader.ts");
-/* harmony import */ var _systems_virtual_joystick_event__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./systems/virtual_joystick_event */ "./src/systems/virtual_joystick_event.ts");
-/* harmony import */ var _ui_virtual_joystick__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./ui/virtual_joystick */ "./src/ui/virtual_joystick.ts");
-/* harmony import */ var _utils_nametag__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./utils/nametag */ "./src/utils/nametag.ts");
-/* harmony import */ var _utils_text__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./utils/text */ "./src/utils/text.ts");
+/* harmony import */ var _components_textchat__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/textchat */ "./src/components/textchat.ts");
+/* harmony import */ var _components_virtual_joystick__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/virtual_joystick */ "./src/components/virtual_joystick.ts");
+/* harmony import */ var _components_video__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/video */ "./src/components/video.ts");
+/* harmony import */ var _components_webxr__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/webxr */ "./src/components/webxr.ts");
+/* harmony import */ var _serializations_video__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./serializations/video */ "./src/serializations/video.ts");
+/* harmony import */ var _systems_avatar_virtual_joystick_controls__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./systems/avatar_virtual_joystick_controls */ "./src/systems/avatar_virtual_joystick_controls.ts");
+/* harmony import */ var _systems_billboard__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./systems/billboard */ "./src/systems/billboard.ts");
+/* harmony import */ var _systems_gltf_mixer_animation__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./systems/gltf_mixer_animation */ "./src/systems/gltf_mixer_animation.ts");
+/* harmony import */ var _systems_image__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./systems/image */ "./src/systems/image.ts");
+/* harmony import */ var _systems_image_loader__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./systems/image_loader */ "./src/systems/image_loader.ts");
+/* harmony import */ var _systems_lazily_update_video_state__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./systems/lazily_update_video_state */ "./src/systems/lazily_update_video_state.ts");
+/* harmony import */ var _systems_nametag__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./systems/nametag */ "./src/systems/nametag.ts");
+/* harmony import */ var _systems_text__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./systems/text */ "./src/systems/text.ts");
+/* harmony import */ var _systems_video__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./systems/video */ "./src/systems/video.ts");
+/* harmony import */ var _systems_video_loader__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./systems/video_loader */ "./src/systems/video_loader.ts");
+/* harmony import */ var _systems_virtual_joystick_event__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./systems/virtual_joystick_event */ "./src/systems/virtual_joystick_event.ts");
+/* harmony import */ var _ui_textchat__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./ui/textchat */ "./src/ui/textchat.ts");
+/* harmony import */ var _ui_virtual_joystick__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./ui/virtual_joystick */ "./src/ui/virtual_joystick.ts");
+/* harmony import */ var _ui_webxr__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./ui/webxr */ "./src/ui/webxr.ts");
+/* harmony import */ var _utils_nametag__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./utils/nametag */ "./src/utils/nametag.ts");
+/* harmony import */ var _utils_text__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./utils/text */ "./src/utils/text.ts");
+/* harmony import */ var _utils_textchat__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./utils/textchat */ "./src/utils/textchat.ts");
+
+
+
+
+
 
 
 
@@ -61541,6 +62776,7 @@ var __webpack_exports__LazyVideoStateUpdate = __webpack_exports__.LazyVideoState
 var __webpack_exports__LazyVideoStateUpdateProxy = __webpack_exports__.LazyVideoStateUpdateProxy;
 var __webpack_exports__Nametag = __webpack_exports__.Nametag;
 var __webpack_exports__NetworkedVideo = __webpack_exports__.NetworkedVideo;
+var __webpack_exports__TextChat = __webpack_exports__.TextChat;
 var __webpack_exports__TextComponent = __webpack_exports__.TextComponent;
 var __webpack_exports__TextProxy = __webpack_exports__.TextProxy;
 var __webpack_exports__Video = __webpack_exports__.Video;
@@ -61557,6 +62793,8 @@ var __webpack_exports__VirtualJoystickLeft = __webpack_exports__.VirtualJoystick
 var __webpack_exports__VirtualJoystickProxy = __webpack_exports__.VirtualJoystickProxy;
 var __webpack_exports__VirtualJoystickRight = __webpack_exports__.VirtualJoystickRight;
 var __webpack_exports__VirtualJoystickType = __webpack_exports__.VirtualJoystickType;
+var __webpack_exports__WebXRARButton = __webpack_exports__.WebXRARButton;
+var __webpack_exports__WebXRVRButton = __webpack_exports__.WebXRVRButton;
 var __webpack_exports__addNametagComponent = __webpack_exports__.addNametagComponent;
 var __webpack_exports__addTextComponent = __webpack_exports__.addTextComponent;
 var __webpack_exports__avatarVirtualJoystickSystem = __webpack_exports__.avatarVirtualJoystickSystem;
@@ -61565,13 +62803,18 @@ var __webpack_exports__clearVirtualJoystickEventSystem = __webpack_exports__.cle
 var __webpack_exports__gltfMixerAnimationSystem = __webpack_exports__.gltfMixerAnimationSystem;
 var __webpack_exports__imageLoadSystem = __webpack_exports__.imageLoadSystem;
 var __webpack_exports__imageSystem = __webpack_exports__.imageSystem;
+var __webpack_exports__isTextChat = __webpack_exports__.isTextChat;
 var __webpack_exports__lazilyUpdateVideoStateSystem = __webpack_exports__.lazilyUpdateVideoStateSystem;
 var __webpack_exports__nametagSystem = __webpack_exports__.nametagSystem;
+var __webpack_exports__parseReceivedTextChat = __webpack_exports__.parseReceivedTextChat;
+var __webpack_exports__sendTextChat = __webpack_exports__.sendTextChat;
+var __webpack_exports__textChatUISystem = __webpack_exports__.textChatUISystem;
 var __webpack_exports__textSystem = __webpack_exports__.textSystem;
 var __webpack_exports__videoLoadSystem = __webpack_exports__.videoLoadSystem;
 var __webpack_exports__videoSerializers = __webpack_exports__.videoSerializers;
 var __webpack_exports__videoSystem = __webpack_exports__.videoSystem;
 var __webpack_exports__virtualJoystickUISystem = __webpack_exports__.virtualJoystickUISystem;
-export { __webpack_exports__Billboard as Billboard, __webpack_exports__ImageComponent as ImageComponent, __webpack_exports__ImageLoader as ImageLoader, __webpack_exports__ImageLoaderProxy as ImageLoaderProxy, __webpack_exports__ImageProxy as ImageProxy, __webpack_exports__LazyVideoStateUpdate as LazyVideoStateUpdate, __webpack_exports__LazyVideoStateUpdateProxy as LazyVideoStateUpdateProxy, __webpack_exports__Nametag as Nametag, __webpack_exports__NetworkedVideo as NetworkedVideo, __webpack_exports__TextComponent as TextComponent, __webpack_exports__TextProxy as TextProxy, __webpack_exports__Video as Video, __webpack_exports__VideoLoader as VideoLoader, __webpack_exports__VideoLoaderProxy as VideoLoaderProxy, __webpack_exports__VideoProxy as VideoProxy, __webpack_exports__VideoStateUpdated as VideoStateUpdated, __webpack_exports__VirtualJoystick as VirtualJoystick, __webpack_exports__VirtualJoystickEvent as VirtualJoystickEvent, __webpack_exports__VirtualJoystickEventListener as VirtualJoystickEventListener, __webpack_exports__VirtualJoystickEventProxy as VirtualJoystickEventProxy, __webpack_exports__VirtualJoystickEventType as VirtualJoystickEventType, __webpack_exports__VirtualJoystickLeft as VirtualJoystickLeft, __webpack_exports__VirtualJoystickProxy as VirtualJoystickProxy, __webpack_exports__VirtualJoystickRight as VirtualJoystickRight, __webpack_exports__VirtualJoystickType as VirtualJoystickType, __webpack_exports__addNametagComponent as addNametagComponent, __webpack_exports__addTextComponent as addTextComponent, __webpack_exports__avatarVirtualJoystickSystem as avatarVirtualJoystickSystem, __webpack_exports__billboardSystem as billboardSystem, __webpack_exports__clearVirtualJoystickEventSystem as clearVirtualJoystickEventSystem, __webpack_exports__gltfMixerAnimationSystem as gltfMixerAnimationSystem, __webpack_exports__imageLoadSystem as imageLoadSystem, __webpack_exports__imageSystem as imageSystem, __webpack_exports__lazilyUpdateVideoStateSystem as lazilyUpdateVideoStateSystem, __webpack_exports__nametagSystem as nametagSystem, __webpack_exports__textSystem as textSystem, __webpack_exports__videoLoadSystem as videoLoadSystem, __webpack_exports__videoSerializers as videoSerializers, __webpack_exports__videoSystem as videoSystem, __webpack_exports__virtualJoystickUISystem as virtualJoystickUISystem };
+var __webpack_exports__webXrButtonsUISystem = __webpack_exports__.webXrButtonsUISystem;
+export { __webpack_exports__Billboard as Billboard, __webpack_exports__ImageComponent as ImageComponent, __webpack_exports__ImageLoader as ImageLoader, __webpack_exports__ImageLoaderProxy as ImageLoaderProxy, __webpack_exports__ImageProxy as ImageProxy, __webpack_exports__LazyVideoStateUpdate as LazyVideoStateUpdate, __webpack_exports__LazyVideoStateUpdateProxy as LazyVideoStateUpdateProxy, __webpack_exports__Nametag as Nametag, __webpack_exports__NetworkedVideo as NetworkedVideo, __webpack_exports__TextChat as TextChat, __webpack_exports__TextComponent as TextComponent, __webpack_exports__TextProxy as TextProxy, __webpack_exports__Video as Video, __webpack_exports__VideoLoader as VideoLoader, __webpack_exports__VideoLoaderProxy as VideoLoaderProxy, __webpack_exports__VideoProxy as VideoProxy, __webpack_exports__VideoStateUpdated as VideoStateUpdated, __webpack_exports__VirtualJoystick as VirtualJoystick, __webpack_exports__VirtualJoystickEvent as VirtualJoystickEvent, __webpack_exports__VirtualJoystickEventListener as VirtualJoystickEventListener, __webpack_exports__VirtualJoystickEventProxy as VirtualJoystickEventProxy, __webpack_exports__VirtualJoystickEventType as VirtualJoystickEventType, __webpack_exports__VirtualJoystickLeft as VirtualJoystickLeft, __webpack_exports__VirtualJoystickProxy as VirtualJoystickProxy, __webpack_exports__VirtualJoystickRight as VirtualJoystickRight, __webpack_exports__VirtualJoystickType as VirtualJoystickType, __webpack_exports__WebXRARButton as WebXRARButton, __webpack_exports__WebXRVRButton as WebXRVRButton, __webpack_exports__addNametagComponent as addNametagComponent, __webpack_exports__addTextComponent as addTextComponent, __webpack_exports__avatarVirtualJoystickSystem as avatarVirtualJoystickSystem, __webpack_exports__billboardSystem as billboardSystem, __webpack_exports__clearVirtualJoystickEventSystem as clearVirtualJoystickEventSystem, __webpack_exports__gltfMixerAnimationSystem as gltfMixerAnimationSystem, __webpack_exports__imageLoadSystem as imageLoadSystem, __webpack_exports__imageSystem as imageSystem, __webpack_exports__isTextChat as isTextChat, __webpack_exports__lazilyUpdateVideoStateSystem as lazilyUpdateVideoStateSystem, __webpack_exports__nametagSystem as nametagSystem, __webpack_exports__parseReceivedTextChat as parseReceivedTextChat, __webpack_exports__sendTextChat as sendTextChat, __webpack_exports__textChatUISystem as textChatUISystem, __webpack_exports__textSystem as textSystem, __webpack_exports__videoLoadSystem as videoLoadSystem, __webpack_exports__videoSerializers as videoSerializers, __webpack_exports__videoSystem as videoSystem, __webpack_exports__virtualJoystickUISystem as virtualJoystickUISystem, __webpack_exports__webXrButtonsUISystem as webXrButtonsUISystem };
 
 //# sourceMappingURL=addons.bundle.js.map

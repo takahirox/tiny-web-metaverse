@@ -1,8 +1,16 @@
-import { addComponent, IWorld } from "bitecs";
+import { addComponent, defineQuery, IWorld } from "bitecs";
 import { GLTF } from "three/examples/jsm/loaders/GLTFLoader";
 import { loadGltf } from "./three";
 import { GltfRoot, GltfRootProxy } from "../components/gltf";
+import { Renderer, RendererProxy } from "../components/renderer";
 import { HasAnimations } from "../components/mixer_animation";
+
+const rendererQuery = defineQuery([Renderer]);
+
+export const getRendererProxy = (world: IWorld): RendererProxy => {
+  // Assumes always single renderer entity exists
+  return RendererProxy.get(rendererQuery(world)[0]);
+};
 
 export function* loadGltfBitecs(world: IWorld, eid: number, url: string): Generator<void, GLTF> {
   const gltf = yield* loadGltf(url);

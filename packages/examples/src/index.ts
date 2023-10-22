@@ -22,7 +22,10 @@ import {
   virtualJoystickUISystem,
   TextChat,
   textChatUISystem,
-  textSystem
+  textSystem,
+  WebXRARButton,
+  webXrButtonsUISystem,
+  WebXRVRButton
 } from "@tiny-web-metaverse/addons/src";
 import {
   App,
@@ -97,6 +100,7 @@ const run = async (): Promise<void> => {
   document.body.appendChild(canvas);
 
   app.registerSystem(virtualJoystickUISystem, SystemOrder.EventHandling);
+  app.registerSystem(webXrButtonsUISystem, SystemOrder.EventHandling);
 
   app.registerSystem(textChatUISystem, SystemOrder.Setup);
   app.registerSystem(imageSystem, SystemOrder.Setup);
@@ -177,6 +181,12 @@ const run = async (): Promise<void> => {
   addComponent(world, JoinDialog, joinDialogEid);
   addComponent(world, ConnectedStreamEventListener, joinDialogEid);
   addComponent(world, JoinedStreamEventListener, joinDialogEid);
+
+  const vrButtonEid = addEntity(world);
+  addComponent(world, WebXRVRButton, vrButtonEid);
+
+  const arButtonEid = addEntity(world);
+  addComponent(world, WebXRARButton, arButtonEid);
 
   const cubeEid = createNetworkedEntity(world, NetworkedType.Shared, 'cube');
   EntityObject3DProxy.get(cubeEid).root.position.set(

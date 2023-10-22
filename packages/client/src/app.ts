@@ -5,7 +5,6 @@ import {
   IWorld
 } from "bitecs";
 import {
-  Clock,
   Color,
   MathUtils,
   PerspectiveCamera,
@@ -70,17 +69,6 @@ import { Prefabs, PrefabsProxy } from "./components/prefab";
 import { RaycasterComponent, RaycasterProxy } from "./components/raycast";
 import { Renderer, RendererProxy } from "./components/renderer";
 import { RoomId, RoomIdProxy } from "./components/room_id";
-import {
-  TouchEventHandler,
-  TouchEventHandlerProxy,
-  TouchEventListener,
-  TouchMoveEventHandler,
-  TouchMoveEventHandlerProxy,
-  TouchMoveEventListener,
-  TouchPosition,
-  TouchPositionProxy
-} from "./components/touch";
-import { UserId, UserIdProxy } from "./components/user_id";
 import { InScene, SceneProxy, SceneComponent } from "./components/scene";
 import {
   ComponentKeys,
@@ -103,6 +91,26 @@ import {
   StreamRemotePeersProxy
 } from "./components/stream";
 import { Time, TimeProxy } from "./components/time";
+import { Timestamp, TimestampProxy } from "./components/timestamp";
+import {
+  TouchEventHandler,
+  TouchEventHandlerProxy,
+  TouchEventListener,
+  TouchMoveEventHandler,
+  TouchMoveEventHandlerProxy,
+  TouchMoveEventListener,
+  TouchPosition,
+  TouchPositionProxy
+} from "./components/touch";
+import { UserId, UserIdProxy } from "./components/user_id";
+import {
+  WebXRSessionEventListener,
+  WebXRSessionManager,
+  XRFrameComponent,
+  XRFrameProxy,
+  XRSessionComponent,
+  XRSessionProxy
+} from "./components/webxr";
 import {
   WindowResizeEventHandler,
   WindowResizeEventListener,
@@ -155,6 +163,7 @@ import { networkEventClearSystem, networkEventHandleSystem } from "./systems/net
 import { networkSendSystem } from "./systems/network_send";
 import { networkedSystem } from "./systems/networked";
 import { networkedEntitySystem } from "./systems/networked_entity";
+import { peerSystem } from "./systems/peer";
 import { perspectiveCameraSystem } from "./systems/perspective_camera";
 import { positionalAudioSystem } from "./systems/positional_audio";
 import { prefabsSystem } from "./systems/prefab";
@@ -182,14 +191,17 @@ import { touchPositionToPointerSystem } from "./systems/touch_position_to_pointe
 import { touchPositionTrackSystem } from "./systems/touch_position_track";
 import { clearTransformUpdatedSystem } from "./systems/transform";
 import { updateMatricesSystem } from "./systems/update_matrices";
-import { peerSystem } from "./systems/peer";
+import { clearWebXREventSystem, webxrSessionManagementSystem } from "./systems/webxr";
 import {
   windowResizeEventHandleSystem,
   windowResizeEventClearSystem
 } from "./systems/window_resize_event";
 
+import { getRendererProxy } from "./utils/bitecs_three";
 import { addObject3D } from "./utils/entity_object3d";
 import { registerSerializers } from "./utils/serializer";
+import { getTimestampProxy } from "./utils/timestamp";
+import { getXRFrameProxy } from "./utils/webxr";
 
 type RegisteredSystem = {
   system: System;
@@ -237,6 +249,8 @@ export class App {
     const renderer = new WebGLRenderer({ antialias: true, canvas });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
+    // Any downside from always enabling WebXR?
+    renderer.xr.enabled = true;
 
     // Built-in systems and entities
 
@@ -256,6 +270,7 @@ export class App {
     this.registerSystem(peerSystem, SystemOrder.EventHandling + 1);
     this.registerSystem(mousePositionTrackSystem, SystemOrder.EventHandling + 1);
     this.registerSystem(touchPositionTrackSystem, SystemOrder.EventHandling + 1);
+    this.registerSystem(webxrSessionManagementSystem, SystemOrder.EventHandling + 1);
 
     this.registerSystem(mousePositionToPointerSystem, SystemOrder.EventHandling + 2);
     this.registerSystem(touchPositionToPointerSystem, SystemOrder.EventHandling + 2);
@@ -312,13 +327,30 @@ export class App {
     this.registerSystem(clearTransformUpdatedSystem, SystemOrder.TearDown);
     this.registerSystem(clearActiveAnimationsUpdatedSystem, SystemOrder.TearDown);
     this.registerSystem(clearInteractionSystem, SystemOrder.TearDown);
+    this.registerSystem(clearWebXREventSystem, SystemOrder.TearDown);
 
     // Entity 0 for null entity
     addEntity(this.world);
 
+    const timestampEid = addEntity(this.world);
+    addComponent(this.world, Timestamp, timestampEid);
+    TimestampProxy.get(timestampEid).allocate();
+
     const timeEid = addEntity(this.world);
     addComponent(this.world, Time, timeEid);
-    TimeProxy.get(timeEid).allocate(new Clock(), 0, 0);
+    TimeProxy.get(timeEid).allocate();
+
+    const xrFrameEid = addEntity(this.world);
+    addComponent(this.world, XRFrameComponent, xrFrameEid);
+    XRFrameProxy.get(xrFrameEid).allocate();
+
+    const xrSessionEid = addEntity(this.world);
+    addComponent(this.world, XRSessionComponent, xrSessionEid);
+    XRSessionProxy.get(xrSessionEid).allocate();
+
+    const webxrSessionManagerEid = addEntity(this.world);
+    addComponent(this.world, WebXRSessionManager, webxrSessionManagerEid);
+    addComponent(this.world, WebXRSessionEventListener, webxrSessionManagerEid);
 
     const audioContext = new AudioContext();
     const audioContextEid = addEntity(this.world);
@@ -536,19 +568,33 @@ export class App {
     throw new Error(`${system.name} system is not registered.`);
   }
 
-  tick() {
+  tick(): void {
+    // TODO: Add try-catch to prevent crash?
     for (const system of this.systems) {
       system.system(this.world);
     }
   }
 
-  start() {
-    const runTick = () => {
-      // TODO: Use WebGLRenderer setAnimation
-      requestAnimationFrame(runTick);
+  start(): void {
+    getRendererProxy(this.world).renderer.setAnimationLoop((timestamp, xrFrame) => {
+      // For systems that want to use requestAnimationFrame timestamp
+      // instead of performance.now() timestamp
+      getTimestampProxy(this.world).timestamp = timestamp;
+
+      const xrFrameProxy = getXRFrameProxy(this.world);
+
+      if (xrFrame !== undefined) {
+        xrFrameProxy.frame = xrFrame;
+      }
+
       this.tick();
-    };
-    runTick();
+
+      xrFrameProxy.frame = null;
+    });
+  }
+
+  stop(): void {
+    throw new Error('stop() is unimplemented.');
   }
 
   getWorld(): IWorld {

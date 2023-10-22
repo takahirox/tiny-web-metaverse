@@ -5,6 +5,7 @@ export * from "./components/text";
 export * from "./components/textchat";
 export * from "./components/virtual_joystick";
 export * from "./components/video";
+export * from "./components/webxr";
 
 export * from "./serializations/video";
 
@@ -22,6 +23,7 @@ export * from "./systems/virtual_joystick_event";
 
 export * from "./ui/textchat";
 export * from "./ui/virtual_joystick";
+export * from "./ui/webxr";
 
 export * from "./utils/nametag";
 export * from "./utils/text";

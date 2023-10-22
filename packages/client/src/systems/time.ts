@@ -7,11 +7,25 @@ import {
 const timeQuery = defineQuery([Time]);
 
 export const timeSystem = (world: IWorld): void => {
-  timeQuery(world).forEach(eid => {
+  const timeEids = timeQuery(world);
+
+  if (timeEids.length === 0) {
+    return;
+  }
+
+  const timestamp = performance.now();
+
+  timeEids.forEach(eid => {
     const proxy = TimeProxy.get(eid);
-    const clock = proxy.clock;
-    const delta = clock.getDelta(); 
-    proxy.delta = delta;
-    proxy.elapsed += delta;
+
+    if (proxy.timestamp === 0.0) {
+      proxy.delta = 0.0;
+      proxy.elapsed = 0.0;
+    } else {
+      proxy.delta = (timestamp - proxy.timestamp) * 0.001;
+      proxy.elapsed += proxy.delta;
+    }
+
+    proxy.timestamp = timestamp;
   });
 };

@@ -1,17 +1,13 @@
-import { defineComponent, Types } from "bitecs";
-import { Clock } from "three";
+import { defineComponent } from "bitecs";
 import { NULL_EID } from "../common";
 
 // f32 types might cause precision problem??
-export const Time = defineComponent({
-  delta: Types.f32,
-  elapsed: Types.f32
-});
+export const Time = defineComponent();
 
 export class TimeProxy {
   private static instance: TimeProxy = new TimeProxy();
   private eid: number;
-  private map: Map<number, Clock>;
+  private map: Map<number, { delta: number, elapsed: number, timestamp: number } >;
 
   private constructor() {
     this.eid = NULL_EID;
@@ -23,37 +19,35 @@ export class TimeProxy {
     return TimeProxy.instance;
   }
 
-  allocate(
-    clock: Clock,
-    delta: number,
-    elapsed: number
-  ): void {
-    Time.delta[this.eid] = delta;
-    Time.elapsed[this.eid] = elapsed;
-    this.map.set(this.eid, clock);
+  allocate(): void {
+    this.map.set(this.eid, { delta: 0.0, elapsed: 0.0, timestamp: 0.0 });
   }
 
   free(): void {
     this.map.delete(this.eid);
   }
 
-  get clock(): Clock {
-    return this.map.get(this.eid)!;
-  }
-
   get delta(): number {
-    return Time.delta[this.eid];
+    return this.map.get(this.eid)!.delta;
   }
 
   set delta(delta: number) {
-    Time.delta[this.eid] = delta;
+    this.map.get(this.eid)!.delta = delta;
   }
 
   get elapsed(): number {
-    return Time.elapsed[this.eid];
+    return this.map.get(this.eid)!.elapsed;
   }
 
   set elapsed(elapsed: number) {
-    Time.elapsed[this.eid] = elapsed;
+    this.map.get(this.eid)!.elapsed = elapsed;
+  }
+
+  get timestamp(): number {
+    return this.map.get(this.eid)!.timestamp;
+  }
+
+  set timestamp(timestamp: number) {
+    this.map.get(this.eid)!.timestamp = timestamp;
   }
 }
