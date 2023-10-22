@@ -1,6 +1,8 @@
-// WebXR requestSession() needs to be called in user action (button click)
-// so this UI system that manages buttons for WebXR, rather than systems that
-// calls the function in tick(), is needed for WebXR app
+// WebXR requestSession() needs to be called in user action (button click),
+// so regular systems that are called in tick() invoked from requestAnimationFrame
+// can't handle it.
+// Istead we have introduces this UI system that manages buttons that exceptionally
+// handle WebXR asynchronously outside of tick().
 
 import {
   defineQuery,
@@ -63,6 +65,8 @@ const onSessionSupported = (supported: boolean, button: HTMLButtonElement): void
   }
 };
 
+// TODO: Recheck when plugged-in device changes
+
 if ('xr' in navigator) {
   navigator.xr
     .isSessionSupported('immersive-vr')
@@ -118,11 +122,13 @@ arButton.addEventListener('mouseleave', onMouseleave);
 //
 
 const sessionEventQueue: {
+  mode: XRSessionMode,
   session: XRSession,
   type: WebXRSessionEventType
 }[] = [];
 
 let sessionRequesting = false;
+let currentSessionMode: XRSessionMode | null = null;
 let currentSession: XRSession | null = null;
 
 // TODO: Configurable
@@ -137,17 +143,28 @@ const sessionInit = {
 };
 
 const onSessionStarted = async (mode: XRSessionMode, session: XRSession): Promise<void> => {
+  // Which should the followings be, before or after await?
+
+  currentSession = session;
+  currentSessionMode = mode;
+
   session.addEventListener('end', onSessionEnded);
 
   sessionEventQueue.push({
+    mode,
     session,
     type: WebXRSessionEventType.Start
   });
 
   if (currentWorld !== null) {
     await getRendererProxy(currentWorld).renderer.xr.setSession(session);
+
+    // There is a possibility that session ends while waiting.
+    if (currentSession === null) {
+      return;
+    }
   } else {
-    // TODO: Write comment
+    console.error(`Session starts before the WebXR UI system runs. This is a limiation. Try to start session again after the system runs.`);
     session.end();
     return;
   }
@@ -161,14 +178,13 @@ const onSessionStarted = async (mode: XRSessionMode, session: XRSession): Promis
     enableButton(arButton);
     disableButton(vrButton);
   }
-
-  currentSession = session;
 };
 
 const onSessionEnded = (): void => {
   currentSession.removeEventListener('end', onSessionEnded);
 
   sessionEventQueue.push({
+    mode: currentSessionMode,
     session: currentSession,
     type: WebXRSessionEventType.End
   });
@@ -181,6 +197,7 @@ const onSessionEnded = (): void => {
 
   sessionRequesting = false;
   currentSession = null;
+  currentSessionMode = null;
 };
 
 const onButtonClick = (mode: XRSessionMode): void => {
@@ -223,7 +240,16 @@ const arButtonQuery = defineQuery([WebXRARButton]);
 const enterArButtonQuery = enterQuery(arButtonQuery);
 const exitArButtonQuery = exitQuery(arButtonQuery);
 
-// TODO: Write comment
+// Three.js WebGLRenderer.xr.setSession seems to need to be called
+// immediately after session start. So regular systems that are called
+// in tick() invoked by requestAnimationFrame can't handle it.
+// I guess that's because regular requestAnimationFrame may be canceled
+// when session starts?
+// As hack, exceptionally stores world to access WebGLRenderer
+// outside of tick(). Then when session starts on session start
+// handler accesses world used in previous frame but probably
+// it won't be a serious problem because world is not replaced
+// with a new one once it's created.
 let currentWorld: IWorld | null = null;
 
 export const webXrButtonsUISystem = (world: IWorld): void => {
@@ -248,7 +274,7 @@ export const webXrButtonsUISystem = (world: IWorld): void => {
   });
 
   for (const e of sessionEventQueue) {
-    addWebXRSessionEvent(world, e.type, e.session);
+    addWebXRSessionEvent(world, e.type, e.mode, e.session);
   }
 
   sessionEventQueue.length = 0;

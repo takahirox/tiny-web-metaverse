@@ -969,6 +969,7 @@ export declare enum WebXRSessionEventType {
 	Start = 1
 }
 export type WebXRSessionEventValue = {
+	mode: XRSessionMode;
 	session: XRSession;
 	type: WebXRSessionEventType;
 };
@@ -980,7 +981,7 @@ export declare class WebXRSessionEventProxy {
 	private constructor();
 	static get(eid: number): WebXRSessionEventProxy;
 	allocate(): void;
-	add(type: WebXRSessionEventType, session: XRSession): void;
+	add(type: WebXRSessionEventType, mode: XRSessionMode, session: XRSession): void;
 	free(): void;
 	get events(): WebXRSessionEventValue[];
 }
@@ -1149,7 +1150,7 @@ export declare const getTimeProxy: (world: IWorld) => TimeProxy;
 export declare const getTimestampProxy: (world: IWorld) => TimestampProxy;
 export declare const getXRFrameProxy: (world: IWorld) => XRFrameProxy;
 export declare const getXRSessionProxy: (world: IWorld) => XRSessionProxy;
-export declare const addWebXRSessionEvent: (world: IWorld, type: WebXRSessionEventType, session: XRSession) => void;
+export declare const addWebXRSessionEvent: (world: IWorld, type: WebXRSessionEventType, mode: XRSessionMode, session: XRSession) => void;
 export declare function isSessionSupported(mode: XRSessionMode): Generator<void, boolean>;
 export declare function requestSession(mode: XRSessionMode, sessionInit?: XRSessionInit): Generator<void, XRSession>;
 

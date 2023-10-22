@@ -33,6 +33,7 @@ export const getXRSessionProxy = (world: IWorld): XRSessionProxy => {
 export const addWebXRSessionEvent = (
   world: IWorld,
   type: WebXRSessionEventType,
+  mode: XRSessionMode,
   session: XRSession
 ): void => {
   listenerQuery(world).forEach(eid => {
@@ -40,7 +41,7 @@ export const addWebXRSessionEvent = (
       addComponent(world, WebXRSessionEvent, eid);
       WebXRSessionEventProxy.get(eid).allocate();
     }
-    WebXRSessionEventProxy.get(eid).add(type, session);
+    WebXRSessionEventProxy.get(eid).add(type, mode, session);
   });
 };
 

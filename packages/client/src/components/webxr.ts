@@ -76,6 +76,7 @@ export enum WebXRSessionEventType {
 
 // TODO: Rename
 export type WebXRSessionEventValue = {
+  mode: XRSessionMode,
   session: XRSession,
   type: WebXRSessionEventType;
 };
@@ -101,8 +102,8 @@ export class WebXRSessionEventProxy {
     this.map.set(this.eid, []);  
   }
 
-  add(type: WebXRSessionEventType, session: XRSession): void {
-    this.map.get(this.eid)!.push({ session, type });
+  add(type: WebXRSessionEventType, mode: XRSessionMode, session: XRSession): void {
+    this.map.get(this.eid)!.push({ mode, session, type });
   }
 
   free(): void {

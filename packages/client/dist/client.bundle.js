@@ -2836,8 +2836,8 @@ class WebXRSessionEventProxy {
     allocate() {
         this.map.set(this.eid, []);
     }
-    add(type, session) {
-        this.map.get(this.eid).push({ session, type });
+    add(type, mode, session) {
+        this.map.get(this.eid).push({ mode, session, type });
     }
     free() {
         this.map.delete(this.eid);
@@ -6301,23 +6301,57 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   webxrSessionManagementSystem: () => (/* binding */ webxrSessionManagementSystem)
 /* harmony export */ });
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var _components_scene__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/scene */ "./src/components/scene.ts");
 /* harmony import */ var _components_webxr__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/webxr */ "./src/components/webxr.ts");
-/* harmony import */ var _utils_webxr__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/webxr */ "./src/utils/webxr.ts");
+/* harmony import */ var _utils_webxr__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/webxr */ "./src/utils/webxr.ts");
+
 
 
 
 const managerQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_webxr__WEBPACK_IMPORTED_MODULE_1__.WebXRSessionEvent, _components_webxr__WEBPACK_IMPORTED_MODULE_1__.WebXRSessionManager]);
 const eventQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_webxr__WEBPACK_IMPORTED_MODULE_1__.WebXRSessionEvent]);
+const sceneQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_scene__WEBPACK_IMPORTED_MODULE_2__.SceneComponent]);
 const webxrSessionManagementSystem = (world) => {
     // Assumes up to one manager entity
     managerQuery(world).forEach(eid => {
         for (const e of _components_webxr__WEBPACK_IMPORTED_MODULE_1__.WebXRSessionEventProxy.get(eid).events) {
-            const proxy = (0,_utils_webxr__WEBPACK_IMPORTED_MODULE_2__.getXRSessionProxy)(world);
+            const proxy = (0,_utils_webxr__WEBPACK_IMPORTED_MODULE_3__.getXRSessionProxy)(world);
             if (e.type === _components_webxr__WEBPACK_IMPORTED_MODULE_1__.WebXRSessionEventType.Start) {
                 proxy.session = e.session;
+                // In immersive AR mode, background and environment may not be needed
+                // in general because real-world enviroment should be preferred.
+                // As hack and experiment, remove them here and restore when leaving
+                // AR session.
+                // TODO: Implement more properly with ECS architecture
+                if (e.mode === 'immersive-ar') {
+                    sceneQuery(world).forEach(sceneEid => {
+                        const scene = _components_scene__WEBPACK_IMPORTED_MODULE_2__.SceneProxy.get(sceneEid).scene;
+                        if (scene.background !== null) {
+                            scene.userData.originalBackground = scene.background;
+                            scene.background = null;
+                        }
+                        if (scene.environment !== null) {
+                            scene.userData.originalEnvironment = scene.environment;
+                            scene.environment = null;
+                        }
+                    });
+                }
             }
             else if (e.type === _components_webxr__WEBPACK_IMPORTED_MODULE_1__.WebXRSessionEventType.End) {
                 proxy.session = null;
+                if (e.mode === 'immersive-ar') {
+                    sceneQuery(world).forEach(sceneEid => {
+                        const scene = _components_scene__WEBPACK_IMPORTED_MODULE_2__.SceneProxy.get(sceneEid).scene;
+                        if (scene.userData.originalBackground) {
+                            scene.background = scene.userData.originalBackground;
+                            delete scene.userData.originalBackground;
+                        }
+                        if (scene.userData.originalEnvironment) {
+                            scene.environment = scene.userData.originalEnvironment;
+                            delete scene.userData.originalEnvironment;
+                        }
+                    });
+                }
             }
         }
     });
@@ -7039,13 +7073,13 @@ const getXRSessionProxy = (world) => {
     // Assumes always single xr session entity exists
     return _components_webxr__WEBPACK_IMPORTED_MODULE_1__.XRSessionProxy.get(sessionQuery(world)[0]);
 };
-const addWebXRSessionEvent = (world, type, session) => {
+const addWebXRSessionEvent = (world, type, mode, session) => {
     listenerQuery(world).forEach(eid => {
         if (!(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_webxr__WEBPACK_IMPORTED_MODULE_1__.WebXRSessionEvent, eid)) {
             (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_webxr__WEBPACK_IMPORTED_MODULE_1__.WebXRSessionEvent, eid);
             _components_webxr__WEBPACK_IMPORTED_MODULE_1__.WebXRSessionEventProxy.get(eid).allocate();
         }
-        _components_webxr__WEBPACK_IMPORTED_MODULE_1__.WebXRSessionEventProxy.get(eid).add(type, session);
+        _components_webxr__WEBPACK_IMPORTED_MODULE_1__.WebXRSessionEventProxy.get(eid).add(type, mode, session);
     });
 };
 function* isSessionSupported(mode) {

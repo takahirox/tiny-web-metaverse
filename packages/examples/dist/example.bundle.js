@@ -6267,9 +6267,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/utils/bitecs_three.ts");
 /* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/utils/webxr.ts");
 /* harmony import */ var _components_webxr__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/webxr */ "../addons/src/components/webxr.ts");
-// WebXR requestSession() needs to be called in user action (button click)
-// so this UI system that manages buttons for WebXR, rather than systems that
-// calls the function in tick(), is needed for WebXR app
+// WebXR requestSession() needs to be called in user action (button click),
+// so regular systems that are called in tick() invoked from requestAnimationFrame
+// can't handle it.
+// Istead we have introduces this UI system that manages buttons that exceptionally
+// handle WebXR asynchronously outside of tick().
 var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -6322,6 +6324,7 @@ const onSessionSupported = (supported, button) => {
         button.style.display = '';
     }
 };
+// TODO: Recheck when plugged-in device changes
 if ('xr' in navigator) {
     navigator.xr
         .isSessionSupported('immersive-vr')
@@ -6363,6 +6366,7 @@ arButton.addEventListener('mouseleave', onMouseleave);
 //
 const sessionEventQueue = [];
 let sessionRequesting = false;
+let currentSessionMode = null;
 let currentSession = null;
 // TODO: Configurable
 const sessionInit = {
@@ -6374,16 +6378,24 @@ const sessionInit = {
     ]
 };
 const onSessionStarted = (mode, session) => __awaiter(void 0, void 0, void 0, function* () {
+    // Which should the followings be, before or after await?
+    currentSession = session;
+    currentSessionMode = mode;
     session.addEventListener('end', onSessionEnded);
     sessionEventQueue.push({
+        mode,
         session,
         type: _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_1__.WebXRSessionEventType.Start
     });
     if (currentWorld !== null) {
         yield (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_2__.getRendererProxy)(currentWorld).renderer.xr.setSession(session);
+        // There is a possibility that session ends while waiting.
+        if (currentSession === null) {
+            return;
+        }
     }
     else {
-        // TODO: Write comment
+        console.error(`Session starts before the WebXR UI system runs. This is a limiation. Try to start session again after the system runs.`);
         session.end();
         return;
     }
@@ -6397,11 +6409,11 @@ const onSessionStarted = (mode, session) => __awaiter(void 0, void 0, void 0, fu
         enableButton(arButton);
         disableButton(vrButton);
     }
-    currentSession = session;
 });
 const onSessionEnded = () => {
     currentSession.removeEventListener('end', onSessionEnded);
     sessionEventQueue.push({
+        mode: currentSessionMode,
         session: currentSession,
         type: _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_1__.WebXRSessionEventType.End
     });
@@ -6411,6 +6423,7 @@ const onSessionEnded = () => {
     enableButton(arButton);
     sessionRequesting = false;
     currentSession = null;
+    currentSessionMode = null;
 };
 const onButtonClick = (mode) => {
     if (sessionRequesting) {
@@ -6445,7 +6458,16 @@ const exitVrButtonQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)(vrBu
 const arButtonQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_webxr__WEBPACK_IMPORTED_MODULE_3__.WebXRARButton]);
 const enterArButtonQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)(arButtonQuery);
 const exitArButtonQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)(arButtonQuery);
-// TODO: Write comment
+// Three.js WebGLRenderer.xr.setSession seems to need to be called
+// immediately after session start. So regular systems that are called
+// in tick() invoked by requestAnimationFrame can't handle it.
+// I guess that's because regular requestAnimationFrame may be canceled
+// when session starts?
+// As hack, exceptionally stores world to access WebGLRenderer
+// outside of tick(). Then when session starts on session start
+// handler accesses world used in previous frame but probably
+// it won't be a serious problem because world is not replaced
+// with a new one once it's created.
 let currentWorld = null;
 const webXrButtonsUISystem = (world) => {
     currentWorld = world;
@@ -6463,7 +6485,7 @@ const webXrButtonsUISystem = (world) => {
         buttonsDiv.appendChild(arButton);
     });
     for (const e of sessionEventQueue) {
-        (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_4__.addWebXRSessionEvent)(world, e.type, e.session);
+        (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_4__.addWebXRSessionEvent)(world, e.type, e.mode, e.session);
     }
     sessionEventQueue.length = 0;
 };
@@ -9458,8 +9480,8 @@ class WebXRSessionEventProxy {
     allocate() {
         this.map.set(this.eid, []);
     }
-    add(type, session) {
-        this.map.get(this.eid).push({ session, type });
+    add(type, mode, session) {
+        this.map.get(this.eid).push({ mode, session, type });
     }
     free() {
         this.map.delete(this.eid);
@@ -12976,23 +12998,57 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   webxrSessionManagementSystem: () => (/* binding */ webxrSessionManagementSystem)
 /* harmony export */ });
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var _components_scene__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/scene */ "../client/src/components/scene.ts");
 /* harmony import */ var _components_webxr__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/webxr */ "../client/src/components/webxr.ts");
-/* harmony import */ var _utils_webxr__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/webxr */ "../client/src/utils/webxr.ts");
+/* harmony import */ var _utils_webxr__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/webxr */ "../client/src/utils/webxr.ts");
+
 
 
 
 const managerQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_webxr__WEBPACK_IMPORTED_MODULE_1__.WebXRSessionEvent, _components_webxr__WEBPACK_IMPORTED_MODULE_1__.WebXRSessionManager]);
 const eventQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_webxr__WEBPACK_IMPORTED_MODULE_1__.WebXRSessionEvent]);
+const sceneQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_scene__WEBPACK_IMPORTED_MODULE_2__.SceneComponent]);
 const webxrSessionManagementSystem = (world) => {
     // Assumes up to one manager entity
     managerQuery(world).forEach(eid => {
         for (const e of _components_webxr__WEBPACK_IMPORTED_MODULE_1__.WebXRSessionEventProxy.get(eid).events) {
-            const proxy = (0,_utils_webxr__WEBPACK_IMPORTED_MODULE_2__.getXRSessionProxy)(world);
+            const proxy = (0,_utils_webxr__WEBPACK_IMPORTED_MODULE_3__.getXRSessionProxy)(world);
             if (e.type === _components_webxr__WEBPACK_IMPORTED_MODULE_1__.WebXRSessionEventType.Start) {
                 proxy.session = e.session;
+                // In immersive AR mode, background and environment may not be needed
+                // in general because real-world enviroment should be preferred.
+                // As hack and experiment, remove them here and restore when leaving
+                // AR session.
+                // TODO: Implement more properly with ECS architecture
+                if (e.mode === 'immersive-ar') {
+                    sceneQuery(world).forEach(sceneEid => {
+                        const scene = _components_scene__WEBPACK_IMPORTED_MODULE_2__.SceneProxy.get(sceneEid).scene;
+                        if (scene.background !== null) {
+                            scene.userData.originalBackground = scene.background;
+                            scene.background = null;
+                        }
+                        if (scene.environment !== null) {
+                            scene.userData.originalEnvironment = scene.environment;
+                            scene.environment = null;
+                        }
+                    });
+                }
             }
             else if (e.type === _components_webxr__WEBPACK_IMPORTED_MODULE_1__.WebXRSessionEventType.End) {
                 proxy.session = null;
+                if (e.mode === 'immersive-ar') {
+                    sceneQuery(world).forEach(sceneEid => {
+                        const scene = _components_scene__WEBPACK_IMPORTED_MODULE_2__.SceneProxy.get(sceneEid).scene;
+                        if (scene.userData.originalBackground) {
+                            scene.background = scene.userData.originalBackground;
+                            delete scene.userData.originalBackground;
+                        }
+                        if (scene.userData.originalEnvironment) {
+                            scene.environment = scene.userData.originalEnvironment;
+                            delete scene.userData.originalEnvironment;
+                        }
+                    });
+                }
             }
         }
     });
@@ -13730,13 +13786,13 @@ const getXRSessionProxy = (world) => {
     // Assumes always single xr session entity exists
     return _components_webxr__WEBPACK_IMPORTED_MODULE_1__.XRSessionProxy.get(sessionQuery(world)[0]);
 };
-const addWebXRSessionEvent = (world, type, session) => {
+const addWebXRSessionEvent = (world, type, mode, session) => {
     listenerQuery(world).forEach(eid => {
         if (!(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_webxr__WEBPACK_IMPORTED_MODULE_1__.WebXRSessionEvent, eid)) {
             (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_webxr__WEBPACK_IMPORTED_MODULE_1__.WebXRSessionEvent, eid);
             _components_webxr__WEBPACK_IMPORTED_MODULE_1__.WebXRSessionEventProxy.get(eid).allocate();
         }
-        _components_webxr__WEBPACK_IMPORTED_MODULE_1__.WebXRSessionEventProxy.get(eid).add(type, session);
+        _components_webxr__WEBPACK_IMPORTED_MODULE_1__.WebXRSessionEventProxy.get(eid).add(type, mode, session);
     });
 };
 function* isSessionSupported(mode) {
