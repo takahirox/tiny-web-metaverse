@@ -13008,14 +13008,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   webxrSessionManagementSystem: () => (/* binding */ webxrSessionManagementSystem)
 /* harmony export */ });
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! three */ "../../node_modules/three/build/three.module.js");
 /* harmony import */ var _components_avatar__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/avatar */ "../client/src/components/avatar.ts");
 /* harmony import */ var _components_camera__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/camera */ "../client/src/components/camera.ts");
 /* harmony import */ var _components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/entity_object3d */ "../client/src/components/entity_object3d.ts");
 /* harmony import */ var _components_network__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../components/network */ "../client/src/components/network.ts");
 /* harmony import */ var _components_scene__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/scene */ "../client/src/components/scene.ts");
-/* harmony import */ var _utils_bitecs_three__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../utils/bitecs_three */ "../client/src/utils/bitecs_three.ts");
+/* harmony import */ var _utils_bitecs_three__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../utils/bitecs_three */ "../client/src/utils/bitecs_three.ts");
 /* harmony import */ var _components_webxr__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/webxr */ "../client/src/components/webxr.ts");
 /* harmony import */ var _utils_webxr__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../utils/webxr */ "../client/src/utils/webxr.ts");
+
 
 
 
@@ -13092,18 +13094,28 @@ const webxrSessionManagementSystem = (world) => {
         }
     });
 };
+const mat4 = new three__WEBPACK_IMPORTED_MODULE_8__.Matrix4();
+const pos = new three__WEBPACK_IMPORTED_MODULE_8__.Vector3();
+const quat = new three__WEBPACK_IMPORTED_MODULE_8__.Quaternion();
+const scale = new three__WEBPACK_IMPORTED_MODULE_8__.Vector3();
 const webxrCameraSystem = (world) => {
-    const renderer = (0,_utils_bitecs_three__WEBPACK_IMPORTED_MODULE_8__.getRendererProxy)(world).renderer;
+    const renderer = (0,_utils_bitecs_three__WEBPACK_IMPORTED_MODULE_9__.getRendererProxy)(world).renderer;
     if (renderer.xr.enabled && renderer.xr.isPresenting) {
         // Assumes always single camera entity exists while in immersive mode.
         cameraQuery(world).forEach(eid => {
             const camera = _components_camera__WEBPACK_IMPORTED_MODULE_4__.PerspectiveCameraProxy.get(eid).camera;
             renderer.xr.updateCamera(camera);
             avatarQuery(world).forEach(eid => {
-                // TODO: Consider avatar's height
-                const root = _components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__.EntityObject3DProxy.get(eid).root;
-                root.position.copy(camera.position);
-                root.quaternion.copy(camera.quaternion);
+                // TODO: Consider avatar's height and eyes position
+                // TODO: Optimize
+                const avatar = _components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__.EntityObject3DProxy.get(eid).root;
+                mat4.identity();
+                // TODO: Remove magic number
+                mat4.elements[14] = 0.2;
+                mat4.premultiply(camera.matrix);
+                mat4.decompose(pos, quat, scale);
+                avatar.position.copy(pos);
+                avatar.quaternion.copy(quat);
             });
         });
     }

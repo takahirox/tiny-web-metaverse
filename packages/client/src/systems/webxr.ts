@@ -3,6 +3,7 @@ import {
   IWorld,
   removeComponent
 } from "bitecs";
+import { Matrix4, Quaternion, Vector3 } from "three";
 import { Avatar } from "../components/avatar";
 import {
   PerspectiveCameraComponent,
@@ -103,6 +104,11 @@ export const webxrSessionManagementSystem = (world: IWorld): void => {
   });
 };
 
+const mat4 = new Matrix4();
+const pos = new Vector3();
+const quat = new Quaternion();
+const scale = new Vector3();
+
 export const webxrCameraSystem = (world: IWorld): void => {
   const renderer = getRendererProxy(world).renderer;
   if (renderer.xr.enabled && renderer.xr.isPresenting) {
@@ -111,10 +117,18 @@ export const webxrCameraSystem = (world: IWorld): void => {
       const camera = PerspectiveCameraProxy.get(eid).camera;
       renderer.xr.updateCamera(camera);
       avatarQuery(world).forEach(eid => {
-        // TODO: Consider avatar's height
-        const root = EntityObject3DProxy.get(eid).root;
-        root.position.copy(camera.position);
-        root.quaternion.copy(camera.quaternion);
+        // TODO: Consider avatar's height and eyes position
+        // TODO: Optimize
+        const avatar = EntityObject3DProxy.get(eid).root;
+
+        mat4.identity();
+        // TODO: Remove magic number
+        mat4.elements[14] = 0.2;
+        mat4.premultiply(camera.matrix);
+        mat4.decompose(pos, quat, scale);
+
+        avatar.position.copy(pos);
+        avatar.quaternion.copy(quat);
       });
     });
   }
