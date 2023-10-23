@@ -6816,6 +6816,8 @@ class App {
         renderer.setPixelRatio(window.devicePixelRatio);
         // Any downside from always enabling WebXR?
         renderer.xr.enabled = true;
+        // We update it manually
+        renderer.xr.cameraAutoUpdate = false;
         // Built-in systems and entities
         this.registerSystem(_systems_time__WEBPACK_IMPORTED_MODULE_4__.timeSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.Time);
         this.registerSystem(_systems_media_device__WEBPACK_IMPORTED_MODULE_6__.micRequestSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.EventHandling);
@@ -6834,6 +6836,7 @@ class App {
         this.registerSystem(_systems_webxr__WEBPACK_IMPORTED_MODULE_19__.webxrSessionManagementSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.EventHandling + 1);
         this.registerSystem(_systems_mouse_position_to_pointer__WEBPACK_IMPORTED_MODULE_20__.mousePositionToPointerSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.EventHandling + 2);
         this.registerSystem(_systems_touch_position_to_pointer__WEBPACK_IMPORTED_MODULE_21__.touchPositionToPointerSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.EventHandling + 2);
+        this.registerSystem(_systems_webxr__WEBPACK_IMPORTED_MODULE_19__.webxrCameraSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.Setup - 1);
         this.registerSystem(_systems_canvas__WEBPACK_IMPORTED_MODULE_22__.canvasSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.Setup);
         this.registerSystem(_systems_prefab__WEBPACK_IMPORTED_MODULE_23__.prefabsSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.Setup);
         this.registerSystem(_systems_raycaster__WEBPACK_IMPORTED_MODULE_24__.raycasterSystem, _common__WEBPACK_IMPORTED_MODULE_5__.SystemOrder.Setup);
@@ -7013,6 +7016,8 @@ class App {
         const cameraEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(this.world);
         // TODO: Configurable
         const camera = new three__WEBPACK_IMPORTED_MODULE_2__.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.001, 2000.0);
+        // Matrices are updated in updateMatricesSystem.
+        camera.matrixWorldAutoUpdate = false;
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(this.world, _components_camera__WEBPACK_IMPORTED_MODULE_77__.PerspectiveCameraComponent, cameraEid);
         _components_camera__WEBPACK_IMPORTED_MODULE_77__.PerspectiveCameraProxy.get(cameraEid).allocate(camera);
         (0,_utils_entity_object3d__WEBPACK_IMPORTED_MODULE_78__.addObject3D)(this.world, camera, cameraEid);
@@ -12999,13 +13004,22 @@ const updateMatricesSystem = (world) => {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   clearWebXREventSystem: () => (/* binding */ clearWebXREventSystem),
+/* harmony export */   webxrCameraSystem: () => (/* binding */ webxrCameraSystem),
 /* harmony export */   webxrSessionManagementSystem: () => (/* binding */ webxrSessionManagementSystem)
 /* harmony export */ });
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var _components_avatar__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/avatar */ "../client/src/components/avatar.ts");
+/* harmony import */ var _components_camera__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/camera */ "../client/src/components/camera.ts");
 /* harmony import */ var _components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/entity_object3d */ "../client/src/components/entity_object3d.ts");
+/* harmony import */ var _components_network__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../components/network */ "../client/src/components/network.ts");
 /* harmony import */ var _components_scene__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/scene */ "../client/src/components/scene.ts");
+/* harmony import */ var _utils_bitecs_three__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../utils/bitecs_three */ "../client/src/utils/bitecs_three.ts");
 /* harmony import */ var _components_webxr__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/webxr */ "../client/src/components/webxr.ts");
-/* harmony import */ var _utils_webxr__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/webxr */ "../client/src/utils/webxr.ts");
+/* harmony import */ var _utils_webxr__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../utils/webxr */ "../client/src/utils/webxr.ts");
+
+
+
+
 
 
 
@@ -13015,11 +13029,13 @@ const managerQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_compo
 const eventQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_webxr__WEBPACK_IMPORTED_MODULE_1__.WebXRSessionEvent]);
 const sceneQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_scene__WEBPACK_IMPORTED_MODULE_2__.SceneComponent]);
 const invisibleQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__.EntityObject3D, _components_webxr__WEBPACK_IMPORTED_MODULE_1__.InvisibleInAR]);
+const cameraQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_camera__WEBPACK_IMPORTED_MODULE_4__.SceneCamera, _components_camera__WEBPACK_IMPORTED_MODULE_4__.PerspectiveCameraComponent]);
+const avatarQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_avatar__WEBPACK_IMPORTED_MODULE_5__.Avatar, _components_network__WEBPACK_IMPORTED_MODULE_6__.Local, _components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__.EntityObject3D]);
 const webxrSessionManagementSystem = (world) => {
     // Assumes up to one manager entity
     managerQuery(world).forEach(eid => {
         for (const e of _components_webxr__WEBPACK_IMPORTED_MODULE_1__.WebXRSessionEventProxy.get(eid).events) {
-            const proxy = (0,_utils_webxr__WEBPACK_IMPORTED_MODULE_4__.getXRSessionProxy)(world);
+            const proxy = (0,_utils_webxr__WEBPACK_IMPORTED_MODULE_7__.getXRSessionProxy)(world);
             if (e.type === _components_webxr__WEBPACK_IMPORTED_MODULE_1__.WebXRSessionEventType.Start) {
                 proxy.session = e.session;
                 // In immersive AR mode, background and environment may not be needed
@@ -13075,6 +13091,22 @@ const webxrSessionManagementSystem = (world) => {
             }
         }
     });
+};
+const webxrCameraSystem = (world) => {
+    const renderer = (0,_utils_bitecs_three__WEBPACK_IMPORTED_MODULE_8__.getRendererProxy)(world).renderer;
+    if (renderer.xr.enabled && renderer.xr.isPresenting) {
+        // Assumes always single camera entity exists while in immersive mode.
+        cameraQuery(world).forEach(eid => {
+            const camera = _components_camera__WEBPACK_IMPORTED_MODULE_4__.PerspectiveCameraProxy.get(eid).camera;
+            renderer.xr.updateCamera(camera);
+            avatarQuery(world).forEach(eid => {
+                // TODO: Consider avatar's height
+                const root = _components_entity_object3d__WEBPACK_IMPORTED_MODULE_3__.EntityObject3DProxy.get(eid).root;
+                root.position.copy(camera.position);
+                root.quaternion.copy(camera.quaternion);
+            });
+        });
+    }
 };
 const clearWebXREventSystem = (world) => {
     eventQuery(world).forEach(eid => {
@@ -99016,7 +99048,7 @@ const run = () => __awaiter(void 0, void 0, void 0, function* () {
     (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_35__.InScene, lightEid);
     (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_39__.addObject3D)(world, light, lightEid);
     const avatarEid = (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_40__.createNetworkedEntity)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_41__.NetworkedType.Local, 'avatar');
-    _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_42__.EntityObject3DProxy.get(avatarEid).root.position.set(0.0, 0.25, 2.0);
+    _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_42__.EntityObject3DProxy.get(avatarEid).root.position.set(0.0, 0.75, 2.0);
     (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_43__.KeyEventListener, avatarEid);
     (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_44__.AudioDestination, avatarEid);
     const envMapLoaderEid = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addEntity)(world);

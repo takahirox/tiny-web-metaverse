@@ -150,7 +150,7 @@ const run = async (): Promise<void> => {
   addObject3D(world, light, lightEid);
 
   const avatarEid = createNetworkedEntity(world, NetworkedType.Local, 'avatar');
-  EntityObject3DProxy.get(avatarEid).root.position.set(0.0, 0.25, 2.0);
+  EntityObject3DProxy.get(avatarEid).root.position.set(0.0, 0.75, 2.0);
   addComponent(world, KeyEventListener, avatarEid);
   addComponent(world, AudioDestination, avatarEid);
 

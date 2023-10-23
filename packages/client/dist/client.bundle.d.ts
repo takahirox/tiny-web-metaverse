@@ -1110,6 +1110,7 @@ export declare const touchPositionTrackSystem: (world: IWorld) => void;
 export declare const clearTransformUpdatedSystem: (world: IWorld) => void;
 export declare const updateMatricesSystem: (world: IWorld) => void;
 export declare const webxrSessionManagementSystem: (world: IWorld) => void;
+export declare const webxrCameraSystem: (world: IWorld) => void;
 export declare const clearWebXREventSystem: (world: IWorld) => void;
 export declare const windowResizeEventHandleSystem: (world: IWorld) => void;
 export declare const windowResizeEventClearSystem: (world: IWorld) => void;

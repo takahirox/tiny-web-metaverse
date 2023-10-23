@@ -3,14 +3,22 @@ import {
   IWorld,
   removeComponent
 } from "bitecs";
+import { Avatar } from "../components/avatar";
+import {
+  PerspectiveCameraComponent,
+  PerspectiveCameraProxy,
+  SceneCamera
+} from "../components/camera";
 import {
   EntityObject3D,
   EntityObject3DProxy
 } from "../components/entity_object3d";
+import { Local } from "../components/network";
 import {
   SceneComponent,
   SceneProxy
 } from "../components/scene";
+import { getRendererProxy } from "../utils/bitecs_three";
 import {
   InvisibleInAR,
   WebXRSessionEvent,
@@ -24,6 +32,8 @@ const managerQuery = defineQuery([WebXRSessionEvent, WebXRSessionManager]);
 const eventQuery = defineQuery([WebXRSessionEvent]);
 const sceneQuery = defineQuery([SceneComponent]);
 const invisibleQuery = defineQuery([EntityObject3D, InvisibleInAR]);
+const cameraQuery = defineQuery([SceneCamera, PerspectiveCameraComponent]);
+const avatarQuery = defineQuery([Avatar, Local, EntityObject3D]);
 
 export const webxrSessionManagementSystem = (world: IWorld): void => {
   // Assumes up to one manager entity
@@ -91,6 +101,23 @@ export const webxrSessionManagementSystem = (world: IWorld): void => {
       }
     }
   });
+};
+
+export const webxrCameraSystem = (world: IWorld): void => {
+  const renderer = getRendererProxy(world).renderer;
+  if (renderer.xr.enabled && renderer.xr.isPresenting) {
+    // Assumes always single camera entity exists while in immersive mode.
+    cameraQuery(world).forEach(eid => {
+      const camera = PerspectiveCameraProxy.get(eid).camera;
+      renderer.xr.updateCamera(camera);
+      avatarQuery(world).forEach(eid => {
+        // TODO: Consider avatar's height
+        const root = EntityObject3DProxy.get(eid).root;
+        root.position.copy(camera.position);
+        root.quaternion.copy(camera.quaternion);
+      });
+    });
+  }
 };
 
 export const clearWebXREventSystem = (world: IWorld): void => {

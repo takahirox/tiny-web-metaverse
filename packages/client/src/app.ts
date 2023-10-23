@@ -191,7 +191,11 @@ import { touchPositionToPointerSystem } from "./systems/touch_position_to_pointe
 import { touchPositionTrackSystem } from "./systems/touch_position_track";
 import { clearTransformUpdatedSystem } from "./systems/transform";
 import { updateMatricesSystem } from "./systems/update_matrices";
-import { clearWebXREventSystem, webxrSessionManagementSystem } from "./systems/webxr";
+import {
+  clearWebXREventSystem,
+  webxrCameraSystem,
+  webxrSessionManagementSystem
+} from "./systems/webxr";
 import {
   windowResizeEventHandleSystem,
   windowResizeEventClearSystem
@@ -251,6 +255,8 @@ export class App {
     renderer.setPixelRatio(window.devicePixelRatio);
     // Any downside from always enabling WebXR?
     renderer.xr.enabled = true;
+    // We update it manually
+    renderer.xr.cameraAutoUpdate = false;
 
     // Built-in systems and entities
 
@@ -274,6 +280,8 @@ export class App {
 
     this.registerSystem(mousePositionToPointerSystem, SystemOrder.EventHandling + 2);
     this.registerSystem(touchPositionToPointerSystem, SystemOrder.EventHandling + 2);
+
+    this.registerSystem(webxrCameraSystem, SystemOrder.Setup - 1);
 
     this.registerSystem(canvasSystem, SystemOrder.Setup);
     this.registerSystem(prefabsSystem, SystemOrder.Setup);
@@ -506,6 +514,9 @@ export class App {
       0.001,
       2000.0
     );
+
+    // Matrices are updated in updateMatricesSystem.
+    camera.matrixWorldAutoUpdate = false;
 
     addComponent(this.world, PerspectiveCameraComponent, cameraEid);
     PerspectiveCameraProxy.get(cameraEid).allocate(camera);
