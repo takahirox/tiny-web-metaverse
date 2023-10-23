@@ -12,9 +12,9 @@ to meet up with in a room.
 
 ## Screenshot
 
-<img src="./screenshots/screenshot_mobile.png" width="640" /><br />
-<img src="./screenshots/screenshot_mobile_vr.png" width="640" /><br />
-<img src="./screenshots/screenshot_mobile_ar.png" width="640" />
+<img src="./screenshots/screenshot_mobile.png" width="480" /><br />
+<img src="./screenshots/screenshot_mobile_vr.png" width="480" /><br />
+<img src="./screenshots/screenshot_mobile_ar.png" width="480" />
 
 ## Features
 
