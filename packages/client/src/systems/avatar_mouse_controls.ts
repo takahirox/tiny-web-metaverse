@@ -20,22 +20,21 @@ import {
   MouseButtonEvent,
   MouseButtonEventProxy,
   MouseButtonEventType,
-  MouseButtonType,
-  MousePosition,
-  MousePositionProxy,
-  PreviousMousePosition,
-  PreviousMousePositionProxy
+  MouseButtonType
 } from "../components/mouse";
 import { Local } from "../components/network";
 import { Raycasted, RaycastedNearest } from "../components/raycast";
 import { TransformUpdated } from "../components/transform";
+import {
+  getCurrentMousePositionProxy,
+  getPreviousMousePositionProxy
+} from "../utils/mouse";
 
 const euler = new Euler(0, 0, 0, 'YXZ');
 
 const controlsQuery = defineQuery([AvatarMouseControls]);
 const controlsExitQuery = exitQuery(controlsQuery);
 const avatarQuery = defineQuery([Avatar, EntityObject3D, Local]);
-const mouseQuery = defineQuery([MousePosition, PreviousMousePosition]);
 const raycastedQuery = defineQuery([Raycasted, RaycastedNearest]);
 const grabbedQuery = defineQuery([Grabbed]);
 
@@ -54,7 +53,6 @@ export const avatarMouseControlsSystem = (world: IWorld) => {
   const raycastedExist = raycastedQuery(world).length > 0;
   const grabbedExist = grabbedQuery(world).length > 0;
   const avatarEids = avatarQuery(world);
-  const mouseEids = mouseQuery(world);
 
   controlsQuery(world).forEach(controlsEid => {
     const controlsProxy = AvatarMouseControlsProxy.get(controlsEid);
@@ -85,21 +83,19 @@ export const avatarMouseControlsSystem = (world: IWorld) => {
     avatarEids.forEach(avatarEid => {
       const avatar = EntityObject3DProxy.get(avatarEid).root;
 
-      mouseEids.forEach(mouseEid => {
-        const mouseProxy = MousePositionProxy.get(mouseEid);
-        const previousProxy = PreviousMousePositionProxy.get(mouseEid);
+      const { x: currentX, y: currentY } = getCurrentMousePositionProxy(world);
+      const { x: previousX, y: previousY } = getPreviousMousePositionProxy(world);
 
-        const dx = mouseProxy.x - previousProxy.x;
-        const dy = mouseProxy.y - previousProxy.y;
+      const dx = currentX - previousX;
+      const dy = currentY - previousY;
 
-        // TODO: Configurable rotation speed
-        // TODO: Add LinearRotation component?
-        euler.setFromQuaternion(avatar.quaternion);
-        euler.y -= dx;
-        euler.x += dy;
-        euler.x = Math.max(PI_2 - MAX_POLAR_ANGLE, Math.min(PI_2 - MIN_POLAR_ANGLE, euler.x));
-        avatar.quaternion.setFromEuler(euler);
-      });
+      // TODO: Configurable rotation speed
+      // TODO: Add LinearRotation component?
+      euler.setFromQuaternion(avatar.quaternion);
+      euler.y -= dx;
+      euler.x += dy;
+      euler.x = Math.max(PI_2 - MAX_POLAR_ANGLE, Math.min(PI_2 - MIN_POLAR_ANGLE, euler.x));
+      avatar.quaternion.setFromEuler(euler);
 
       addComponent(world, TransformUpdated, avatarEid);
     });

@@ -8,6 +8,7 @@ import {
   Color,
   MathUtils,
   PerspectiveCamera,
+  Ray,
   Raycaster,
   Scene,
   WebGLRenderer
@@ -34,7 +35,9 @@ import {
   PerspectiveCameraProxy,
   SceneCamera
 } from "./components/camera";
+import { KeyEventHandler } from "./components/keyboard";
 import {
+  CurrentMousePosition,
   MouseButtonEventHandler,
   MouseButtonEventHandlerProxy,
   MouseButtonEventListener,
@@ -43,10 +46,8 @@ import {
   MouseMoveEventListener,
   MousePosition,
   MousePositionProxy,
-  PreviousMousePosition,
-  PreviousMousePositionProxy
+  PreviousMousePosition
 } from "./components/mouse";
-import { KeyEventHandler } from "./components/keyboard";
 import {
   ComponentNetworkEventListener,
   EntityNetworkEventListener,
@@ -66,6 +67,7 @@ import {
 import { Peers, PeersManager, PeersProxy } from "./components/peer";
 import { Pointer, PointerProxy } from "./components/pointer";
 import { Prefabs, PrefabsProxy } from "./components/prefab";
+import { RayComponent, RayProxy, FirstRay } from "./components/ray";
 import { RaycasterComponent, RaycasterProxy } from "./components/raycast";
 import { Renderer, RendererProxy } from "./components/renderer";
 import { RoomId, RoomIdProxy } from "./components/room_id";
@@ -104,8 +106,14 @@ import {
 } from "./components/touch";
 import { UserId, UserIdProxy } from "./components/user_id";
 import {
+  FirstXRController,
+  SecondXRController,
   WebXRSessionEventListener,
   WebXRSessionManager,
+  XRController,
+  XRControllerConnectionEventListener,
+  XRControllerProxy,
+  XRControllerSelectEventListener,
   XRFrameComponent,
   XRFrameProxy,
   XRSessionComponent,
@@ -134,7 +142,7 @@ import { gltfSystem } from "./systems/gltf";
 import { gltfAssetLoadSystem } from "./systems/gltf_asset_load";
 import { gltfSceneLoadSystem } from "./systems/gltf_scene_load";
 import { grabSystem } from "./systems/grab";
-import { grabbedObjectsPointerTrackSystem } from "./systems/grab_pointer_track";
+import { grabbedObjectsRayTrackSystem } from "./systems/grab_ray_track";
 import { clearInteractionSystem } from "./systems/interacted";
 import {
   keyEventHandleSystem,
@@ -167,6 +175,7 @@ import { peerSystem } from "./systems/peer";
 import { perspectiveCameraSystem } from "./systems/perspective_camera";
 import { positionalAudioSystem } from "./systems/positional_audio";
 import { prefabsSystem } from "./systems/prefab";
+import { raySystem } from "./systems/ray";
 import { clearRaycastedSystem, raycastSystem } from "./systems/raycast";
 import { raycasterSystem } from "./systems/raycaster";
 import { renderSystem } from "./systems/render";
@@ -191,11 +200,16 @@ import { touchPositionToPointerSystem } from "./systems/touch_position_to_pointe
 import { touchPositionTrackSystem } from "./systems/touch_position_track";
 import { clearTransformUpdatedSystem } from "./systems/transform";
 import { updateMatricesSystem } from "./systems/update_matrices";
+import { webxrCameraSystem } from "./systems/webxr_camera";
 import {
-  clearWebXREventSystem,
-  webxrCameraSystem,
+  clearWebXRControllerEventSystem,
+  webxrControllerEventHandlingSystem,
+  webxrControllerSystem
+} from "./systems/webxr_controller";
+import {
+  clearWebXRSessionEventSystem,
   webxrSessionManagementSystem
-} from "./systems/webxr";
+} from "./systems/webxr_session";
 import {
   windowResizeEventHandleSystem,
   windowResizeEventClearSystem
@@ -280,8 +294,12 @@ export class App {
 
     this.registerSystem(mousePositionToPointerSystem, SystemOrder.EventHandling + 2);
     this.registerSystem(touchPositionToPointerSystem, SystemOrder.EventHandling + 2);
+    this.registerSystem(webxrCameraSystem, SystemOrder.EventHandling + 2);
+    this.registerSystem(webxrControllerEventHandlingSystem, SystemOrder.EventHandling + 2);
 
-    this.registerSystem(webxrCameraSystem, SystemOrder.Setup - 1);
+    this.registerSystem(webxrControllerSystem, SystemOrder.EventHandling + 3);
+
+    this.registerSystem(raySystem, SystemOrder.Setup - 1);
 
     this.registerSystem(canvasSystem, SystemOrder.Setup);
     this.registerSystem(prefabsSystem, SystemOrder.Setup);
@@ -308,7 +326,7 @@ export class App {
     this.registerSystem(touchInteractSystem, SystemOrder.BeforeMatricesUpdate);
     this.registerSystem(selectSystem, SystemOrder.BeforeMatricesUpdate);
     this.registerSystem(grabSystem, SystemOrder.BeforeMatricesUpdate);
-    this.registerSystem(grabbedObjectsPointerTrackSystem, SystemOrder.BeforeMatricesUpdate);
+    this.registerSystem(grabbedObjectsRayTrackSystem, SystemOrder.BeforeMatricesUpdate);
     this.registerSystem(avatarKeyControlsSystem, SystemOrder.BeforeMatricesUpdate);
     this.registerSystem(avatarMouseControlsSystem, SystemOrder.BeforeMatricesUpdate);
 
@@ -335,7 +353,8 @@ export class App {
     this.registerSystem(clearTransformUpdatedSystem, SystemOrder.TearDown);
     this.registerSystem(clearActiveAnimationsUpdatedSystem, SystemOrder.TearDown);
     this.registerSystem(clearInteractionSystem, SystemOrder.TearDown);
-    this.registerSystem(clearWebXREventSystem, SystemOrder.TearDown);
+    this.registerSystem(clearWebXRControllerEventSystem, SystemOrder.TearDown);
+    this.registerSystem(clearWebXRSessionEventSystem, SystemOrder.TearDown);
 
     // Entity 0 for null entity
     addEntity(this.world);
@@ -359,6 +378,25 @@ export class App {
     const webxrSessionManagerEid = addEntity(this.world);
     addComponent(this.world, WebXRSessionManager, webxrSessionManagerEid);
     addComponent(this.world, WebXRSessionEventListener, webxrSessionManagerEid);
+
+    // Should we get controller and create entity when entering immersive mode?
+    const xrController1 = renderer.xr.getController(0);
+    const xrController1Eid = addEntity(this.world);
+    addComponent(this.world, XRController, xrController1Eid);
+    XRControllerProxy.get(xrController1Eid).allocate(xrController1);
+    addComponent(this.world, FirstXRController, xrController1Eid);
+    addObject3D(this.world, xrController1, xrController1Eid);
+    addComponent(this.world, XRControllerConnectionEventListener, xrController1Eid);
+    addComponent(this.world, XRControllerSelectEventListener, xrController1Eid);
+
+    const xrController2 = renderer.xr.getController(1);
+    const xrController2Eid = addEntity(this.world);
+    addComponent(this.world, XRController, xrController2Eid);
+    XRControllerProxy.get(xrController2Eid).allocate(xrController2);
+    addComponent(this.world, SecondXRController, xrController2Eid);
+    addObject3D(this.world, xrController2, xrController2Eid);
+    addComponent(this.world, XRControllerConnectionEventListener, xrController2Eid);
+    addComponent(this.world, XRControllerSelectEventListener, xrController2Eid);
 
     const audioContext = new AudioContext();
     const audioContextEid = addEntity(this.world);
@@ -458,16 +496,26 @@ export class App {
     addComponent(this.world, PeersManager, peerManagerEid);
     addComponent(this.world, UserNetworkEventListener, peerManagerEid);
 
+    const rayEid = addEntity(this.world);
+    addComponent(this.world, RayComponent, rayEid);
+    RayProxy.get(rayEid).allocate(new Ray());
+    addComponent(this.world, FirstRay, rayEid);
+    // TODO: Second Ray entity is created when entering VR mode?
+
     const pointerEid = addEntity(this.world);
     addComponent(this.world, Pointer, pointerEid);
     PointerProxy.get(pointerEid).allocate();
 
-    const mousePositionEid = addEntity(this.world);
-    addComponent(this.world, MousePosition, mousePositionEid);
-    MousePositionProxy.get(mousePositionEid).allocate();
-    addComponent(this.world, PreviousMousePosition, mousePositionEid);
-    PreviousMousePositionProxy.get(mousePositionEid).allocate();
-    addComponent(this.world, MouseMoveEventListener, mousePositionEid);
+    const currentMousePositionEid = addEntity(this.world);
+    addComponent(this.world, MousePosition, currentMousePositionEid);
+    MousePositionProxy.get(currentMousePositionEid).allocate();
+    addComponent(this.world, CurrentMousePosition, currentMousePositionEid);
+    addComponent(this.world, MouseMoveEventListener, currentMousePositionEid);
+
+    const previousMousePositionEid = addEntity(this.world);
+    addComponent(this.world, MousePosition, previousMousePositionEid);
+    MousePositionProxy.get(previousMousePositionEid).allocate();
+    addComponent(this.world, PreviousMousePosition, previousMousePositionEid);
 
     const touchPositionEid = addEntity(this.world);
     addComponent(this.world, TouchPosition, touchPositionEid);

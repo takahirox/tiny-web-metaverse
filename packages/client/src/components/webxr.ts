@@ -1,4 +1,5 @@
 import { defineComponent } from "bitecs";
+import { Group } from "three";
 import { NULL_EID } from "../common";
 
 export const XRSessionComponent = defineComponent();
@@ -6,7 +7,10 @@ export const XRSessionComponent = defineComponent();
 export class XRSessionProxy {
   private static instance: XRSessionProxy = new XRSessionProxy();	
   private eid: number;
-  private map: Map<number, XRSession | null>;
+  private map: Map<number, {
+    mode: XRSessionMode | null,
+    session: XRSession | null
+  }>;
 
   private constructor() {
     this.eid = NULL_EID;
@@ -19,19 +23,27 @@ export class XRSessionProxy {
   }
 
   allocate(): void {
-    this.map.set(this.eid, null);
+    this.map.set(this.eid, { mode: null, session: null });
   }
 
   free(): void {
     this.map.delete(this.eid);
   }
 
+  get mode(): XRSessionMode | null {
+    return this.map.get(this.eid)!.mode;
+  }
+
+  set mode(mode: XRSessionMode) {
+    this.map.get(this.eid)!.mode = mode;
+  }
+
   get session(): XRSession | null {
-    return this.map.get(this.eid)!;
+    return this.map.get(this.eid)!.session;
   }
 
   set session(session: XRSession | null) {
-    this.map.set(this.eid, session);
+    this.map.get(this.eid).session = session;
   }
 }
 
@@ -68,6 +80,43 @@ export class XRFrameProxy {
     this.map.set(this.eid, frame);
   }
 }
+
+export const InvisibleInAR = defineComponent();
+
+export const XRController = defineComponent();
+
+export class XRControllerProxy {
+  private static instance: XRControllerProxy = new XRControllerProxy();	
+  private eid: number;
+  // Note: No XRController specific type/object in Three.js
+  private map: Map<number, Group>;
+
+  private constructor() {
+    this.eid = NULL_EID;
+    this.map = new Map();
+  }
+
+  static get(eid: number): XRControllerProxy {
+    XRControllerProxy.instance.eid = eid;
+    return XRControllerProxy.instance;
+  }
+
+  allocate(controller: Group): void {
+    this.map.set(this.eid, controller);
+  }
+
+  free(): void {
+    this.map.delete(this.eid);
+  }
+
+  get controller(): Group {
+    return this.map.get(this.eid)!;
+  }
+}
+
+export const FirstXRController = defineComponent();
+export const SecondXRController = defineComponent();
+export const ActiveXRController = defineComponent();
 
 export enum WebXRSessionEventType {
   End,
@@ -118,4 +167,101 @@ export class WebXRSessionEventProxy {
 export const WebXRSessionEventListener = defineComponent();
 export const WebXRSessionManager = defineComponent();
 
-export const InvisibleInAR = defineComponent();
+export enum XRControllerType {
+  First = 0,
+  Second
+};
+
+export enum XRControllerConnectionEventType {
+  Connected = 'connected',
+  Disconnected = 'disconnected'
+};
+
+// TODO: Rename
+export type XRControllerConnectionEventValue = {
+  controller: XRControllerType,
+  type: XRControllerConnectionEventType;
+};
+
+export const XRControllerConnectionEvent = defineComponent();
+
+export class XRControllerConnectionEventProxy {
+  private static instance: XRControllerConnectionEventProxy = new XRControllerConnectionEventProxy();
+  private eid: number;
+  private map: Map<number, XRControllerConnectionEventValue[]>;
+
+  private constructor() {
+    this.eid = NULL_EID;
+    this.map = new Map();
+  }
+
+  static get(eid: number): XRControllerConnectionEventProxy {
+    XRControllerConnectionEventProxy.instance.eid = eid;
+    return XRControllerConnectionEventProxy.instance;
+  }
+
+  allocate(): void {
+    this.map.set(this.eid, []);  
+  }
+
+  add(controller: XRControllerType, type: XRControllerConnectionEventType): void {
+    this.map.get(this.eid)!.push({ controller, type });
+  }
+
+  free(): void {
+    this.map.delete(this.eid);
+  }
+
+  get events(): XRControllerConnectionEventValue[] {
+    return this.map.get(this.eid)!;
+  }
+}
+
+export const XRControllerConnectionEventListener = defineComponent();
+
+export enum XRControllerSelectEventType {
+  End = 'selectend',
+  Start = 'selectstart'
+};
+
+// TODO: Rename
+export type XRControllerSelectEventValue = {
+  controller: XRControllerType,
+  type: XRControllerSelectEventType;
+};
+
+export const XRControllerSelectEvent = defineComponent();
+
+export class XRControllerSelectEventProxy {
+  private static instance: XRControllerSelectEventProxy = new XRControllerSelectEventProxy();
+  private eid: number;
+  private map: Map<number, XRControllerSelectEventValue[]>;
+
+  private constructor() {
+    this.eid = NULL_EID;
+    this.map = new Map();
+  }
+
+  static get(eid: number): XRControllerSelectEventProxy {
+    XRControllerSelectEventProxy.instance.eid = eid;
+    return XRControllerSelectEventProxy.instance;
+  }
+
+  allocate(): void {
+    this.map.set(this.eid, []);  
+  }
+
+  add(controller: XRControllerType, type: XRControllerSelectEventType): void {
+    this.map.get(this.eid)!.push({ controller, type });
+  }
+
+  free(): void {
+    this.map.delete(this.eid);
+  }
+
+  get events(): XRControllerSelectEventValue[] {
+    return this.map.get(this.eid)!;
+  }
+}
+
+export const XRControllerSelectEventListener = defineComponent();

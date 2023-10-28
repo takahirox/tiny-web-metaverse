@@ -102,7 +102,6 @@ export class MouseMoveEventProxy {
 }
 
 export const MousePosition = defineComponent();
-export const PreviousMousePosition = defineComponent();
 
 export class MousePositionProxy {
   private static instance: MousePositionProxy = new MousePositionProxy();
@@ -142,43 +141,8 @@ export class MousePositionProxy {
   }
 }
 
-export class PreviousMousePositionProxy {
-  private static instance: PreviousMousePositionProxy = new PreviousMousePositionProxy();
-  private eid: number;
-  private map: Map<number, { x: number, y: number }>;
-
-  private constructor() {
-    this.eid = NULL_EID;
-    this.map = new Map();
-  }
-
-  static get(eid: number): PreviousMousePositionProxy {
-    PreviousMousePositionProxy.instance.eid = eid;
-    return PreviousMousePositionProxy.instance;
-  }
-
-  allocate(): void {
-    this.map.set(this.eid, {x: 0, y: 0});
-  }
-
-  free(): void {
-    this.map.delete(this.eid);
-  }
-
-  update(x: number, y: number): void {
-    const values = this.map.get(this.eid)!;
-    values.x = x;
-    values.y = y;
-  }
-
-  get x(): number {
-    return this.map.get(this.eid)!.x;
-  }
-
-  get y(): number {
-    return this.map.get(this.eid)!.y;
-  }
-}
+export const CurrentMousePosition = defineComponent();
+export const PreviousMousePosition = defineComponent();
 
 export const MouseButtonEventHandler = defineComponent();
 export const MouseButtonEventHandlerReady = defineComponent();

@@ -4,8 +4,10 @@ import {
   hasComponent,
   IWorld
 } from "bitecs";
-import { toGenerator } from "./coroutine";
 import {
+  FirstXRController,
+  SecondXRController,
+  XRController,
   XRFrameComponent,
   XRFrameProxy,
   XRSessionComponent,
@@ -15,10 +17,13 @@ import {
   WebXRSessionEventProxy,
   WebXRSessionEventType
 } from "../components/webxr";
+import { getRendererProxy } from "./bitecs_three";
 
 const frameQuery = defineQuery([XRFrameComponent]);
 const sessionQuery = defineQuery([XRSessionComponent]);
 const listenerQuery = defineQuery([WebXRSessionEventListener]);
+const firstControllerQuery = defineQuery([FirstXRController, XRController]);
+const secondControllerQuery = defineQuery([SecondXRController, XRController]);
 
 export const getXRFrameProxy = (world: IWorld): XRFrameProxy => {
   // Assumes always single xr frame entity exists
@@ -45,37 +50,33 @@ export const addWebXRSessionEvent = (
   });
 };
 
-export function* isSessionSupported(mode: XRSessionMode): Generator<void, boolean> {
-  return yield* toGenerator(new Promise(resolve => {
-    if (!('xr' in navigator)) {
-      resolve(false);
-      return;
-    }
-
-    navigator.xr
-      .isSessionSupported(mode)
-      .then(resolve)
-      .catch(e => {
-        // Resolve as unsupported if fails. Is this correct?
-        console.error(e);
-        resolve(false);
-      });
-  }));
+export const isXRPresenting = (world: IWorld): boolean => {
+  const renderer = getRendererProxy(world).renderer;
+  return renderer.xr.enabled && renderer.xr.isPresenting;
 };
 
-export function* requestSession(mode: XRSessionMode, sessionInit: XRSessionInit = {
-  // Not deeply thought yet...
-  optionalFeatures: [
-    'local-floor',
-    'bounded-floor',
-    'hand-tracking',
-    'layers'
-  ]
-}): Generator<void, XRSession> {
-  return yield* toGenerator(new Promise((resolve, reject) => {
-    navigator.xr
-      .requestSession(mode, sessionInit)
-      .then(resolve)
-      .catch(reject)
-  }));
+export const inVR = (world: IWorld): boolean => {
+  if (!isXRPresenting(world)) {	
+    return false;
+  }
+
+  return getXRSessionProxy(world).mode === 'immersive-vr';
+};
+
+export const inAR = (world: IWorld): boolean => {
+  if (!isXRPresenting(world)) {	
+    return false;
+  }
+
+  return getXRSessionProxy(world).mode === 'immersive-ar';
+};
+
+export const getFirstXRControllerEid = (world: IWorld): number => {
+  // Assumes always only single first controller entity exists
+  return firstControllerQuery(world)[0];
+};
+
+export const getSecondXRControllerEid = (world: IWorld): number => {
+  // Assumes always only single second controller entity exists
+  return secondControllerQuery(world)[0];
 };
