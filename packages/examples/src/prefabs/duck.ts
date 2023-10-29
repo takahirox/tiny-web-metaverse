@@ -18,7 +18,8 @@ import {
   Raycastable,
   SecondSourceInteractable,
   Selectable,
-  TouchEventListener
+  TouchEventListener,
+  XRControllerSelectEventListener
 } from "@tiny-web-metaverse/client/src";
 
 const assetUrl = 'assets/models/Duck/Duck.gltf';
@@ -31,6 +32,7 @@ export const DuckPrefab = (world: IWorld): number => {
   addComponent(world, Raycastable, eid);
   addComponent(world, MouseButtonEventListener, eid);
   addComponent(world, TouchEventListener, eid);
+  addComponent(world, XRControllerSelectEventListener, eid);
   addComponent(world, FirstSourceInteractable, eid);
   addComponent(world, Grabbable, eid);
   addComponent(world, SecondSourceInteractable, eid);

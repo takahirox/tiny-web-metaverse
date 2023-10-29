@@ -8,12 +8,14 @@ import {
   removeComponent
 } from "bitecs";
 import { Event, Group } from "three";
-/*
 import {
-  EntityObject3D,
-  EntityObject3DProxy
-} from "../components/entity_object3d";
-*/
+  FirstSourceInteractable,
+  FirstSourceInteractionLeaveEvent,
+  FirstSourceInteractionTriggerEvent,
+  SecondSourceInteractable,
+  SecondSourceInteractionLeaveEvent,
+  SecondSourceInteractionTriggerEvent
+} from "../components/interact";
 import {
   FirstRay,
   RayComponent,
@@ -29,6 +31,7 @@ import {
   XRControllerConnectionEventListener,
   XRControllerConnectionEventProxy,
   XRControllerConnectionEventType,
+  XRControllerConnectionEventValue,
   XRControllerSelectEvent,
   XRControllerSelectEventListener,
   XRControllerSelectEventProxy,
@@ -128,12 +131,16 @@ const connectionEventQuery = defineQuery([XRControllerConnectionEvent]);
 const selectListenerQuery = defineQuery([XRControllerSelectEventListener]);
 const selectEventQuery = defineQuery([XRControllerSelectEvent]);
 
-const connectionHandlerQuery = defineQuery([XRController, XRControllerConnectionEvent]);
+const firstControllerConnectionQuery = defineQuery([FirstXRController, XRController, XRControllerConnectionEvent]);
+const secondControllerConnectionQuery = defineQuery([SecondXRController, XRController, XRControllerConnectionEvent]);
+
+const firstInteractableQuery = defineQuery([FirstSourceInteractable, XRControllerSelectEvent]);
+const secondInteractableQuery = defineQuery([SecondSourceInteractable, XRControllerSelectEvent]);
 
 const firstRayQuery = defineQuery([FirstRay, RayComponent]);
 const firstActiveControllerQuery = defineQuery([ActiveXRController, FirstXRController]);
 
-// TODO: Implement second query
+// TODO: Implement second ray query
 
 export const webxrControllerEventHandlingSystem = (world: IWorld): void => {
   exitControllerQuery(world).forEach(eid => {
@@ -169,21 +176,58 @@ export const webxrControllerEventHandlingSystem = (world: IWorld): void => {
   selectEventQueue.length = 0;
 };
 
+const handleConnectionEvent = (world: IWorld, eid: number, e: XRControllerConnectionEventValue): void => {
+  if (e.type === XRControllerConnectionEventType.Connected) {
+    addComponent(world, ActiveXRController, eid);
+    // Is InScene really necessary?
+    addComponent(world, InScene, eid);
+  } else if (e.type === XRControllerConnectionEventType.Disconnected) {
+    removeComponent(world, ActiveXRController, eid);
+    removeComponent(world, InScene, eid);
+  }
+};
+
 export const webxrControllerSystem = (world: IWorld): void => {
-  connectionHandlerQuery(world).forEach(eid => {
+  firstControllerConnectionQuery(world).forEach(eid => {
     for (const e of XRControllerConnectionEventProxy.get(eid).events) {
-      // TODO: Simplify if possible.
-      //       Make two queries first controller and second controller queries?
-      if ((e.controller === XRControllerType.First && hasComponent(world, FirstXRController, eid)) ||
-        (e.controller === XRControllerType.Second && hasComponent(world, SecondXRController, eid))) {
-        if (e.type === XRControllerConnectionEventType.Connected) {
-          addComponent(world, ActiveXRController, eid);
-          // Is InScene really necessary?
-          addComponent(world, InScene, eid);
-        } else if (e.type === XRControllerConnectionEventType.Disconnected) {
-          removeComponent(world, ActiveXRController, eid);
-          removeComponent(world, InScene, eid);
-        }
+      if (e.controller !== XRControllerType.First) {
+        continue;
+      }
+      handleConnectionEvent(world, eid, e);
+    }
+  });
+
+  secondControllerConnectionQuery(world).forEach(eid => {
+    for (const e of XRControllerConnectionEventProxy.get(eid).events) {
+      if (e.controller !== XRControllerType.Second) {
+        continue;
+      }
+      handleConnectionEvent(world, eid, e);
+    }
+  });
+
+  firstInteractableQuery(world).forEach(eid => {
+    for (const e of XRControllerSelectEventProxy.get(eid).events) {
+      if (e.controller !== XRControllerType.First) {
+        continue;
+      }
+      if (e.type === XRControllerSelectEventType.Start) {
+        addComponent(world, FirstSourceInteractionTriggerEvent, eid);
+      } else if (e.type === XRControllerSelectEventType.End) {
+        addComponent(world, FirstSourceInteractionLeaveEvent, eid);
+      }
+    }
+  });
+
+  secondInteractableQuery(world).forEach(eid => {
+    for (const e of XRControllerSelectEventProxy.get(eid).events) {
+      if (e.controller !== XRControllerType.Second) {
+        continue;
+      }
+      if (e.type === XRControllerSelectEventType.Start) {
+        addComponent(world, SecondSourceInteractionTriggerEvent, eid);
+      } else if (e.type === XRControllerSelectEventType.End) {
+        addComponent(world, SecondSourceInteractionLeaveEvent, eid);
       }
     }
   });

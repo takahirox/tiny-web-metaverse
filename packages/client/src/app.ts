@@ -143,7 +143,7 @@ import { gltfAssetLoadSystem } from "./systems/gltf_asset_load";
 import { gltfSceneLoadSystem } from "./systems/gltf_scene_load";
 import { grabSystem } from "./systems/grab";
 import { grabbedObjectsRayTrackSystem } from "./systems/grab_ray_track";
-import { clearInteractionSystem } from "./systems/interacted";
+import { clearInteractionSystem, interactSystem } from "./systems/interaction";
 import {
   keyEventHandleSystem,
   keyEventClearSystem
@@ -166,7 +166,7 @@ import {
 } from "./systems/mouse_move_event";
 import { mousePositionToPointerSystem } from "./systems/mouse_position_to_pointer";
 import { mousePositionTrackSystem } from "./systems/mouse_position_track";
-import { mouseInteractSystem } from "./systems/mouse_interact";
+import { mouseInteractionTriggerSystem } from "./systems/mouse_interaction_trigger";
 import { networkEventClearSystem, networkEventHandleSystem } from "./systems/network_event";
 import { networkSendSystem } from "./systems/network_send";
 import { networkedSystem } from "./systems/networked";
@@ -191,7 +191,7 @@ import {
   touchEventClearSystem,
   touchEventHandleSystem
 } from "./systems/touch_event";
-import { touchInteractSystem } from "./systems/touch_interact";
+import { touchInteractionTriggerSystem } from "./systems/touch_interaction_trigger";
 import {
   touchMoveEventClearSystem,
   touchMoveEventHandleSystem
@@ -322,8 +322,9 @@ export class App {
     this.registerSystem(linearMoveSystem, SystemOrder.BeforeMatricesUpdate);
     this.registerSystem(linearTransformSystem, SystemOrder.BeforeMatricesUpdate);
     this.registerSystem(raycastSystem, SystemOrder.BeforeMatricesUpdate);
-    this.registerSystem(mouseInteractSystem, SystemOrder.BeforeMatricesUpdate);
-    this.registerSystem(touchInteractSystem, SystemOrder.BeforeMatricesUpdate);
+    this.registerSystem(mouseInteractionTriggerSystem, SystemOrder.BeforeMatricesUpdate);
+    this.registerSystem(touchInteractionTriggerSystem, SystemOrder.BeforeMatricesUpdate);
+    this.registerSystem(interactSystem, SystemOrder.BeforeMatricesUpdate);
     this.registerSystem(selectSystem, SystemOrder.BeforeMatricesUpdate);
     this.registerSystem(grabSystem, SystemOrder.BeforeMatricesUpdate);
     this.registerSystem(grabbedObjectsRayTrackSystem, SystemOrder.BeforeMatricesUpdate);

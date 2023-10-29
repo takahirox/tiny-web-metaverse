@@ -16,7 +16,8 @@ import {
   Raycastable,
   SecondSourceInteractable,
   Selectable,
-  TouchEventListener
+  TouchEventListener,
+  XRControllerSelectEventListener
 } from "@tiny-web-metaverse/client/src";
 
 export const CubePrefab = (world: IWorld): number => {
@@ -27,6 +28,7 @@ export const CubePrefab = (world: IWorld): number => {
   addComponent(world, Raycastable, eid);
   addComponent(world, MouseButtonEventListener, eid);
   addComponent(world, TouchEventListener, eid);
+  addComponent(world, XRControllerSelectEventListener, eid);
   addComponent(world, FirstSourceInteractable, eid);
   addComponent(world, SecondSourceInteractable, eid);
   addComponent(world, Grabbable, eid);

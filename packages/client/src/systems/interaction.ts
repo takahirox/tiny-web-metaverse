@@ -1,4 +1,5 @@
 import {
+  addComponent,
   defineQuery,
   IWorld,
   removeComponent
@@ -11,6 +12,10 @@ import {
   SecondSourceInteractionLeaveEvent,
   SecondSourceInteractionTriggerEvent
 } from "../components/interact";
+import { RaycastedNearest } from "../components/raycast";
+
+const firstSourceInteractableQuery = defineQuery([FirstSourceInteractionTriggerEvent, RaycastedNearest]);
+const secondSourceInteractableQuery = defineQuery([RaycastedNearest, SecondSourceInteractionTriggerEvent]);
 
 const firstInteractedQuery = defineQuery([FirstSourceInteracted]);
 const firstTriggerEventQuery = defineQuery([FirstSourceInteractionTriggerEvent]);
@@ -18,6 +23,16 @@ const firstLeaveEventQuery = defineQuery([FirstSourceInteractionLeaveEvent]);
 const secondInteractedQuery = defineQuery([SecondSourceInteracted]);
 const secondTriggerEventQuery = defineQuery([SecondSourceInteractionTriggerEvent]);
 const secondLeaveEventQuery = defineQuery([SecondSourceInteractionLeaveEvent]);
+
+export const interactSystem = (world: IWorld) => {
+  firstSourceInteractableQuery(world).forEach(eid => {
+    addComponent(world, FirstSourceInteracted, eid);
+  });
+
+  secondSourceInteractableQuery(world).forEach(eid => {
+    addComponent(world, SecondSourceInteracted, eid);
+  });
+};
 
 export const clearInteractionSystem = (world: IWorld): void => {
   firstInteractedQuery(world).forEach(eid => {

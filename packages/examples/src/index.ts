@@ -4,6 +4,7 @@ import {
 } from "bitecs";
 import { AmbientLight } from "three";
 import {
+  addXRControllerRayComponent,
   avatarVirtualJoystickSystem,
   billboardSystem,
   clearVirtualJoystickEventSystem,
@@ -13,6 +14,9 @@ import {
   lazilyUpdateVideoStateSystem,
   nametagSystem,
   NetworkedVideo,
+  TextChat,
+  textChatUISystem,
+  textSystem,
   videoSystem,
   videoLoadSystem,
   videoSerializers,
@@ -21,12 +25,10 @@ import {
   VirtualJoystickProxy,
   VirtualJoystickRight,
   virtualJoystickUISystem,
-  TextChat,
-  textChatUISystem,
-  textSystem,
   WebXRARButton,
   webXrButtonsUISystem,
-  WebXRVRButton
+  WebXRVRButton,
+  xrControllerRaySystem
 } from "@tiny-web-metaverse/addons/src";
 import {
   addObject3D,
@@ -50,7 +52,8 @@ import {
   SceneEnvironmentMapLoaderProxy,
   SelectedEventListener,
   SystemOrder,
-  UserNetworkEventListener
+  UserNetworkEventListener,
+  XRControllerConnectionEventListener
 } from "@tiny-web-metaverse/client/src";
 
 import { JoinDialog } from "./components/join_dialog";
@@ -122,6 +125,7 @@ const run = async (): Promise<void> => {
   app.registerSystem(nametagSystem, SystemOrder.MatricesUpdate - 1);
   app.registerSystem(billboardSystem, SystemOrder.MatricesUpdate - 1);
 
+  app.registerSystem(xrControllerRaySystem, SystemOrder.Render - 1);
   app.registerSystem(colorSystem, SystemOrder.Render - 1);
   app.registerSystem(userEventSystem, SystemOrder.Render - 1);
 
@@ -153,6 +157,10 @@ const run = async (): Promise<void> => {
   EntityObject3DProxy.get(avatarEid).root.position.set(0.0, 0.75, 2.0);
   addComponent(world, KeyEventListener, avatarEid);
   addComponent(world, AudioDestination, avatarEid);
+
+  const xrControllerRayEid = addEntity(world);
+  addXRControllerRayComponent(world, xrControllerRayEid);
+  addComponent(world, XRControllerConnectionEventListener, xrControllerRayEid);
 
   const envMapLoaderEid = addEntity(world);
   addComponent(world, SceneEnvironmentMapLoader, envMapLoaderEid);
