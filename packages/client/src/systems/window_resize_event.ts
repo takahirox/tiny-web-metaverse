@@ -11,15 +11,17 @@ import {
   WindowResizeEventListener
 } from "../components/window_resize";
 
-const initialQuery = enterQuery(defineQuery([NullComponent]));
-const listenerQuery = defineQuery([WindowResizeEventListener]);
-const eventQuery = defineQuery([WindowResizeEvent]);
-
 const eventQueue: {}[] = [];
 
 const onResize = (): void => {
   eventQueue.push({});
 };
+
+// Trick to execute only in the first system run
+const initialQuery = enterQuery(defineQuery([NullComponent]));
+
+const listenerQuery = defineQuery([WindowResizeEventListener]);
+const eventQuery = defineQuery([WindowResizeEvent]);
 
 export const windowResizeEventHandleSystem = (world: IWorld) => {
   initialQuery(world).forEach(() => {

@@ -18,8 +18,9 @@ to meet up with in a room.
 
 ## Features
 
-* WebXR AR/VR support
+* AR/VR support with [WebXR](https://developer.mozilla.org/en-US/docs/Web/API/WebXR_Device_API)
 * Mobile devices support
+* Positional audio and audio effects with [WebAudio](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API)
 
 T.B.D.
 

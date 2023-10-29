@@ -17,12 +17,6 @@ import {
   TouchMoveEventProxy
 } from "../components/touch";
 
-const canvasQuery = defineQuery([Canvas]);
-const enterCanvasQuery = enterQuery(canvasQuery);
-const exitCanvasQuery = exitQuery(canvasQuery);
-const listenerQuery = defineQuery([TouchMoveEventListener]);
-const eventQuery = defineQuery([TouchMoveEvent]);
-
 const addEvent = (world: IWorld, eid: number, x: number, y: number): void => {
   if (!hasComponent(world, TouchMoveEvent, eid)) {
     addComponent(world, TouchMoveEvent, eid);
@@ -44,6 +38,12 @@ const onTouchMove = (event: TouchEvent): void => {
     y: -((touch.pageY / canvas.clientHeight) * 2.0 - 1.0)
   });
 };
+
+const canvasQuery = defineQuery([Canvas]);
+const enterCanvasQuery = enterQuery(canvasQuery);
+const exitCanvasQuery = exitQuery(canvasQuery);
+const listenerQuery = defineQuery([TouchMoveEventListener]);
+const eventQuery = defineQuery([TouchMoveEvent]);
 
 export const touchMoveEventHandleSystem = (world: IWorld) => {
   // Assumes up to only one canvas entity

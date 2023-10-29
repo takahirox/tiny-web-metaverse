@@ -12905,22 +12905,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   touchMoveEventHandleSystem: () => (/* binding */ touchMoveEventHandleSystem)
 /* harmony export */ });
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
-/* harmony import */ var _components_canvas__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/canvas */ "../client/src/components/canvas.ts");
-/* harmony import */ var _components_touch__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/touch */ "../client/src/components/touch.ts");
+/* harmony import */ var _components_canvas__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/canvas */ "../client/src/components/canvas.ts");
+/* harmony import */ var _components_touch__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/touch */ "../client/src/components/touch.ts");
 
 
 
-const canvasQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_canvas__WEBPACK_IMPORTED_MODULE_1__.Canvas]);
-const enterCanvasQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)(canvasQuery);
-const exitCanvasQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)(canvasQuery);
-const listenerQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_touch__WEBPACK_IMPORTED_MODULE_2__.TouchMoveEventListener]);
-const eventQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_touch__WEBPACK_IMPORTED_MODULE_2__.TouchMoveEvent]);
 const addEvent = (world, eid, x, y) => {
-    if (!(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_touch__WEBPACK_IMPORTED_MODULE_2__.TouchMoveEvent, eid)) {
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_touch__WEBPACK_IMPORTED_MODULE_2__.TouchMoveEvent, eid);
-        _components_touch__WEBPACK_IMPORTED_MODULE_2__.TouchMoveEventProxy.get(eid).allocate();
+    if (!(0,bitecs__WEBPACK_IMPORTED_MODULE_0__.hasComponent)(world, _components_touch__WEBPACK_IMPORTED_MODULE_1__.TouchMoveEvent, eid)) {
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_touch__WEBPACK_IMPORTED_MODULE_1__.TouchMoveEvent, eid);
+        _components_touch__WEBPACK_IMPORTED_MODULE_1__.TouchMoveEventProxy.get(eid).allocate();
     }
-    _components_touch__WEBPACK_IMPORTED_MODULE_2__.TouchMoveEventProxy.get(eid).add(x, y);
+    _components_touch__WEBPACK_IMPORTED_MODULE_1__.TouchMoveEventProxy.get(eid).add(x, y);
 };
 const eventQueue = [];
 const onTouchMove = (event) => {
@@ -12934,14 +12929,19 @@ const onTouchMove = (event) => {
         y: -((touch.pageY / canvas.clientHeight) * 2.0 - 1.0)
     });
 };
+const canvasQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_canvas__WEBPACK_IMPORTED_MODULE_2__.Canvas]);
+const enterCanvasQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)(canvasQuery);
+const exitCanvasQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)(canvasQuery);
+const listenerQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_touch__WEBPACK_IMPORTED_MODULE_1__.TouchMoveEventListener]);
+const eventQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_touch__WEBPACK_IMPORTED_MODULE_1__.TouchMoveEvent]);
 const touchMoveEventHandleSystem = (world) => {
     // Assumes up to only one canvas entity
     exitCanvasQuery(world).forEach(eid => {
-        const canvas = _components_canvas__WEBPACK_IMPORTED_MODULE_1__.CanvasProxy.get(eid).canvas;
+        const canvas = _components_canvas__WEBPACK_IMPORTED_MODULE_2__.CanvasProxy.get(eid).canvas;
         canvas.removeEventListener('touchmove', onTouchMove);
     });
     enterCanvasQuery(world).forEach(eid => {
-        const canvas = _components_canvas__WEBPACK_IMPORTED_MODULE_1__.CanvasProxy.get(eid).canvas;
+        const canvas = _components_canvas__WEBPACK_IMPORTED_MODULE_2__.CanvasProxy.get(eid).canvas;
         canvas.addEventListener('touchmove', onTouchMove);
     });
     for (const e of eventQueue) {
@@ -12953,10 +12953,10 @@ const touchMoveEventHandleSystem = (world) => {
 };
 const touchMoveEventClearSystem = (world) => {
     eventQuery(world).forEach(eid => {
-        const proxy = _components_touch__WEBPACK_IMPORTED_MODULE_2__.TouchMoveEventProxy.get(eid);
+        const proxy = _components_touch__WEBPACK_IMPORTED_MODULE_1__.TouchMoveEventProxy.get(eid);
         proxy.events.length = 0;
         proxy.free();
-        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_touch__WEBPACK_IMPORTED_MODULE_2__.TouchMoveEvent, eid);
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _components_touch__WEBPACK_IMPORTED_MODULE_1__.TouchMoveEvent, eid);
     });
 };
 
@@ -13471,13 +13471,14 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const initialQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_null__WEBPACK_IMPORTED_MODULE_1__.NullComponent]));
-const listenerQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_window_resize__WEBPACK_IMPORTED_MODULE_2__.WindowResizeEventListener]);
-const eventQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_window_resize__WEBPACK_IMPORTED_MODULE_2__.WindowResizeEvent]);
 const eventQueue = [];
 const onResize = () => {
     eventQueue.push({});
 };
+// Trick to execute only in the first system run
+const initialQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_null__WEBPACK_IMPORTED_MODULE_1__.NullComponent]));
+const listenerQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_window_resize__WEBPACK_IMPORTED_MODULE_2__.WindowResizeEventListener]);
+const eventQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_window_resize__WEBPACK_IMPORTED_MODULE_2__.WindowResizeEvent]);
 const windowResizeEventHandleSystem = (world) => {
     initialQuery(world).forEach(() => {
         window.addEventListener('resize', onResize);
