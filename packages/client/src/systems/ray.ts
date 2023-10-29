@@ -5,14 +5,14 @@ import {
 import { Pointer, PointerProxy } from "../components/pointer";
 import { FirstRay, RayComponent, RayProxy } from "../components/ray";
 import { getSceneCameraProxy } from "../utils/bitecs_three";
-import { inVR } from "../utils/webxr";
+import { inAR, inVR } from "../utils/webxr";
 
 const rayQuery = defineQuery([RayComponent, FirstRay]);
 const pointerQuery = defineQuery([Pointer]);
 
 export const raySystem = (world: IWorld): void => {
-  // This operation is done in WebXR system if in VR mode
-  if (inVR(world)) {
+  // This operation is done in WebXR system if in VR/AR mode
+  if (inAR(world) || inVR(world)) {
     return;
   }
 

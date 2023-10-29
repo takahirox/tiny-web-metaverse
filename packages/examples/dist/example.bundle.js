@@ -12171,8 +12171,8 @@ __webpack_require__.r(__webpack_exports__);
 const rayQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_ray__WEBPACK_IMPORTED_MODULE_1__.RayComponent, _components_ray__WEBPACK_IMPORTED_MODULE_1__.FirstRay]);
 const pointerQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_pointer__WEBPACK_IMPORTED_MODULE_2__.Pointer]);
 const raySystem = (world) => {
-    // This operation is done in WebXR system if in VR mode
-    if ((0,_utils_webxr__WEBPACK_IMPORTED_MODULE_3__.inVR)(world)) {
+    // This operation is done in WebXR system if in VR/AR mode
+    if ((0,_utils_webxr__WEBPACK_IMPORTED_MODULE_3__.inAR)(world) || (0,_utils_webxr__WEBPACK_IMPORTED_MODULE_3__.inVR)(world)) {
         return;
     }
     rayQuery(world).forEach(rayEid => {
