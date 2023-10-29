@@ -18,6 +18,9 @@ to meet up with in a room.
 
 ## Features
 
+* WebXR AR/VR support
+* Mobile devices support
+
 T.B.D.
 
 ## Sub-projects
