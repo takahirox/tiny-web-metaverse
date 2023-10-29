@@ -18,6 +18,7 @@ export * from "./components/media_device";
 export * from "./components/mixer_animation";
 export * from "./components/mouse";
 export * from "./components/network";
+export * from "./components/null";
 export * from "./components/peer";
 export * from "./components/pointer";
 export * from "./components/prefab";

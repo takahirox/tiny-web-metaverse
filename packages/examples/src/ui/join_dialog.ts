@@ -46,6 +46,14 @@ const button = document.createElement('button');
 button.innerText = ' Join ';
 joinForm.appendChild(button);
 
+const gitHubLink = document.createElement('a');
+gitHubLink.href = 'https://github.com/takahirox/tiny-web-metaverse';
+gitHubLink.innerText = 'Source code at GitHub';
+gitHubLink.target = '_blank';
+joinForm.appendChild(document.createElement('br'));
+joinForm.appendChild(document.createElement('br'));
+joinForm.appendChild(gitHubLink);
+
 let onClick : (e: Event) => void | null = null;
 
 const joinDialogQuery = defineQuery([JoinDialog]);

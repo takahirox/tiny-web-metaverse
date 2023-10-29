@@ -35,14 +35,9 @@ import {
   PerspectiveCameraProxy,
   SceneCamera
 } from "./components/camera";
-import { KeyEventHandler } from "./components/keyboard";
 import {
   CurrentMousePosition,
-  MouseButtonEventHandler,
-  MouseButtonEventHandlerProxy,
   MouseButtonEventListener,
-  MouseMoveEventHandler,
-  MouseMoveEventHandlerProxy,
   MouseMoveEventListener,
   MousePosition,
   MousePositionProxy,
@@ -64,6 +59,7 @@ import {
   StateClientProxy,
   UserNetworkEventListener
 } from "./components/network";
+import { NullComponent } from "./components/null";
 import { Peers, PeersManager, PeersProxy } from "./components/peer";
 import { Pointer, PointerProxy } from "./components/pointer";
 import { Prefabs, PrefabsProxy } from "./components/prefab";
@@ -95,11 +91,7 @@ import {
 import { Time, TimeProxy } from "./components/time";
 import { Timestamp, TimestampProxy } from "./components/timestamp";
 import {
-  TouchEventHandler,
-  TouchEventHandlerProxy,
   TouchEventListener,
-  TouchMoveEventHandler,
-  TouchMoveEventHandlerProxy,
   TouchMoveEventListener,
   TouchPosition,
   TouchPositionProxy
@@ -120,7 +112,6 @@ import {
   XRSessionProxy
 } from "./components/webxr";
 import {
-  WindowResizeEventHandler,
   WindowResizeEventListener,
   WindowSize
 } from "./components/window_resize";
@@ -358,7 +349,8 @@ export class App {
     this.registerSystem(clearWebXRSessionEventSystem, SystemOrder.TearDown);
 
     // Entity 0 for null entity
-    addEntity(this.world);
+    const nullEid = addEntity(this.world);
+    addComponent(this.world, NullComponent, nullEid);
 
     const timestampEid = addEntity(this.world);
     addComponent(this.world, Timestamp, timestampEid);
@@ -445,28 +437,6 @@ export class App {
     addComponent(this.world, LeftPeerStreamEventListener, streamRemotePeerRegisterEid);
     addComponent(this.world, ExitedPeerStreamEventListener, streamRemotePeerRegisterEid);
     addComponent(this.world, NewConsumerStreamEventListener, streamRemotePeerRegisterEid);
-
-    const keyEventHandlerEid = addEntity(this.world);
-    addComponent(this.world, KeyEventHandler, keyEventHandlerEid);
-
-    const mouseMoveEventHandlerEid = addEntity(this.world);
-    addComponent(this.world, MouseMoveEventHandler, mouseMoveEventHandlerEid);
-    MouseMoveEventHandlerProxy.get(mouseMoveEventHandlerEid).init(canvas);
-
-    const mouseButtonEventHandlerEid = addEntity(this.world);
-    addComponent(this.world, MouseButtonEventHandler, mouseButtonEventHandlerEid);
-    MouseButtonEventHandlerProxy.get(mouseButtonEventHandlerEid).init(canvas);
-
-    const touchMoveEventHandlerEid = addEntity(this.world);
-    addComponent(this.world, TouchMoveEventHandler, touchMoveEventHandlerEid);
-    TouchMoveEventHandlerProxy.get(touchMoveEventHandlerEid).init(canvas);
-
-    const touchEventHandlerEid = addEntity(this.world);
-    addComponent(this.world, TouchEventHandler, touchEventHandlerEid);
-    TouchEventHandlerProxy.get(touchEventHandlerEid).init(canvas);
-
-    const resizeEventHandlerEid = addEntity(this.world);
-    addComponent(this.world, WindowResizeEventHandler, resizeEventHandlerEid);
 
     const networkAdapterEid = addEntity(this.world);
     addComponent(this.world, StateClient, networkAdapterEid);

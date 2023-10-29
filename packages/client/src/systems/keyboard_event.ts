@@ -2,26 +2,17 @@ import {
   addComponent,
   defineQuery,
   enterQuery,
-  exitQuery,
   hasComponent,
   IWorld,
   removeComponent
 } from "bitecs";
 import {
   KeyEvent,
-  KeyEventHandler,
-  KeyEventHandlerReady,
-  KeyEventHandlerProxy,
   KeyEventListener,
   KeyEventProxy,
   KeyEventType
 } from "../components/keyboard";
-
-const handlerQuery = defineQuery([KeyEventHandler]);
-const handlerEnterQuery = enterQuery(handlerQuery);
-const handlerExitQuery = exitQuery(handlerQuery);
-const listenerQuery = defineQuery([KeyEventListener]);
-const eventQuery = defineQuery([KeyEvent]);
+import { NullComponent } from "../components/null"
 
 const addEvent = (world: IWorld, eid: number, type: KeyEventType, code: number): void => {
   if (!hasComponent(world, KeyEvent, eid)) {
@@ -31,50 +22,42 @@ const addEvent = (world: IWorld, eid: number, type: KeyEventType, code: number):
   KeyEventProxy.get(eid).add(type, code);
 };
 
+const eventQueue: { keyCode: number, type: KeyEventType }[] = [];
+
+const onKeyDown = (event: KeyboardEvent): void => {
+  eventQueue.push({ keyCode: event.keyCode, type: KeyEventType.Down });
+};
+
+const onKeyUp = (event: KeyboardEvent): void => {
+  eventQueue.push({ keyCode: event.keyCode, type: KeyEventType.Up });
+};
+
+// Trick to execute only in the first system run
+const initialQuery = enterQuery(defineQuery([NullComponent]));
+
+const listenerQuery = defineQuery([KeyEventListener]);
+const eventQuery = defineQuery([KeyEvent]);
+
 export const keyEventHandleSystem = (world: IWorld) => {
-  handlerExitQuery(world).forEach(eid => {
-    const proxy = KeyEventHandlerProxy.get(eid);
-
-    if (proxy.alive) {
-      document.removeEventListener('keydown', proxy.keydownListener);
-      document.removeEventListener('keyup', proxy.keyupListener);
-    }
-
-    proxy.free();
-
-    if (hasComponent(world, KeyEventHandlerReady, eid)) {
-      removeComponent(world, KeyEventHandlerReady, eid);
-    }
+  initialQuery(world).forEach(() => {
+    document.addEventListener('keydown', onKeyDown);
+    document.addEventListener('keyup', onKeyUp);
   });
 
-  handlerEnterQuery(world).forEach(eid => {
-    const keydownListener = (event: KeyboardEvent): void => {
-      listenerQuery(world).forEach(eid => {
-        addEvent(world, eid, KeyEventType.Down, event.keyCode);
-      });
-    };
+  for (const e of eventQueue) {
+    listenerQuery(world).forEach(eid => {
+      addEvent(world, eid, e.type, e.keyCode);
+    });
+  }
 
-    const keyupListener = (event: KeyboardEvent): void => {
-      listenerQuery(world).forEach(eid => {
-        addEvent(world, eid, KeyEventType.Up, event.keyCode);
-      });
-    };
-
-    document.addEventListener('keydown', keydownListener);
-    document.addEventListener('keyup', keyupListener);
-
-    KeyEventHandlerProxy.get(eid).allocate(
-      keydownListener,
-      keyupListener
-    );
-
-    addComponent(world, KeyEventHandlerReady, eid);
-  });
+  eventQueue.length = 0;
 };
 
 export const keyEventClearSystem = (world: IWorld) => {
   eventQuery(world).forEach(eid => {
-    KeyEventProxy.get(eid).free();
+    const proxy = KeyEventProxy.get(eid)
+    proxy.events.length = 0;
+    proxy.free();
     removeComponent(world, KeyEvent, eid);
   });
 };

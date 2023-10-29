@@ -8,114 +8,101 @@ import {
   removeComponent
 } from "bitecs";
 import {
+  Canvas,
+  CanvasProxy
+} from "../components/canvas";
+import {
   TouchEvent,
-  TouchEventHandler,
-  TouchEventHandlerProxy,
-  TouchEventHandlerReady,
   TouchEventListener,
   TouchEventProxy,
   TouchEventType
 } from "../components/touch";
 
-const handlerQuery = defineQuery([TouchEventHandler]);
-const handlerEnterQuery = enterQuery(handlerQuery);
-const handlerExitQuery = exitQuery(handlerQuery);
-const listenerQuery = defineQuery([TouchEventListener]);
-const eventQuery = defineQuery([TouchEvent]);
-
-const addTouchEvent = (
+const addEvent = (
   world: IWorld,
   eid: number,
   type: TouchEventType,
-  event: TouchEvent
+  x: number,
+  y: number
 ): void => {
   if (!hasComponent(world, TouchEvent, eid)) {
     addComponent(world, TouchEvent, eid);
     TouchEventProxy.get(eid).allocate();
   }
-
-  // TODO: Implement properly
-  if (type === TouchEventType.Start) {
-    // TODO: Support multiple touches
-    const touch = event.touches[0];
-
-    // TODO: Use canvas, not document.body?
-    // TODO: Is using pageX/Y correct?
-    TouchEventProxy.get(eid).add(
-      type,
-      (touch.pageX / document.body.clientWidth) * 2.0 - 1.0,
-      -((touch.pageY / document.body.clientHeight) * 2.0 - 1.0)
-    );
-  } else {
-    // TODO: Fix me. Setting x/y = 0/0 as dummy for now.
-    //       What values should be passed?
-    TouchEventProxy.get(eid).add(type, 0, 0);
-  }
+  TouchEventProxy.get(eid).add(type, x, y);
 }
 
+const eventQueue: {
+  type: TouchEventType,
+  x: number,
+  y: number
+}[] = [];
+
+const onTouchStart = (event: TouchEvent): void => {
+  // TODO: Support multiple touches
+  const touch = event.touches[0];
+  const canvas = event.target as HTMLCanvasElement;
+  console.log(event.target);
+
+  // TODO: Is using pageX/Y correct?
+  eventQueue.push({
+    type: TouchEventType.Start,
+    x: (touch.pageX / canvas.clientWidth) * 2.0 - 1.0,
+    y: -((touch.pageY / canvas.clientHeight) * 2.0 - 1.0)
+  });
+};
+
+// TODO: Should we fire up event if the window is unfocused
+//       while holding mouse buttons?
+
+const onTouchEnd = (): void => {
+  // TODO: Fix me. Setting x/y = 0/0 as dummy for now.
+  //       What values should be passed?
+  eventQueue.push({ type: TouchEventType.End, x: 0, y: 0 });
+};
+
+const onTouchCancel = (): void => {
+  // TODO: Same above.
+  eventQueue.push({ type: TouchEventType.Cancel, x: 0, y: 0 });
+};
+
+const canvasQuery = defineQuery([Canvas]);
+const enterCanvasQuery = enterQuery(canvasQuery);
+const exitCanvasQuery = exitQuery(canvasQuery);
+const listenerQuery = defineQuery([TouchEventListener]);
+const eventQuery = defineQuery([TouchEvent]);
+
 export const touchEventHandleSystem = (world: IWorld) => {
-  handlerExitQuery(world).forEach(eid => {
-    const proxy = TouchEventHandlerProxy.get(eid);
+  // Assumes up to only one canvas entity
 
-    if (proxy.listenersAlive) {
-      const target = proxy.target;
-
-      target.removeEventListener('touchstart', proxy.touchstartListener);
-      target.removeEventListener('touchend', proxy.touchendListener);
-      target.removeEventListener('touchcancel', proxy.touchcancelListener);
-    }
-
-    if (hasComponent(world, TouchEventHandlerReady, eid)) {
-      removeComponent(world, TouchEventHandlerReady, eid);
-    }
-
-    proxy.free();
+  exitCanvasQuery(world).forEach(eid => {
+    const canvas = CanvasProxy.get(eid).canvas;
+    canvas.removeEventListener('touchstart', onTouchStart);
+    canvas.removeEventListener('touchend', onTouchEnd);
+    canvas.removeEventListener('touchcancel', onTouchCancel);
   });
 
-  handlerEnterQuery(world).forEach(eid => {
-    const proxy = TouchEventHandlerProxy.get(eid);
-
-    const touchstartListener = (event: TouchEvent): void => {
-      // TODO: May need to check world is still alive?
-      listenerQuery(world).forEach(eid => {
-        addTouchEvent(world, eid, TouchEventType.Start, event);
-      });
-    };
-
-    // TODO: Should we fire up event if the window is unfocused
-    //       while holding mouse buttons?
-
-    const touchendListener = (event: TouchEvent): void => {
-      listenerQuery(world).forEach(eid => {
-        addTouchEvent(world, eid, TouchEventType.End, event);
-      });
-    };
-
-    const touchcancelListener = (event: TouchEvent): void => {
-      listenerQuery(world).forEach(eid => {
-        addTouchEvent(world, eid, TouchEventType.Cancel, event);
-      });
-    };
-
-    const target = proxy.target;
-
-    target.addEventListener('touchstart', touchstartListener);
-    target.addEventListener('touchend', touchendListener);
-    target.addEventListener('touchcancel', touchcancelListener);
-
-    TouchEventHandlerProxy.get(eid).allocate(
-      touchstartListener,
-      touchendListener,
-      touchcancelListener
-    );
-
-    addComponent(world, TouchEventHandlerReady, eid);
+  enterCanvasQuery(world).forEach(eid => {
+    const canvas = CanvasProxy.get(eid).canvas;
+    canvas.addEventListener('touchstart', onTouchStart);
+    canvas.addEventListener('touchend', onTouchEnd);
+    canvas.addEventListener('touchcancel', onTouchCancel);
   });
+
+  for (const e of eventQueue) {
+    listenerQuery(world).forEach(eid => {
+      addEvent(world, eid, e.type, e.x, e.y);
+    });
+  }
+
+  eventQueue.length = 0;
 };
 
 export const touchEventClearSystem = (world: IWorld) => {
   eventQuery(world).forEach(eid => {
-    TouchEventProxy.get(eid).free();
+    const proxy = TouchEventProxy.get(eid);
+    proxy.events.length = 0;
+    proxy.free();
     removeComponent(world, TouchEvent, eid);
   });
 };

@@ -8,19 +8,14 @@ import {
   removeComponent
 } from "bitecs";
 import {
+  Canvas,
+  CanvasProxy
+} from "../components/canvas";
+import {
   MouseMoveEvent,
-  MouseMoveEventHandler,
-  MouseMoveEventHandlerProxy,
-  MouseMoveEventHandlerReady,
   MouseMoveEventListener,
   MouseMoveEventProxy
 } from "../components/mouse";
-
-const handlerQuery = defineQuery([MouseMoveEventHandler]);
-const handlerEnterQuery = enterQuery(handlerQuery);
-const handlerExitQuery = exitQuery(handlerQuery);
-const listenerQuery = defineQuery([MouseMoveEventListener]);
-const eventQuery = defineQuery([MouseMoveEvent]);
 
 const addEvent = (world: IWorld, eid: number, x: number, y: number): void => {
   if (!hasComponent(world, MouseMoveEvent, eid)) {
@@ -30,46 +25,50 @@ const addEvent = (world: IWorld, eid: number, x: number, y: number): void => {
   MouseMoveEventProxy.get(eid).add(x, y);
 };
 
+const eventQueue: { x: number, y: number }[] = [];
+
+const onMouseMove = (event: MouseEvent): void => {
+  // TODO: Avoid cast if possible
+  const canvas = event.target as HTMLCanvasElement;
+  eventQueue.push({
+    x: (event.offsetX / canvas.clientWidth) * 2.0 - 1.0,
+    y: -((event.offsetY / canvas.clientHeight) * 2.0 - 1.0)
+  });
+};
+
+const canvasQuery = defineQuery([Canvas]);
+const enterCanvasQuery = enterQuery(canvasQuery);
+const exitCanvasQuery = exitQuery(canvasQuery);
+const listenerQuery = defineQuery([MouseMoveEventListener]);
+const eventQuery = defineQuery([MouseMoveEvent]);
+
 export const mouseMoveEventHandleSystem = (world: IWorld) => {
-  handlerExitQuery(world).forEach(eid => {
-    const proxy = MouseMoveEventHandlerProxy.get(eid);
+  // Assumes up to only one canvas entity
 
-    if (proxy.listenersAlive) {
-      const target = proxy.target;
-      target.removeEventListener('mousemove', proxy.listener);
-    }
-
-    if (hasComponent(world, MouseMoveEventHandlerReady, eid)) {
-      removeComponent(world, MouseMoveEventHandlerReady, eid);
-    }
-
-    proxy.free();
+  exitCanvasQuery(world).forEach(eid => {
+    const canvas = CanvasProxy.get(eid).canvas;
+    canvas.removeEventListener('mousemove', onMouseMove);
   });
 
-  handlerEnterQuery(world).forEach(eid => {
-    const proxy = MouseMoveEventHandlerProxy.get(eid);
-    const target = proxy.target;
-
-    const listener = (event: MouseEvent): void => {
-      listenerQuery(world).forEach(eid => {
-        addEvent(
-          world,
-          eid,
-          (event.offsetX / target.clientWidth) * 2.0 - 1.0,
-          -((event.offsetY / target.clientHeight) * 2.0 - 1.0)
-        );
-      });
-    };
-
-    target.addEventListener('mousemove', listener);
-    MouseMoveEventHandlerProxy.get(eid).allocate(listener);
-    addComponent(world, MouseMoveEventHandlerReady, eid);
+  enterCanvasQuery(world).forEach(eid => {
+    const canvas = CanvasProxy.get(eid).canvas;
+    canvas.addEventListener('mousemove', onMouseMove);
   });
+
+  for (const e of eventQueue) {
+    listenerQuery(world).forEach(eid => {
+      addEvent(world, eid, e.x, e.y);
+    });
+  }
+
+  eventQueue.length = 0;
 };
 
 export const mouseMoveEventClearSystem = (world: IWorld) => {
   eventQuery(world).forEach(eid => {
-    MouseMoveEventProxy.get(eid).free();
+    const proxy = MouseMoveEventProxy.get(eid);
+    proxy.events.length = 0;
+    proxy.free();
     removeComponent(world, MouseMoveEvent, eid);
   });
 };

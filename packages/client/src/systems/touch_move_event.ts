@@ -8,17 +8,18 @@ import {
   removeComponent
 } from "bitecs";
 import {
+  Canvas,
+  CanvasProxy
+} from "../components/canvas";
+import {
   TouchMoveEvent,
-  TouchMoveEventHandler,
-  TouchMoveEventHandlerProxy,
-  TouchMoveEventHandlerReady,
   TouchMoveEventListener,
   TouchMoveEventProxy
 } from "../components/touch";
 
-const handlerQuery = defineQuery([TouchMoveEventHandler]);
-const handlerEnterQuery = enterQuery(handlerQuery);
-const handlerExitQuery = exitQuery(handlerQuery);
+const canvasQuery = defineQuery([Canvas]);
+const enterCanvasQuery = enterQuery(canvasQuery);
+const exitCanvasQuery = exitQuery(canvasQuery);
 const listenerQuery = defineQuery([TouchMoveEventListener]);
 const eventQuery = defineQuery([TouchMoveEvent]);
 
@@ -30,49 +31,47 @@ const addEvent = (world: IWorld, eid: number, x: number, y: number): void => {
   TouchMoveEventProxy.get(eid).add(x, y);
 };
 
+const eventQueue: { x: number, y: number }[] = [];
+
+const onTouchMove = (event: TouchEvent): void => {
+  // TODO: Avoid cast if possible
+  const canvas = event.target as HTMLCanvasElement;
+  // TODO: Support multiple touches
+  // TODO: Is using pageX/Y correct?
+  const touch = event.touches[0];
+  eventQueue.push({
+    x: (touch.pageX / canvas.clientWidth) * 2.0 - 1.0,
+    y: -((touch.pageY / canvas.clientHeight) * 2.0 - 1.0)
+  });
+};
+
 export const touchMoveEventHandleSystem = (world: IWorld) => {
-  handlerExitQuery(world).forEach(eid => {
-    const proxy = TouchMoveEventHandlerProxy.get(eid);
+  // Assumes up to only one canvas entity
 
-    if (proxy.listenersAlive) {
-      const target = proxy.target;
-      target.removeEventListener('touchmove', proxy.listener);
-    }
-
-    if (hasComponent(world, TouchMoveEventHandlerReady, eid)) {
-      removeComponent(world, TouchMoveEventHandlerReady, eid);
-    }
-
-    proxy.free();
+  exitCanvasQuery(world).forEach(eid => {
+    const canvas = CanvasProxy.get(eid).canvas;
+    canvas.removeEventListener('touchmove', onTouchMove);
   });
 
-  handlerEnterQuery(world).forEach(eid => {
-    const proxy = TouchMoveEventHandlerProxy.get(eid);
-    const target = proxy.target;
-
-    const listener = (event: TouchEvent): void => {
-      // TODO: Support multiple touches
-      // TODO: Is using pageX/Y correct?
-      const touch = event.touches[0];
-      listenerQuery(world).forEach(eid => {
-        addEvent(
-          world,
-          eid,
-          (touch.pageX / target.clientWidth) * 2.0 - 1.0,
-          -((touch.pageY / target.clientHeight) * 2.0 - 1.0)
-        );
-      });
-    };
-
-    target.addEventListener('touchmove', listener);
-    TouchMoveEventHandlerProxy.get(eid).allocate(listener);
-    addComponent(world, TouchMoveEventHandlerReady, eid);
+  enterCanvasQuery(world).forEach(eid => {
+    const canvas = CanvasProxy.get(eid).canvas;
+    canvas.addEventListener('touchmove', onTouchMove);
   });
+
+  for (const e of eventQueue) {
+    listenerQuery(world).forEach(eid => {
+      addEvent(world, eid, e.x, e.y);
+    });
+  }
+
+  eventQueue.length = 0;
 };
 
 export const touchMoveEventClearSystem = (world: IWorld) => {
   eventQuery(world).forEach(eid => {
-    TouchMoveEventProxy.get(eid).free();
+    const proxy = TouchMoveEventProxy.get(eid);
+    proxy.events.length = 0;
+    proxy.free();
     removeComponent(world, TouchMoveEvent, eid);
   });
 };
