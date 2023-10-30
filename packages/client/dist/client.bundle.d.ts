@@ -178,6 +178,8 @@ export declare const Grabbable: import("bitecs").ComponentType<import("bitecs").
 export declare const Grabbed: import("bitecs").ComponentType<{
 	distance: "f32";
 }>;
+export declare const GrabbedByFirstSource: import("bitecs").ComponentType<import("bitecs").ISchema>;
+export declare const GrabbedBySecondSource: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare const FirstSourceInteractable: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare const FirstSourceInteracted: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare const FirstSourceInteractionTriggerEvent: import("bitecs").ComponentType<import("bitecs").ISchema>;
@@ -552,13 +554,18 @@ export declare class RayProxy {
 	free(): void;
 	get ray(): Ray;
 }
+export declare const ActiveRay: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare const FirstRay: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare const SecondRay: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare const Raycastable: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare const Raycasted: import("bitecs").ComponentType<{
 	distance: "f32";
 }>;
+export declare const RaycastedByFirstRay: import("bitecs").ComponentType<import("bitecs").ISchema>;
+export declare const RaycastedBySecondRay: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare const RaycastedNearest: import("bitecs").ComponentType<import("bitecs").ISchema>;
+export declare const RaycastedNearestByFirstRay: import("bitecs").ComponentType<import("bitecs").ISchema>;
+export declare const RaycastedNearestBySecondRay: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare const RaycasterComponent: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare class RaycasterProxy {
 	private static instance;
@@ -1058,7 +1065,7 @@ export declare const peerSystem: (world: IWorld) => void;
 export declare const perspectiveCameraSystem: (world: IWorld) => void;
 export declare const positionalAudioSystem: (world: IWorld) => void;
 export declare const prefabsSystem: (world: IWorld) => void;
-export declare const raySystem: (world: IWorld) => void;
+export declare const pointerToRaySystem: (world: IWorld) => void;
 export declare const raycastSystem: (world: IWorld) => void;
 export declare const clearRaycastedSystem: (world: IWorld) => void;
 export declare const raycasterSystem: (world: IWorld) => void;
@@ -1086,6 +1093,7 @@ export declare const webxrCameraSystem: (world: IWorld) => void;
 export declare const webxrControllerEventHandlingSystem: (world: IWorld) => void;
 export declare const webxrControllerSystem: (world: IWorld) => void;
 export declare const clearWebXRControllerEventSystem: (world: IWorld) => void;
+export declare const webxrRaySystem: (world: IWorld) => void;
 export declare const webxrSessionManagementSystem: (world: IWorld) => void;
 export declare const clearWebXRSessionEventSystem: (world: IWorld) => void;
 export declare const windowResizeEventHandleSystem: (world: IWorld) => void;
