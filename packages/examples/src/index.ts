@@ -8,12 +8,14 @@ import {
   avatarVirtualJoystickSystem,
   billboardSystem,
   clearVirtualJoystickEventSystem,
+  FirstXRControllerRay,
   gltfMixerAnimationSystem,
   imageSystem,
   imageLoadSystem,
   lazilyUpdateVideoStateSystem,
   nametagSystem,
   NetworkedVideo,
+  SecondXRControllerRay,
   TextChat,
   textChatUISystem,
   textSystem,
@@ -158,9 +160,15 @@ const run = async (): Promise<void> => {
   addComponent(world, KeyEventListener, avatarEid);
   addComponent(world, AudioDestination, avatarEid);
 
-  const xrControllerRayEid = addEntity(world);
-  addXRControllerRayComponent(world, xrControllerRayEid);
-  addComponent(world, XRControllerConnectionEventListener, xrControllerRayEid);
+  const firstXrControllerRayEid = addEntity(world);
+  addXRControllerRayComponent(world, firstXrControllerRayEid);
+  addComponent(world, XRControllerConnectionEventListener, firstXrControllerRayEid);
+  addComponent(world, FirstXRControllerRay, firstXrControllerRayEid);
+
+  const secondXrControllerRayEid = addEntity(world);
+  addXRControllerRayComponent(world, secondXrControllerRayEid);
+  addComponent(world, XRControllerConnectionEventListener, secondXrControllerRayEid);
+  addComponent(world, SecondXRControllerRay, secondXrControllerRayEid);
 
   const envMapLoaderEid = addEntity(world);
   addComponent(world, SceneEnvironmentMapLoader, envMapLoaderEid);

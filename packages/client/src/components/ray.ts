@@ -32,6 +32,8 @@ export class RayProxy {
   }
 }
 
+export const ActiveRay = defineComponent();
+
 export const FirstRay = defineComponent();
 export const SecondRay = defineComponent();
 

@@ -12,7 +12,7 @@ const rayQuery = defineQuery([FirstRay, RayComponent]);
 const grabbedQuery = defineQuery([EntityObject3D, Grabbed, InScene]);
 
 export const grabbedObjectsRayTrackSystem = (world: IWorld) => {
-  // TODO: Second Ray support
+  // TODO: Second Ray support in immersive mode?
 
   rayQuery(world).forEach(rayEid => {
     const ray = RayProxy.get(rayEid).ray;

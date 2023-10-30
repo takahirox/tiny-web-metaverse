@@ -1,6 +1,7 @@
 import {
   addComponent,
   defineQuery,
+  hasComponent,
   IWorld,
   removeComponent
 } from "bitecs";
@@ -9,11 +10,21 @@ import {
   EntityObject3D,
   EntityObject3DProxy
 } from "../components/entity_object3d";
-import { FirstRay, RayComponent, RayProxy } from "../components/ray";
+import {
+  ActiveRay,
+  FirstRay,
+  RayComponent,
+  RayProxy,
+  SecondRay
+} from "../components/ray";
 import {
   Raycastable,
   Raycasted,
+  RaycastedByFirstRay,
+  RaycastedBySecondRay,
   RaycastedNearest,
+  RaycastedNearestByFirstRay,
+  RaycastedNearestBySecondRay,
   RaycasterComponent,
   RaycasterProxy
 } from "../components/raycast";
@@ -21,22 +32,24 @@ import {
 const vec3 = new Vector3();
 
 const raycasterQuery = defineQuery([RaycasterComponent]);
-const rayQuery = defineQuery([FirstRay, RayComponent]);
-const raycastableQuery = defineQuery([Raycastable, EntityObject3D]);
-const raycastedQuery = defineQuery([Raycasted]);
-const raycastedNearestQuery = defineQuery([RaycastedNearest]);
 
-// TODO: Implement Second Ray
+const rayQuery = defineQuery([ActiveRay, RayComponent]);
+const raycastableQuery = defineQuery([Raycastable, EntityObject3D]);
+
+const raycastedQuery = defineQuery([Raycasted]);
+const firstRaycastedQuery = defineQuery([RaycastedByFirstRay]);
+const secondRaycastedQuery = defineQuery([RaycastedBySecondRay]);
+const raycastedNearestQuery = defineQuery([RaycastedNearest]);
+const firstRaycastedNearestQuery = defineQuery([RaycastedNearestByFirstRay]);
+const secondRaycastedNearestQuery = defineQuery([RaycastedNearestBySecondRay]);
+
+// TODO: Simplify and optimize
 
 export const raycastSystem = (world: IWorld) => {
-  const raycasterEids = raycasterQuery(world);
-  const rayEids = rayQuery(world);
-  const raycastableEids = raycastableQuery(world);
-
-  raycasterEids.forEach(raycasterEid => {
+  raycasterQuery(world).forEach(raycasterEid => {
     const raycaster = RaycasterProxy.get(raycasterEid).raycaster;
 
-    rayEids.forEach(rayEid => {
+    rayQuery(world).forEach(rayEid => {
       const ray = RayProxy.get(rayEid).ray;
 
       raycaster.ray.copy(ray);
@@ -47,7 +60,7 @@ export const raycastSystem = (world: IWorld) => {
       const objects: Object3D[] = [];
       const eidMap: Map<Object3D, number> = new Map();
 
-      raycastableEids.forEach(raycastableEid => {
+      raycastableQuery(world).forEach(raycastableEid => {
         const obj = EntityObject3DProxy.get(raycastableEid).root;
         objects.push(obj);
         eidMap.set(obj, raycastableEid);
@@ -67,15 +80,31 @@ export const raycastSystem = (world: IWorld) => {
         }
 
         if (obj === null) {
-          throw new Error('Unfoung object, this should not happen.');
+          throw new Error('Unfound object, this should not happen.');
         }
 
         const raycastedEid = eidMap.get(obj)!;
         addComponent(world, Raycasted, raycastedEid);
+
+        if (hasComponent(world, FirstRay, rayEid)) {
+          addComponent(world, RaycastedByFirstRay, raycastedEid);
+        }
+        if (hasComponent(world, SecondRay, rayEid)) {
+          addComponent(world, RaycastedBySecondRay, raycastedEid);
+        }
+
         vec3.copy(EntityObject3DProxy.get(raycastedEid).root.position).sub(ray.origin);
         Raycasted.distance[raycastedEid] = vec3.length();
+
         if (i === 0) {
           addComponent(world, RaycastedNearest, raycastedEid);
+
+          if (hasComponent(world, FirstRay, rayEid)) {
+            addComponent(world, RaycastedNearestByFirstRay, raycastedEid);
+          }
+          if (hasComponent(world, SecondRay, rayEid)) {
+            addComponent(world, RaycastedNearestBySecondRay, raycastedEid);
+          }
         }
       }
     });
@@ -86,7 +115,24 @@ export const clearRaycastedSystem = (world: IWorld) => {
   raycastedQuery(world).forEach(eid => {
     removeComponent(world, Raycasted, eid);
   });
+
+  firstRaycastedQuery(world).forEach(eid => {
+    removeComponent(world, RaycastedByFirstRay, eid);
+  });
+
+  secondRaycastedQuery(world).forEach(eid => {
+    removeComponent(world, RaycastedBySecondRay, eid);
+  });
+
   raycastedNearestQuery(world).forEach(eid => {
     removeComponent(world, RaycastedNearest, eid);
+  });
+
+  firstRaycastedNearestQuery(world).forEach(eid => {
+    removeComponent(world, RaycastedNearestByFirstRay, eid);
+  });
+
+  secondRaycastedNearestQuery(world).forEach(eid => {
+    removeComponent(world, RaycastedNearestBySecondRay, eid);
   });
 };

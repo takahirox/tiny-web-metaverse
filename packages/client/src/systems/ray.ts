@@ -10,7 +10,7 @@ import { inAR, inVR } from "../utils/webxr";
 const rayQuery = defineQuery([RayComponent, FirstRay]);
 const pointerQuery = defineQuery([Pointer]);
 
-export const raySystem = (world: IWorld): void => {
+export const pointerToRaySystem = (world: IWorld): void => {
   // This operation is done in WebXR system if in VR/AR mode
   if (inAR(world) || inVR(world)) {
     return;

@@ -12,10 +12,22 @@ import {
   SecondSourceInteractionLeaveEvent,
   SecondSourceInteractionTriggerEvent
 } from "../components/interact";
-import { RaycastedNearest } from "../components/raycast";
+import {
+  RaycastedNearest,
+  RaycastedNearestByFirstRay,
+  RaycastedNearestBySecondRay
+} from "../components/raycast";
+import { isXRPresenting } from "../utils/webxr";
 
-const firstSourceInteractableQuery = defineQuery([FirstSourceInteractionTriggerEvent, RaycastedNearest]);
-const secondSourceInteractableQuery = defineQuery([RaycastedNearest, SecondSourceInteractionTriggerEvent]);
+const firstSourceInteractableQuery =
+  defineQuery([FirstSourceInteractionTriggerEvent, RaycastedNearest, RaycastedNearestByFirstRay]);
+const secondSourceInteractableQuery =
+  defineQuery([RaycastedNearest, RaycastedNearestByFirstRay, SecondSourceInteractionTriggerEvent]);
+
+// Hack: Second source is interactable only by second ray in immersive mode.
+// TODO: This hack maybe error prone. Think simpler approach
+const secondSourceInteractableInImmersiveModeQuery =
+  defineQuery([RaycastedNearest, RaycastedNearestBySecondRay, SecondSourceInteractionTriggerEvent]);
 
 const firstInteractedQuery = defineQuery([FirstSourceInteracted]);
 const firstTriggerEventQuery = defineQuery([FirstSourceInteractionTriggerEvent]);
@@ -29,7 +41,10 @@ export const interactSystem = (world: IWorld) => {
     addComponent(world, FirstSourceInteracted, eid);
   });
 
-  secondSourceInteractableQuery(world).forEach(eid => {
+  (isXRPresenting(world)
+    ? secondSourceInteractableInImmersiveModeQuery
+    : secondSourceInteractableQuery
+  )(world).forEach(eid => {
     addComponent(world, SecondSourceInteracted, eid);
   });
 };

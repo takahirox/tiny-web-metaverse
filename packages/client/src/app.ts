@@ -63,7 +63,13 @@ import { NullComponent } from "./components/null";
 import { Peers, PeersManager, PeersProxy } from "./components/peer";
 import { Pointer, PointerProxy } from "./components/pointer";
 import { Prefabs, PrefabsProxy } from "./components/prefab";
-import { RayComponent, RayProxy, FirstRay } from "./components/ray";
+import {
+  ActiveRay,
+  FirstRay,
+  RayComponent,
+  RayProxy,
+  SecondRay
+} from "./components/ray";
 import { RaycasterComponent, RaycasterProxy } from "./components/raycast";
 import { Renderer, RendererProxy } from "./components/renderer";
 import { RoomId, RoomIdProxy } from "./components/room_id";
@@ -166,7 +172,7 @@ import { peerSystem } from "./systems/peer";
 import { perspectiveCameraSystem } from "./systems/perspective_camera";
 import { positionalAudioSystem } from "./systems/positional_audio";
 import { prefabsSystem } from "./systems/prefab";
-import { raySystem } from "./systems/ray";
+import { pointerToRaySystem } from "./systems/ray";
 import { clearRaycastedSystem, raycastSystem } from "./systems/raycast";
 import { raycasterSystem } from "./systems/raycaster";
 import { renderSystem } from "./systems/render";
@@ -197,6 +203,7 @@ import {
   webxrControllerEventHandlingSystem,
   webxrControllerSystem
 } from "./systems/webxr_controller";
+import { webxrRaySystem } from "./systems/webxr_ray";
 import {
   clearWebXRSessionEventSystem,
   webxrSessionManagementSystem
@@ -288,9 +295,10 @@ export class App {
     this.registerSystem(webxrCameraSystem, SystemOrder.EventHandling + 2);
     this.registerSystem(webxrControllerEventHandlingSystem, SystemOrder.EventHandling + 2);
 
+    this.registerSystem(webxrRaySystem, SystemOrder.EventHandling + 3);
     this.registerSystem(webxrControllerSystem, SystemOrder.EventHandling + 3);
 
-    this.registerSystem(raySystem, SystemOrder.Setup - 1);
+    this.registerSystem(pointerToRaySystem, SystemOrder.Setup - 1);
 
     this.registerSystem(canvasSystem, SystemOrder.Setup);
     this.registerSystem(prefabsSystem, SystemOrder.Setup);
@@ -467,11 +475,21 @@ export class App {
     addComponent(this.world, PeersManager, peerManagerEid);
     addComponent(this.world, UserNetworkEventListener, peerManagerEid);
 
-    const rayEid = addEntity(this.world);
-    addComponent(this.world, RayComponent, rayEid);
-    RayProxy.get(rayEid).allocate(new Ray());
-    addComponent(this.world, FirstRay, rayEid);
-    // TODO: Second Ray entity is created when entering VR mode?
+    const firstRayEid = addEntity(this.world);
+    addComponent(this.world, RayComponent, firstRayEid);
+    RayProxy.get(firstRayEid).allocate(new Ray());
+    addComponent(this.world, FirstRay, firstRayEid);
+    addComponent(this.world, ActiveRay, firstRayEid);
+    addComponent(this.world, WebXRSessionEventListener, firstRayEid);
+    addComponent(this.world, XRControllerConnectionEventListener, firstRayEid);
+
+    // The second ray can be activated in VR/AR mode
+    const secondRayEid = addEntity(this.world);
+    addComponent(this.world, RayComponent, secondRayEid);
+    RayProxy.get(secondRayEid).allocate(new Ray());
+    addComponent(this.world, SecondRay, secondRayEid);
+    addComponent(this.world, WebXRSessionEventListener, secondRayEid);
+    addComponent(this.world, XRControllerConnectionEventListener, secondRayEid);
 
     const pointerEid = addEntity(this.world);
     addComponent(this.world, Pointer, pointerEid);

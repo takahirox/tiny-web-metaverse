@@ -19,7 +19,8 @@ import {
 import {
   FirstRay,
   RayComponent,
-  RayProxy
+  RayProxy,
+  SecondRay
 } from "../components/ray";
 import { InScene } from "../components/scene";
 import {
@@ -137,10 +138,11 @@ const secondControllerConnectionQuery = defineQuery([SecondXRController, XRContr
 const firstInteractableQuery = defineQuery([FirstSourceInteractable, XRControllerSelectEvent]);
 const secondInteractableQuery = defineQuery([SecondSourceInteractable, XRControllerSelectEvent]);
 
-const firstRayQuery = defineQuery([FirstRay, RayComponent]);
 const firstActiveControllerQuery = defineQuery([ActiveXRController, FirstXRController]);
+const firstRayQuery = defineQuery([FirstRay, RayComponent]);
 
-// TODO: Implement second ray query
+const secondActiveControllerQuery = defineQuery([ActiveXRController, SecondXRController]);
+const secondRayQuery = defineQuery([SecondRay, RayComponent]);
 
 export const webxrControllerEventHandlingSystem = (world: IWorld): void => {
   exitControllerQuery(world).forEach(eid => {
@@ -187,6 +189,14 @@ const handleConnectionEvent = (world: IWorld, eid: number, e: XRControllerConnec
   }
 };
 
+const trackController = (controllerEid: number, rayEid: number): void => {
+  const controller = XRControllerProxy.get(controllerEid).controller;
+  const ray = RayProxy.get(rayEid).ray;
+  ray.origin.copy(controller.position);
+  // TODO: Is this calculation correct?
+  ray.direction.set(0, 0, -1.0).applyQuaternion(controller.quaternion);
+};
+	  
 export const webxrControllerSystem = (world: IWorld): void => {
   firstControllerConnectionQuery(world).forEach(eid => {
     for (const e of XRControllerConnectionEventProxy.get(eid).events) {
@@ -236,16 +246,16 @@ export const webxrControllerSystem = (world: IWorld): void => {
     return;
   }
 
-  // TODO: If controller is inactive, what ray should be?
-  // TODO: Controller may not be in scene yet at the first frame when controller is connected.
+  // TODO: If controller is inactive, how ray should be?
   firstActiveControllerQuery(world).forEach(controllerEid => {
     firstRayQuery(world).forEach(rayEid => {
-      const ray = RayProxy.get(rayEid).ray;
-      const controller = XRControllerProxy.get(controllerEid).controller;
+      trackController(controllerEid, rayEid);
+    });
+  });
 
-      ray.origin.copy(controller.position);
-      // TODO: Is this calculation correct?
-      ray.direction.set(0, 0, -1.0).applyQuaternion(controller.quaternion);
+  secondActiveControllerQuery(world).forEach(controllerEid => {
+    secondRayQuery(world).forEach(rayEid => {
+      trackController(controllerEid, rayEid);
     });
   });
 };

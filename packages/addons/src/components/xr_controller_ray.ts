@@ -31,3 +31,6 @@ export class XRControllerRayProxy {
     return this.map.get(this.eid)!;
   }
 }
+
+export const FirstXRControllerRay = defineComponent();
+export const SecondXRControllerRay = defineComponent();

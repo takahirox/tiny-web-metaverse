@@ -5,3 +5,7 @@ export const Grabbed = defineComponent({
   // TODO: Write description
   distance: Types.f32
 });
+
+export const GrabbedByFirstSource = defineComponent();
+export const GrabbedBySecondSource = defineComponent();
+

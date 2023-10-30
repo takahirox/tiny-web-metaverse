@@ -93,6 +93,7 @@ export * from "./systems/transform";
 export * from "./systems/update_matrices";
 export * from "./systems/webxr_camera";
 export * from "./systems/webxr_controller";
+export * from "./systems/webxr_ray";
 export * from "./systems/webxr_session";
 export * from "./systems/window_resize_event";
 

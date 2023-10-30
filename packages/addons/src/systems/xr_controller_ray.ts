@@ -12,43 +12,75 @@ import {
   InScene,
   RayComponent,
   RayProxy,
+  SecondRay,
   XRControllerType,
   XRControllerConnectionEvent,
   XRControllerConnectionEventProxy,
   XRControllerConnectionEventType
 } from "@tiny-web-metaverse/client/src";
-import { XRControllerRay } from "../components/xr_controller_ray";
+import {
+  FirstXRControllerRay,
+  XRControllerRay,
+  SecondXRControllerRay
+} from "../components/xr_controller_ray";
+
+const firstActiveControllerRayQuery =
+  defineQuery([EntityObject3D, FirstXRControllerRay, InScene, XRControllerRay]);
+const secondActiveControllerRayQuery =
+  defineQuery([EntityObject3D, InScene, SecondXRControllerRay, XRControllerRay]);
+
+// TODO: Only active rays?
+const firstRayQuery = defineQuery([FirstRay, RayComponent]);
+const secondRayQuery = defineQuery([RayComponent, SecondRay]);
+
+// TODO: Use ActiveXRController instead of XRControllerConnectionEvent?
+const firstConnectionEventQuery =
+  defineQuery([FirstXRControllerRay, XRControllerConnectionEvent, XRControllerRay]);
+const secondConnectionEventQuery =
+  defineQuery([SecondXRControllerRay, XRControllerConnectionEvent, XRControllerRay]);
+
+const handleConnection = (world: IWorld, eid: number, type: XRControllerType): void => {
+  for (const e of XRControllerConnectionEventProxy.get(eid).events) { 
+    if (e.controller !== type) {
+      continue;
+    }
+    if (e.type === XRControllerConnectionEventType.Connected) {
+      addComponent(world, InScene, eid);
+    } else if (e.type === XRControllerConnectionEventType.Disconnected) {
+      removeComponent(world, InScene, eid);
+    }
+  }
+};
 
 const quat = new Quaternion();
 const vec3 = new Vector3();
 
-// TODO: Implement Second ray
-
-const rayQuery = defineQuery([FirstRay, RayComponent]);
-const controllerRayQuery = defineQuery([EntityObject3D, InScene, XRControllerRay]);
-const connectionEventQuery = defineQuery([XRControllerConnectionEvent, XRControllerRay]);
+const trackRay = (objEid: number, rayEid: number): void => {
+  const root = EntityObject3DProxy.get(objEid).root;
+  const ray = RayProxy.get(rayEid).ray;
+  // TODO: Optimize and/or simplify
+  root.position.copy(ray.origin);
+  root.quaternion.copy(quat.setFromUnitVectors(vec3.set(0, 0, -1.0), ray.direction));
+};
 
 export const xrControllerRaySystem = (world: IWorld): void => {
-  connectionEventQuery(world).forEach(eid => {
-    for (const e of XRControllerConnectionEventProxy.get(eid).events) { 
-      if (e.controller !== XRControllerType.First) {
-        continue;
-      }
-      if (e.type === XRControllerConnectionEventType.Connected) {
-        addComponent(world, InScene, eid);
-      } else if (e.type === XRControllerConnectionEventType.Disconnected) {
-        removeComponent(world, InScene, eid);
-      }
-    }
+  firstConnectionEventQuery(world).forEach(eid => {
+    handleConnection(world, eid, XRControllerType.First);
   });
 
-  controllerRayQuery(world).forEach(objEid => {
-    const root = EntityObject3DProxy.get(objEid).root;
-    rayQuery(world).forEach(rayEid => {
-      const ray = RayProxy.get(rayEid).ray;
-      // TODO: Optimize and/or simplify
-      root.position.copy(ray.origin);
-      root.quaternion.copy(quat.setFromUnitVectors(vec3.set(0, 0, -1.0), ray.direction));
+  secondConnectionEventQuery(world).forEach(eid => {
+    handleConnection(world, eid, XRControllerType.Second);
+  });
+
+  firstActiveControllerRayQuery(world).forEach(objEid => {
+    firstRayQuery(world).forEach(rayEid => {
+      trackRay(objEid, rayEid);
+    });
+  });
+
+  secondActiveControllerRayQuery(world).forEach(objEid => {
+    secondRayQuery(world).forEach(rayEid => {
+      trackRay(objEid, rayEid);
     });
   });
 };
