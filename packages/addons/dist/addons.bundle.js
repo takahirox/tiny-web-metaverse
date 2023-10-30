@@ -6518,6 +6518,7 @@ const onSessionEnded = () => {
     currentSessionMode = null;
 };
 const onButtonClick = (mode) => {
+    var _a;
     if (sessionRequesting) {
         return;
     }
@@ -6533,7 +6534,7 @@ const onButtonClick = (mode) => {
         if (!sessionInit.optionalFeatures || !sessionInit.optionalFeatures.includes('dom-overlay')) {
             const domOverlayRoot = document.getElementById('WebXRDomOverlayRoot');
             if (domOverlayRoot !== null) {
-                sessionInit.optionalFeatures = sessionInit.optionalFeatures || [];
+                sessionInit.optionalFeatures = ((_a = sessionInit.optionalFeatures) === null || _a === void 0 ? void 0 : _a.slice()) || [];
                 sessionInit.optionalFeatures.push('dom-overlay');
                 sessionInit.domOverlay = { root: domOverlayRoot };
             }

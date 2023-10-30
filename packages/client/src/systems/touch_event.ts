@@ -42,7 +42,6 @@ const onTouchStart = (event: TouchEvent): void => {
   // TODO: Support multiple touches
   const touch = event.touches[0];
   const canvas = event.target as HTMLCanvasElement;
-  console.log(event.target);
 
   // TODO: Is using pageX/Y correct?
   eventQueue.push({

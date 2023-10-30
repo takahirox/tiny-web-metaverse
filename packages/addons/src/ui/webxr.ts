@@ -223,7 +223,7 @@ const onButtonClick = (mode: XRSessionMode): void => {
       const domOverlayRoot = document.getElementById('WebXRDomOverlayRoot');
 
       if (domOverlayRoot !== null) {
-        sessionInit.optionalFeatures = sessionInit.optionalFeatures || [];
+        sessionInit.optionalFeatures = sessionInit.optionalFeatures?.slice() || [];
         sessionInit.optionalFeatures.push('dom-overlay');
         sessionInit.domOverlay = { root: domOverlayRoot };
       }

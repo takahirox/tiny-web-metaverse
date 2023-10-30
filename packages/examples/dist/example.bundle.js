@@ -6547,6 +6547,7 @@ const onSessionEnded = () => {
     currentSessionMode = null;
 };
 const onButtonClick = (mode) => {
+    var _a;
     if (sessionRequesting) {
         return;
     }
@@ -6562,7 +6563,7 @@ const onButtonClick = (mode) => {
         if (!sessionInit.optionalFeatures || !sessionInit.optionalFeatures.includes('dom-overlay')) {
             const domOverlayRoot = document.getElementById('WebXRDomOverlayRoot');
             if (domOverlayRoot !== null) {
-                sessionInit.optionalFeatures = sessionInit.optionalFeatures || [];
+                sessionInit.optionalFeatures = ((_a = sessionInit.optionalFeatures) === null || _a === void 0 ? void 0 : _a.slice()) || [];
                 sessionInit.optionalFeatures.push('dom-overlay');
                 sessionInit.domOverlay = { root: domOverlayRoot };
             }
@@ -12896,7 +12897,6 @@ const onTouchStart = (event) => {
     // TODO: Support multiple touches
     const touch = event.touches[0];
     const canvas = event.target;
-    console.log(event.target);
     // TODO: Is using pageX/Y correct?
     eventQueue.push({
         type: _components_touch__WEBPACK_IMPORTED_MODULE_1__.TouchEventType.Start,
@@ -15344,9 +15344,11 @@ const handleOnAnimationClipSelectInputs = (world, eid) => {
     onAnimationSelectInputQueue.length = 0;
 };
 //
-const div = document.createElement('div');
+const domOverlayRoot = document.createElement('div');
 // See addons/src/ui/webxr.ts
-div.id = 'WebXRDomOverlayRoot';
+domOverlayRoot.id = 'WebXRDomOverlayRoot';
+document.body.appendChild(domOverlayRoot);
+const div = document.createElement('div');
 div.style.width = 'calc(200px - 1.0em)';
 div.style.height = 'calc(100% - 1.0em)';
 div.style.display = 'none';
@@ -15360,7 +15362,7 @@ div.style.opacity = '1.0';
 div.style.borderLeft = 'solid 1px #000000';
 div.style.padding = '0.5em';
 div.style.margin = '0';
-document.body.appendChild(div);
+domOverlayRoot.appendChild(div);
 const eidDiv = document.createElement('div');
 div.appendChild(eidDiv);
 const { root: positionRootDiv, spans: positionSpans, inputs: positionInputs } = createPositionElement();

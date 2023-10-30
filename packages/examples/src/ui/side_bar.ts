@@ -471,10 +471,12 @@ const handleOnAnimationClipSelectInputs = (world: IWorld, eid: number) => {
 
 //
 
-const div = document.createElement('div');
+const domOverlayRoot = document.createElement('div');
 // See addons/src/ui/webxr.ts
-div.id = 'WebXRDomOverlayRoot';
+domOverlayRoot.id = 'WebXRDomOverlayRoot';
+document.body.appendChild(domOverlayRoot);
 
+const div = document.createElement('div');
 div.style.width = 'calc(200px - 1.0em)';
 div.style.height = 'calc(100% - 1.0em)';
 div.style.display = 'none';
@@ -488,7 +490,7 @@ div.style.opacity = '1.0';
 div.style.borderLeft = 'solid 1px #000000';
 div.style.padding = '0.5em';
 div.style.margin = '0';
-document.body.appendChild(div);
+domOverlayRoot.appendChild(div);
 
 const eidDiv = document.createElement('div');
 div.appendChild(eidDiv);
