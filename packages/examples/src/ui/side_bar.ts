@@ -472,6 +472,9 @@ const handleOnAnimationClipSelectInputs = (world: IWorld, eid: number) => {
 //
 
 const div = document.createElement('div');
+// See addons/src/ui/webxr.ts
+div.id = 'WebXRDomOverlayRoot';
+
 div.style.width = 'calc(200px - 1.0em)';
 div.style.height = 'calc(100% - 1.0em)';
 div.style.display = 'none';

@@ -135,12 +135,12 @@ let currentSession: XRSession | null = null;
 
 // TODO: Configurable
 
-const sessionInit = {
+const defaultSessionInit: XRSessionInit = {
   optionalFeatures: [
-    'local-floor',
     'bounded-floor',
     'hand-tracking',
-    'layers'
+    'layers',
+    'local-floor'
   ]
 };
 
@@ -213,6 +213,22 @@ const onButtonClick = (mode: XRSessionMode): void => {
   disableButton(arButton);
 
   if (currentSession === null) {
+    const sessionInit = Object.assign({}, defaultSessionInit);
+
+    // Hack and experiment:
+    // If an element names "WebXRDomOverlayRoot" is found
+    // enable WebXR dom-overlay feature with the element.
+    // TODO: Fix me, more elegant API
+    if (!sessionInit.optionalFeatures || !sessionInit.optionalFeatures.includes('dom-overlay')) {
+      const domOverlayRoot = document.getElementById('WebXRDomOverlayRoot');
+
+      if (domOverlayRoot !== null) {
+        sessionInit.optionalFeatures = sessionInit.optionalFeatures || [];
+        sessionInit.optionalFeatures.push('dom-overlay');
+        sessionInit.domOverlay = { root: domOverlayRoot };
+      }
+    }
+
     navigator.xr
       .requestSession(mode, sessionInit)
       .then(session => onSessionStarted(mode, session))
