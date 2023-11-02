@@ -51,6 +51,7 @@ module.exports = [
       ],
       // These fallbacks are for "@gradio/client"
       fallback: {
+        buffer: false,
         crypto: false,
         http: false,
         https: false,
