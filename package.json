@@ -4,12 +4,12 @@
     "url": "https://github.com/takahirox/tiny-web-metaverse/issues"
   },
   "dependencies": {
-    "bitecs": "^0.3.38",
-    "three": "^0.158.0"
+    "bitecs": "^0.3.40",
+    "three": "^0.152.2"
   },
   "description": "Tiny Web metaverse",
   "devDependencies": {
-    "@types/three": "^0.158.1",
+    "@types/three": "^0.152.1",
     "dts-bundle-generator": "^8.0.1",
     "ts-loader": "^9.4.2",
     "typescript": "^4.9.5",
