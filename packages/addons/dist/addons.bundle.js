@@ -5653,6 +5653,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/utils/three.ts");
 /* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/load.ts");
 /* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/utils/entity_object3d.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/utils/time.ts");
 /* harmony import */ var _components_loading_object__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/loading_object */ "./src/components/loading_object.ts");
 /* harmony import */ var _assets_models_loading_object__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../assets/models/loading_object */ "./assets/models/loading_object.ts");
 
@@ -5739,7 +5740,7 @@ const loadingObjectSystem = (world) => {
         proxy.free();
     });
     objectQuery(world).forEach(eid => {
-        _components_loading_object__WEBPACK_IMPORTED_MODULE_4__.LoadingObjectProxy.get(eid).mixer.update(1 / 60);
+        _components_loading_object__WEBPACK_IMPORTED_MODULE_4__.LoadingObjectProxy.get(eid).mixer.update((0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_7__.getTimeProxy)(world).delta);
     });
 };
 

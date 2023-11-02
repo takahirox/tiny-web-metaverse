@@ -5676,6 +5676,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/utils/three.ts");
 /* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/load.ts");
 /* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/utils/entity_object3d.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/utils/time.ts");
 /* harmony import */ var _components_loading_object__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/loading_object */ "../addons/src/components/loading_object.ts");
 /* harmony import */ var _assets_models_loading_object__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../assets/models/loading_object */ "../addons/assets/models/loading_object.ts");
 
@@ -5762,7 +5763,7 @@ const loadingObjectSystem = (world) => {
         proxy.free();
     });
     objectQuery(world).forEach(eid => {
-        _components_loading_object__WEBPACK_IMPORTED_MODULE_4__.LoadingObjectProxy.get(eid).mixer.update(1 / 60);
+        _components_loading_object__WEBPACK_IMPORTED_MODULE_4__.LoadingObjectProxy.get(eid).mixer.update((0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_7__.getTimeProxy)(world).delta);
     });
 };
 
@@ -15925,8 +15926,10 @@ const eventQueue = [];
 const OPAQUE = 0.8;
 const TRANSPARENT = 0.4;
 const MAX_QUERY_LENGTH = 500;
+const MAX_QUERY_COUNT = 5;
 const SUBMIT_INTERVAL = 5; // In seconds
 let leftInterval = 0.0;
+let queryCount = 0;
 const div = document.createElement('div');
 div.style.alignItems = 'center';
 div.style.background = 'lightblue';
@@ -16058,7 +16061,9 @@ textField.addEventListener('keydown', e => {
 submitButton.addEventListener('click', e => {
     e.preventDefault();
     // Just in case...
-    if (submitButton.disabled === true || leftInterval > 0) {
+    if (submitButton.disabled === true ||
+        leftInterval > 0 ||
+        queryCount >= MAX_QUERY_COUNT) {
         return;
     }
     const text = textField.value.trim();
@@ -16067,6 +16072,7 @@ submitButton.addEventListener('click', e => {
     }
     // TODO: Warning if the query length is over MAX_QUERY_LENGTH?
     eventQueue.push({ query: text.slice(0, MAX_QUERY_LENGTH) });
+    queryCount++;
     submitButton.disabled = true;
     textField.disabled = true;
     messageSpan.innerText = 'Processing...';
@@ -16075,7 +16081,7 @@ submitButton.addEventListener('click', e => {
 const textToModelQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_text_to_model__WEBPACK_IMPORTED_MODULE_1__.TextToModel]);
 const enterTextToModelQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)(textToModelQuery);
 const exitTextToModelQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)(textToModelQuery);
-const loaderQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_text_to_model__WEBPACK_IMPORTED_MODULE_1__.TextToModelLoader]);
+const exitLoaderQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_text_to_model__WEBPACK_IMPORTED_MODULE_1__.TextToModelLoader]));
 const textToModelUISystem = (world) => {
     // Assumes up to one TextToModel entiry
     exitTextToModelQuery(world).forEach(() => {
@@ -16092,9 +16098,15 @@ const textToModelUISystem = (world) => {
             break;
         }
         // 
-        if (submitButton.disabled === true && loaderQuery(world).length === 0 && leftInterval === 0.0) {
+        if (submitButton.disabled === true && exitLoaderQuery(world).length > 0) {
             // To prevent flood requests.
-            leftInterval = SUBMIT_INTERVAL;
+            if (queryCount >= MAX_QUERY_COUNT) {
+                textField.value = '';
+                messageSpan.innerText = `Max ${MAX_QUERY_COUNT} queries per client`;
+            }
+            else {
+                leftInterval = SUBMIT_INTERVAL;
+            }
         }
         else if (leftInterval > 0.0) {
             leftInterval -= (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_2__.getTimeProxy)(world).delta;

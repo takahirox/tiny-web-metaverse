@@ -11,6 +11,7 @@ import {
 import { AnimationMixer, Group } from "three";
 import {
   addObject3D,
+  getTimeProxy,
   loadGltf,
   Loading,
   recenterObject3D,
@@ -121,6 +122,6 @@ export const loadingObjectSystem = (world: IWorld): void => {
   });
 
   objectQuery(world).forEach(eid => {
-    LoadingObjectProxy.get(eid).mixer.update(1/60);
+    LoadingObjectProxy.get(eid).mixer.update(getTimeProxy(world).delta);
   });
 };

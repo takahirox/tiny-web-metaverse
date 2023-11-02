@@ -20,9 +20,11 @@ const eventQueue: { query: string }[] = [];
 const OPAQUE = 0.8;
 const TRANSPARENT = 0.4;
 const MAX_QUERY_LENGTH = 500;
+const MAX_QUERY_COUNT = 5;
 const SUBMIT_INTERVAL = 5; // In seconds
 
 let leftInterval = 0.0;
+let queryCount = 0;
 
 const div = document.createElement('div');
 div.style.alignItems = 'center';
@@ -182,7 +184,9 @@ submitButton.addEventListener('click', e => {
   e.preventDefault();
 
   // Just in case...
-  if (submitButton.disabled === true || leftInterval > 0) {
+  if (submitButton.disabled === true ||
+    leftInterval > 0 ||
+    queryCount >= MAX_QUERY_COUNT) {
     return;
   }
 
@@ -194,6 +198,7 @@ submitButton.addEventListener('click', e => {
 
   // TODO: Warning if the query length is over MAX_QUERY_LENGTH?
   eventQueue.push({ query: text.slice(0, MAX_QUERY_LENGTH) });
+  queryCount++;
   submitButton.disabled = true;
   textField.disabled = true;
   messageSpan.innerText = 'Processing...';
@@ -205,7 +210,7 @@ const textToModelQuery = defineQuery([TextToModel]);
 const enterTextToModelQuery = enterQuery(textToModelQuery);
 const exitTextToModelQuery = exitQuery(textToModelQuery);
 
-const loaderQuery = defineQuery([TextToModelLoader]);
+const exitLoaderQuery = exitQuery(defineQuery([TextToModelLoader]));
 
 export const textToModelUISystem = (world: IWorld): void => {
   // Assumes up to one TextToModel entiry
@@ -227,9 +232,14 @@ export const textToModelUISystem = (world: IWorld): void => {
     }
 
     // 
-    if (submitButton.disabled === true && loaderQuery(world).length === 0 && leftInterval === 0.0) {
+    if (submitButton.disabled === true && exitLoaderQuery(world).length > 0) {
       // To prevent flood requests.
-      leftInterval = SUBMIT_INTERVAL;
+      if (queryCount >= MAX_QUERY_COUNT) {
+        textField.value = '';
+        messageSpan.innerText = `Max ${MAX_QUERY_COUNT} queries per client`;
+      } else {
+        leftInterval = SUBMIT_INTERVAL;
+      }
     } else if (leftInterval > 0.0) {
       leftInterval -= getTimeProxy(world).delta;
       if (leftInterval <= 0.0) {
