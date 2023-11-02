@@ -1,5 +1,6 @@
 export * from "./components/billboard";
 export * from "./components/image";
+export * from "./components/loading_object";
 export * from "./components/nametag";
 export * from "./components/text";
 export * from "./components/textchat";
@@ -16,6 +17,7 @@ export * from "./systems/gltf_mixer_animation";
 export * from "./systems/image";
 export * from "./systems/image_loader";
 export * from "./systems/lazily_update_video_state";
+export * from "./systems/loading_object";
 export * from "./systems/nametag";
 export * from "./systems/text";
 export * from "./systems/video";

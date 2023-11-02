@@ -20,6 +20,8 @@ to meet up with in a room.
 
 * AR/VR support with [WebXR](https://developer.mozilla.org/en-US/docs/Web/API/WebXR_Device_API)
 * Mobile devices support
+* Voice comunication with [WebRTC](https://webrtc.org/)
+* Networked Entity state with [WebSocket](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API)
 * Positional audio and audio effects with [WebAudio](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API)
 
 T.B.D.

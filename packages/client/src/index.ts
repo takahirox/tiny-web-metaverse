@@ -14,6 +14,7 @@ export * from "./components/input_source";
 export * from "./components/keyboard";
 export * from "./components/linear_move";
 export * from "./components/linear_transform";
+export * from "./components/load";
 export * from "./components/media_device";
 export * from "./components/mixer_animation";
 export * from "./components/mouse";

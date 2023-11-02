@@ -90,14 +90,15 @@ const connectionEventQueue: {
 
 const onConnected = (event: Event): void => {
   connectionEventQueue.push({
-    controller: event.target,
+    // TODO: Avoid cast if possible
+    controller: event.target as Group,
     type: XRControllerConnectionEventType.Connected
   });
 };
 
 const onDisconnected = (event: Event): void => {
   connectionEventQueue.push({
-    controller: event.target,
+    controller: event.target as Group,
     type: XRControllerConnectionEventType.Disconnected
   });
 };
@@ -110,14 +111,14 @@ const selectEventQueue: {
 
 const onSelectStart = (event: Event): void => {
   selectEventQueue.push({
-    controller: event.target,
+    controller: event.target as Group,
     type: XRControllerSelectEventType.Start
   });
 };
 
 const onSelectEnd = (event: Event): void => {
   selectEventQueue.push({
-    controller: event.target,
+    controller: event.target as Group,
     type: XRControllerSelectEventType.End
   });
 };

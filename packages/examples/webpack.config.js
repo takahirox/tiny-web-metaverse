@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 
 const mode = 'development';
 
@@ -31,14 +32,34 @@ module.exports = [
     name: "examples",
     output: {
       filename: 'example.bundle.js',
-      path: path.resolve(__dirname, 'dist')
+      path: path.resolve(__dirname, 'dist'),
+      // I don't know why but this seems to be needed if import "@gradio/client"
+      publicPath: '/'
     },
+    // Workaround for "node:buffer" that seems to be imported
+    // via "@gradio/client"
+    plugins: [
+      new webpack.NormalModuleReplacementPlugin(/^node:/, (resource) => {
+        resource.request = resource.request.replace(/^node:/, '');
+      })
+    ],
     resolve: {
       extensions: [
         '.js',
         '.ts',
         '.tsx'
-      ]
+      ],
+      // These fallbacks are for "@gradio/client"
+      fallback: {
+        crypto: false,
+        http: false,
+        https: false,
+        net: false,
+        stream: false,
+        url: false,
+        tls: false,
+        zlib: false
+      }
     }
   }
 ];

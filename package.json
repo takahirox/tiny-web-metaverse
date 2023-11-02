@@ -5,17 +5,17 @@
   },
   "dependencies": {
     "bitecs": "^0.3.38",
-    "three": "^0.152.2"
+    "three": "^0.158.0"
   },
   "description": "Tiny Web metaverse",
   "devDependencies": {
-    "@types/three": "^0.151.0",
+    "@types/three": "^0.158.1",
     "dts-bundle-generator": "^8.0.1",
     "ts-loader": "^9.4.2",
     "typescript": "^4.9.5",
-    "webpack": "^5.75.0",
-    "webpack-cli": "^5.0.1",
-    "webpack-dev-server": "^4.13.3"
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1"
   },
   "homepage": "https://github.com/takahirox/tiny-web-metaverse#readme",
   "license": "MIT",
@@ -27,14 +27,14 @@
   },
   "scripts": {
     "build:addons": "cd packages/addons && npm run build",
-    "build:all": "npm run build:stream_server && npm run build:stream_client && npm run build:state_client && npm run build:client && npm run build:examples",
+    "build:all": "npm run build:stream_server && npm run build:stream_client && npm run build:state_client && npm run build:client && npm run build:addons && npm run build:examples",
     "build:client": "cd packages/client && npm run build",
     "build:examples": "cd packages/examples && npm run build",
     "build:state_client": "cd packages/state_client && npm run build",
     "build:stream_client": "cd packages/stream_client && npm run build",
     "build:stream_server": "cd packages/stream_server && npm run build",
     "install:addons": "cd packages/addons && npm install",
-    "install:all": "npm install && npm run install:stream_server && npm run install:stream_client && npm run install:state_client && npm run install:client && npm run install:examples",
+    "install:all": "npm install && npm run install:stream_server && npm run install:stream_client && npm run install:state_client && npm run install:client && npm run install:addons && npm run install:examples",
     "install:client": "cd packages/client && npm install",
     "install:examples": "cd packages/examples && npm install",
     "install:state_client": "cd packages/state_client && npm install",

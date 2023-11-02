@@ -1,7 +1,9 @@
 import {
+  addComponent,
   defineQuery,
   enterQuery,
   exitQuery,
+  hasComponent,
   IWorld,
   removeComponent
 } from "bitecs";
@@ -10,6 +12,7 @@ import {
   GltfAssetLoader,
   GltfAssetLoaderProxy
 } from "../components/gltf";
+import { Loading } from "../components/load";
 import { addObject3D } from "../utils/entity_object3d";
 import { loadGltfBitecs } from "../utils/bitecs_three";
 import {
@@ -18,6 +21,7 @@ import {
 } from "../utils/three";
 
 function* load(world: IWorld, eid: number): Generator {
+  addComponent(world, Loading, eid);
   const url = GltfAssetLoaderProxy.get(eid).url;
   const gltf = yield* loadGltfBitecs(world, eid, url);
 
@@ -50,6 +54,9 @@ export const gltfAssetLoadSystem = (world: IWorld): void => {
   loaderExitQuery(world).forEach(eid => {
     generators.delete(eid);
     GltfAssetLoaderProxy.get(eid).free();
+    if (hasComponent(world, Loading, eid)) {
+      removeComponent(world, Loading, eid);
+    }
   });
 
   loaderEnterQuery(world).forEach(eid => {
@@ -69,6 +76,7 @@ export const gltfAssetLoadSystem = (world: IWorld): void => {
     }
     if (done) {
       removeComponent(world, GltfAssetLoader, eid);
+      removeComponent(world, Loading, eid);
     }
-  })
+  });
 };

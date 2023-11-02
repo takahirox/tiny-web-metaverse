@@ -13,8 +13,8 @@ import {
 // the following depending on the number of objects
 //   0:  EntityRootGroup (Root)
 //   1:  Object3D        (Root)
-//   2-: EntityRootGroup (Root) - Object3DA
-//                              - Object3DB
+//   2-: EntityRootGroup (Root) - Object3D_A
+//                              - Object3D_B
 //                              - ...
 
 export const addObject3D = (world: IWorld, obj: Object3D, eid: number): void => {
@@ -28,10 +28,10 @@ export const addObject3D = (world: IWorld, obj: Object3D, eid: number): void => 
   const objects = proxy.objects;
 
   if (objects.length === 0) {
-    swapRootObject3D(obj, eid);
+    swapRootObject3D(obj, eid, false);
   } else {
     if (objects.length === 1) {
-      const oldRootObj = swapRootObject3D(proxy.group, eid);
+      const oldRootObj = swapRootObject3D(proxy.group, eid, false);
       proxy.root.add(oldRootObj);
     }
     proxy.root.add(obj);
@@ -53,11 +53,11 @@ export const removeObject3D = (world: IWorld, obj: Object3D, eid: number): void 
   proxy.objects.splice(index, 1);
 
   if (proxy.objects.length === 0) {
-    swapRootObject3D(proxy.group, eid);
+    swapRootObject3D(proxy.group, eid, false);
   } else {
     proxy.root.remove(obj);
     if (proxy.objects.length === 1) {
-      swapRootObject3D(proxy.objects[0], eid);
+      swapRootObject3D(proxy.objects[0], eid, true);
     }
   }
 };
@@ -71,19 +71,25 @@ export const hasObject3D = (world: IWorld, obj: Object3D, eid: number): boolean 
   return EntityObject3DProxy.get(eid).objects.indexOf(obj) !== -1;
 };
 
-const swapRootObject3D = (newRoot: Object3D, eid: number): Object3D => {
+const swapRootObject3D = (
+  newRoot: Object3D,
+  eid: number,
+  moveChildren: boolean
+): Object3D => {
   const proxy = EntityObject3DProxy.get(eid);
   const oldRoot = proxy.root;
 
-  Object3D.prototype.copy.call(newRoot, oldRoot);
+  Object3D.prototype.copy.call(newRoot, oldRoot, false);
 
   if (oldRoot.parent !== null) {
     oldRoot.parent.add(newRoot);
     oldRoot.parent.remove(oldRoot);
   }
 
-  while (oldRoot.children.length > 0) {
-    newRoot.add(oldRoot.children[0]);
+  if (moveChildren) {
+    while (oldRoot.children.length > 0) {
+      newRoot.add(oldRoot.children[0]);
+    }
   }
 
   // TODO: Write comment

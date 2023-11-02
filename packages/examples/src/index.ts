@@ -13,6 +13,7 @@ import {
   imageSystem,
   imageLoadSystem,
   lazilyUpdateVideoStateSystem,
+  loadingObjectSystem,
   nametagSystem,
   NetworkedVideo,
   SecondXRControllerRay,
@@ -60,20 +61,24 @@ import {
 
 import { JoinDialog } from "./components/join_dialog";
 import { SideBar } from "./components/side_bar";
+import { TextToModel } from "./components/text_to_model";
 import { UserEventHandler } from "./components/user_event_handler";
 
 import { AvatarPrefab } from "./prefabs/avatar";
 import { CubePrefab } from "./prefabs/cube";
 import { DuckPrefab } from "./prefabs/duck";
 import { FoxPrefab } from "./prefabs/fox";
+import { GltfPrefab } from "./prefabs/gltf";
 import { ImagePrefab } from "./prefabs/image";
 import { VideoPrefab } from "./prefabs/video";
 
 import { colorSystem } from "./systems/color";
+import { textToModelLoadSystem } from "./systems/text_to_model";
 import { userEventSystem } from "./systems/user";
 
 import { updateJoinDialogSystem } from "./ui/join_dialog";
 import { updateSidebarSystem } from "./ui/side_bar";
+import { textToModelUISystem } from "./ui/text_to_model";
 
 import { isMobile, isTablet } from "./utils/platform_detect";
 
@@ -111,10 +116,13 @@ const run = async (): Promise<void> => {
   app.registerSystem(webXrButtonsUISystem, SystemOrder.EventHandling);
 
   app.registerSystem(textChatUISystem, SystemOrder.Setup);
+  app.registerSystem(textToModelUISystem, SystemOrder.Setup);
   app.registerSystem(imageSystem, SystemOrder.Setup);
   app.registerSystem(imageLoadSystem, SystemOrder.Setup);
   app.registerSystem(videoSystem, SystemOrder.Setup);
   app.registerSystem(videoLoadSystem, SystemOrder.Setup);
+  app.registerSystem(textToModelLoadSystem, SystemOrder.Setup);
+  app.registerSystem(loadingObjectSystem, SystemOrder.Setup);
 
   app.registerSystem(gltfMixerAnimationSystem, SystemOrder.Setup + 1);
   app.registerSystem(lazilyUpdateVideoStateSystem, SystemOrder.Setup + 1);
@@ -139,6 +147,7 @@ const run = async (): Promise<void> => {
   registerPrefab(world, 'cube', CubePrefab);
   registerPrefab(world, 'duck', DuckPrefab);
   registerPrefab(world, 'fox', FoxPrefab);
+  registerPrefab(world, 'gltf', GltfPrefab);
   registerPrefab(world, 'image', ImagePrefab);
   registerPrefab(world, 'video', VideoPrefab);
 
@@ -190,6 +199,9 @@ const run = async (): Promise<void> => {
   addComponent(world, TextChat, textChatEid);
   addComponent(world, BroadcastNetworkEventListener, textChatEid);
   addComponent(world, UserNetworkEventListener, textChatEid);
+
+  const textToModelEid = addEntity(world);
+  addComponent(world, TextToModel, textToModelEid);
 
   const mouseButtonEventEid = addEntity(world);
   addComponent(world, MouseButtonEventListener, mouseButtonEventEid);

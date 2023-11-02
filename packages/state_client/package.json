@@ -8,8 +8,7 @@
   },
   "description": "Tiny Web metaverse State client",
   "devDependencies": {
-    "@types/phoenix": "^1.5.6",
-    "webpack-dev-server": "^4.13.3"
+    "@types/phoenix": "^1.5.6"
   },
   "exports": {
     ".": {

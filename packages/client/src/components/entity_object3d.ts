@@ -22,6 +22,7 @@ export class EntityObject3DProxy {
   private static instance: EntityObject3DProxy = new EntityObject3DProxy();
   private eid: number;
   private rootObjectMap: Map<number, Object3D>;
+  // TODO: Use Set instead?
   private objectsMap: Map<number, Object3D[]>;
   private groupMap: Map<number, EntityRootGroup>;
 
