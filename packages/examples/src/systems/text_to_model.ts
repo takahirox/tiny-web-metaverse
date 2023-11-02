@@ -7,7 +7,7 @@ import {
   IWorld,
   removeComponent
 } from "bitecs";
-import { Vector3 } from "three";
+import { Mesh, MeshStandardMaterial, Vector3 } from "three";
 import { client } from "@gradio/client";
 import {
   Avatar,
@@ -15,6 +15,8 @@ import {
   EntityObject3D,
   EntityObject3DProxy,
   FirstSourceInteractable,
+  GltfRoot,
+  GltfRootProxy,
   Grabbable,
   InScene,
   Loading,
@@ -106,6 +108,8 @@ const loaderQuery = defineQuery([TextToModelLoader]);
 const enterLoaderQuery = enterQuery(loaderQuery);
 const exitLoaderQuery = exitQuery(loaderQuery);
 
+const enterGltfQuery = enterQuery(defineQuery([GltfRoot]));
+
 const generators = new Map<number, Generator>();
 
 export const textToModelLoadSystem = (world: IWorld): void => {
@@ -149,5 +153,30 @@ export const textToModelLoadSystem = (world: IWorld): void => {
 
     // TODO: Remove entity properly when loading is done
     removeEntityIfNoComponent(world, eid);
+  });
+
+  enterGltfQuery(world).forEach(eid => {
+    // A hack. Shap-E models look black in AR mode maybe because
+    // of null scene.background and scene.environment.
+    // Changing material.metalness from 1.0 to small seems to be
+    // a workaround for now.
+    GltfRootProxy.get(eid).root.traverse(obj => {
+      const mesh = obj as Mesh;
+      if (mesh.isMesh !== true) {
+        return;
+      }
+      // A detection of Shap-E models.
+      // This may be fragile because it can be affected by Shap-E update.
+      // Keep an eye on Shap-E, or fix the root issue.
+      if ('file_name' in mesh.userData &&
+        'file_path' in mesh.userData &&
+        'name' in mesh.userData &&
+        'processed' in mesh.userData) {
+        const material = mesh.material as MeshStandardMaterial;
+        if (material.metalness > 0.1) {
+          material.metalness = 0.1;
+        }
+      }
+    });
   });
 };

@@ -15184,7 +15184,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/select.ts");
 /* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/utils/coroutine.ts");
 /* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/utils/network.ts");
-/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/utils/bitecs.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/components/gltf.ts");
+/* harmony import */ var _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! @tiny-web-metaverse/client/src */ "../client/src/utils/bitecs.ts");
 /* harmony import */ var _components_text_to_model__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/text_to_model */ "./src/components/text_to_model.ts");
 
 
@@ -15254,6 +15255,7 @@ function* load(world, eid) {
 const loaderQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_components_text_to_model__WEBPACK_IMPORTED_MODULE_2__.TextToModelLoader]);
 const enterLoaderQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)(loaderQuery);
 const exitLoaderQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.exitQuery)(loaderQuery);
+const enterGltfQuery = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.enterQuery)((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineQuery)([_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_18__.GltfRoot]));
 const generators = new Map();
 const textToModelLoadSystem = (world) => {
     enterLoaderQuery(world).forEach(eid => {
@@ -15292,7 +15294,31 @@ const textToModelLoadSystem = (world) => {
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_13__.SecondSourceInteractable, eid);
         (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_15__.Selectable, eid);
         // TODO: Remove entity properly when loading is done
-        (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_18__.removeEntityIfNoComponent)(world, eid);
+        (0,_tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_19__.removeEntityIfNoComponent)(world, eid);
+    });
+    enterGltfQuery(world).forEach(eid => {
+        // A hack. Shap-E models look black in AR mode maybe because
+        // of null scene.background and scene.environment.
+        // Changing material.metalness from 1.0 to small seems to be
+        // a workaround for now.
+        _tiny_web_metaverse_client_src__WEBPACK_IMPORTED_MODULE_18__.GltfRootProxy.get(eid).root.traverse(obj => {
+            const mesh = obj;
+            if (mesh.isMesh !== true) {
+                return;
+            }
+            // A detection of Shap-E models.
+            // This may be fragile because it can be affected by Shap-E update.
+            // Keep an eye on Shap-E, or fix the root issue.
+            if ('file_name' in mesh.userData &&
+                'file_path' in mesh.userData &&
+                'name' in mesh.userData &&
+                'processed' in mesh.userData) {
+                const material = mesh.material;
+                if (material.metalness > 0.1) {
+                    material.metalness = 0.1;
+                }
+            }
+        });
     });
 };
 
