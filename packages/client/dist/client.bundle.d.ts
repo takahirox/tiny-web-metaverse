@@ -246,6 +246,7 @@ export declare const LinearScale: import("bitecs").ComponentType<{
 	targetY: "f32";
 	targetZ: "f32";
 }>;
+export declare const Loading: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare const MicRequestor: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare const MicConnectedEvent: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare const MicConnectedEventListener: import("bitecs").ComponentType<import("bitecs").ISchema>;
