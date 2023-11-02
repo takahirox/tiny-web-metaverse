@@ -42,6 +42,18 @@ usernameForm.value = 'Your name';
 usernameForm.style.marginRight = '1em';
 joinForm.appendChild(usernameForm);
 
+usernameForm.addEventListener('keypress', e => {
+  e.stopPropagation();
+});
+
+usernameForm.addEventListener('keyup', e => {
+  e.stopPropagation();
+});
+
+usernameForm.addEventListener('keydown', e => {
+  e.stopPropagation();
+});
+
 const button = document.createElement('button');
 button.innerText = ' Join ';
 joinForm.appendChild(button);

@@ -203,6 +203,27 @@ textField.addEventListener('keypress', e => {
     e.preventDefault();
     sendButton.click();
   }
+  e.stopPropagation();
+});
+
+textField.addEventListener('keyup', e => {
+  e.stopPropagation();
+});
+
+textField.addEventListener('keydown', e => {
+  e.stopPropagation();
+});
+
+textField.addEventListener('keypress', e => {
+  e.stopPropagation();
+});
+
+chatField.addEventListener('keyup', e => {
+  e.stopPropagation();
+});
+
+chatField.addEventListener('keydown', e => {
+  e.stopPropagation();
 });
 
 // beep

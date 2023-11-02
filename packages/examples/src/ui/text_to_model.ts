@@ -12,6 +12,8 @@ import {
   TextToModelLoaderProxy
 } from "../components/text_to_model";
 
+const ShapEURL = 'https://huggingface.co/spaces/hysts/Shap-E';
+
 // TODO: Configurable?
 const parentElement = document.body;
 const eventQueue: { query: string }[] = [];
@@ -65,6 +67,14 @@ const messageSpan = document.createElement('span');
 messageSpan.innerText = 'Text to 3D Model';
 messageSpan.style.color = 'black';
 div.appendChild(messageSpan);
+
+const poweredByLink = document.createElement('span');
+const a = document.createElement('a');
+a.href = ShapEURL;
+a.innerText = 'Powered by Shap-E';
+a.target = '_blank';
+poweredByLink.appendChild(a);
+div.appendChild(poweredByLink);
 
 // toggle
 
@@ -157,6 +167,15 @@ textField.addEventListener('keypress', e => {
     e.preventDefault();
     submitButton.click();
   }
+  e.stopPropagation();
+});
+
+textField.addEventListener('keyup', e => {
+  e.stopPropagation();
+});
+
+textField.addEventListener('keydown', e => {
+  e.stopPropagation();
 });
 
 submitButton.addEventListener('click', e => {

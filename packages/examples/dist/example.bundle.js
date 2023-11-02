@@ -6298,6 +6298,22 @@ textField.addEventListener('keypress', e => {
         e.preventDefault();
         sendButton.click();
     }
+    e.stopPropagation();
+});
+textField.addEventListener('keyup', e => {
+    e.stopPropagation();
+});
+textField.addEventListener('keydown', e => {
+    e.stopPropagation();
+});
+textField.addEventListener('keypress', e => {
+    e.stopPropagation();
+});
+chatField.addEventListener('keyup', e => {
+    e.stopPropagation();
+});
+chatField.addEventListener('keydown', e => {
+    e.stopPropagation();
 });
 // beep
 // TODO: Improve
@@ -15359,6 +15375,15 @@ usernameForm.type = 'text';
 usernameForm.value = 'Your name';
 usernameForm.style.marginRight = '1em';
 joinForm.appendChild(usernameForm);
+usernameForm.addEventListener('keypress', e => {
+    e.stopPropagation();
+});
+usernameForm.addEventListener('keyup', e => {
+    e.stopPropagation();
+});
+usernameForm.addEventListener('keydown', e => {
+    e.stopPropagation();
+});
 const button = document.createElement('button');
 button.innerText = ' Join ';
 joinForm.appendChild(button);
@@ -15893,6 +15918,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+const ShapEURL = 'https://huggingface.co/spaces/hysts/Shap-E';
 // TODO: Configurable?
 const parentElement = document.body;
 const eventQueue = [];
@@ -15939,6 +15965,13 @@ const messageSpan = document.createElement('span');
 messageSpan.innerText = 'Text to 3D Model';
 messageSpan.style.color = 'black';
 div.appendChild(messageSpan);
+const poweredByLink = document.createElement('span');
+const a = document.createElement('a');
+a.href = ShapEURL;
+a.innerText = 'Powered by Shap-E';
+a.target = '_blank';
+poweredByLink.appendChild(a);
+div.appendChild(poweredByLink);
 // toggle
 let visibleChat = true;
 toggleButton.addEventListener('click', () => {
@@ -16014,6 +16047,13 @@ textField.addEventListener('keypress', e => {
         e.preventDefault();
         submitButton.click();
     }
+    e.stopPropagation();
+});
+textField.addEventListener('keyup', e => {
+    e.stopPropagation();
+});
+textField.addEventListener('keydown', e => {
+    e.stopPropagation();
 });
 submitButton.addEventListener('click', e => {
     e.preventDefault();
