@@ -86,12 +86,11 @@ function* load(world: IWorld, eid: number): Generator<void, void> {
 
   if (Array.isArray(result.data) &&
     result.data.length > 0 &&
-    result.data[0].is_file === true &&
-    typeof result.data[0].data === 'string' &&
-    result.data[0].data.match(/\.glb$/) !== null) {
+    typeof result.data[0].url === 'string' &&
+    result.data[0].url.match(/\.glb$/) !== null) {
     // TODO: Where should we call createNetworkedEntity()?
     //       There may be better place to call.
-    const gltfEid = createNetworkedEntity(world, NetworkedType.Shared, 'gltf', { url: result.data[0].data });
+    const gltfEid = createNetworkedEntity(world, NetworkedType.Shared, 'gltf', { url: result.data[0].url });
 
     // Move to the loader
     const loaderRoot = EntityObject3DProxy.get(eid).root;
