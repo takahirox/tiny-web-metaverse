@@ -5,7 +5,8 @@
   },
   "dependencies": {
     "@tiny-web-metaverse/state_client": "^0.0.1",
-    "@tiny-web-metaverse/stream_client": "^0.0.1"
+    "@tiny-web-metaverse/stream_client": "^0.0.1",
+    "three-mesh-bvh": "^0.6.8"
   },
   "description": "Tiny Web metaverse client",
   "exports": {
