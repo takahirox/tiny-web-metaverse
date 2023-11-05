@@ -9,7 +9,6 @@ import {
   MathUtils,
   PerspectiveCamera,
   Ray,
-  Raycaster,
   Scene,
   WebGLRenderer
 } from "three";
@@ -70,7 +69,6 @@ import {
   RayProxy,
   SecondRay
 } from "./components/ray";
-import { RaycasterComponent, RaycasterProxy } from "./components/raycast";
 import { Renderer, RendererProxy } from "./components/renderer";
 import { RoomId, RoomIdProxy } from "./components/room_id";
 import { InScene, SceneProxy, SceneComponent } from "./components/scene";
@@ -132,6 +130,7 @@ import { mixerAnimationSerializers } from "./serializations/mixer_animation";
 import { resumeAudioContextSystem } from "./systems/audio_context";
 import { avatarKeyControlsSystem } from "./systems/avatar_key_controls";
 import { avatarMouseControlsSystem } from "./systems/avatar_mouse_controls";
+import { generateBVHSystem } from "./systems/bvh";
 import { canvasSystem } from "./systems/canvas";
 import { entityObject3DSystem } from "./systems/entity_object3d";
 import { fpsCameraSystem } from "./systems/fps_camera";
@@ -174,7 +173,6 @@ import { positionalAudioSystem } from "./systems/positional_audio";
 import { prefabsSystem } from "./systems/prefab";
 import { pointerToRaySystem } from "./systems/ray";
 import { clearRaycastedSystem, raycastSystem } from "./systems/raycast";
-import { raycasterSystem } from "./systems/raycaster";
 import { renderSystem } from "./systems/render";
 import { rendererSystem } from "./systems/renderer";
 import { sceneSystem } from "./systems/scene";
@@ -302,7 +300,6 @@ export class App {
 
     this.registerSystem(canvasSystem, SystemOrder.Setup);
     this.registerSystem(prefabsSystem, SystemOrder.Setup);
-    this.registerSystem(raycasterSystem, SystemOrder.Setup);
     this.registerSystem(rendererSystem, SystemOrder.Setup);
     this.registerSystem(entityObject3DSystem, SystemOrder.Setup);
     this.registerSystem(sceneSystem, SystemOrder.Setup);
@@ -317,6 +314,7 @@ export class App {
     this.registerSystem(streamRemotePeerRegisterSystem, SystemOrder.Setup);
     this.registerSystem(resumeAudioContextSystem, SystemOrder.Setup);
     this.registerSystem(lazilyActivateAnimationSystem, SystemOrder.Setup + 1);
+    this.registerSystem(generateBVHSystem, SystemOrder.Setup + 1);
 
     this.registerSystem(linearMoveSystem, SystemOrder.BeforeMatricesUpdate);
     this.registerSystem(linearTransformSystem, SystemOrder.BeforeMatricesUpdate);
@@ -511,10 +509,6 @@ export class App {
     TouchPositionProxy.get(touchPositionEid).allocate();
     addComponent(this.world, TouchEventListener, touchPositionEid);
     addComponent(this.world, TouchMoveEventListener, touchPositionEid);
-
-    const raycasterEid = addEntity(this.world);
-    addComponent(this.world, RaycasterComponent, raycasterEid);
-    RaycasterProxy.get(raycasterEid).allocate(new Raycaster());
 
     const avatarMouseControlsEid = addEntity(this.world);
     addComponent(this.world, AvatarMouseControls, avatarMouseControlsEid);

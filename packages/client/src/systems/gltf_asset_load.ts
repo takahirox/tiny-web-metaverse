@@ -8,6 +8,7 @@ import {
   removeComponent
 } from "bitecs";
 import { Group } from "three";
+import { BVHGenerator } from "../components/bvh";
 import {
   GltfAssetLoader,
   GltfAssetLoaderProxy
@@ -42,6 +43,8 @@ function* load(world: IWorld, eid: number): Generator {
   const root = new Group();
   root.add(scene);
   addObject3D(world, root, eid);
+
+  addComponent(world, BVHGenerator, eid);
 }
 
 const loaderQuery = defineQuery([GltfAssetLoader]);

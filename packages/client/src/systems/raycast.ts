@@ -5,7 +5,15 @@ import {
   IWorld,
   removeComponent
 } from "bitecs";
-import { Intersection, Object3D, Vector3 } from "three";
+import {
+  Intersection,
+  Matrix4,
+  Mesh,
+  Raycaster,
+  Vector3
+} from "three";
+import { MeshBVH } from 'three-mesh-bvh';
+import { NULL_EID } from "../common";
 import {
   EntityObject3D,
   EntityObject3DProxy
@@ -24,14 +32,12 @@ import {
   RaycastedBySecondRay,
   RaycastedNearest,
   RaycastedNearestByFirstRay,
-  RaycastedNearestBySecondRay,
-  RaycasterComponent,
-  RaycasterProxy
+  RaycastedNearestBySecondRay
 } from "../components/raycast";
 
 const vec3 = new Vector3();
-
-const raycasterQuery = defineQuery([RaycasterComponent]);
+const invMat4 = new Matrix4();
+const raycaster = new Raycaster();
 
 const rayQuery = defineQuery([ActiveRay, RayComponent]);
 const raycastableQuery = defineQuery([Raycastable, EntityObject3D]);
@@ -43,71 +49,96 @@ const raycastedNearestQuery = defineQuery([RaycastedNearest]);
 const firstRaycastedNearestQuery = defineQuery([RaycastedNearestByFirstRay]);
 const secondRaycastedNearestQuery = defineQuery([RaycastedNearestBySecondRay]);
 
+const ascSort = (a: Intersection, b: Intersection) => {
+  return a.distance - b.distance;
+};
+
 // TODO: Simplify and optimize
 
 export const raycastSystem = (world: IWorld) => {
-  raycasterQuery(world).forEach(raycasterEid => {
-    const raycaster = RaycasterProxy.get(raycasterEid).raycaster;
+  rayQuery(world).forEach(rayEid => {
+    const ray = RayProxy.get(rayEid).ray;
 
-    rayQuery(world).forEach(rayEid => {
-      const ray = RayProxy.get(rayEid).ray;
+    raycaster.ray.copy(ray);
 
-      raycaster.ray.copy(ray);
+    // TODO: Clean up and optimize if possible
+    // TODO: Store distance for first and second ray separately
+    let nearestEid = NULL_EID;
+    let nearestDistance = Infinity;
 
-      // TODO: Optimize, here can be a CPU performance bottleneck
-      // TODO: Creating arrays and a map every time may be inefficient?
-      const intersected: Intersection[] = [];
-      const objects: Object3D[] = [];
-      const eidMap: Map<Object3D, number> = new Map();
+    raycastableQuery(world).forEach(eid => {
+      const root = EntityObject3DProxy.get(eid).root;
+      const hits: Intersection[] = [];
 
-      raycastableQuery(world).forEach(raycastableEid => {
-        const obj = EntityObject3DProxy.get(raycastableEid).root;
-        objects.push(obj);
-        eidMap.set(obj, raycastableEid);
+      root.traverse(obj => {
+        const mesh = obj as Mesh;
+
+        if (mesh.isMesh !== true) {
+          return;
+        }
+
+        // BVH is stored at geometry in bvh system.
+        // TODO: Avoid any
+        const bvh = (mesh.geometry as any).boundsTree as MeshBVH;
+
+        if (bvh) {
+          invMat4.copy(mesh.matrixWorld).invert();
+          raycaster.ray.applyMatrix4(invMat4);
+          const hit = bvh.raycastFirst(raycaster.ray, mesh.material);
+          if (hit) {
+            // TODO: Ensure world matrix is up to date?
+            hit.point.applyMatrix4(mesh.matrixWorld);
+            hit.distance = hit.point.distanceTo(ray.origin);
+            hit.object = mesh;
+
+            if (hit.distance >= raycaster.near && hit.distance <= raycaster.far) {
+              hits.push(hit);
+            }
+          }
+          raycaster.ray.copy(ray);
+        } else {
+          // Use regular raycaster as fallback if no BVH
+          for (const hit of raycaster.intersectObject(mesh, false)) {
+            hits.push(hit);
+          }
+        }
       });
 
-      raycaster.intersectObjects(objects, true, intersected);
+      if (hits.length === 0) {
+        return;
+      }
 
-      for (let i = 0; i < intersected.length; i++) {
-        // TODO: Clean up if possible
-        let obj = intersected[i].object;
+      // TODO: Optimization, avoid sort
+      const hit = hits.sort(ascSort)[0];
 
-        while (obj !== null) {
-          if (eidMap.has(obj)) {
-            break;
-          }
-          obj = obj.parent;
-        }
+      if (hit.distance < nearestDistance) {
+        nearestDistance = hit.distance;
+        nearestEid = eid;
+      }
 
-        if (obj === null) {
-          throw new Error('Unfound object, this should not happen.');
-        }
+      addComponent(world, Raycasted, eid);;
 
-        const raycastedEid = eidMap.get(obj)!;
-        addComponent(world, Raycasted, raycastedEid);
+      vec3.copy(EntityObject3DProxy.get(eid).root.position).sub(ray.origin);
+      Raycasted.distance[eid] = vec3.length();
 
-        if (hasComponent(world, FirstRay, rayEid)) {
-          addComponent(world, RaycastedByFirstRay, raycastedEid);
-        }
-        if (hasComponent(world, SecondRay, rayEid)) {
-          addComponent(world, RaycastedBySecondRay, raycastedEid);
-        }
-
-        vec3.copy(EntityObject3DProxy.get(raycastedEid).root.position).sub(ray.origin);
-        Raycasted.distance[raycastedEid] = vec3.length();
-
-        if (i === 0) {
-          addComponent(world, RaycastedNearest, raycastedEid);
-
-          if (hasComponent(world, FirstRay, rayEid)) {
-            addComponent(world, RaycastedNearestByFirstRay, raycastedEid);
-          }
-          if (hasComponent(world, SecondRay, rayEid)) {
-            addComponent(world, RaycastedNearestBySecondRay, raycastedEid);
-          }
-        }
+      if (hasComponent(world, FirstRay, rayEid)) {
+        addComponent(world, RaycastedByFirstRay, eid);
+      }
+      if (hasComponent(world, SecondRay, rayEid)) {
+        addComponent(world, RaycastedBySecondRay, eid);
       }
     });
+
+    if (nearestEid !== NULL_EID) {
+      addComponent(world, RaycastedNearest, nearestEid);
+
+      if (hasComponent(world, FirstRay, rayEid)) {
+        addComponent(world, RaycastedNearestByFirstRay, nearestEid);
+      }
+      if (hasComponent(world, SecondRay, rayEid)) {
+        addComponent(world, RaycastedNearestBySecondRay, nearestEid);
+      }
+    }
   });
 };
 

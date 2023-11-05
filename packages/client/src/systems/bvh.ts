@@ -1,4 +1,5 @@
 import {
+  addComponent,
   defineQuery,
   enterQuery,
   exitQuery,
@@ -7,14 +8,11 @@ import {
 } from "bitecs";
 import { Mesh } from "three";
 import { MeshBVH } from "three-mesh-bvh/src";
-//
-// @ts-ignore
-import { GenerateMeshBVHWorker } from "three-mesh-bvh/src/workers/GenerateMeshBVHWorker";
 import {
   EntityObject3D,
   EntityObject3DProxy
 } from "../components/entity_object3d";
-import { BVHGenerator } from "../components/bvh";
+import { BVHGenerator, HasBVH } from "../components/bvh";
 import { toGenerator } from "../utils/coroutine";
 
 const generatorQuery = defineQuery([BVHGenerator, EntityObject3D]);
@@ -23,22 +21,33 @@ const exitGeneratorQuery = exitQuery(generatorQuery);
 
 const generators = new Map<number, Generator>();
 
-function* generate(_world: IWorld, eid: number): Generator<void, void> {
+// TODO: Support SkinnedMesh, periodically refit
+
+function* generate(world: IWorld, eid: number): Generator<void, void> {
   const root = EntityObject3DProxy.get(eid).root;
   const pending: Promise<void>[] = [];
 
   root.traverse(obj => {
     const mesh = obj as Mesh;
     if (mesh.geometry !== undefined) {
-      const worker = new GenerateMeshBVHWorker();
-	  pending.push(worker.generate(mesh.geometry).then((bvh: MeshBVH) => {
+      pending.push(new Promise(resolve => {
+        // Async bvh generation somehow doesn't work.
+        // Using the sync one for now.
+        // TODO: Use the async one
         // TODO: Remove any
-        (mesh.geometry as any).boundsTree = bvh;
+        // TODO: Where to save BVH?
+        // TODO: Avoid to make BVH if too many or low polygons?
+        (mesh.geometry as any).boundsTree = new MeshBVH(mesh.geometry);
+        resolve();
       }));
     }
   });
 
   yield* toGenerator(Promise.all(pending));
+
+  if (pending.length > 0) {
+    addComponent(world, HasBVH, eid);
+  }
 }
 
 export const generateBVHSystem = (world: IWorld): void => {

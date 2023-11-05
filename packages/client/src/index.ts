@@ -77,7 +77,6 @@ export * from "./systems/positional_audio";
 export * from "./systems/prefab";
 export * from "./systems/ray";
 export * from "./systems/raycast";
-export * from "./systems/raycaster";
 export * from "./systems/render";
 export * from "./systems/renderer";
 export * from "./systems/scene";
