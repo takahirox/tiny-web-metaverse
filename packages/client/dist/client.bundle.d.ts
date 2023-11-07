@@ -252,6 +252,33 @@ export declare const Loading: import("bitecs").ComponentType<import("bitecs").IS
 export declare const MicRequestor: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare const MicConnectedEvent: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare const MicConnectedEventListener: import("bitecs").ComponentType<import("bitecs").ISchema>;
+export declare const MessageSender: import("bitecs").ComponentType<import("bitecs").ISchema>;
+export declare class MessageSenderProxy {
+	private static instance;
+	private eid;
+	private map;
+	private constructor();
+	static get(eid: number): MessageSenderProxy;
+	allocate(data: any): void;
+	free(): void;
+	get data(): any;
+}
+export declare const MessageEvent: import("bitecs").ComponentType<import("bitecs").ISchema>;
+export type MessageEventValue = {
+	data: any;
+};
+export declare class MessageEventProxy {
+	private static instance;
+	private eid;
+	private map;
+	private constructor();
+	static get(eid: number): MessageEventProxy;
+	allocate(): void;
+	add(data: any): void;
+	free(): void;
+	get events(): MessageEventValue[];
+}
+export declare const MessageEventListener: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare const MixerAnimation: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare class MixerAnimationProxy {
 	private static instance;
@@ -1040,6 +1067,9 @@ export declare const linearMoveSystem: (world: IWorld) => void;
 export declare const linearTransformSystem: (world: IWorld) => void;
 export declare const micRequestSystem: (world: IWorld) => void;
 export declare const micEventClearSystem: (world: IWorld) => void;
+export declare const messageSendSystem: (world: IWorld) => void;
+export declare const messageEventReceiveSystem: (world: IWorld) => void;
+export declare const clearMessageEventSystem: (world: IWorld) => void;
 export declare const mixerAnimationSystem: (world: IWorld) => void;
 export declare const clearActiveAnimationsUpdatedSystem: (world: IWorld) => void;
 export declare const mouseButtonEventHandleSystem: (world: IWorld) => void;

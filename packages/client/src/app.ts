@@ -149,6 +149,11 @@ import { linearMoveSystem } from "./systems/linear_move";
 import { linearTransformSystem } from "./systems/linear_transform";
 import { micRequestSystem, micEventClearSystem } from "./systems/media_device";
 import {
+  clearMessageEventSystem,
+  messageEventReceiveSystem,
+  messageSendSystem
+} from "./systems/message_event";
+import {
   clearActiveAnimationsUpdatedSystem,
   mixerAnimationSystem
 } from "./systems/mixer_animation";
@@ -282,6 +287,7 @@ export class App {
     this.registerSystem(networkEventHandleSystem, SystemOrder.EventHandling);
     this.registerSystem(streamEventHandleSystem, SystemOrder.EventHandling);
     this.registerSystem(streamConnectionSystem, SystemOrder.EventHandling);
+    this.registerSystem(messageEventReceiveSystem, SystemOrder.EventHandling);
 
     this.registerSystem(peerSystem, SystemOrder.EventHandling + 1);
     this.registerSystem(mousePositionTrackSystem, SystemOrder.EventHandling + 1);
@@ -337,6 +343,8 @@ export class App {
 
     this.registerSystem(renderSystem, SystemOrder.Render);
 
+    this.registerSystem(messageSendSystem, SystemOrder.TearDown - 1);
+
     this.registerSystem(keyEventClearSystem, SystemOrder.TearDown);
     this.registerSystem(mouseMoveEventClearSystem, SystemOrder.TearDown);
     this.registerSystem(mouseButtonEventClearSystem, SystemOrder.TearDown);
@@ -351,6 +359,7 @@ export class App {
     this.registerSystem(clearTransformUpdatedSystem, SystemOrder.TearDown);
     this.registerSystem(clearActiveAnimationsUpdatedSystem, SystemOrder.TearDown);
     this.registerSystem(clearInteractionSystem, SystemOrder.TearDown);
+    this.registerSystem(clearMessageEventSystem, SystemOrder.TearDown);
     this.registerSystem(clearWebXRControllerEventSystem, SystemOrder.TearDown);
     this.registerSystem(clearWebXRSessionEventSystem, SystemOrder.TearDown);
 
