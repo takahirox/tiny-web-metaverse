@@ -54,6 +54,7 @@ toggleButton.style.visibility = 'visible';
 chatDiv.appendChild(toggleButton);
 
 const chatField = document.createElement('textarea');
+chatField.id = 'twmTextchatChatArea';
 chatField.readOnly = true;
 chatField.style.background = 'lightblue';
 chatField.style.borderRadius = '4px';
@@ -71,6 +72,7 @@ inputForm.style.width = '100%';
 chatDiv.appendChild(inputForm);
 
 const textField = document.createElement('textarea');
+textField.id = 'twmTextchatTextField';
 textField.style.borderRadius = '4px';
 textField.style.boxSizing = 'border-box';
 textField.style.height = '3em';
@@ -79,6 +81,7 @@ textField.style.width = '100%';
 inputForm.appendChild(textField);
 
 const sendButton = document.createElement('button');
+sendButton.id = 'twmTextchatSendButton';
 sendButton.innerText = 'Send';
 inputForm.appendChild(sendButton);
 

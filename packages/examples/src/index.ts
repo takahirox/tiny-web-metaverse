@@ -47,6 +47,7 @@ import {
   InvisibleInAR,
   JoinedStreamEventListener,
   KeyEventListener,
+  MessageEventListener,
   MouseButtonEventListener,
   NetworkedType,
   registerPrefab,
@@ -59,6 +60,7 @@ import {
   XRControllerConnectionEventListener
 } from "@tiny-web-metaverse/client/src";
 
+import { AIAvatarCommand } from "./components/ai_avatar";
 import { JoinDialog } from "./components/join_dialog";
 import { SideBar } from "./components/side_bar";
 import { TextToModel } from "./components/text_to_model";
@@ -72,6 +74,7 @@ import { GltfPrefab } from "./prefabs/gltf";
 import { ImagePrefab } from "./prefabs/image";
 import { VideoPrefab } from "./prefabs/video";
 
+import { aiAvatarSystem } from "./systems/ai_avatar";
 import { colorSystem } from "./systems/color";
 import { textToModelLoadSystem } from "./systems/text_to_model";
 import { userEventSystem } from "./systems/user";
@@ -127,6 +130,7 @@ const run = async (): Promise<void> => {
   app.registerSystem(gltfMixerAnimationSystem, SystemOrder.Setup + 1);
   app.registerSystem(lazilyUpdateVideoStateSystem, SystemOrder.Setup + 1);
 
+  app.registerSystem(aiAvatarSystem, SystemOrder.BeforeMatricesUpdate);
   app.registerSystem(updateJoinDialogSystem, SystemOrder.BeforeMatricesUpdate);
   app.registerSystem(updateSidebarSystem, SystemOrder.BeforeMatricesUpdate);
   app.registerSystem(avatarVirtualJoystickSystem, SystemOrder.BeforeMatricesUpdate);
@@ -168,6 +172,10 @@ const run = async (): Promise<void> => {
   EntityObject3DProxy.get(avatarEid).root.position.set(0.0, 0.75, 2.0);
   addComponent(world, KeyEventListener, avatarEid);
   addComponent(world, AudioDestination, avatarEid);
+
+  const aiAvatarCommandEid = addEntity(world);
+  addComponent(world, AIAvatarCommand, aiAvatarCommandEid);
+  addComponent(world, MessageEventListener, aiAvatarCommandEid);
 
   const firstXrControllerRayEid = addEntity(world);
   addXRControllerRayComponent(world, firstXrControllerRayEid);

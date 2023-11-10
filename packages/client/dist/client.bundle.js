@@ -1249,7 +1249,7 @@ class MessageEventProxy {
         this.map.set(this.eid, []);
     }
     add(data) {
-        this.map.get(this.eid).push({ data });
+        this.map.get(this.eid).push(data);
     }
     free() {
         this.map.delete(this.eid);

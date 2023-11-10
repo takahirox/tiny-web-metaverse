@@ -19,6 +19,7 @@ import {
 import { JoinDialog } from "../components/join_dialog";
 
 const plane = document.createElement('span');
+plane.id = 'twmJoinDialog';
 plane.style.position = 'absolute';
 plane.style.top = '0';
 plane.style.left = '0';
@@ -36,7 +37,7 @@ joinForm.style.transform = 'translate(-50%, -50%)';
 joinForm.style.zIndex = '10000';
 
 const usernameForm = document.createElement('input');
-usernameForm.id = 'usernameForm';
+usernameForm.id = 'twmUsernameField';
 usernameForm.type = 'text';
 usernameForm.value = 'Your name';
 usernameForm.style.marginRight = '1em';
@@ -55,6 +56,7 @@ usernameForm.addEventListener('keydown', e => {
 });
 
 const button = document.createElement('button');
+button.id = 'twmJoinButton';
 button.innerText = ' Join ';
 joinForm.appendChild(button);
 

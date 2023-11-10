@@ -59,7 +59,7 @@ export class MessageEventProxy {
   }
 
   add(data: any): void {
-    this.map.get(this.eid)!.push({ data });
+    this.map.get(this.eid)!.push(data);
   }
 
   free(): void {
