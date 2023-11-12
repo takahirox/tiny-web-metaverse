@@ -61,13 +61,14 @@ development environment and workflow.
 
 ## Features
 
-* AR/VR support with [WebXR](https://developer.mozilla.org/en-US/docs/Web/API/WebXR_Device_API)
-* Mobile devices support
-* Voice comunication with [WebRTC](https://webrtc.org/)
-* Networked Entity state with [WebSocket](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API)
-* Positional audio and audio effects with [WebAudio](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API)
-
-T.B.D.
+* Extendibility and flexibility with [ECS architecture](https://en.wikipedia.org/wiki/Entity_component_system)
+* Easy self-hosting with [Docker](https://www.docker.com/)
+* VR/AR support with [WebXR](https://developer.mozilla.org/en-US/docs/Web/API/WebXR_Device_API)
+* Real-time network synchronization with [WebSocket](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API)
+* Real-time Audio/Video communication with [WebRTC](https://webrtc.org/)
+* Audio effects with [WebAudio](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API)
+* Support for mobile devices
+* Accelerates development with standard Web technologies
 
 ## Sub-projects
 
@@ -80,6 +81,10 @@ This project consists of the sub projects. See `packages` directory.
 * [state_server](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/state_server):
 * [stream_client](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/stream_client):
 * [stream_server](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/stream_server):
+
+## Architecture overview
+
+T.B.D.
 
 ## How to build
 
