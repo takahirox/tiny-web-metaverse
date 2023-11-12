@@ -1,7 +1,7 @@
 # Tiny Web Metaverse
 
-Tiny Web Metaverse is a Web-based 3D virtual space framework with high
-flexibility and extensibility. It is built on web standards, making it
+Tiny Web Metaverse is a Web-based multi-user 3D virtual space framework with
+high flexibility and extensibility. It is built on web standards, making it
 familiar and easy to use for developers with Web development experience.
 
 Tiny Web Metaverse adopts an ECS architecture. This architecture makes it
@@ -22,6 +22,42 @@ to meet up with in a room.
 <img src="./screenshots/screenshot_mobile.png" width="480" /><br />
 <img src="./screenshots/screenshot_mobile_vr.png" width="480" /><br />
 <img src="./screenshots/screenshot_mobile_ar.png" width="480" />
+
+##　What this framework provides
+
+This framework makes it easy to create and deploy multiplayer virtual 3D space
+web apps that reflect user ideas in a free way, with its ease of adding custom
+features and self-hosting.
+
+The advent of [WebGL](https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API)
+and [WebGPU](https://developer.mozilla.org/en-US/docs/Web/API/WebGPU_API), as
+well as JavaScript 3D graphics libraries that use them, has made 3D rendering
+easier in browsers. Also, [WebXR](https://developer.mozilla.org/en-US/docs/Web/API/WebXR_Device_API),
+[WebSocket](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API), and
+[WebRTC](https://webrtc.org/) have made it possible to create web apps with
+VR/AR, and real-time network processing.
+
+Many people are interested in developing multiplayer virtual 3D space web apps
+that could be used to create applications that realize new forms of human
+interaction, such as open online games and virtual events.
+
+However, developing them can be surprisingly difficult. You need to develop both
+the client and the server, and you need knowledge of hosting and Web APIs. These
+processes can be cumbersome.
+
+There are ways to use existing platforms to create custom content, but they can
+be restrictive, as custom logic can be difficult to add, and you may need to
+register with the platform.
+
+To address these challenges, I created a framework that is easy to modify, extend,
+and self-host.
+
+The framework handles the cumbersome processing of the above Web APIs,so you can
+focus on your own custom logic and content creation. It is also built on
+technologies that are commonly used in web app development, such as
+[JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript) and
+[TypeScript](https://www.typescriptlang.org/), so you can develop with a familiar
+development environment and workflow.
 
 ## Features
 
