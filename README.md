@@ -23,7 +23,7 @@ to meet up with in a room.
 <img src="./screenshots/screenshot_mobile_vr.png" width="480" /><br />
 <img src="./screenshots/screenshot_mobile_ar.png" width="480" />
 
-##　What this framework provides
+## What this framework provides
 
 This framework makes it easy to create and deploy multiplayer virtual 3D space
 web apps that reflect user ideas in a free way, with its ease of adding custom
