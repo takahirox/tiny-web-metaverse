@@ -98,6 +98,8 @@ Database:
 
 - Used by the state server to store object state
 
+<img src="./diagrams/overview.svg">
+
 ## Sub-projects
 
 This project consists of the sub projects. See `packages` directory.
