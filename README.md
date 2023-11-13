@@ -70,6 +70,34 @@ development environment and workflow.
 * Support for mobile devices
 * Accelerates development with standard Web technologies
 
+## Architecture overview
+
+Client:
+
+- 3D graphics rendering using WebGL
+- VR/AR processing using WebXR, such as positional tracking
+- Network synchronization of object states with remote clients using WebSockets
+  via State server
+- Audio and video communication with remote clients using WebRTC via Stream
+  server
+- Input handling from input devices such as mouse, keyboard, touchscreen,
+  VR headset, and so on
+
+Stream server:
+
+- SFU WebRTC server for client-to-client audio and video communication
+- Reduces the burden on the publisher, and also saves the number of WebRTC
+  connections
+
+State server:
+
+- A Pub/Sub server for synchronizing object state between clients
+- Adopts a Pub/Sub architecture, which makes it loosely coupled and scalable
+
+Database:
+
+- Used by the state server to store object state
+
 ## Sub-projects
 
 This project consists of the sub projects. See `packages` directory.
@@ -81,10 +109,6 @@ This project consists of the sub projects. See `packages` directory.
 * [state_server](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/state_server):
 * [stream_client](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/stream_client):
 * [stream_server](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/stream_server):
-
-## Architecture overview
-
-T.B.D.
 
 ## How to build
 
