@@ -104,13 +104,17 @@ Database:
 
 This project consists of the sub projects. See `packages` directory.
 
-* [addons](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/addons):
-* [client](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/client):
-* [examples](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/examples):
-* [state_client](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/state_client):
-* [state_server](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/state_server):
-* [stream_client](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/stream_client):
-* [stream_server](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/stream_server):
+* [addons](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/addons): Addons for Client
+* [client](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/client): Client
+* [examples](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/examples): Demo
+* [state_client](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/state_client): Client of State server
+* [state_server](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/state_server): State server
+* [stream_client](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/stream_client): Client of Stream server
+* [stream_server](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/stream_server): Stream server
+
+## How to add custom logic
+
+See [the Readme of Client](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/client)
 
 ## How to build
 
