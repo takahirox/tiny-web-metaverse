@@ -14,8 +14,19 @@ setup.
 
 [Online Demo](https://tiny-web-metaverse.net)
 
-Click to enter a room, and then share the URL (with `?room_id=xxx`) with your friends
-to meet up with in a room.
+Click to enter a room, and then share the URL (with `?room_id=xxx`) with your 
+friends to meet up with in a room.
+
+Built on this framework, this demo offers the following features:
+
+* 3D Exploration: Walk around and rotate the 3D space
+* Collaborative Object Manipulation: Collaborate with remote users to manipulate
+  objects in the 3D space
+* Audio and Text Chat: Communicate with remote users via audio or text
+* Mobile-Friendly: Access from a mobile device
+* VR/AR Experience: Experience the 3D space in a realistic way using VR/AR
+  devices
+* AI Model Generation: Generate 3D models automatically using generative AI
 
 ## Screenshot
 
