@@ -179,7 +179,7 @@ And access http://localhost:8080 on your browser.
 
 ## Deploy Demo to AWS ECS with Docker
 
-See [the Deploy to AWS document](./deploy/aws.md).
+See [the Deploy Demo to AWS ECS with Docker document](./docs/deploy/aws.md).
 
 ## Deploy Demo to Google Cloud
 
