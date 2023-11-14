@@ -179,7 +179,7 @@ And access http://localhost:8080 on your browser.
 
 ## Deploy Demo to AWS ECS with Docker
 
-TODO: Use AWS cloud formation for easier deployment? [https://github.com/takahirox/tiny-web-metaverse/issues/38](#38)
+TODO: Use AWS cloud formation for easier deployment? [#38](https://github.com/takahirox/tiny-web-metaverse/issues/38)
 
 Prerequirements:
 
@@ -302,12 +302,12 @@ for trial. Increase the storage size to miximum capacity for free (30GB SSD).
 
 ### Setup hosted zone and certificate
 
-1. Create Hosted zone from Route 53
+Create Hosted zone from Route 53
 
 - Domain name: Your domain
 - Type: Public hosted zone
 
-2. Create a record on the hosted zone you created
+Create a record on the hosted zone you created
 
 - Record: Your domain
 - Alias: On
@@ -315,7 +315,7 @@ for trial. Increase the storage size to miximum capacity for free (30GB SSD).
   - Region: Choose the region of the load balancer
   - Load balancer: Choose the load balancer you created
 
-3. Request certificate via AWS Certificate Manager (ACM)
+Request certificate via AWS Certificate Manager (ACM)
 
 - Certificate type: Public certificate type
 - Domain name: Your domain
@@ -488,7 +488,7 @@ $ cd tiny-web-metaverse
 $ MEDIASOUP_ANNOUNCED_IP=your_ip_address docker compose up
 ```
 
-Access https:// + your domain name (https://yourdomain.com if your domain name
+Access https:// + your domain name (ex: https://yourdomain.com if your domain name
 is "yourdomain.com") on web browser when the programs start.
 
 ### Running cost estimation
