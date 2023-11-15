@@ -273,6 +273,7 @@ export class FooEventProxy {
 export const FooEventListener = defineQuery();
 
 // src/systems/foo.ts
+
 import {
   addComponent,
   defineQuery,
@@ -280,7 +281,6 @@ import {
   hasComponent
 } from "bitecs";
 import {
-  FooComponent,
   FooEvent,
   FooEventListener,
   FooEventProxy,
