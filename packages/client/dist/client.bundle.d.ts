@@ -7,6 +7,7 @@ import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 export declare const NULL_EID = 0;
 export declare const INITIAL_VERSION = 0;
 export declare const LOCAL_VERSION = -1;
+export declare const REMOVAL_INTERVAL = 3;
 export declare const SystemOrder: Readonly<{
 	Time: 0;
 	EventHandling: 100;
@@ -596,6 +597,9 @@ export declare const RaycastedBySecondRay: import("bitecs").ComponentType<import
 export declare const RaycastedNearest: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare const RaycastedNearestByFirstRay: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare const RaycastedNearestBySecondRay: import("bitecs").ComponentType<import("bitecs").ISchema>;
+export declare const EntityRemoval: import("bitecs").ComponentType<{
+	interval: "ui8";
+}>;
 export declare const Renderer: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare class RendererProxy {
 	private static instance;
@@ -1052,6 +1056,7 @@ export declare const avatarMouseControlsSystem: (world: IWorld) => void;
 export declare const generateBVHSystem: (world: IWorld) => void;
 export declare const canvasSystem: (world: IWorld) => void;
 export declare const entityObject3DSystem: (world: IWorld) => void;
+export declare const entityRemovalSystem: (world: IWorld) => void;
 export declare const fpsCameraSystem: (world: IWorld) => void;
 export declare const gltfSystem: (world: IWorld) => void;
 export declare const gltfAssetLoadSystem: (world: IWorld) => void;
@@ -1125,6 +1130,7 @@ export declare const addAudioSourceWithAudioSourceNode: (world: IWorld, eid: num
 export declare const addAudioSourceWithElement: (world: IWorld, eid: number, audio: HTMLAudioElement) => void;
 export declare const addAudioSourceWithStream: (world: IWorld, eid: number, stream: MediaStream) => void;
 export declare const removeEntityIfNoComponent: (world: IWorld, eid: number) => boolean;
+export declare const removeComponentsAndThenEntity: (world: IWorld, eid: number) => void;
 export declare const hasComponents: (world: IWorld, components: Component[], eid: number) => boolean;
 export declare const getRendererProxy: (world: IWorld) => RendererProxy;
 export declare const getSceneCameraProxy: (world: IWorld) => PerspectiveCameraProxy;

@@ -52,9 +52,10 @@ Many people are interested in developing multiplayer virtual 3D space web apps
 that could be used to create applications that realize new forms of human
 interaction, such as open online games and virtual events.
 
-However, developing them can be surprisingly difficult. You need to develop both
-the client and the server, and you need knowledge of hosting and Web APIs. These
-processes can be cumbersome.
+However, developing them can be surprisingly laborious. You need to develop
+both the client and the server, and you need knowledge of hosting and Web APIs.
+Network synchronization is especially troublesome. These processes can be
+cumbersome.
 
 There are ways to use existing platforms to create custom content, but they can
 be restrictive, as custom logic can be difficult to add, and you may need to

@@ -6949,6 +6949,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   LOCAL_VERSION: () => (/* binding */ LOCAL_VERSION),
 /* harmony export */   NETWORK_INTERVAL: () => (/* binding */ NETWORK_INTERVAL),
 /* harmony export */   NULL_EID: () => (/* binding */ NULL_EID),
+/* harmony export */   REMOVAL_INTERVAL: () => (/* binding */ REMOVAL_INTERVAL),
 /* harmony export */   SystemOrder: () => (/* binding */ SystemOrder),
 /* harmony export */   TIME_EPSILON: () => (/* binding */ TIME_EPSILON)
 /* harmony export */ });
@@ -6956,6 +6957,8 @@ const NULL_EID = 0;
 //
 const INITIAL_VERSION = 0;
 const LOCAL_VERSION = -1;
+//
+const REMOVAL_INTERVAL = 3;
 const SystemOrder = Object.freeze({
     Time: 0,
     EventHandling: 100,
@@ -7853,6 +7856,26 @@ const SecondRay = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)();
 
 /***/ }),
 
+/***/ "../client/src/components/removal.ts":
+/*!*******************************************!*\
+  !*** ../client/src/components/removal.ts ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   EntityRemoval: () => (/* binding */ EntityRemoval)
+/* harmony export */ });
+/* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
+// src/components/removal.ts
+
+const EntityRemoval = (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.defineComponent)({
+    interval: bitecs__WEBPACK_IMPORTED_MODULE_0__.Types.ui8
+});
+
+
+/***/ }),
+
 /***/ "../client/src/components/renderer.ts":
 /*!********************************************!*\
   !*** ../client/src/components/renderer.ts ***!
@@ -8385,9 +8408,14 @@ const addAudioSourceWithStream = (world, eid, stream) => {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   hasComponents: () => (/* binding */ hasComponents),
+/* harmony export */   removeComponentsAndThenEntity: () => (/* binding */ removeComponentsAndThenEntity),
 /* harmony export */   removeEntityIfNoComponent: () => (/* binding */ removeEntityIfNoComponent)
 /* harmony export */ });
 /* harmony import */ var bitecs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bitecs */ "../../node_modules/bitecs/dist/index.mjs");
+/* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../common */ "../client/src/common.ts");
+/* harmony import */ var _components_removal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/removal */ "../client/src/components/removal.ts");
+
+
 
 const removeEntityIfNoComponent = (world, eid) => {
     if ((0,bitecs__WEBPACK_IMPORTED_MODULE_0__.getEntityComponents)(world, eid).length === 0) {
@@ -8395,6 +8423,14 @@ const removeEntityIfNoComponent = (world, eid) => {
         return true;
     }
     return false;
+};
+// TODO: Write comment for the reason why we need this function
+const removeComponentsAndThenEntity = (world, eid) => {
+    for (const c of (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.getEntityComponents)(world, eid)) {
+        (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.removeComponent)(world, c, eid);
+    }
+    (0,bitecs__WEBPACK_IMPORTED_MODULE_0__.addComponent)(world, _components_removal__WEBPACK_IMPORTED_MODULE_1__.EntityRemoval, eid);
+    _components_removal__WEBPACK_IMPORTED_MODULE_1__.EntityRemoval.interval[eid] = _common__WEBPACK_IMPORTED_MODULE_2__.REMOVAL_INTERVAL;
 };
 const hasComponents = (world, components, eid) => {
     for (const component of components) {

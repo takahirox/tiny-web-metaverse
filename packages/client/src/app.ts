@@ -133,6 +133,7 @@ import { avatarMouseControlsSystem } from "./systems/avatar_mouse_controls";
 import { generateBVHSystem } from "./systems/bvh";
 import { canvasSystem } from "./systems/canvas";
 import { entityObject3DSystem } from "./systems/entity_object3d";
+import { entityRemovalSystem } from "./systems/entity_removal";
 import { fpsCameraSystem } from "./systems/fps_camera";
 import { gltfSystem } from "./systems/gltf";
 import { gltfAssetLoadSystem } from "./systems/gltf_asset_load";
@@ -362,6 +363,8 @@ export class App {
     this.registerSystem(clearMessageEventSystem, SystemOrder.TearDown);
     this.registerSystem(clearWebXRControllerEventSystem, SystemOrder.TearDown);
     this.registerSystem(clearWebXRSessionEventSystem, SystemOrder.TearDown);
+
+    this.registerSystem(entityRemovalSystem, SystemOrder.TearDown + 10);
 
     // Entity 0 for null entity
     const nullEid = addEntity(this.world);
