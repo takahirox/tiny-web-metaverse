@@ -7,6 +7,8 @@ or Client addons development.
 
 ## Client overview
 
+## Client core and addons
+
 ## Three.js
 
 ## bitECS
