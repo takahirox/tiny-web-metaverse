@@ -463,6 +463,22 @@ export const loadFooSystem = (world: IWorld): void => {
 };
 ```
 
+Note that any state can change while waiting for the completion of a generator
+function. You must not use any data fetched before a generator function starts,
+after a generator function has completed.
+
+```typescript
+// Bad
+const data: number = BarProxy.get(eid).bar.data;
+yield* generatorFunction();
+operate(data);
+
+// Good
+yield* generatorFunction();
+const data: number = BarProxy.get(eid).bar.data;
+operate(data);
+```
+
 ## Three.js stuffs in Tiny Web Metaverse Client
 
 ### EntityObject3D
