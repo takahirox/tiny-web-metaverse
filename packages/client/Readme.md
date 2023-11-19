@@ -7,13 +7,101 @@ or Client addons development.
 
 ## Client overview
 
-## Client core and addons
+Client is the software (Web page) that end-users directly operate in the Tiny
+Web Metaverse framework, and it mainly plays the following roles.
 
-## Three.js
+- 3D graphics rendering using [WebGL](https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API)
+- VR/AR processing using [WebXR](https://immersiveweb.dev/), such as positional tracking
+- Network synchronization of object states with remote clients using
+  [WebSockets](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API) via
+  [State server](../state_server)
+- Audio and video communication with remote clients using [WebRTC](https://webrtc.org/)
+  via [Stream server](../stream_server)
+- Input handling from input devices such as mouse, keyboard, touchscreen, VR headset,
+  and so on
 
-## bitECS
+## Client core
 
-### ECS architecture
+Client provides the minimum and basic functions for the virtual 3D space.
+Advanced functions are implemented extensively by framework users.
+
+For example, Client provides a way to define an avatar, but setting the
+model and other settings of the avatarthe is user's responsibility.
+
+Additionally, Client detects input from input devices and shapes it into a form
+that is easy to process, but the users implement how to process the input.
+
+For example, the users implement how to move the avatar with which button when
+keyboard input is received.
+
+Moreover, Client does not involve in the 2D UI that is overlapped on the 3D
+Canvas. The implementation of the 2D UI is the responsibility of the user.
+
+Hereafter, The "Client that provides basic functions" will be referred to as
+"Client core" when emphasizing it
+
+## Addons
+
+Framework users need to implement application-specific processing outside of
+the Client core. However, many of these processes are highly reusable.
+
+For example, the operation of an avatar using a keyboard is a similar process
+in many applications. Such processes are published as [Addons](../addons).
+
+By selectively importing Addons, framework users do not need to implement
+highly reusable processes themselves.
+
+If you want to fine-tune the functionality of an Addon, copy the source code
+and edit it for use.
+
+If you want to add an addon to Addons, please send a
+[Pull Request](https://github.com/takahirox/tiny-web-metaverse/pulls).
+
+## Core third-party libraries
+
+### Three.js
+
+Tiny Web Metaverse Client uses the JavaScript 3D graphics library [Three.js](https://threejs.org/)
+to manage objects in 3D space, render 3D space using WebGL, and process VR and
+AR using WebXR.
+
+Three.js knowledge is essential for developing the Client core, Addon, and
+user apps. If you are new to Three.js, please learn the basics from the
+[documentation](https://threejs.org/docs/).
+
+The following explanations assume that the reader has a basic understanding
+of Three.js.
+
+### bitECS
+
+Tiny Web Metaverse Client uses the JavaScript ECS library
+[bitECS](https://github.com/NateTheGreatt/bitECS).
+
+Similarly to Three.js, basic knowledge of bitECS is required to develop a
+Client, Addon, or user app. If you are not familiar with bitECS, I recommend
+learning the basics from the [documentation](https://github.com/NateTheGreatt/bitECS/blob/master/docs/INTRO.md).
+
+From here on, this document assumes that the reader has basic knowledge of bitECS.
+
+## ECS architecture
+
+Tiny Web Metaverse Client adopts
+[ECS (Entity Component System) architecture](https://en.wikipedia.org/wiki/Entity_component_system).
+
+Entity Component System (ECS) is a software architectural pattern commonly used in game development for representing game world objects. It decomposes game objects into three distinct parts: entities, components, and systems.
+
+- Entities: Entities represent the unique objects in the game world. They serve
+  as mere identifiers and don't hold any data or behavior. Each entity is
+  assigned a unique identifier, allowing systems to reference and operate on
+  them.
+- Components: Components are data containers that hold the attributes and
+  properties of entities. They are essentially data structures that encapsulate
+  the characteristics of an entity, such as position, velocity, health, sprite,
+  and other relevant information.
+- Systems: Systems are the functional units that act upon entities and
+  components. They represent the behavior and logic of the game, processing
+  data from components and modifying entities accordingly. Systems operate on
+  groups of entities that possess specific components.
 
 ## Component
 
@@ -209,6 +297,10 @@ addObject3D(world, mesh, eid);
 
 ### InScene
 
+### Matrices
+
+### Scene hierarchy
+
 ## Prefab
 
 Prefab is a 
@@ -333,6 +425,8 @@ export const clearFooEventSystem = (world: IWorld): void => {
   });
 };
 ```
+
+## 2D UI
 
 ## Networking
 
