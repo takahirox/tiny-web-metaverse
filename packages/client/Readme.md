@@ -103,7 +103,9 @@ Entity Component System (ECS) is a software architectural pattern commonly used 
   data from components and modifying entities accordingly. Systems operate on
   groups of entities that possess specific components.
 
-## Entity
+## ECS in Tiny Web Metaverse
+
+### Entity
 
 Use `addEntity()` of bitECS to create a new entity.
 
@@ -126,7 +128,7 @@ returned to a pool managed by bitECS. This ID can be reused later.
 In Tiny Web Metaverse, we assume that the pool is large enough that Entity
 IDs are not immediately reused, for simplicity.
 
-## Component
+### Component
 
 Use `defineComponent()` of bitECS to define a component and `addComponent()`
 to assign a component to an entity.
@@ -258,9 +260,10 @@ proxy2.foo.operation();
 TODO: This limitation can be an error prone because static type checking
 can't detect the problem and it requires manual oversight.
 
-## System
+### System
 
-System is a 
+A system in Tiny Web Metaverse Client is just a function that takes `IWorld`
+of bitECS.
 
 ```typescript
 import { IWorld } from "bitecs";
@@ -269,6 +272,11 @@ export const fooSystem = (world: IWorld): void => {
   ...
 };
 ```
+
+Systems registered to `App` that is explained later are invoked once an
+animation frame.
+
+We highly recommend to use `query` of bitECS to access specific components.
 
 ```typescript
 import { defineQuery, IWorld } from "bitecs";
@@ -283,6 +291,36 @@ export const fooSystem = (world: IWorld): void => {
   });
 };
 ```
+
+## App
+
+`App` in Client manages systems and calls registered systems once an animation
+frame for each.
+
+Framework user creates an `App` instance with [canvas](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement)
+and `roomId` in their user applications. `roomId` is an identifier for room.
+Only clients in the same room can see and communicate each other. In the
+constructor built-in entities, systems and serializers (explained later) are
+created or registered.
+
+`App.start()` starts an application. This is an example of a minimal user
+application. (But nothing is rendered because no entity has been created to
+which Three.js objects are assigned. How to assign Three.js objects is
+explained later.)
+
+```typescript
+import { App } from "@tiny-web-metaverse/client/src";
+
+const roomId = '1234';
+const canvas = document.createElement('canvas');
+
+const app = new App({ canvas, roomId });
+document.body.appendChild(canvas);
+
+app.start();
+```
+
+### registerSystem()
 
 ## Coroutine
 
@@ -557,12 +595,6 @@ export const positionSerializers = {
 
 ### removeComponentsAndThenEntity()
 
-## App
-
-```typescript
-
-```
-
 ### SystemOrder
 
 ## User app
@@ -793,3 +825,7 @@ addComponent(world, AudioDestination, avatarEid);
 
 app.start();
 ```
+
+## Built-in components
+
+T.B.D.
