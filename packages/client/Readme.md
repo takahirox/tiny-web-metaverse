@@ -300,8 +300,7 @@ frame for each.
 Framework user creates an `App` instance with [canvas](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement)
 and `roomId` in their user applications. `roomId` is an identifier for room.
 Only clients in the same room can see and communicate each other. In the
-constructor built-in entities, systems and serializers (explained later) are
-created or registered.
+constructor built-in entities and systems are created or registered.
 
 `App.start()` starts an application. This is an example of a minimal user
 application. (But nothing is rendered because no entity has been created to
@@ -321,6 +320,73 @@ app.start();
 ```
 
 ### registerSystem()
+
+`App.registerSystem()` is a method for registering a system to `App`. A
+registered system is called in animation loop at specified timing.
+
+The method takes `system` and `orderPriority` as arguments. `system` is
+a function that takes `IWorld` of bitECS. `orderPriority` is an integer.
+
+Registered `system`s are called in the animation loop in the order of the
+`orderPriority` numbers. Note that the order in which `system`s with the same
+`orderPriority` value are called is not specified.
+
+### System order
+
+Systems are generally expected to be executed in the following order.
+
+- Time: Get elapsed and delta time.
+- EventHandling: Handling async events detected while ideling. 
+- Setup: Set up any resource at the beginning of an animation loop.
+- BeforeMatricesUpdate: Update transforms (position/rotation/scale).
+- MatricesUpdate: `App` update scene graph matrices. See "Matrices update"
+  section for the details.
+- BeforeRender: Operate anything that use updated matrices and that don't need
+  transform update. Or operate anything that should be done right before
+  rendering.
+- Render: `App` renders the scene with Three.js `WebGLRenderer.render()`
+- AfterRender: Operate anything that should be done right after rendering.
+- PostProcess: Apply post-processing visual effects.
+- TearDown: Operate anything that should be done at the end of an animation
+  loop, for example clearing event components.
+
+We highly recommend to use predefined `SystemOrder` corresponsing to them to
+specify systems execution order. The values are just integers so 
+
+```typescript
+export const SystemOrder = Object.freeze({
+  Time: 0,
+  EventHandling: 100,
+  Setup: 200,
+  BeforeMatricesUpdate: 300,
+  MatricesUpdate: 400,
+  BeforeRender: 500,
+  Render: 600,
+  AfterRender: 700,
+  PostProcess: 800,
+  TearDown: 900
+});
+```
+
+This is an example.
+
+```typescript
+import { App, SystemOrder } from "@tiny-web-metaverse/client/src";
+import { barSystem } from "./systems/bar";
+import { fooSystem } from "./systems/foo";
+
+const roomId = '1234';
+const canvas = document.createElement('canvas');
+
+const app = new App({ canvas, roomId });
+document.body.appendChild(canvas);
+
+app.registerSystem(fooSystem, SystemOrder.BeforeMatricesUpdate);
+// "+ 1" is to ensure that barSystem runs after fooSystem
+app.registerSystem(barSystem, SystemOrder.BeforeMatricesUpdate + 1);
+
+app.start();
+```
 
 ## Coroutine
 
