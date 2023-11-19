@@ -103,34 +103,85 @@ Entity Component System (ECS) is a software architectural pattern commonly used 
   data from components and modifying entities accordingly. Systems operate on
   groups of entities that possess specific components.
 
+## Entity
+
+Use `addEntity()` of bitECS to create a new entity.
+
+```typescript
+import { addEntity, IWorld } from "bitecs";
+
+const somewhere = (world: IWorld): void => {
+  const eid = addEntity(world);
+  ...
+};
+
+```
+
+The essence of an entity is an integer, called an Entity ID. It is often
+abbreviated as `eid` in Tiny Web Metaverse.
+
+When an entity is deleted by the `removeEntity()` of bitECS, the Entity ID is
+returned to a pool managed by bitECS. This ID can be reused later.
+
+In Tiny Web Metaverse, we assume that the pool is large enough that Entity
+IDs are not immediately reused, for simplicity.
+
 ## Component
 
-Component is a 
+Use `defineComponent()` of bitECS to define a component and `addComponent()`
+to assign a component to an entity.
 
 ```typescript
 // src/components/foo.ts
+
 import { defineComponent } from "bitecs";
 
 export const FooComponent = defineComponent();
+
+// Add a component to an entity
+
+import { IWorld } from "bitecs";
+import { FooComponent } from "../components/foo";
+
+const somewhere = (world: IWorld, eid: number): void => {
+  addComponent(world, FooComponent, eid);
+  ...
+};
+
 ```
+
+You can define component with component data definition.
 
 ```typescript
 // src/components/foo.ts
 import { defineComponent, Types } from "bitecs";
 
-export const FooComponent = defineComponent(
+export const FooComponent = defineComponent({
   data: Types.f32
-);
+});
 
-// somewhere
-const data = FooComponent.data[eid];
-FooComponent.data[eid] = newData;
+// Add a component to an entity and
+// initialize the component data
+
+import { IWorld } from "bitecs";
+import { FooComponent } from "../components/foo";
+
+const somewhere = (world: IWorld, eid: number): void => {
+  addComponent(world, FooComponent, eid);
+  FooComponent.data[eid] = 0.0;
+  ...
+};
 ```
+
+bitECS doesn't support non-numeric data types natively. If you want to use
+non-numeric data type, use [Component Proxy](https://github.com/NateTheGreatt/bitECS/blob/master/docs/INTRO.md#-component-proxy)
+style. We use static `get` method to reuse Proxy instance to maintain high
+performance iteration.
 
 ```typescript
 // src/components/foo.ts
 import { defineComponent } from "bitecs";
-import { Foo } from "foo";
+import { Foo } from "foo-lib";
 import { NULL_EID } from "../common";
 
 export const FooComponent = defineComponent();
@@ -162,36 +213,50 @@ export class FooProxy {
     return this.map.get(this.eid)!;
   }
 }
-```
 
-```typescript
-// Initialization
-addComponent(world, Foo, eid);
-FooProxy.get(eid).allocate();
+// Add a component to an entity,
+// get a corresponding proxy, and
+// initialize the component data
 
-// Access
-const foo = FooProxy.get(eid).foo;
+import { IWorld } from "bitecs";
+import { Foo } from "foo-lib";
+import { FooComponent, FooProxy } from "../components/foo";
 
-// Release
-FooProxy.get(eid).free();
-
-import {
-  defineQuery,
-  exitQuery,
-  IWorld,
-} from "bitecs";
-
-const exitFooQuery = exitQuery(defineQuery([FooComponent]));
-
-export const fooSystem = (world: IWorld): void => {
-  exitFooQuery(world).forEach(eid => {
-    const proxy = FooProxy.get(eid);
-    const foo = proxy.foo;
-    foo.close();
-    proxy.free();
-  });
+const somewhere = (world: IWorld, eid: number): void => {
+  addComponent(world, FooComponent, eid);
+  const proxy = FooProxy.get(eid);
+  proxy.allocate(new Foo());
+  ...
 };
 ```
+
+TODO: A mechanism is needed to ensure that a component and its data managed by
+proxy have the same lifetime. Currently, this requires manual oversight, which
+is prone to errors.
+
+Note that only a single proxy instance exists for each component. If you need
+to access components for multiple entities, obtain a new proxy after each
+entity's operation is complete.
+
+```typescript
+// Bad
+const proxy1 = FooProxy.get(eid1);
+const proxy2 = FooProxy.get(eid2);
+
+// This operation is wrong, proxy1 internally refers to eid2's component
+proxy1.foo.operation();
+
+proxy2.foo.operation();
+
+// Good
+const proxy1 = FooProxy.get(eid1);
+proxy1.foo.operation();
+const proxy2 = FooProxy.get(eid2);
+proxy2.foo.operation();
+```
+
+TODO: This limitation can be an error prone because static type checking
+can't detect the problem and it requires manual oversight.
 
 ## System
 
