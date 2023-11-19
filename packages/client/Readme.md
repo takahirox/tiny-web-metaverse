@@ -390,6 +390,19 @@ app.start();
 
 ## Coroutine
 
+Systems execution order is predictable in Tiny Web Metaverse Client. It makes
+easier to control systems and improves the simplicity and maintainability.
+
+Async/Await must not be used in systems to keep this policy. Instead, consider
+to use Coroutine approach with JavaScript
+[generator function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*)
+and [yield*](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/yield*).
+Some async/await operations may not be avoidable, for example calling async
+functions in a third-party library. In that case, use built-in `toGenerator()`
+utility function that allows to handle an async function as a generator function.
+
+This is an example.
+
 ```typescript
 // src/systems/load_foo.ts
 
@@ -401,17 +414,18 @@ import {
   IWorld,
   removeComponent
 } from "bitecs";
+import { loadFooAsync } from "foo-lib";
+import { toGenerator } from "@tiny-web-metaverse/client/src";
 import {
   FooComponent,
   FooLoader,
   FooLoaderProxy,
   FooProxy
 } from "../components/foo";
-import { toGenerator } from "../utils/coroutine";
 
 function* load(world: IWorld, eid: number): Generator {
   const url = FooLoaderProxy.get(eid).url;
-  const foo = yield* toGenerator(loadFoo(url));
+  const foo = yield* toGenerator(loadFooAsync(url));
   addComponent(world, FooComponent, eid);
   FooProxy.get(eid).allocate(foo);
 }
@@ -661,7 +675,7 @@ export const positionSerializers = {
 
 ### removeComponentsAndThenEntity()
 
-### SystemOrder
+### NULL_EID
 
 ## User app
 
