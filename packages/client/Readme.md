@@ -177,8 +177,9 @@ const somewhere = (world: IWorld, eid: number): void => {
 
 bitECS doesn't support non-numeric data types natively. If you want to use
 non-numeric data type, use [Component Proxy](https://github.com/NateTheGreatt/bitECS/blob/master/docs/INTRO.md#-component-proxy)
-style. We use static `get` method to reuse Proxy instance to maintain high
-performance iteration.
+style. (Our Component Proxy style is not exactly same as the bitECS one but
+inspired by it.)We use static `get` method to reuse Proxy instance to maintain
+high performance iteration.
 
 ```typescript
 // src/components/foo.ts
@@ -215,16 +216,17 @@ export class FooProxy {
     return this.map.get(this.eid)!;
   }
 }
+```
 
-// Add a component to an entity,
-// get a corresponding proxy, and
-// initialize the component data
+When you add a component that has proxy to an entity you also need to get
+proxy and initialize the component data.
 
+```typescript
 import { IWorld } from "bitecs";
 import { Foo } from "foo-lib";
 import { FooComponent, FooProxy } from "../components/foo";
 
-const somewhere = (world: IWorld, eid: number): void => {
+const somewhereToAdd = (world: IWorld, eid: number): void => {
   addComponent(world, FooComponent, eid);
   const proxy = FooProxy.get(eid);
   proxy.allocate(new Foo());
@@ -289,6 +291,73 @@ export const fooSystem = (world: IWorld): void => {
     const foo = FooProxy.get(eid).foo;
     foo.operation();
   });
+};
+```
+
+### Remove entities
+
+Removing an entity is a tricky part in Tiny Web Metaverse Client because
+we use Component Proxy style described above. Just removing an entity
+`removeEntity()` of `bitECS` doesn't release proxy and component data.
+It can cause memory leak and also may cause a problem when an entity
+is recycled.
+
+To resolve this problem, a special flow has been introduced.
+
+First, write a system for a component that has proxy to release the
+component data when the component is removed from an entity.
+
+```typescript
+// src/systems/clear_foo.ts
+
+import {
+  defineQuery,
+  exitQuery,
+  IWorld
+} from "bitecs";
+import {
+  FooComponent,
+  FooProxy
+} from "../components/foo";
+
+const exitFooQuery = exitQuery(defineQuery([FooComponent]));
+
+export const clearFooSystem = (world: IWorld): void => {
+  exitFooQuery(world).forEach(eid => {
+    const proxy = FooProxy.get(eid);
+    const foo = proxy.foo;
+    foo.close();
+    proxy.free();
+  });
+};
+```
+
+When you remove the component from an entity, just use `removeComponent()`
+of bitECS. The component data will be released when the releasing system
+is called next time.
+
+```typescript
+import { IWorld, removeComponent } from "bitecs";
+import { FooComponent } from "../components/foo";
+
+const somewhereToRemove = (world: IWorld, eid: number): void => {
+  removeComponent(world, FooComponent, eid);
+  ...
+};
+```
+
+If you want to remove an entity, use built-in `removeComponentsAndThenEntity()`
+utility function. It immediately removes all the components associated with
+an entity, and then remove the entity after several animation frames. It allows
+systems to release component data in that interval.
+
+```typescript
+import { IWorld } from "bitecs";
+import { removeComponentsAndThenEntity } from "@tiny-web-metaverse/client/src";
+
+const somewhereToRemove = (world: IWorld, eid: number): void => {
+  removeComponentsAndThenEntity(world, eid);
+  ...
 };
 ```
 
@@ -479,7 +548,7 @@ const data: number = BarProxy.get(eid).bar.data;
 operate(data);
 ```
 
-## Three.js stuffs in Tiny Web Metaverse Client
+## Three.js stuffs
 
 ### EntityObject3D
 
@@ -499,29 +568,6 @@ addObject3D(world, mesh, eid);
 ### Matrices
 
 ### Scene hierarchy
-
-## Prefab
-
-Prefab is a 
-
-```
-// src/prefabs/foo
-import {
-  addComponent,
-  addEntity,
-  IWorld
-} from "bitecs";
-import { FooComponent, FooProxy } from "../components/foo";
-
-export const GltfPrefab = (world: IWorld, params: { fooData: number }): number => {
-  const eid = addEntity(world);
-
-  addComponent(world, FooComponent, eid);
-  FooProxy.get(eid).allocate(fooData);
-
-  return eid;
-};
-```
 
 ## Event handling
 
@@ -627,6 +673,29 @@ export const clearFooEventSystem = (world: IWorld): void => {
 
 ## 2D UI
 
+## Prefab
+
+Prefab is a 
+
+```
+// src/prefabs/foo
+import {
+  addComponent,
+  addEntity,
+  IWorld
+} from "bitecs";
+import { FooComponent, FooProxy } from "../components/foo";
+
+export const GltfPrefab = (world: IWorld, params: { fooData: number }): number => {
+  const eid = addEntity(world);
+
+  addComponent(world, FooComponent, eid);
+  FooProxy.get(eid).allocate(fooData);
+
+  return eid;
+};
+```
+
 ## Networking
 
 ```typescript
@@ -688,8 +757,6 @@ export const positionSerializers = {
 ```
 
 ## Utilities
-
-### removeComponentsAndThenEntity()
 
 ### NULL_EID
 
@@ -923,5 +990,9 @@ app.start();
 ```
 
 ## Built-in components
+
+T.B.D.
+
+## Networking internal
 
 T.B.D.
