@@ -550,18 +550,98 @@ operate(data);
 
 ## Three.js stuffs
 
+There are some limitations and restrictions for Three.js operations to
+simplify and optimize.
+
 ### EntityObject3D
 
-```typescript
-addComponent(world, EntityObject3D, eid);
-EntityObject3DProxy.get(eid).allocate();
-const root = EntityObject3DProxy.get(eid).root;
-```
+If you want to assign Three.js `Object3D`s to an entity, use built-in
+`EntityObject3D` component and its proxy. `EntityObject3DProxy.allocate()`
+allocates a new Three.js `Group`, called `EntityRootGroup`, as `root`.
+
+You can access `root` via `EntityObject3DProxy.root`. You can control
+the transform of an entity's Object3D immediately after assigning
+`EntityObject3D`.
 
 ```typescript
-const mesh = new Mesh(geometry, material);
-addObject3D(world, mesh, eid);
+import { addComponent, IWorld } from "bitecs";
+import {
+  EntityObject3D,
+  EntityObject3DProxy
+} from "@tiny-web-metaverse/client/src";
+
+const setupEntityObject3D = (world: IWorld, eid: number): void => {
+  addComponent(world, EntityObject3D, eid);
+  EntityObject3DProxy.get(eid).allocate();
+  const root = EntityObject3DProxy.get(eid).root;
+  root.position.set(0.0, 0.0, -2.0);
+};
 ```
+
+Call built-in `addObject3D()` utility function to add your Three.js `Object3D`
+(eg: `Mesh`). You can call `addObject3D()` even before assiging
+`EntityObject3D` component to an entity because the function assigns it
+if the component is not assigned yet. Use built-in `removeObject3D()`
+utility function to remove an Three.js `Object3D` from an entity.
+
+When `Object3D` is assigned to an entity, `Object3D`s transform must be identity
+(identity matrix). Update the transform via `EntityObject3DProxy.root` after
+assigning.
+
+```typescript
+import { IWorld } from "bitecs";
+import { Mesh, MeshBasicMaterial, SphereGeometry } from "three";
+import { addObject3D } from "@tiny-web-metaverse/client/src";
+
+const addSphereMesh = (world: IWorld, eid: number): void => {
+  const geometry = new SphereGeometry(1.0);
+  const material = new MeshBasicMaterial();
+  const mesh = new Mesh(geometry, material);
+  addObject3D(world, mesh, eid);
+  EntityObject3DProxy.get(eid).root.position.set(0.0, 0.0, 2.0);
+};
+```
+
+`addObject3D()` and `removeObject3D()` form the following Three.js
+objects structure as optimization. When swapping the root object, they keep
+the transform (position/rotation/scale/matrix). 
+
+```
+The number of assigned Object3Ds: 0
+
+- EntityRootGroup (EntityObject3DProxy.root)
+
+The number of assigned Object3Ds: 1
+
+- Object3D (EntityObject3DProxy.root)
+
+The number of assigned Object3Ds: 2-
+
+EntityRootGroup (EntityObject3DProxy.root)
+  - Object3D_A
+  - Object3D_B
+  ...
+```
+
+`root` object can be swapped so it is a good practice to access
+`EntityObject3DProxy.root` right before using it.
+
+```typescript
+// Bad
+const root = EntityObject3DProxy.get(eid);
+something(); // This function may add or remove Object3D from an entity
+root.position.set(0.0, 0.0, 2.0);
+
+// Good
+something();
+const root = EntityObject3DProxy.get(eid);
+root.position.set(0.0, 0.0, 2.0);
+```
+
+TODO: Static type check can't detect misoperation like the bad one in the
+above example code. Can we introduce a mechanism to avoid the problem?
+
+TODO: Remove this optimization? It can simpler.
 
 ### InScene
 
@@ -671,6 +751,10 @@ export const clearFooEventSystem = (world: IWorld): void => {
 };
 ```
 
+### Input source interaction
+
+T.B.D.
+
 ## 2D UI
 
 ## Prefab
@@ -695,6 +779,14 @@ export const GltfPrefab = (world: IWorld, params: { fooData: number }): number =
   return eid;
 };
 ```
+
+## Stream server connection
+
+T.B.D.
+
+## State server connection
+
+T.B.D.
 
 ## Networking
 
