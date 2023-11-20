@@ -584,7 +584,7 @@ Call built-in `addObject3D()` utility function to add your Three.js `Object3D`
 if the component is not assigned yet. Use built-in `removeObject3D()`
 utility function to remove an Three.js `Object3D` from an entity.
 
-When `Object3D` is assigned to an entity, `Object3D`s transform must be identity
+When an `Object3D` is assigned to an entity, its transform must be identity
 (identity matrix). Update the transform via `EntityObject3DProxy.root` after
 assigning.
 
@@ -602,9 +602,10 @@ const addSphereMesh = (world: IWorld, eid: number): void => {
 };
 ```
 
-`addObject3D()` and `removeObject3D()` form the following Three.js
-objects structure as optimization. When swapping the root object, they keep
-the transform (position/rotation/scale/matrix). 
+Multiple `Object3D`s can be assigned to an entity. `addObject3D()`
+and `removeObject3D()` form the following Three.js objects structure as
+optimization. When swapping the root object, they keep the transform
+(position/rotation/scale/matrix). 
 
 ```
 The number of assigned Object3Ds: 0
@@ -617,7 +618,7 @@ The number of assigned Object3Ds: 1
 
 The number of assigned Object3Ds: 2-
 
-EntityRootGroup (EntityObject3DProxy.root)
+- EntityRootGroup (EntityObject3DProxy.root)
   - Object3D_A
   - Object3D_B
   ...
@@ -641,13 +642,79 @@ root.position.set(0.0, 0.0, 2.0);
 TODO: Static type check can't detect misoperation like the bad one in the
 above example code. Can we introduce a mechanism to avoid the problem?
 
-TODO: Remove this optimization? It can simpler.
+TODO: Remove this optimization? It can be simpler.
 
 ### InScene
 
-### Matrices
+Add `InScene` built-in component to an entity to add its Three.js `Object3D`s to
+Three.js `scene`. A built-in system adds them to the `scene`. If `InScene`
+component is removed from an entity, the system removes its `Object3D`s from the
+`scene`.
+
+```typescript
+import { addComponent, IWorld } from "bitecs";
+import { Mesh, MeshBasicMaterial, SphereGeometry } from "three";
+import { addObject3D, InScene } from "@tiny-web-metaverse/client/src";
+
+const addSphereMesh = (world: IWorld, eid: number): void => {
+  const geometry = new SphereGeometry(1.0);
+  const material = new MeshBasicMaterial();
+  const mesh = new Mesh(geometry, material);
+  addObject3D(world, mesh, eid);
+  EntityObject3DProxy.get(eid).root.position.set(0.0, 0.0, 2.0);
+  addComponent(world, InScene, eid);
+};
+```
 
 ### Scene hierarchy
+
+In Tiny Web Metaverse Client, Three.js `Scene` is expected to have an identity
+matrix and `Object3D`s assigned to an entity are expected to be not the children
+of other `Object3D`s assigned to other entities for simplicity and optimization
+as
+
+- The scene graph can be kept shallow and scene graph matrices update cost
+can be lower because a Three.js `Object3D`'s transform update doesn't affect
+many `Object3D`s in the scene.
+- The local transform of a `EntityObject3D`'s `root` match its world transform
+so even when world transform is needed world transform calculation is not
+needed.
+
+If an entity's `Object3D` wants to be as if a child of other entity's `Object3D`
+you can manipulate the matrix like this.
+
+```typescript
+import { entityExists, hasComponent, IWorld } from "bitecs";
+import {
+  EntityObject3D,
+  EntityObject3DProxy
+} from "@tiny-web-metaverse/client/src";
+
+const asIfChild = (world: IWorld, eid: number, parentEid: number): void => {
+  if (!entityExists(world, parentEid) ||
+    !hasComponent(world, EntityObject3D, parentEid) {
+    return;
+  }
+
+  const root = EntityObject3DProxy.get(eid).root;
+  const parent = EntityObject3DProxy.get(parentEid).root;
+
+  root.updateMatrix();
+  parent.updateMatrix();
+  root.matrix.premultiply(parent.matrix);
+  root.matrix.decompose(root.position, root.quaternion, root.scale);
+};
+```
+
+TODO: Introduce a mechanism that allows entity's `Object3D` to act as if
+a child of other entity's `Object3D`?
+
+### Matrices
+
+`App` updates the entire scene graph matrices at `SystemOrder.MatricesUpdate` in
+an animation loop. Systems that update transform(position/rotation/scale) should
+run before it. And systemt that need updated matrices and don't update transform
+should run after it for efficiency.
 
 ## Event handling
 
