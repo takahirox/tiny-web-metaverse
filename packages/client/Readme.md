@@ -785,16 +785,16 @@ export class FooEventProxy {
   }
 }
 
-export const FooEventListener = defineQuery();
+export const FooEventListener = defineComponent();
 ```
 
 And create a system that stores async events happened during the idle time to
-a queue and notifies the events to entities that listen to that entity by adding
+a queue and notifies the events to entities that listen to that event by adding
 the event component in an animation loop.
 
-Also create a system that remove the event component.
+Also create a system that removes the event component.
 
-```
+```typescript
 // src/systems/foo.ts
 
 import {
@@ -854,7 +854,7 @@ export const clearFooEventSystem = (world: IWorld): void => {
 ```
 
 And then write a system that fetches entities that have the event component
-and process with the events.
+and processes with the events.
 
 ```typescript
 export const fooEventSystem = (world: IWorld): void => {
