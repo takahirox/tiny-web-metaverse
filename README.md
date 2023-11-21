@@ -124,7 +124,7 @@ This project consists of the sub projects. See `packages` directory.
 * [stream_client](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/stream_client): Client of Stream server
 * [stream_server](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/stream_server): Stream server
 
-## How to add custom logic
+## How to add custom features
 
 See [the Readme of Client](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/client)
 
