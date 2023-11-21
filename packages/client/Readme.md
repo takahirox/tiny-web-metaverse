@@ -801,7 +801,8 @@ import {
   addComponent,
   defineQuery,
   enterQuery,
-  hasComponent
+  hasComponent,
+  IWorld
 } from "bitecs";
 import {
   FooEvent,
@@ -891,11 +892,71 @@ T.B.D.
 
 ## 2D UI
 
+As mentioned above, Client core doesn't take care of 2D UI controls that
+overlaps 3D canvas. It is the responsibility of user-application (or addons);
+
+If you want [HTML DOM elements](https://developer.mozilla.org/en-US/docs/Web/API/Element)
+to interact entities or components, the implementation would be similar to
+EventHandling described above, like storing events in idle time and processing
+with them in animation loop. This is an example of system code.
+
+```typescript
+// src/systems/ui_button.ts
+
+import { IWorld } from "bitecs";
+import { FooComponent } from "../components/foo";
+import { NullComponent } from "../components/null";
+
+const enum ButtonEventType {
+  Clicked
+};
+
+const eventQueue: { type: ButtonEventType }[] = [];
+
+const button = document.createElement('button');
+button.innerText = 'Click';
+button.style.buttom = '10px';
+button.style.left = '50%';
+button.style.position = 'absolute';
+button.style.transform = 'translate(-50%)';
+button.style.zIndex = '1000';
+
+button.addEventListener(() => {
+  eventQueue.push({ type: ButtonEventType.Clicked });
+});
+
+// enterQuery + NullComponent is a hack for executing only at the first call
+const initializeQuery = enterQuery(defineQuery([NullComponent]));
+const fooQuery = defineQuery([FooComponent]);
+
+export const buttonUISystem = (world: IWorld): void => {
+  initializeQuery(world).forEach(() => {
+    document.body.appendChild(button);
+  });
+
+  for (const e of eventQueue) {
+    fooQuery(world).forEach(eid => {
+      ...
+    });
+  }
+
+  eventQueue.length = 0;
+};
+```
+
+## Stream server connection
+
+T.B.D.
+
+## State server connection
+
+T.B.D.
+
 ## Prefab
 
 Prefab is a 
 
-```
+```typescript
 // src/prefabs/foo
 import {
   addComponent,
@@ -913,14 +974,6 @@ export const GltfPrefab = (world: IWorld, params: { fooData: number }): number =
   return eid;
 };
 ```
-
-## Stream server connection
-
-T.B.D.
-
-## State server connection
-
-T.B.D.
 
 ## Networking
 
