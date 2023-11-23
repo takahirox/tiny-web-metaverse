@@ -1,9 +1,9 @@
 This document is T.B.D.
 
-# Tiny Web Metaverse Client
+# Tiny Web Metaverse Client core concept
 
-This is a document for who are interested in Tiny Web Metaverse Client
-or Client addons development.
+This document describes the Tiny Web Metaverse Client core concept needed for
+Client or Addons development.
 
 ## Client overview
 
@@ -952,9 +952,180 @@ T.B.D.
 
 T.B.D.
 
-## Prefab
+## Network sync
 
-Prefab is a 
+In Tiny Web Metaverse, the state of Entities can be selectively synchronized
+with remote clients in the same room. Here, the state of an Entities refers to
+the entity existence and the specified component data.
+
+A synchronized Entity is called a Networked Entity, and its synchronized
+components are called Networked Components.
+
+Some built-in network systems perform network synchronization processing.
+
+The network send system periodically checks for changes to the data in the
+networked component. Only when changes are detected the system sends the
+updated data to the remote client via the server. This helps to prevent network
+data flooding.
+
+The network receive system observes the network data sent from the remote
+client. When data is received, the system reflects the data to the networked
+components. Because data is only sent periodically, the system may interpolate
+the data before reflecting it.
+
+You need to do the following steps to create networked components and entities.
+
+- Define networked components
+- Write and register serializers/deserializers
+- Write and register prefabs
+- Create networked entity
+
+Let's take a loot at one by one.
+
+### Networked type
+
+There are three networked types.
+
+- Local: Local networked components/entities should be directly controlled only
+by local client. Changes made to Local components/entities are sent to other
+clients by built-in network send system. On remote clients, Local
+components/entities appear as Remote.
+- Remote: Remote networked components/entities should be directly controlled
+only by a remote client that created them. Updates to remote entities are
+received and applied to corresponding components/entities by built-in network
+receive system. Remote components/entities appear as Local on a remote client
+that created them and as Remote on other clients.
+on their creator client and as Remote on other clients.
+- Shared: Shared networked components/entities are controlled by any client.
+Built-in network send and receive systems make them synced. Shared
+components/entities appear as Shared on all clients.
+
+### Networked Components
+
+First you need to create a component that indicates another component is
+networked. For instance, if you want to make `FooComponent` component
+network-enabled, create `NetworkedFooComponent`. When both `FooComponent` and
+`NetworkedFooComponent` are added to an entity, `FooComponent` becomes
+networked. If only `FooComponent` is added, it remains non-networked.
+
+```typescript
+// src/components/foo.ts
+
+import { defineComponent, Types } from "bitecs";
+
+export const FooComponent = defineComponent({
+  data: Types.f32
+});
+export const NetworkedFooComponent = defineComponent();
+
+// Refer to the following "Serializer" section about this component
+export const FooComponentInterpolation = defineComponent({
+  target: Types.f32
+});
+```
+
+### Serializer
+
+Next, you have to write diff checkers, serializers, and deserializers for
+networked components.
+
+Diff checker is a function periodically called to check for changes of
+networked component data.
+
+Serializer is a function that serializes networked component data to send.
+Deserializer is a function that deserializes serialized network component
+data and reflects to component data.
+
+You can define two deserializer types, one with interpolation and another
+one for without interpolation. The non-interpolation one is used for component
+data initialization and the other one is used for others.
+
+In general, interpolation would be like 
+
+Normally, interpolation is a process of gradually approaching the target value.
+Such processing should be done in a system, and you need to write a system.
+In the deserializer, you will need to add a component to drive the system.
+
+```typescript
+// src/serializers/position.ts
+
+import {
+  addComponent,
+  hasComponent
+} from "bitecs";
+import {
+  FooComponent,
+  FooComponentInterpolation,
+  NetworkedFooComponent
+} from "../components/foo";
+
+const EPSILON = 0.0001;
+export type SerializedFoo = { data: number };
+
+const checkFooDiff = (world: IWorld, eid: number, cache: SerializedFoo): boolean => {
+  if (!hasComponent(world, FooComponent, eid)) {
+    throw new Error('checkFooDiff requires FooComponent component.');
+  }
+  return Math.abs(cache.data - FooComponent.data[eid]) > EPSILON;
+};
+
+const serializeFoo = (world: IWorld, eid: number): SerializedFoo => {
+  if (!hasComponent(world, FooComponent, eid)) {
+    throw new Error('serializeFoo requires FooComponent component.');
+  }
+  return { data: FooComponent.data[eid] };
+};
+
+const deserializeFoo = (world: IWorld, eid: number, data: SerializedFoo): void => {
+  if (!hasComponent(world, FooComponent, eid)) {
+    throw new Error('deserializeFoo requires FooComponent component.');
+  }
+  FooComponent.data[eid] = data.data;
+};
+
+const networkDeserializeFoo = (world: IWorld, eid: number, data: SerializedFoo): void => {
+  if (!hasComponent(world, FooComponent, eid)) {
+    throw new Error('networkDeserializeFoo requires FooComponent component.');
+  }
+  // Add a component to drive a interpolation system.
+  // Interpolation system implementation is omitted in this example.
+  addComponent(world, FooComponentInterpolation, eid);
+  FooComponentInterpolation.target[eid] = data.data;
+};
+
+export const fooSerializers = {
+  deserializer: deserializeFoo,
+  diffChecker: checkFooDiff,
+  networkDeserializer: deserializeFoo,
+  serializer: serializeFoo
+};
+```
+
+And then you have to register the functions with the built-in
+`registerSerializers()` function to establish a mapping between the functions
+and the networked component.
+
+The second argument is a unique key string within the application that
+identifies this mapping.
+
+The third and fourth arguments specify a networked component and functions
+for mapping. These functions must be contained within an object that provides
+the `diffChecker`, `serializer`, `deserializer`, and `networkDeserializer`.
+Deserializer function without interpolation should be passed as
+`deserializer`, while deserializer function with interpolation should be
+passed as `networkDeserializer`.
+
+```typescript
+import { registerSerializers } from "@tiny-web-metaverse/client/src";
+import { NetworkedFoo } from "../components/networked_position";
+import { fooSerializers } from "../serializers/foo";
+
+registerSerializers(world, 'foo', NetworkedFoo, fooSerializers);
+```
+
+### Prefab
+
+Next, you have to write a prefab. Prefab is a 
 
 ```typescript
 // src/prefabs/foo
@@ -963,9 +1134,10 @@ import {
   addEntity,
   IWorld
 } from "bitecs";
+import { NetworkedPosition } from "../components/networked_position";
 import { FooComponent, FooProxy } from "../components/foo";
 
-export const GltfPrefab = (world: IWorld, params: { fooData: number }): number => {
+export const SpherePrefab = (world: IWorld): number => {
   const eid = addEntity(world);
 
   addComponent(world, FooComponent, eid);
@@ -975,7 +1147,7 @@ export const GltfPrefab = (world: IWorld, params: { fooData: number }): number =
 };
 ```
 
-## Networking
+### createNetworkedEntity()
 
 ```typescript
 const eid = createNetworkedEntity(world, NetworkedType.Local, 'local');
@@ -986,60 +1158,19 @@ NetworkedType
 - Remote:
 - Shared:
 
-## Serialization
+### Networked Components
 
-```typescript
-export type SerializedFoo = [data1: number, data2: number];
-
-const serializeFoo = (world: IWorld, eid: number): SerializedPosition => {
-  if (!hasComponent(world, FooComponent, eid)) {
-    throw new Error('serializeFoo requires FooComponent component.');
-  }
-  const foo = FooProxy.get(eid).foo;
-  return [foo.data1, foo.data2];
-};
-
-const deserializeFoo = (world: IWorld, eid: number, data: SerializedFoo): void => {
-  if (!hasComponent(world, FooComponent, eid)) {
-    throw new Error('deserializeFoo requires FooComponent component.');
-  }
-  const foo = FooProxy.get(eid).foo;
-  foo.data1 = data[0];
-  foo.data2 = data[1];
-};
-
-const deserializeNetworkedFoo = (world: IWorld, eid: number, data: SerializedFoo): void => {
-  deserializeFoo(world, eid, data);
-};
-
-const checkFooDiff = (world: IWorld, eid: number, cache: SerializedFoo): boolean => {
-  if (hasComponent(world, LinearTranslate, eid)) {
-    return Math.abs(LinearTranslate.targetX[eid] - cache[0]) > F32_EPSILON ||
-      Math.abs(LinearTranslate.targetY[eid] - cache[1]) > F32_EPSILON ||
-      Math.abs(LinearTranslate.targetZ[eid] - cache[2]) > F32_EPSILON;
-  }
-  if (!hasComponent(world, EntityObject3D, eid)) {
-    throw new Error('checkPositionDiff requires LinearTranslate or EntityObject3D component.');
-  }
-  const position = EntityObject3DProxy.get(eid).root.position;
-  return Math.abs(position.x - cache[0]) > F32_EPSILON ||
-    Math.abs(position.y - cache[1]) > F32_EPSILON ||
-    Math.abs(position.z - cache[2]) > F32_EPSILON;
-};
-
-export const positionSerializers = {
-  deserializer: deserializePosition,
-  diffChecker: checkPositionDiff,
-  networkDeserializer: deserializeNetworkedPosition,
-  serializer: serializePosition,
-};
-```
+- Local
+- Remote
+- Shared
 
 ## Utilities
 
-### NULL_EID
+### NULL_EID and NullComponent
 
-## User app
+## Examples
+
+### User app
 
 ```typescript
 // src/app.ts
@@ -1054,7 +1185,7 @@ document.body.appendChild(canvas);
 app.start();
 ```
 
-## Custom addons
+### Custom addons
 
 ```typescript
 // src/components/foo
@@ -1100,7 +1231,7 @@ FooComponent.data[eid] = 0.0;
 app.start();
 ```
 
-## Example App - Avatar
+### Example App - Avatar
 
 ```typescript
 // src/prefabs/avatar.ts
@@ -1231,7 +1362,7 @@ addComponent(world, AudioDestination, avatarEid);
 app.start();
 ```
 
-## Example - with existing addons
+### Example - with existing addons
 
 ```typescript
 // src/app.ts
@@ -1272,6 +1403,6 @@ app.start();
 
 T.B.D.
 
-## Networking internal
+## Network sync internal
 
 T.B.D.
