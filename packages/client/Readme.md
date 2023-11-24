@@ -5,6 +5,50 @@ This document is T.B.D.
 This document describes the Tiny Web Metaverse Client core concept needed for
 Client or Addons development.
 
+- [Client overview](#client-overview)
+- [Client core](#client-core)
+- [Addons](#addons)
+- [Core third-party libraries](#core-third-party-libraries)
+  - [Three.js](#threejs)
+  - [bitECS](#bitecs)
+- [ECS architecture](#ecs-architecture)
+- [ECS in Tiny Web Metaverse](#ecs-in-tiny-web-metaverse)
+  - [Entity](#entity)
+  - [Component](#component)
+  - [System](#system)
+  - [Remove entities](#remove-entities)
+- [App](#app)
+  - [registersystem](#registersystem)
+  - [System order](#system-order)
+- [Coroutine](#coroutine)
+- [Three.js stuffs](#threejs-stuffs)
+  - [EntityObject3D](#entityobject3d)
+  - [InScene](#inscene)
+  - [Scene hierarchy](#scene-hierarchy)
+  - [Matrices update](#matrices-update)
+  - [Loading glTF](#loading-gltf)
+- [Event handling](#event-handling)
+  - [Input source interaction](#input-source-interaction)
+- [2D UI](#2d-ui)
+- [Stream server connection](#stream-server-connection)
+- [State server connection](#state-server-connection)
+- [Network sync](#network-sync)
+  - [Networked type](#networked-type)
+  - [Networked Components](#networked-components)
+  - [Serializer](#serializer)
+  - [Prefab](#prefab)
+  - [createNetworkedEntity()](#createnetworkedentity)
+- [Audio processing](#audio-processing)
+  - [Positional audio](#positional-audio)
+  - [Custom audio effect](#custom-audio-effect)
+- [Other utilities](#other-utilities)
+  - [NULL_EID and NullComponent](#null_eid-and-nullcomponent)
+- [User app examples](#user-app-examples)
+  - [Avatar example](#avatar-example)
+  - [Avatar example with addons](#avatar-example-with-addons)
+- [Built-in components](#built-in-components)
+- [Network sync internal](#network-sync-internal)
+
 ## Client overview
 
 Client is the software (Web page) that end-users directly operate in the Tiny
@@ -1289,7 +1333,7 @@ A good starting point is to create a Client that displays avatars.
 
 If you need more practical examples, see [the examples package](../examples).
 
-### Avatar
+### Avatar example
 
 This is a very basic example to handle networked avatars. 
 
@@ -1426,7 +1470,7 @@ addComponent(world, AudioDestination, avatarEid);
 app.start();
 ```
 
-### Avatar with existing addons
+### Avatar example with addons
 
 This example is based on the above example. Instead of implementing a custom
 avatar key controls system, it imports controls addons and set them up.
