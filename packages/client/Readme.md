@@ -1277,41 +1277,25 @@ export const barSystem = (world: IWorld): void => {
 };
 ```
 
-## Creating custom addons
-
-See [the Readme of addons package](../addons).
-
 ## User app examples
 
-See [the examples package](../examples) for a more practical example.
+So far, you have learned the Client core concepts necessary to create your own
+Client (User app). You can create your own Client on top of the Client Core by
+adding Entities, Components, Systems, Prefabs, Serializers, UI, and so on. You
+can also import [the Readme of addons package](../addons) or create and publish
+addons for others to reuse.
 
-### Minimal User app
+A good starting point is to create a Client that displays avatars.
 
-This minimal user app example shows how to instanciate `App` and start it.
-Note that nothing is rendered because of no renderable objects in the world.
-
-```typescript
-// src/app.ts
-
-import { App } from "@tiny-web-metaverse/client/src";
-
-const roomId = '1234';
-const canvas = document.createElement('canvas');
-
-const app = new App({ canvas, roomId });
-document.body.appendChild(canvas);
-
-app.start();
-```
+If you need more practical examples, see [the examples package](../examples).
 
 ### Avatar
 
-This is a very basic example to handle avatars. 
+This is a very basic example to handle networked avatars. 
 
 - An avatar appears as a sphere object in the scene
 - Local avatar is moved with the arrow keys
-- Avatar entities are networked entities so the both Local and Remote avatars
-are shown in the scene
+- Remote avatars shown moved by remote clients
 
 ```typescript
 // src/prefabs/avatar.ts
