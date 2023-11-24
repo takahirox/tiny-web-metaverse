@@ -40,6 +40,8 @@ const managerQuery = defineQuery([NetworkedEntityManager]);
 const broadcastorQuery = defineQuery([BroadcastRequestor]);
 const exitBroadcastorQuery = exitQuery(broadcastorQuery);
 
+// TODO: Implement remove entity
+
 export const networkSendSystem = (world: IWorld) => {
   senderQuery(world).forEach(senderEid => {
     const lastSendTime = NetworkEventSender.lastSendTime[senderEid];

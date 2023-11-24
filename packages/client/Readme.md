@@ -716,6 +716,10 @@ an animation loop. Systems that update transform(position/rotation/scale) should
 run before it. And systemt that need updated matrices and don't update transform
 should run after it for efficiency.
 
+### Loading glTF
+
+T.B.D.
+
 ## Event handling
 
 As written above, we avoid async/await in systems for simplicity and predictable
@@ -1200,16 +1204,95 @@ Networked entities have the built-in `Networked` component. And also they have
 either `Local`, `Remote`, or `Shared` built-in component corresponding to
 network type.
 
-## Utilities
+## Audio processing
+
+T.B.D.
+
+### Positional audio
+
+T.B.D.
+
+### Custom audio effect
+
+T.B.D.
+
+## Other utilities
 
 ### NULL_EID and NullComponent
 
-## Examples
+`App` first creates an entity with the built-in `NullComponent` component in
+the constructor. This first entity itself should not be used for any processing.
 
-### User app
+However, its Entity ID (which should be zero) can be used to indicate that the
+entity does not exist. For instance, you could write a function that searches
+for entities with a specific component and returns their Entity ID. If no such
+entity is found, it returns zero. There is a built-in variable, NULL_EID, which
+represents a nonexistent Entity ID.
+
+```typescript
+import {
+  Component,
+  defineQuery
+  IWorld,
+  removeQuery
+} from "bitecs";
+import { NULL_EID } from "@tiny-web-metaverse/client/src";
+import { FooComponent } from "../components/foo";
+
+const searchAnyEntity = (world: IWorld, c: Component): number => {
+  const query = defineQuery([c]);
+  const eids = query(world);
+  removeQuery(world, query);
+  return eids.length > 0 ? eids[0] : NULL_EID;
+};
+
+const func = (world: IWorld): void => {
+  const eid = searchAnyEntity(world, FooComponent);
+  if (eid !== NULL_EID) {
+    // If found
+  } else {
+    // If not found
+  }
+};
+```
+
+And built-in `NullComponent` component should be added only to that world-first
+entity. This `NullComponent` can be used for letting a system process something
+only in the first call by using bitECS `defineQuery()` and `enterQuery()`.
+
+```typescript
+import {
+  defineQuery,
+  enterQuery,
+  IWorld
+} from "bitecs";
+import { NullComponent } from "@tiny-web-metaverse/client/src";
+
+const initializeQuery = enterQuery(defineQuery([NullComponent]));
+
+export const barSystem = (world: IWorld): void => {
+  initializeQuery(world).forEach(() => {
+    // This code is only executed once, the first time the system is called.
+  });
+};
+```
+
+## Creating custom addons
+
+See [the Readme of addons package](../addons).
+
+## User app examples
+
+See [the examples package](../examples) for a more practical example.
+
+### Minimal User app
+
+This minimal user app example shows how to instanciate `App` and start it.
+Note that nothing is rendered because of no renderable objects in the world.
 
 ```typescript
 // src/app.ts
+
 import { App } from "@tiny-web-metaverse/client/src";
 
 const roomId = '1234';
@@ -1221,53 +1304,14 @@ document.body.appendChild(canvas);
 app.start();
 ```
 
-### Custom addons
+### Avatar
 
-```typescript
-// src/components/foo
+This is a very basic example to handle avatars. 
 
-import { defineComponent, Types } from "bitecs";
-
-export const FooComponent = defineComponent({
-  data: Types.f32
-});
-
-// src/systems/foo.ts
-
-import { defineQuery } from "bitecs";
-import { FooComponent } from "../components/foo";
-
-const fooQuery = defineQuery([FooComponent]);
-
-export const fooSystem = (world: IWorld): void => {
-  fooQuery(world).forEach(eid => {
-    FooComponent.data[eid] += 1.0;
-  });
-};
-
-// src/app.ts
-
-import { addComponent, addEntity } from "bitecs";
-import { App, SystemOrder } from "@tiny-web-metaverse/client/src";
-import { FooComponent } from "./components/foo";
-import { fooSystem } from "./systems/foo";
-
-const roomId = '1234';
-const canvas = document.createElement('canvas');
-
-const app = new App({ canvas, roomId });
-document.body.appendChild(canvas);
-
-app.registerSystem(fooSystem, SystemOrder.BeforeMatricesUpdate);
-
-const eid = addEntity(world);
-addComponent(world, FooComponent, eid);
-FooComponent.data[eid] = 0.0;
-
-app.start();
-```
-
-### Example App - Avatar
+- An avatar appears as a sphere object in the scene
+- Local avatar is moved with the arrow keys
+- Avatar entities are networked entities so the both Local and Remote avatars
+are shown in the scene
 
 ```typescript
 // src/prefabs/avatar.ts
@@ -1398,7 +1442,10 @@ addComponent(world, AudioDestination, avatarEid);
 app.start();
 ```
 
-### Example - with existing addons
+### Avatar with existing addons
+
+This example is based on the above example. Instead of implementing a custom
+avatar key controls system, it imports controls addons and set them up.
 
 ```typescript
 // src/app.ts
