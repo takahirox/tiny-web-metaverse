@@ -973,6 +973,9 @@ client. When data is received, the system reflects the data to the networked
 components. Because data is only sent periodically, the system may interpolate
 the data before reflecting it.
 
+Network entities are bound to a client that created them. If a client leaves
+the room, the network entities created by the client will be removed.
+
 You need to do the following steps to create networked components and entities.
 
 - Define networked components
@@ -1106,7 +1109,7 @@ And then you have to register the functions with the built-in
 and the networked component.
 
 The second argument is a unique key string within the application that
-identifies this mapping.
+identifies this mapping. This key is used in built-in network systems.
 
 The third and fourth arguments specify a networked component and functions
 for mapping. These functions must be contained within an object that provides
@@ -1125,44 +1128,77 @@ registerSerializers(world, 'foo', NetworkedFoo, fooSerializers);
 
 ### Prefab
 
-Next, you have to write a prefab. Prefab is a 
+Next, you have to write a prefab. Prefab is a function that takes bitECS `world`
+and an optional parameter, and creates an entity with preset components. Prefab
+may be said an entity template function.
+
+A networked entity is created from a prefab. Networked components for a
+networked entity must be set up in a prefab.
 
 ```typescript
-// src/prefabs/foo
+// src/prefabs/foo.ts
+
 import {
   addComponent,
   addEntity,
   IWorld
 } from "bitecs";
-import { NetworkedPosition } from "../components/networked_position";
-import { FooComponent, FooProxy } from "../components/foo";
+import { FooComponent, NetworkedFoo } from "../components/foo";
 
-export const SpherePrefab = (world: IWorld): number => {
+export const FooPrefab = (world: IWorld, params: { data: number }): number => {
   const eid = addEntity(world);
 
   addComponent(world, FooComponent, eid);
-  FooProxy.get(eid).allocate(fooData);
+  FooComponent.data[eid] = params.data;
+  addComponent(world, NetworkedFoo, eid);
 
   return eid;
 };
 ```
 
-### createNetworkedEntity()
+Similar to serializers, prefab have to be registered with the built-in
+`registerPrefab()` function.
+
+The second argument is a unique key string within the application that
+identifies this prefab. This key is used when creating a networked entity.
+
+The third argument specifies a prefab to register.
 
 ```typescript
-const eid = createNetworkedEntity(world, NetworkedType.Local, 'local');
+import { registerPrefab } from "@tiny-web-metaverse/client/src";
+import { NetworkedFoo } from "../components/networked_position";
+import { fooSerializers } from "../serializers/foo";
+
+registerPrefab(world, 'foo', FooPrefab);
 ```
 
-NetworkedType
-- Local:
-- Remote:
-- Shared:
+### createNetworkedEntity()
 
-### Networked Components
+The set up for networked entity creation has been done. The last thing you
+have to do is create networked entities.
 
-- Local
-- Remote
-- Shared
+You can create a networked entity with the built-in `createNetworkedEntity()`.
+
+The second argument specifies the network type with the built-in `NetworkedType`
+enum, `Local` or `Shared`. `Remote` entities creation is fired from a remote
+client so they are created in built-in network systems.
+`createNetworkedEntity()` is only for `Local` or `Shared` networked entities.
+
+The third argument is a registered prefab key used to create a networked
+entity from.
+
+```typescript
+import {
+  createNetworkedEntity,
+  NetworkedType
+} from "@tiny-web-metaverse/client/src";
+
+const eid = createNetworkedEntity(world, NetworkedType.Local, 'foo');
+```
+
+Networked entities have the built-in `Networked` component. And also they have
+either `Local`, `Remote`, or `Shared` built-in component corresponding to
+network type.
 
 ## Utilities
 
