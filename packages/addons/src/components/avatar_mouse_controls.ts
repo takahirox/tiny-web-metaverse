@@ -1,5 +1,5 @@
 import { defineComponent } from "bitecs";
-import { NULL_EID } from "../common";
+import { NULL_EID } from "@tiny-web-metaverse/client/src";
 
 export const AvatarMouseControls = defineComponent();
 

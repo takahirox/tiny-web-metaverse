@@ -85,18 +85,6 @@ export declare class AudioSourceProxy {
 }
 export declare const AudioDestination: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare const Avatar: import("bitecs").ComponentType<import("bitecs").ISchema>;
-export declare const AvatarMouseControls: import("bitecs").ComponentType<import("bitecs").ISchema>;
-export declare class AvatarMouseControlsProxy {
-	private static instance;
-	private eid;
-	private map;
-	private constructor();
-	static get(eid: number): AvatarMouseControlsProxy;
-	allocate(): void;
-	free(): void;
-	get enabled(): boolean;
-	set enabled(value: boolean);
-}
 export declare const BVHGenerator: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare const HasBVH: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare const PerspectiveCameraComponent: import("bitecs").ComponentType<import("bitecs").ISchema>;
@@ -1051,8 +1039,6 @@ export declare const scaleSerializers: {
 	serializer: (world: IWorld, eid: number) => SerializedScale;
 };
 export declare const resumeAudioContextSystem: (world: IWorld) => void;
-export declare const avatarKeyControlsSystem: (world: IWorld) => void;
-export declare const avatarMouseControlsSystem: (world: IWorld) => void;
 export declare const generateBVHSystem: (world: IWorld) => void;
 export declare const canvasSystem: (world: IWorld) => void;
 export declare const entityObject3DSystem: (world: IWorld) => void;

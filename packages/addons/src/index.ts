@@ -1,3 +1,4 @@
+export * from "./components/avatar_mouse_controls";
 export * from "./components/billboard";
 export * from "./components/image";
 export * from "./components/loading_object";
@@ -11,6 +12,8 @@ export * from "./components/xr_controller_ray";
 
 export * from "./serializations/video";
 
+export * from "./systems/avatar_key_controls";
+export * from "./systems/avatar_mouse_controls";
 export * from "./systems/avatar_virtual_joystick_controls";
 export * from "./systems/billboard";
 export * from "./systems/gltf_mixer_animation";

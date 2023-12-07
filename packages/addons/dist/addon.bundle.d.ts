@@ -4,6 +4,18 @@ import { IWorld } from 'bitecs';
 import { AnimationMixer, Group, Line } from 'three';
 import { Text as TroikaText } from 'troika-three-text';
 
+export declare const AvatarMouseControls: import("bitecs").ComponentType<import("bitecs").ISchema>;
+export declare class AvatarMouseControlsProxy {
+	private static instance;
+	private eid;
+	private map;
+	private constructor();
+	static get(eid: number): AvatarMouseControlsProxy;
+	allocate(): void;
+	free(): void;
+	get enabled(): boolean;
+	set enabled(value: boolean);
+}
 export declare const Billboard: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare const ImageComponent: import("bitecs").ComponentType<import("bitecs").ISchema>;
 export declare class ImageProxy {
@@ -168,6 +180,8 @@ export declare const videoSerializers: {
 	networkDeserializer: (world: IWorld, eid: number, data: SerializedVideo, updatedAt: number) => void;
 	serializer: (world: IWorld, eid: number) => SerializedVideo;
 };
+export declare const avatarKeyControlsSystem: (world: IWorld) => void;
+export declare const avatarMouseControlsSystem: (world: IWorld) => void;
 export declare const avatarVirtualJoystickSystem: (world: IWorld) => void;
 export declare const billboardSystem: (world: IWorld) => void;
 export declare const gltfMixerAnimationSystem: (world: IWorld) => void;

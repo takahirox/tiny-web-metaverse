@@ -1,13 +1,15 @@
 import { addComponent, defineQuery, IWorld, removeComponent } from "bitecs";
-import { Avatar } from "../components/avatar";
-import { KeyEvent, KeyEventProxy, KeyEventType } from "../components/keyboard";
 import {
+  Avatar,
+  KeyEvent,
+  KeyEventProxy,
+  KeyEventType,
   LinearMoveBackward,
   LinearMoveForward,
   LinearMoveLeft,
-  LinearMoveRight
-} from "../components/linear_move";
-import { Local } from "../components/network";
+  LinearMoveRight,
+  Local
+} from "@tiny-web-metaverse/client/src";
 
 const eventQuery = defineQuery([
   Avatar,

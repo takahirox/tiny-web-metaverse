@@ -3,7 +3,6 @@ export * from "./common";
 
 export * from "./components/audio_effect";
 export * from "./components/avatar";
-export * from "./components/avatar_mouse_controls";
 export * from "./components/bvh";
 export * from "./components/camera";
 export * from "./components/canvas";
@@ -46,8 +45,6 @@ export * from "./serializations/mixer_animation";
 export * from "./serializations/transform";
 
 export * from "./systems/audio_context";
-export * from "./systems/avatar_key_controls";
-export * from "./systems/avatar_mouse_controls";
 export * from "./systems/bvh";
 export * from "./systems/canvas";
 export * from "./systems/entity_object3d";

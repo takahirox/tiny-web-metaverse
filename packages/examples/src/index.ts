@@ -5,6 +5,10 @@ import {
 import { AmbientLight } from "three";
 import {
   addXRControllerRayComponent,
+  AvatarMouseControls,
+  AvatarMouseControlsProxy,
+  avatarKeyControlsSystem,
+  avatarMouseControlsSystem,
   avatarVirtualJoystickSystem,
   billboardSystem,
   clearVirtualJoystickEventSystem,
@@ -130,6 +134,8 @@ const run = async (): Promise<void> => {
   app.registerSystem(gltfMixerAnimationSystem, SystemOrder.Setup + 1);
   app.registerSystem(lazilyUpdateVideoStateSystem, SystemOrder.Setup + 1);
 
+  app.registerSystem(avatarKeyControlsSystem, SystemOrder.BeforeMatricesUpdate);
+  app.registerSystem(avatarMouseControlsSystem, SystemOrder.BeforeMatricesUpdate);
   app.registerSystem(aiAvatarSystem, SystemOrder.BeforeMatricesUpdate);
   app.registerSystem(updateJoinDialogSystem, SystemOrder.BeforeMatricesUpdate);
   app.registerSystem(updateSidebarSystem, SystemOrder.BeforeMatricesUpdate);
@@ -171,7 +177,10 @@ const run = async (): Promise<void> => {
   const avatarEid = createNetworkedEntity(world, NetworkedType.Local, 'avatar');
   EntityObject3DProxy.get(avatarEid).root.position.set(0.0, 0.75, 2.0);
   addComponent(world, KeyEventListener, avatarEid);
+  addComponent(world, MouseButtonEventListener, avatarEid);
   addComponent(world, AudioDestination, avatarEid);
+  addComponent(world, AvatarMouseControls, avatarEid);
+  AvatarMouseControlsProxy.get(avatarEid).allocate();
 
   const aiAvatarCommandEid = addEntity(world);
   addComponent(world, AIAvatarCommand, aiAvatarCommandEid);

@@ -23,10 +23,6 @@ import {
   AudioContextProxy,
   AudioContextSuspended
 } from "./components/audio_effect";
-import {
-  AvatarMouseControls,
-  AvatarMouseControlsProxy
-} from "./components/avatar_mouse_controls";
 import { Canvas, CanvasProxy } from "./components/canvas";
 import {
   FpsCamera,
@@ -36,7 +32,6 @@ import {
 } from "./components/camera";
 import {
   CurrentMousePosition,
-  MouseButtonEventListener,
   MouseMoveEventListener,
   MousePosition,
   MousePositionProxy,
@@ -128,8 +123,6 @@ import {
 import { mixerAnimationSerializers } from "./serializations/mixer_animation";
 
 import { resumeAudioContextSystem } from "./systems/audio_context";
-import { avatarKeyControlsSystem } from "./systems/avatar_key_controls";
-import { avatarMouseControlsSystem } from "./systems/avatar_mouse_controls";
 import { generateBVHSystem } from "./systems/bvh";
 import { canvasSystem } from "./systems/canvas";
 import { entityObject3DSystem } from "./systems/entity_object3d";
@@ -332,8 +325,6 @@ export class App {
     this.registerSystem(selectSystem, SystemOrder.BeforeMatricesUpdate);
     this.registerSystem(grabSystem, SystemOrder.BeforeMatricesUpdate);
     this.registerSystem(grabbedObjectsRayTrackSystem, SystemOrder.BeforeMatricesUpdate);
-    this.registerSystem(avatarKeyControlsSystem, SystemOrder.BeforeMatricesUpdate);
-    this.registerSystem(avatarMouseControlsSystem, SystemOrder.BeforeMatricesUpdate);
 
     this.registerSystem(fpsCameraSystem, SystemOrder.MatricesUpdate - 1);
     this.registerSystem(networkSendSystem, SystemOrder.MatricesUpdate - 1);
@@ -521,11 +512,6 @@ export class App {
     TouchPositionProxy.get(touchPositionEid).allocate();
     addComponent(this.world, TouchEventListener, touchPositionEid);
     addComponent(this.world, TouchMoveEventListener, touchPositionEid);
-
-    const avatarMouseControlsEid = addEntity(this.world);
-    addComponent(this.world, AvatarMouseControls, avatarMouseControlsEid);
-    AvatarMouseControlsProxy.get(avatarMouseControlsEid).allocate();
-    addComponent(this.world, MouseButtonEventListener, avatarMouseControlsEid);
 
     const canvasEid = addEntity(this.world);
     addComponent(this.world, Canvas, canvasEid);
