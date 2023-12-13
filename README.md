@@ -143,7 +143,7 @@ This project consists of the sub projects. See `packages` directory.
 
 ## How to create your application
 
-See [the Readme of Client](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/client)
+See [the Getting started document](https://github.com/takahirox/tiny-web-metaverse/blob/main/docs/development/getting_started.md).
 
 ## How to build
 
