@@ -341,7 +341,7 @@ import {
 } from "@tiny-web-metaverse/client/src";
 
 const sceneAssetUrl = 'assets/scene.glb';
-const avatarAssetUrl = 'assets/Duck.gltf';
+const avatarAssetUrl = 'assets/avatar.glb';
 
 const roomId = '1234';
 const canvas = document.createElement('canvas');
@@ -422,7 +422,7 @@ import {
 } from "@tiny-web-metaverse/client/src";
 
 const sceneAssetUrl = 'assets/scene.glb';
-const avatarAssetUrl = 'assets/Duck.gltf';
+const avatarAssetUrl = 'assets/avatar.glb';
 
 const roomId = '1234';
 const canvas = document.createElement('canvas');
@@ -506,7 +506,7 @@ import {
 } from "@tiny-web-metaverse/client/src";
 
 const sceneAssetUrl = 'assets/scene.glb';
-const avatarAssetUrl = 'assets/Duck.gltf';
+const avatarAssetUrl = 'assets/avatar.glb';
 
 const roomId = '1234';
 const canvas = document.createElement('canvas');
