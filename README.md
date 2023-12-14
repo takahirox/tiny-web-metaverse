@@ -1,5 +1,7 @@
 # Tiny Web Metaverse
 
+[![Latest NPM release](https://img.shields.io/npm/v/@tiny-web-metaverse/client.svg)](https://www.npmjs.com/package/@tiny-web-metaverse/client)
+
 Tiny Web Metaverse is a Web-based multi-user 3D virtual space framework with
 high flexibility and extensibility. It is built on web standards, making it
 familiar and easy to use for developers with Web development experience.
@@ -133,13 +135,13 @@ Database:
 
 This project consists of the sub projects. See `packages` directory.
 
-* [addons](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/addons): Addons for Client
-* [client](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/client): Client
-* [examples](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/examples): Demo
-* [state_client](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/state_client): Client of State server
-* [state_server](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/state_server): State server
-* [stream_client](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/stream_client): Client of Stream server
-* [stream_server](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/stream_server): Stream server
+* [addons](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/addons): [![Latest addons NPM release](https://img.shields.io/npm/v/@tiny-web-metaverse/addons.svg)](https://www.npmjs.com/package/@tiny-web-metaverse/addons) Addons for Client
+* [client](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/client): [![Latest client NPM release](https://img.shields.io/npm/v/@tiny-web-metaverse/client.svg)](https://www.npmjs.com/package/@tiny-web-metaverse/client) Client
+* [examples](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/examples): [![Latest examples NPM release](https://img.shields.io/npm/v/@tiny-web-metaverse/examples.svg)](https://www.npmjs.com/package/@tiny-web-metaverse/examples) Demo
+* [state_client](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/state_client): [![Latest state_client NPM release](https://img.shields.io/npm/v/@tiny-web-metaverse/state_client.svg)](https://www.npmjs.com/package/@tiny-web-metaverse/state_client) Client of State server
+* [state_server](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/state_server): [![Latest state_server NPM release](https://img.shields.io/npm/v/@tiny-web-metaverse/state_server.svg)](https://www.npmjs.com/package/@tiny-web-metaverse/state_server) State server
+* [stream_client](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/stream_client): [![Latest stream_client NPM release](https://img.shields.io/npm/v/@tiny-web-metaverse/stream_client.svg)](https://www.npmjs.com/package/@tiny-web-metaverse/stream_client) Client of Stream server
+* [stream_server](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/stream_server): [![Latest stream_server NPM release](https://img.shields.io/npm/v/@tiny-web-metaverse/stream_server.svg)](https://www.npmjs.com/package/@tiny-web-metaverse/stream_server) Stream server
 
 ## How to create your application
 
