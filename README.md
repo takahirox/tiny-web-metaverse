@@ -2,9 +2,10 @@
 
 [![Latest NPM release](https://img.shields.io/npm/v/@tiny-web-metaverse/client.svg)](https://www.npmjs.com/package/@tiny-web-metaverse/client)
 
-Tiny Web Metaverse is a Web-based multi-user 3D virtual space framework with
-high flexibility and extensibility. It is built on web standards, making it
-familiar and easy to use for developers with Web development experience.
+Tiny Web Metaverse is a Web-based multi-user 3D virtual space lightweight
+framework with high flexibility and extensibility. It is built on web
+standards, making it familiar and easy to use for developers with Web
+development experience.
 
 Tiny Web Metaverse adopts an ECS architecture. This architecture makes it
 easy to add or modify features without having to modify existing code.
