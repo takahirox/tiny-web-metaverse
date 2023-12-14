@@ -143,9 +143,12 @@ This project consists of the sub projects. See `packages` directory.
 * [stream_client](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/stream_client): [![Latest stream_client NPM release](https://img.shields.io/npm/v/@tiny-web-metaverse/stream_client.svg)](https://www.npmjs.com/package/@tiny-web-metaverse/stream_client) Client of Stream server
 * [stream_server](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/stream_server): [![Latest stream_server NPM release](https://img.shields.io/npm/v/@tiny-web-metaverse/stream_server.svg)](https://www.npmjs.com/package/@tiny-web-metaverse/stream_server) Stream server
 
-## How to create your application
+## Documents
 
-See [the Getting started document](https://github.com/takahirox/tiny-web-metaverse/blob/main/docs/development/getting_started.md).
+* [Getting Started](https://github.com/takahirox/tiny-web-metaverse/blob/main/docs/development/getting_started.md)
+* [Client Core concept](https://github.com/takahirox/tiny-web-metaverse/blob/main/packages/client/Readme.md)
+
+We strongly recommend starting with the Getting Started documentation.
 
 ## How to build
 
