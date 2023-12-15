@@ -148,6 +148,7 @@ This project consists of the sub projects. See `packages` directory.
 
 * [Getting Started](https://github.com/takahirox/tiny-web-metaverse/blob/main/docs/development/getting_started.md)
 * [Client Core concept](https://github.com/takahirox/tiny-web-metaverse/blob/main/packages/client/Readme.md)
+* [Addons](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/addons)
 
 We strongly recommend starting with the Getting Started documentation.
 

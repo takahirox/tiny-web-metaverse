@@ -1,5 +1,7 @@
 # Tiny Web Metaverse Client core concept
 
+[![Latest NPM release](https://img.shields.io/npm/v/@tiny-web-metaverse/client.svg)](https://www.npmjs.com/package/@tiny-web-metaverse/client)
+
 This document describes the Tiny Web Metaverse Client core concept needed for
 Client or Addons development.
 
