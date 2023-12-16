@@ -37,6 +37,13 @@ Built on this framework, this demo offers the following features:
 <img src="./screenshots/screenshot_mobile_vr.png" width="480" /><br />
 <img src="./screenshots/screenshot_mobile_ar.png" width="480" />
 
+## Demo videos
+
+* [Text to 3D model AI + AR/VR](https://twitter.com/superhoge/status/1720274165125840997)
+* [AI chatbot](https://twitter.com/superhoge/status/1723184343542317418)
+* [Realtime Image to Image AI](https://twitter.com/superhoge/status/1730847570422100179)
+* [Realtime texture generation with Text to Texture AI](https://twitter.com/superhoge/status/1735887721644888268)
+
 ## What this framework provides
 
 This framework makes it easy to create and deploy multiplayer virtual 3D space
