@@ -43,6 +43,7 @@ Built on this framework, this demo offers the following features:
 * [AI chatbot](https://twitter.com/superhoge/status/1723184343542317418)
 * [Realtime Image to Image AI](https://twitter.com/superhoge/status/1730847570422100179)
 * [Realtime texture generation with Text to Texture AI](https://twitter.com/superhoge/status/1735887721644888268)
+* [Canvas to Image AI into 3D scene](https://twitter.com/superhoge/status/1736174055315947677)
 
 ## What this framework provides
 
