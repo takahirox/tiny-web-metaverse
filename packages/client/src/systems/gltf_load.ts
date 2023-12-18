@@ -12,6 +12,7 @@ import {
   GltfLoaderProxy
 } from "../components/gltf";
 import { Loading } from "../components/load";
+import { Spawned } from "../components/spawn";
 import { addObject3D } from "../utils/entity_object3d";
 import { loadGltfBitecs } from "../utils/bitecs_three";
 
@@ -24,6 +25,10 @@ function* load(world: IWorld, eid: number): Generator {
   const scene = gltf.scene || gltf.scenes[0];
 
   addObject3D(world, scene, eid);
+
+  if (!hasComponent(world, Spawned, eid)) {
+    addComponent(world, Spawned, eid);
+  }
 }
 
 const loaderQuery = defineQuery([GltfLoader]);

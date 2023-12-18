@@ -30,6 +30,7 @@ export * from "./components/renderer";
 export * from "./components/room_id";
 export * from "./components/scene";
 export * from "./components/serializer";
+export * from "./components/spawn";
 export * from "./components/stream";
 export * from "./components/time";
 export * from "./components/timestamp";

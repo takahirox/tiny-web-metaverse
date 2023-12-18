@@ -660,6 +660,7 @@ export declare class ComponentKeysProxy {
 	getKey(component: IComponent): string;
 	hasKey(component: IComponent): boolean;
 }
+export declare const Spawned: import("bitecs").ComponentType<import("bitecs").ISchema>;
 declare class StreamAdapter {
 	private device;
 	private socket;

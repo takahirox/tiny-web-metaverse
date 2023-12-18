@@ -33,6 +33,7 @@ import {
   selectedEventClearSystem,
   SelectedEventListener,
   selectSystem,
+  spawnAnimationSystem,
   TextChat,
   textChatUISystem,
   textSystem,
@@ -178,6 +179,7 @@ const run = async (): Promise<void> => {
   app.registerSystem(textSystem, SystemOrder.BeforeMatricesUpdate);
   app.registerSystem(grabbedObjectsRayTrackSystem, SystemOrder.BeforeMatricesUpdate);
 
+  app.registerSystem(spawnAnimationSystem, SystemOrder.MatricesUpdate - 1);
   app.registerSystem(fpsCameraSystem, SystemOrder.MatricesUpdate - 1);
   app.registerSystem(nametagSystem, SystemOrder.MatricesUpdate - 1);
   app.registerSystem(billboardSystem, SystemOrder.MatricesUpdate - 1);

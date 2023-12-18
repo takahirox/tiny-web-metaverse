@@ -11,7 +11,8 @@ import {
   InScene,
   NetworkedPosition,
   NetworkedQuaternion,
-  NetworkedScale  
+  NetworkedScale,
+  Spawned
 } from "@tiny-web-metaverse/client/src";
 
 export const AvatarPrefab = (world: IWorld): number => {
@@ -47,6 +48,8 @@ export const AvatarPrefab = (world: IWorld): number => {
   const nametagEid = addEntity(world);
   addNametagComponent(world, nametagEid, eid);
   addComponent(world, InScene, nametagEid);
+
+  addComponent(world, Spawned, eid);
 
   return eid;
 };

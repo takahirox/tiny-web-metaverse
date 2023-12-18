@@ -32,6 +32,7 @@ export * from "./systems/loading_object";
 export * from "./systems/mouse_interaction_trigger";
 export * from "./systems/nametag";
 export * from "./systems/select";
+export * from "./systems/spawn_animation";
 export * from "./systems/text";
 export * from "./systems/touch_interaction_trigger";
 export * from "./systems/video";

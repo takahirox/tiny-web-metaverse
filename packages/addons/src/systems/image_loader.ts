@@ -3,6 +3,7 @@ import {
   defineQuery,
   enterQuery,
   exitQuery,
+  hasComponent,
   IWorld,
   removeComponent
 } from "bitecs";
@@ -14,7 +15,11 @@ import {
   MeshBasicMaterial,
   PlaneGeometry
 } from "three";
-import { addObject3D, toGenerator } from "@tiny-web-metaverse/client/src";
+import {
+  addObject3D,
+  Spawned,
+  toGenerator
+} from "@tiny-web-metaverse/client/src";
 import {
   ImageComponent,
   ImageLoader,
@@ -57,6 +62,10 @@ function* load(world: IWorld, eid: number): Generator<void, void> {
 
   const imageObject = createImageObject(image);
   addObject3D(world, imageObject, eid);
+
+  if (!hasComponent(world, Spawned, eid)) {
+    addComponent(world, Spawned, eid);
+  }
 }
 
 const loaderQuery = defineQuery([ImageLoader]);

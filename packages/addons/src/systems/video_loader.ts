@@ -3,6 +3,7 @@ import {
   defineQuery,
   enterQuery,
   exitQuery,
+  hasComponent,
   IWorld,
   removeComponent
 } from "bitecs";
@@ -13,7 +14,11 @@ import {
   PlaneGeometry,
   VideoTexture
 } from "three";
-import { addObject3D, toGenerator } from "@tiny-web-metaverse/client/src";
+import {
+  addObject3D,
+  Spawned,
+  toGenerator
+} from "@tiny-web-metaverse/client/src";
 import {
   Video,
   VideoLoader,
@@ -69,6 +74,10 @@ function* load(world: IWorld, eid: number): Generator<void, void> {
 
   const videoObject = createVideoObject(video);
   addObject3D(world, videoObject, eid);
+
+  if (!hasComponent(world, Spawned, eid)) {
+    addComponent(world, Spawned, eid);
+  }
 }
 
 const loaderQuery = defineQuery([VideoLoader]);

@@ -228,6 +228,7 @@ export declare const mouseInteractionTriggerSystem: (world: IWorld) => void;
 export declare const nametagSystem: (world: IWorld) => void;
 export declare const selectSystem: (world: IWorld) => void;
 export declare const selectedEventClearSystem: (world: IWorld) => void;
+export declare const spawnAnimationSystem: (world: IWorld) => void;
 export declare const textSystem: (world: IWorld) => void;
 export declare const touchInteractionTriggerSystem: (world: IWorld) => void;
 export declare const videoSystem: (world: IWorld) => void;
