@@ -295,8 +295,8 @@ export class App {
     this.registerSystem(canvasSystem, SystemOrder.Setup);
     this.registerSystem(prefabsSystem, SystemOrder.Setup);
     this.registerSystem(rendererSystem, SystemOrder.Setup);
-    this.registerSystem(entityObject3DSystem, SystemOrder.Setup);
     this.registerSystem(sceneSystem, SystemOrder.Setup);
+    this.registerSystem(entityObject3DSystem, SystemOrder.Setup);
     this.registerSystem(perspectiveCameraSystem, SystemOrder.Setup);
     this.registerSystem(gltfLoadSystem, SystemOrder.Setup);
     this.registerSystem(gltfSystem, SystemOrder.Setup);
