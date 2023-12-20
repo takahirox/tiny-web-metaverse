@@ -39,6 +39,11 @@ Built on this framework, this demo offers the following features:
 
 ## Demo videos
 
+One of the features of Tiny Web Metaverse is that it is easy to add features
+due to its high extensibility. For example, it is easy to add features that
+leverage generative AI, which is rapidly growing recently. I have actually
+added some features locally and recorded videos. You can watch them here.
+
 * [Text to 3D model AI + AR/VR](https://twitter.com/superhoge/status/1720274165125840997)
 * [AI chatbot](https://twitter.com/superhoge/status/1723184343542317418)
 * [Realtime Image to Image AI](https://twitter.com/superhoge/status/1730847570422100179)
