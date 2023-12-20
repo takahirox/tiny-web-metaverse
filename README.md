@@ -53,8 +53,7 @@ added some features locally and recorded videos. You can watch them here.
 ## What this framework provides
 
 This framework makes it easy to create and deploy multiplayer virtual 3D space
-web apps that reflect user ideas in a free way, with its ease of adding custom
-features and self-hosting.
+web apps that reflect user ideas in a free way.
 
 The advent of [WebGL](https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API)
 and [WebGPU](https://developer.mozilla.org/en-US/docs/Web/API/WebGPU_API), as
@@ -65,8 +64,8 @@ easier in browsers. Also, [WebXR](https://developer.mozilla.org/en-US/docs/Web/A
 VR/AR, and real-time network processing.
 
 Many people are interested in developing multiplayer virtual 3D space web apps
-that could be used to create applications that realize new forms of human
-interaction, such as open online games and virtual events.
+that could realize new forms of human interaction, such as open online games
+and virtual events.
 
 However, developing them can be surprisingly laborious. You need to develop
 both the client and the server, and you need knowledge of hosting and Web APIs.
@@ -75,17 +74,17 @@ cumbersome.
 
 There are ways to use existing platforms to create custom content, but they can
 be restrictive, as custom logic can be difficult to add, and you may need to
-register with the platform.
+register with the platforms.
 
 To address these challenges, I created a framework that is easy to modify, extend,
 and self-host.
 
-The framework handles the cumbersome processing of the above Web APIs,so you can
-focus on your own custom logic and content creation. It is also built on
-technologies that are commonly used in web app development, such as
+The framework handles the cumbersome processing of the Web APIs and networking,
+so you can focus on your own custom logic and content creation. It is also
+built on technologies that are commonly used in web app development, such as
 [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript) and
-[TypeScript](https://www.typescriptlang.org/), so you can develop with a familiar
-development environment and workflow.
+[TypeScript](https://www.typescriptlang.org/), so you can develop with a
+familiar development environment and workflow.
 
 ## Features
 
