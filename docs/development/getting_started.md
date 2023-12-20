@@ -1,4 +1,4 @@
-# Application Creation with Tiny Web Metaverse
+# Tiny Web Metaverse Getting Started
 
 The goal of this document is to help readers understand how to develop Tiny
 Web Metaverse applications and run them locally.
@@ -56,7 +56,7 @@ $ mix ecto.migrate
 $ mix phx.server
 ```
 
-## Application file and directory structure
+## Application files and directory structure
 
 The following directory structure and configuration files are assumed for creating
 an application. We assume that you will use [webpack](https://webpack.js.org/) as
@@ -242,18 +242,19 @@ Let's place a room object in the 3D scene. Tiny Web Metaverse has the ability
 to load [glTF](https://www.khronos.org/gltf/) files. Find a free glTF/glb file
 that looks like a room on the internet and save it as `assets/scene.glb`.
 
-Then update `src/index.ts` to write the code to place the object. Create a new
-Entity and add the `GltfLoader`, `InScene`, and `SceneObject` components. Set
-the path to the glb file to the `GltfLoaderProxy`. This will cause the built-in
-systems to load the glb file, parse the content, generate a Three.js objects,
-and add them to the Scene. Also create an entity and instance for light.
+Then update `src/index.ts` to add the code to place the object. Create a new
+Entity and add the built-in`GltfLoader`, `InScene`, and `SceneObject`
+components. Set the path to the glb file to the `GltfLoaderProxy`. This will
+drive the built-in systems to load the glb file, parse the content, generate
+a Three.js objects, and add them to the Scene. Also create an entity and
+instance for light.
 
 For more information on Entity, Component, ComponentProxy, and System refer to
 [the Client core concept document](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/client).
 
 Then rebuild with the `npm run build` command, start the server with the
-`npm run server` command, and access the application. The room object will be
-displayed.
+`npm run server` command, and access the application web page. The room object
+will be displayed.
 
 ```typescript
 // src/index.ts
@@ -282,12 +283,14 @@ document.body.appendChild(canvas);
 
 const world = app.getWorld();
 
+// Setup scene object
 const sceneObjectEid = addEntity(world);
 addComponent(world, InScene, sceneObjectEid);
 addComponent(world, SceneObject, sceneObjectEid);
 addComponent(world, GltfLoader, sceneObjectEid);
 GltfLoaderProxy.get(sceneObjectEid).allocate(sceneAssetUrl);
 
+// Setup light
 const light = new AmbientLight(0x888888);
 const lightEid = addEntity(world);
 addComponent(world, InScene, lightEid);
