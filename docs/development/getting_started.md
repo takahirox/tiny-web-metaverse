@@ -611,7 +611,7 @@ component and its Proxy. The size of the object can be controlled by Three.js's
 the scale value linearly to the specified value in the specified time by a
 built-in system.
 
-```typscript
+```typescript
 import {
   addComponent,
   defineQuery,
