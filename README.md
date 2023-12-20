@@ -37,7 +37,7 @@ Built on this framework, this demo offers the following features:
 <img src="./screenshots/screenshot_mobile_vr.png" width="480" /><br />
 <img src="./screenshots/screenshot_mobile_ar.png" width="480" />
 
-## Demo videos
+## AI Demo videos
 
 One of the features of Tiny Web Metaverse is that it is easy to add features
 due to its high extensibility. For example, it is easy to add features that
