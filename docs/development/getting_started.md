@@ -616,8 +616,7 @@ import {
   addComponent,
   defineQuery,
   enterQuery,
-  IWorld,
-  Not
+  IWorld
 } from "bitecs";
 import {
   EntityObject3D,
