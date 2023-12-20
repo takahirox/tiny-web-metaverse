@@ -566,6 +566,95 @@ for voice communications must be connected by issuing a request.
 
 See [the Stream server connection section in the Client core concept document](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/client#stream-server-connection).
 
+## Creating an addon
+
+Now, let's take a look at how to make an Addon, based on what I actually made.
+
+When using the built-in `GltfLoader`, a built-in system will load the glTF file,
+parse the content, generate Three.js objects, and place them in the 3D scene.
+However, the objects will suddenly appear in the 3D scene when they are placed,
+as shown in the screenshot, which may give a sudden impression. I thought that
+it would be better to make it appear more smoothly by adding some visual effects.
+
+```typescript
+import {
+  addComponent,
+  IWorld
+} from "bitecs";
+import {
+  GltfLoader,
+  GltfLoaderProxy
+} from "@tiny-web-metaverse/client/src";
+
+const addGltfObject = (world: IWorld, eid: number, url: string): void => {
+  addComponent(world, GltfLoader, eid);
+  GltfLoaderProxy.get(eid).allocate(url);
+};
+```
+
+<img src="../images/without_spawn_animation.gif" width="640">
+
+When looking at the code in the [client core](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/client),
+I noticed that the built-in `Spawned` component is added when a glTF object is
+added to an entity. I thought that if I wrote a system that would be fired
+when the `Spawned` component was added, I could give a visual effect when it
+appeared in the 3D scene.
+
+The bitECS `enterQuery` can be used to drive a system when a component is
+added. I wrote a system that gives a visual effect like something popping up
+by changing object's scale from small size to its normal size in a short period
+of time when the object is added to the 3D scene.
+
+You can access the object of an entity using the built-in `EntityObject3D`
+component and its Proxy. The size of the object can be controlled by Three.js's
+`Object3D.scale`. The built-in `LinearScale` component can be used to control
+the scale value linearly to the specified value in the specified time by a
+built-in system.
+
+```typscript
+import {
+  addComponent,
+  defineQuery,
+  enterQuery,
+  IWorld,
+  Not
+} from "bitecs";
+import {
+  EntityObject3D,
+  EntityObject3DProxy,
+  LinearScale,
+  Spawned
+} from "@tiny-web-metaverse/client/src";
+
+const enterSpawnedQuery = enterQuery(defineQuery([EntityObject3D, Spawned]));
+
+export const spawnAnimationSystem = (world: IWorld): void => {
+  enterSpawnedQuery(world).forEach(eid => {
+    const root = EntityObject3DProxy.get(eid).root;
+    addComponent(world, LinearScale, eid);
+    LinearScale.duration[eid] = 0.2;
+    LinearScale.targetX[eid] = root.scale.x;
+    LinearScale.targetY[eid] = root.scale.y;
+    LinearScale.targetZ[eid] = root.scale.z;
+    root.scale.set(0.1, 0.1, 0.1);
+  });
+};
+```
+
+I added this system to my `App`.
+
+```typescript
+app.registerSystem(spawnAnimationSystem, SystemOrder.MatricesUpdate - 1);
+```
+
+With this system, the object now appears as follows. Compared to the first one,
+it appears more smoothly thanks to the visual effect of popping up.
+
+<img src="../images/with_spawn_animation.gif" width="640">
+
+This addon is publicly available at [Addons package](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/addons),
+so you can also use it.
+
 ## More practical examples
 
 For more practical code examples, please refer to [the examples package](../../packages/examples).
