@@ -592,7 +592,7 @@ const addGltfObject = (world: IWorld, eid: number, url: string): void => {
 };
 ```
 
-<img src="../images/without_spawn_animation.gif" width="640">
+<img src="../images/without_spawn_animation.gif" width="320">
 
 When looking at the code in the [client core](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/client),
 I noticed that the built-in `Spawned` component is added when a glTF object is
@@ -650,7 +650,7 @@ app.registerSystem(spawnAnimationSystem, SystemOrder.MatricesUpdate - 1);
 With this system, the object now appears as follows. Compared to the first one,
 it appears more smoothly thanks to the visual effect of popping up.
 
-<img src="../images/with_spawn_animation.gif" width="640">
+<img src="../images/with_spawn_animation.gif" width="320">
 
 This addon is publicly available at [Addons package](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/addons),
 so you can also use it.
