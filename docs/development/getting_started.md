@@ -426,10 +426,10 @@ Rebuild and access the application. You will see an avatar in the room.
 ## Control an avatar
 
 Let's make the avatar movable. The system to move the avatar with the keyboard
-is available in the Addons, so import it. Also add the KeyEventListener
-component to the Entity of the Avatar for the system. The FPS camera system
-that follows the movement of the avatar is also available in the Addons, so
-use it as well.
+is available in the Addons package, so import and register it. Also add the
+built-in `Local` and `KeyEventListener` component to the avatar entity because
+the system requires. the FPS camera system that follows the movement of the
+avatar is also available in the Addons package, so let's use it as well.
 
 ```typescript
 // src/index.ts
@@ -509,9 +509,15 @@ avatar and camera using the arrow keys on the keyboard.
 As it is, the avatar is not synchronized over the network. Let's make it
 synchronized over the network.
 
-Define and register an Avatar prefab, and create a `NetworkedEntity` using the
-built-in `createNetworkedEntity()` function. `NetworkedEntities` are
-synchronized between local and remote clients.
+Define and register an Avatar prefab. Prefab is a template of Entity and it
+is used for Networked entities.
+
+And then create a Networked Entity by using the built-in
+`createNetworkedEntity()` function. Networked Entities are synchronized
+between local and remote clients.
+
+Please refer to [the Network sync section in the Client core concept document](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/client#network-sync)
+for the details of over network synchronization and how to set them up.
 
 ```typescript
 import {
@@ -566,6 +572,7 @@ const lightEid = addEntity(world);
 addComponent(world, InScene, lightEid);
 addObject3D(world, light, lightEid);
 
+// Define and register Avatar prefab
 const AvatarPrefab = (world: IWorld): number => {
   const eid = addEntity(world);
   addComponent(world, Avatar, eid);
@@ -580,6 +587,7 @@ const AvatarPrefab = (world: IWorld): number => {
 
 registerPrefab(world, 'avatar', AvatarPrefab);
 
+// Create a networked entity for avatar
 const avatarEid = createNetworkedEntity(world, NetworkedType.Local, 'avatar');
 EntityObject3DProxy.get(avatarEid).root.position.set(0.0, 0.75, 2.0);
 addComponent(world, KeyEventListener, avatarEid);
@@ -607,7 +615,13 @@ See [the Stream server connection section in the Client core concept document](h
 
 ## Creating an addon
 
-Now, let's take a look at how to make an Addon, based on what I actually made.
+One of the features of Tiny Web Metaverse is high extensibility. Framework
+users can easily add custom features by writing components, systems, and so on.
+A collection of components, systems, and others for a certain feature is called
+addon.
+
+Now, let's take a look at how to make a simple addon that is composed of only a
+single sytem, based on what I actually made.
 
 When using the built-in `GltfLoader`, a built-in system will load the glTF file,
 parse the content, generate Three.js objects, and place them in the 3D scene.
