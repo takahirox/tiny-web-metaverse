@@ -243,11 +243,19 @@ to load [glTF](https://www.khronos.org/gltf/) files. Find a free glTF/glb file
 that looks like a room on the internet and save it as `assets/scene.glb`.
 
 Then update `src/index.ts` to add the code to place the object. Create a new
-Entity and add the built-in`GltfLoader`, `InScene`, and `SceneObject`
-components. Set the path to the glb file to the `GltfLoaderProxy`. This will
-drive the built-in systems to load the glb file, parse the content, generate
-a Three.js objects, and add them to the Scene. Also create an entity and
-instance for light.
+Entity and add the built-in `GltfLoader`, `InScene`, and `SceneObject`
+components. Set the path to the glb file to the `GltfLoaderProxy`.
+
+`GltfLoader` component will drive the built-in systems to load the glb file,
+parse the content, generate a Three.js objects, and add them to the Scene.
+`GltfLoaderProxy` is used for assigning non-number value to `GltfLoader`
+component. `InScene` component will drive the built-in system to add the
+Three.js objects associated to the entity to the 3D scene. `SceneObject`
+component is for indicating that Three.js objects associated to the entity
+is scene objects and can be used for processing scene objects (or non-scene
+objects) in some systems.
+
+Similarly, create another entity and setup light.
 
 For more information on Entity, Component, ComponentProxy, and System refer to
 [the Client core concept document](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/client).
