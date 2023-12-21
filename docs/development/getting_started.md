@@ -251,18 +251,22 @@ parse the content, generate a Three.js objects, and add them to the Scene.
 `GltfLoaderProxy` is used for assigning non-number value to `GltfLoader`
 component. `InScene` component will drive the built-in system to add the
 Three.js objects associated to the entity to the 3D scene. `SceneObject`
-component is for indicating that Three.js objects associated to the entity
-is scene objects and can be used for processing scene objects (or non-scene
-objects) in some systems.
+component is for indicating that an entity is for scene object and can be
+used for finding scene object entities in systems.
 
-Similarly, create another entity and setup light.
+Similarly, create another entity and setup light. The built-in `addObject3D`
+utility function is for associating Three.js objects to an entity. The built-in
+glTF loading system also calls it inside.
 
-For more information on Entity, Component, ComponentProxy, and System refer to
-[the Client core concept document](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/client).
+`App.getWorld()` returns bitECS World instance that is used for managing
+Component or whatever bitECS resources.
+
+For more information on World, Entity, Component, ComponentProxy, and System
+refer to [the Client core concept document](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/client).
 
 Then rebuild with the `npm run build` command, start the server with the
-`npm run server` command, and access the application web page. The room object
-will be displayed.
+`npm run server` command, and access the application web page again. The room
+object will be displayed.
 
 ```typescript
 // src/index.ts
@@ -310,19 +314,42 @@ app.start();
 ## Add an Avatar to the Scene
 
 Next, let's display your avatar in the 3D scene. Find a glTF file for a
-character that is free to use, similar to the objects for the room, and save
+character that is free to use and, similar to the objects for the room, save
 the file as `assets/avatar.glb`.
 
-Create an entity for the avatar, add the appropriate components to load the
-glb file, and place the avatar object at `(0.0, 0.75, 2.0)`, and position
-the built-in camera well behind the avatar.
+Edit `src/index.ts` to create an entity for the avatar, add the appropriate
+components to load the glb file, and place the avatar object at
+`(0.0, 0.75, 2.0)`, and position the built-in camera well behind the avatar.
 
-`App.registerSystem()` is for registering a system. In this example two systems
-from [Addons](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/addons)
-that resize and recenter non-scene glTF objects are registered.
+The built-in `Avatar` component is, similar to `SceneObject` component, for
+indicating an entity is for avatar. 
+
+The built-in `EntityObject3D` component and its proxy `EntityObject3DProxy`
+are for accessing Three.js objects associated to an entity. The built-in
+glTF loading system adds `EntityObject3D` to an entity when Three.js objects
+are created from glTF content inside so you don't really need to explicilty
+add when loading glTF. But in this example we need to immediately access
+the position of the Three.js object after the entity creatino and setup then
+we explicitly add and initialize the component. Please refer to
+[the Client core concept](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/client#entityobject3d)
+document for the details.
+
+`App` constructor initializes a Three.js `PerspectiveCamera` object and
+associates it to an entity. To access this built-in camera entity, you can use
+the built-in `PerspectiveCameraComponent` component and bitECS query. Please
+refer to [the Client core concept](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/client#entityobject3d)
+and bitECS document for query.
 
 Addons are a collection of reusable components, systems, and other artifacts
-that can be imported and used by framework users.
+that can be imported and used by framework users. You can find useful addons at
+[the Addons package](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/addons).
+
+The origin point and size of glTF models are very vary. There are some addons
+for constantly manipulating glTF objects. In this example two systems from
+[the Addons package](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/addons)
+that resize and recenter non-scene glTF objects are registered. Registered
+systems run every animation frame. `App.registerSystem()` is for registering
+a system.
 
 ```typescript
 // src/index.ts
@@ -346,7 +373,6 @@ import {
   GltfLoader,
   GltfLoaderProxy,
   InScene,
-  Local,
   PerspectiveCameraComponent,
   SceneObject
 } from "@tiny-web-metaverse/client/src";
@@ -373,9 +399,9 @@ const lightEid = addEntity(world);
 addComponent(world, InScene, lightEid);
 addObject3D(world, light, lightEid);
 
+// Setup avatar
 const avatarEid = addEntity(world);
 addComponent(world, Avatar, avatarEid);
-addComponent(world, Local, avatarEid);
 addComponent(world, InScene, avatarEid);
 addComponent(world, GltfLoader, avatarEid);
 GltfLoaderProxy.get(avatarEid).allocate(avatarAssetUrl);
@@ -383,10 +409,12 @@ addComponent(world, EntityObject3D, avatarEid);
 EntityObject3DProxy.get(avatarEid).allocate();
 EntityObject3DProxy.get(avatarEid).root.position.set(0.0, 0.75, 2.0);
 
+// position the built-in camera well behind the avatar.
 defineQuery([PerspectiveCameraComponent])(world).forEach(eid => {
   EntityObject3DProxy.get(eid).root.position.set(0.0, 0.75, 6.0);
 });
 
+// Register glTF model resize and recenter addon systems
 app.registerSystem(gltfAssetResizeSystem, SystemOrder.Setup + 1);
 app.registerSystem(gltfAssetRecenterSystem, SystemOrder.Setup + 2);
 
