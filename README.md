@@ -142,7 +142,7 @@ Database:
 
 - Used by the state server to store object state
 
-<img src="./diagrams/overview.svg">
+<img src="./docs/diagrams/overview.svg">
 
 ## Sub-projects
 
