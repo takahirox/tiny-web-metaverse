@@ -5,7 +5,7 @@ Web Metaverse applications and run them locally.
 
 ## Client core concept
 
-Please refer to [the Client Core concept document](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/client)
+Please refer to [the Client Core concept document](./client_core_concept.md)
 as needed for a deeper understanding.
 
 ## Prerequisites

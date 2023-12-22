@@ -118,6 +118,7 @@ contribute to a virtual artwork or project.
 
 [Client:](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/client)
 
+- bieECS resource management
 - 3D graphics rendering using WebGL
 - VR/AR processing using WebXR, such as positional tracking
 - Network synchronization of object states with remote clients using WebSockets
@@ -159,7 +160,7 @@ This project consists of the sub projects. See `packages` directory.
 ## Documents
 
 * [Getting Started](https://github.com/takahirox/tiny-web-metaverse/blob/main/docs/development/getting_started.md)
-* [Client Core concept](https://github.com/takahirox/tiny-web-metaverse/blob/main/packages/client/Readme.md)
+* [Client Core concept](https://github.com/takahirox/tiny-web-metaverse/blob/main/docks/development/client_core_concept.md)
 * [Addons](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/addons)
 
 We strongly recommend starting with the Getting Started documentation.
