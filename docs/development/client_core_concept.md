@@ -1808,10 +1808,6 @@ addComponent(world, AudioDestination, avatarEid);
 app.start();
 ```
 
-## Built-in components
-
-T.B.D.
-
 ## Network sync internal
 
 T.B.D.

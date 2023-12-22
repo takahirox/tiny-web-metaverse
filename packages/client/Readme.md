@@ -30,3 +30,15 @@ $ npm run build
 
 [Client Core Concept](../../docs/development/client_core_concept.md) for a
 deeper understanding.
+
+## Built-in components
+
+T.B.D.
+
+## Built-in systems
+
+T.B.D.
+
+## Built-in utility functions
+
+T.B.D.
