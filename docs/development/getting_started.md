@@ -3,9 +3,9 @@
 The goal of this document is to help readers understand how to develop Tiny
 Web Metaverse applications and run them locally.
 
-## Client core concept
+## Client Core concept
 
-Please refer to [the Client Core concept document](./client_core_concept.md)
+Please refer to [the Client Core concept document](../client/core_concept.md)
 as needed for a deeper understanding.
 
 ## Prerequisites
@@ -262,7 +262,7 @@ glTF loading system also calls it inside.
 Component or whatever bitECS resources.
 
 For more information on World, Entity, Component, ComponentProxy, and System
-refer to [the Client core concept document](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/client).
+refer to [the Client Core concept document](../client/core_concept.md).
 
 Then rebuild with the `npm run build` command, start the server with the
 `npm run server` command, and access the application web page again. The room
@@ -331,13 +331,13 @@ are created from glTF content inside so you don't really need to explicilty
 add when loading glTF. But in this example we need to immediately access
 the position of the Three.js object after the entity creatino and setup then
 we explicitly add and initialize the component. Please refer to
-[the Client core concept](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/client#entityobject3d)
+[the Client Core concept](../client/core_concept.md#entityobject3d)
 document for the details.
 
 `App` constructor initializes a Three.js `PerspectiveCamera` object and
 associates it to an entity. To access this built-in camera entity, you can use
 the built-in `PerspectiveCameraComponent` component and bitECS query. Please
-refer to [the Client core concept](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/client#entityobject3d)
+refer to [the Client Core concept](../client/core_concept.md#entityobject3d)
 and bitECS document for query.
 
 Addons are a collection of reusable components, systems, and other artifacts
@@ -516,7 +516,7 @@ And then create a Networked Entity by using the built-in
 `createNetworkedEntity()` function. Networked Entities are synchronized
 between local and remote clients.
 
-Please refer to [the Network sync section in the Client core concept document](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/client#network-sync)
+Please refer to [the Network sync section in the Client Core concept document](../client/core_concept.md#network-sync)
 for the details of over network synchronization and how to set them up.
 
 ```typescript
@@ -611,7 +611,7 @@ for network synchronization of entities is automatically connected when an
 [Stream Server](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/stream_server)
 for voice communications must be connected by issuing a request.
 
-See [the Stream server connection section in the Client core concept document](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/client#stream-server-connection).
+See [the Stream server connection section in the Client Core concept document](../client/core_concept.md#stream-server-connection).
 
 ## Creating an addon
 
@@ -711,7 +711,7 @@ so you can also use it.
 
 For more practical code examples, please refer to [the examples package](../../packages/examples).
 
-Also [the Client Core concept document](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/client)
+Also [the Client Core concept document](../client/core_concept.md)
 will help you create your custom features.
 
 ## How to deploy to public cloud servers

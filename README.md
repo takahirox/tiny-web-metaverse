@@ -160,8 +160,20 @@ This project consists of the sub projects. See `packages` directory.
 ## Documents
 
 * [Getting Started](https://github.com/takahirox/tiny-web-metaverse/blob/main/docs/development/getting_started.md)
-* [Client Core concept](https://github.com/takahirox/tiny-web-metaverse/blob/main/docks/development/client_core_concept.md)
-* [Addons](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/addons)
+* Client
+  * [Client Core concept](https://github.com/takahirox/tiny-web-metaverse/blob/main/docs/client/core_concept.md)
+  * API and built-in addons
+  * Entity State networking internal
+  * Streaming
+* Addons
+  * Addons list
+* State server
+  * Overview
+* Stream server
+  * Overview
+* Deploy
+  * [Deploy Demo to AWS ECS](https://github.com/takahirox/tiny-web-metaverse/blob/main/docs/deploy/aws.md)
+  * [Deploy Demo to Google Cloud](https://github.com/takahirox/tiny-web-metaverse/blob/main/docs/deploy/google_cloud.md)
 
 We strongly recommend starting with the Getting Started documentation.
 
@@ -215,13 +227,9 @@ $ ./Dockerfiles/up.sh
 
 And access http://localhost:8080 on your browser.
 
-## Deploy Demo to AWS ECS with Docker
+## Deploy Demo to Cloud servers
 
-See [the Deploy Demo to AWS ECS with Docker document](./docs/deploy/aws.md).
-
-## Deploy Demo to Google Cloud
-
-See [the Deploy Demo to Google Cloud with Docker document](./docs/deploy/google_cloud.md).
+Refer to [the documents](#documents).
 
 ## How to support the project
 
