@@ -14,6 +14,12 @@ Parameters:
     Type: List<AWS::EC2::Subnet::Id>
   KeyPair:
     Type: AWS::EC2::KeyPair::KeyName
+  InstanceType:
+    Type: String
+    Default: t2.micro
+  Image:
+    Type: AWS::EC2::Image::Id
+    Default: ami-0dfa284c9d7b2adad
 
 Resources:
   # Security group for internal instance
@@ -91,12 +97,13 @@ Resources:
   EC2Instance:
     Type: AWS::EC2::Instance
     Properties:
-      # Choose free tier instance if you want to use for free
-      InstanceType: t2.micro
+      InstanceType: !Ref InstanceType
+      ImageId: !Ref Image
       KeyName: !Ref KeyPair
       SecurityGroupIds:
         - !Ref InternalSecurityGroup
       # Increase storage size to maximum 30GB SSD capacity if you use free tier
+      # TODO: Conditional, only if free tier?
       BlockDeviceMappings:
         - DeviceName: /dev/xvda
           Ebs:
@@ -137,10 +144,8 @@ Resources:
       DomainName: !Ref DomainName
       DomainValidationOptions:
         - DomainName: !Ref DomainName
-          ValidationDomain: !Ref DomainName
           HostedZoneId: !Ref HostedZone
       ValidationMethod: DNS
-      SubjectAlternativeNames: !Ref DomainName
       KeyAlgorithm: RSA_2048
 
   # Target groups and listeners
@@ -170,7 +175,8 @@ Resources:
         Type: AWS::ElasticLoadBalancingV2::TargetGroup
         Properties:
           TargetType: instance
-          Targets: !Ref EC2Instance
+          Targets:
+            - Id: !Ref EC2Instance
           Name: !Sub tcp-udp${TCPUDPPort}
           Protocol: TCP_UDP
           Port: !Ref TCPUDPPort
@@ -192,7 +198,8 @@ Resources:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
       TargetType: instance
-      Targets: !Ref EC2Instance
+      Targets:
+        - Id: !Ref EC2Instance
       Name: stream-server
       Protocol: TCP
       Port: 3000
@@ -216,7 +223,8 @@ Resources:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
       TargetType: instance
-      Targets: !Ref EC2Instance
+      Targets:
+        - Id: !Ref EC2Instance
       Name: state-server
       Protocol: TCP
       Port: 4000
@@ -240,7 +248,8 @@ Resources:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
       TargetType: instance
-      Targets: !Ref NLB
+      Targets:
+        - Id: !Ref EC2Instance
       Name: examples
       Protocol: TCP
       Port: 8080

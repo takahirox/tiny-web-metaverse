@@ -14,7 +14,7 @@ services:
   examples:
     build:
       context: .
-      dockerfile: Dockerfiles/examples.Dockerfile
+      dockerfile: deploy/Dockerfiles/examples.Dockerfile
     depends_on:
       - state_server
       - stream_server
@@ -23,7 +23,7 @@ services:
   state_server:
     build:
       context: .
-      dockerfile: Dockerfiles/state_server.Dockerfile
+      dockerfile: deploy/Dockerfiles/state_server.Dockerfile
     depends_on:
       - database
     environment:
@@ -39,7 +39,7 @@ services:
   stream_server:
     build:
       context: .
-      dockerfile: Dockerfiles/stream_server.Dockerfile
+      dockerfile: deploy/Dockerfiles/stream_server.Dockerfile
     environment:
       MEDIASOUP_ANNOUNCED_IP: ${MEDIASOUP_ANNOUNCED_IP}
       MEDIASOUP_LISTEN_IP: 0.0.0.0
