@@ -7,57 +7,66 @@
 * [Make an AWS account](https://aws.amazon.com/)
 * [Login to AWS Management console](https://aws.amazon.com/console/)
 * [Create and download a key pair at AWS EC2 console](https://console.aws.amazon.com/ec2/)
-* Optional: [Create VPC and subnets if needed at AWS VPC if needed](https://console.aws.amazon.com/vpc/).
-Default ones created when opening an AWS account are also ok.
+* Optional: [Create VPC and subnets if needed at AWS VPC if needed](https://console.aws.amazon.com/vpc/)
+  * Default ones created when opening an AWS account are also ok.
 
 ## Set up AWS resources
+
+Open Create stack page
 
 * Go to [AWS CloudFormation console](https://console.aws.amazon.com/cloudformation/)
 * Click "Create stack" button
 
 <img src="./create_stack_button.png" width="480">
 
-* In Step 1: Create stack
-  * Select "Template is ready" in Prepate template
-  * Select "Upload a template file", Click "Choose file", and upload [tiny-web-metaverse/deploy/aws.yaml](../../../deploy/aws.yaml) in Template source
-  * Click "Next" button
+In Step 1: Create stack
+
+* Select "Template is ready" in Prepate template
+* Select "Upload a template file", Click "Choose file", and upload [tiny-web-metaverse/deploy/aws.yaml](../../../deploy/aws.yaml) in Template source
+* Click "Next" button
   
 <img src="./prepate_template.png" width="480">
 <img src="./template_source.png" width="480">
 
-* In Step 2: Specify stack details
-  * Stack name: Any. Eg: tiny-web-metaverse-demo
-  * AppName: Any. Eg: tiny-web-metaverse
-  * DomainName: Your domain name you created in advance. Eg: your-domain.com    
-  * Image: Find enter AMI 2023 Image ID. Using the default one would be ok.
-  * InstanceType: Any Eg. t2.micro ([for free to use](https://aws.amazon.com/free/))
-  * KeyPair: Choose the one you created in advance
-  * Subnets: Choose the ones you created in advance or the default ones
-  * VPC: Choose the one you created in advance or the default one
-  * Click "Next" button
+In Step 2: Specify stack details
+
+* Stack name: Any. Eg. tiny-web-metaverse-demo
+* AppName: Any. Eg. tiny-web-metaverse
+* DomainName: Your domain name you created in advance. Eg. your-domain.com    
+* Image: Find enter AMI 2023 Image ID. Using the default one would be ok.
+* InstanceType: Any Eg. t2.micro ([for free to use](https://aws.amazon.com/free/))
+* KeyPair: Choose the one you created in advance
+* Subnets: Choose the ones you created in advance or the default ones
+* VPC: Choose the one you created in advance or the default one
+* Click "Next" button
 
 <img src="./stack_name.png" width="480">
 <img src="./parameters.png" width="480">
 
-* In Step 3: Configure stack options
-  * Adjust configuration if you needed
-  * Click "Next" button
+In Step 3: Configure stack options
 
-* In Step 4: Review
-  * Click "Create change set" button
+* Adjust configuration if you needed
+* Click "Next" button
 
-* Create change set dialog
-  * Change set name: Any. Eg: tiny-web-metaverse-demo
-  * Click "Create change set" button
+In Step 4: Review
 
-* In change set page
-  * Wait until Execution status will be Available (Click reload button if needed)
-  * Click "Execute change set" button
+* Click "Create change set" button
 
-* Execute change set? dialog
-  * Adjust configuration if needed
-  * Click "Execute change set" button
-  * Wait until CREATE_COMPLETE status
+Create change set dialog
+
+* Change set name: Any. Eg. tiny-web-metaverse-demo
+* Click "Create change set" button
+
+In change set page
+
+* Wait until Execution status will be Available (Click reload button if needed)
+* Click "Execute change set" button
+
+Execute change set? dialog
+
+* Adjust configuration if needed
+* Click "Execute change set" button
+* Wait until CREATE_COMPLETE status
 
 Executing change set may take time, especially Certificate verification task.
 
