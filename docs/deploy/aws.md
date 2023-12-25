@@ -107,7 +107,7 @@ TODO: Revisit Sources for security
 ## Launch an EC2 instance
 
 1. Create and download key pair
-2. Launch a new EC2 instance with the key pair
+2. Launch a new EC2 instance with the key pair and AMI 2023
 
 Note: If you want to use a
 [free tier EC2 instance (t2.micro or t3.micro depending on regions)](https://aws.amazon.com/free/)
@@ -291,7 +291,7 @@ $ sudo chmod 600 /swapfile
 $ sudo mkswap /swapfile
 $ sudo swapon /swapfile
 $ sudo swapon -s
-$ vi /etc/fstab
+$ sudo vi /etc/fstab
 # Add /swapfile swap swap defaults 0 0
 ```
 
