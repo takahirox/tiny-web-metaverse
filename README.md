@@ -172,8 +172,8 @@ This project consists of the sub projects. See `packages` directory.
 * Stream server
   * Overview
 * Deploy
-  * [Deploy Demo to AWS ECS](https://github.com/takahirox/tiny-web-metaverse/blob/main/docs/deploy/aws.md)
-  * [Deploy Demo to Google Cloud](https://github.com/takahirox/tiny-web-metaverse/blob/main/docs/deploy/google_cloud.md)
+  * [Deploy Demo to AWS ECS](https://github.com/takahirox/tiny-web-metaverse/blob/main/docs/deploy/aws/Readme.md)
+  * [Deploy Demo to Google Cloud](https://github.com/takahirox/tiny-web-metaverse/blob/main/docs/deploy/google_cloud/Readme.md)
 
 We strongly recommend starting with the Getting Started documentation.
 
