@@ -19,7 +19,7 @@ Default ones created when opening an AWS account are also ok.
 
 * In Step 1: Create stack
   * Select "Template is ready" in Prepate template
-  * Select "Upload a template file", Click "Choose file", and upload [tiny-web-metaverse/blob/main/deploy/aws.yaml](../../../deploy/aws.yaml) in Template source
+  * Select "Upload a template file", Click "Choose file", and upload [tiny-web-metaverse/deploy/aws.yaml](../../../deploy/aws.yaml) in Template source
   * Click "Next" button
   
 <img src="./prepate_template.png" width="480">
