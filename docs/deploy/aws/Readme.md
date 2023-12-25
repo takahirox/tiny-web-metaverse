@@ -1,4 +1,4 @@
-# Deploy Demo to AWS ECS with AWS CloudFormation and Docker
+# Deploy Demo to AWS ECS
 
 ## Prerequirements
 
