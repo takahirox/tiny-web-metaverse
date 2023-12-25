@@ -1,0 +1,266 @@
+AWSTemplateFormatVersion: 2010-09-09
+Transform: AWS::LanguageExtensions
+
+Parameters:
+  AppName:
+    Type: String
+    Default: tiny-web-metaverse
+  DomainName:
+    Type: String
+    Default: your-domain.com
+  VPC:
+    Type: AWS::EC2::VPC::Id
+  Subnets:
+    Type: List<AWS::EC2::Subnet::Id>
+  KeyPair:
+    Type: AWS::EC2::KeyPair::KeyName
+
+Resources:
+  # Security group for internal instance
+  InternalSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security group for internal instance
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+          Description: SSH
+        - IpProtocol: udp
+          FromPort: 2000
+          ToPort: 2100
+          CidrIp: 0.0.0.0/0
+          Description: stream_server_udp-private
+        - IpProtocol: tcp
+          FromPort: 2000
+          ToPort: 2100
+          CidrIp: 0.0.0.0/0
+          Description: stream_server_tcp-private
+        - IpProtocol: tcp
+          FromPort: 3000
+          ToPort: 3000
+          CidrIp: 0.0.0.0/0
+          Description: stream_server-private
+        - IpProtocol: tcp
+          FromPort: 4000
+          ToPort: 4000
+          CidrIp: 0.0.0.0/0
+          Description: state_server-private
+        - IpProtocol: tcp
+          FromPort: 8080
+          ToPort: 8080
+          CidrIp: 0.0.0.0/0
+          Description: examples-private
+
+  # Security group for exposed load balancer
+  ExposedLoadBalancerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security group for exposed load balancer
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+          Description: examples-public
+        - IpProtocol: udp
+          FromPort: 2000
+          ToPort: 2100
+          CidrIp: 0.0.0.0/0
+          Description: stream_server_udp-public
+        - IpProtocol: tcp
+          FromPort: 2000
+          ToPort: 2100
+          CidrIp: 0.0.0.0/0
+          Description: stream_server_tcp-public
+        - IpProtocol: tcp
+          FromPort: 3000
+          ToPort: 3000
+          CidrIp: 0.0.0.0/0
+          Description: stream_server-public
+        - IpProtocol: tcp
+          FromPort: 4000
+          ToPort: 4000
+          CidrIp: 0.0.0.0/0
+          Description: state_server-public
+
+  # EC2 instance
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      # Choose free tier instance if you want to use for free
+      InstanceType: t2.micro
+      KeyName: !Ref KeyPair
+      SecurityGroupIds:
+        - !Ref InternalSecurityGroup
+      # Increase storage size to maximum 30GB SSD capacity if you use free tier
+      BlockDeviceMappings:
+        - DeviceName: /dev/xvda
+          Ebs:
+            VolumeSize: 30
+            VolumeType: gp3
+
+  # Network Load Balancer
+  NLB:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Type: network
+      Name: !Sub ${AppName}-nlb
+      Subnets: !Ref Subnets
+      SecurityGroups:
+        - !Ref ExposedLoadBalancerSecurityGroup
+
+  # Hosted zone
+  HostedZone:
+    Type: AWS::Route53::HostedZone
+    Properties:
+      Name: !Ref DomainName
+
+  # Record set for the domain
+  RecordSet:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: !Ref HostedZone
+      Name: !Ref DomainName
+      Type: A
+      AliasTarget:
+        HostedZoneId: !GetAtt NLB.CanonicalHostedZoneID
+        DNSName: !GetAtt NLB.DNSName
+
+  # Certificate
+  Certificate:
+    Type: AWS::CertificateManager::Certificate
+    Properties:
+      DomainName: !Ref DomainName
+      DomainValidationOptions:
+        - DomainName: !Ref DomainName
+          ValidationDomain: !Ref DomainName
+          HostedZoneId: !Ref HostedZone
+      ValidationMethod: DNS
+      SubjectAlternativeNames: !Ref DomainName
+      KeyAlgorithm: RSA_2048
+
+  # Target groups and listeners
+  Fn::ForEach::TargetListenerTCPUDPPorts:
+    - TCPUDPPort
+    - - '2000'
+      - '2001'
+      - '2002'
+      - '2003'
+      - '2004'
+      - '2005'
+      - '2006'
+      - '2007'
+      - '2008'
+      - '2009'
+      - '2010'
+      - '2011'
+      - '2012'
+      - '2013'
+      - '2014'
+      - '2015'
+      - '2016'
+      - '2017'
+      - '2018'
+      - '2019'
+    - TargetGroup${TCPUDPPort}:
+        Type: AWS::ElasticLoadBalancingV2::TargetGroup
+        Properties:
+          TargetType: instance
+          Targets: !Ref EC2Instance
+          Name: !Sub tcp-udp${TCPUDPPort}
+          Protocol: TCP_UDP
+          Port: !Ref TCPUDPPort
+          VpcId: !Ref VPC
+          HealthCheckProtocol: TCP
+          HealthCheckPort: 3000
+      Listener${TCPUDPPort}:
+        Type: AWS::ElasticLoadBalancingV2::Listener
+        Properties:
+          LoadBalancerArn: !Ref NLB
+          Protocol: TCP_UDP
+          Port: !Ref TCPUDPPort
+          DefaultActions:
+            - Type: forward
+              TargetGroupArn: !Ref
+                Fn::Sub: TargetGroup${TCPUDPPort}
+
+  TargetGroup3000:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      TargetType: instance
+      Targets: !Ref EC2Instance
+      Name: stream-server
+      Protocol: TCP
+      Port: 3000
+      VpcId: !Ref VPC
+      HealthCheckProtocol: TCP
+
+  Listener3000:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      LoadBalancerArn: !Ref NLB
+      Protocol: TLS
+      Port: 3000
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref TargetGroup3000
+      SslPolicy: ELBSecurityPolicy-TLS13-1-2-2021-06
+      Certificates:
+        - CertificateArn: !Ref Certificate
+
+  TargetGroup4000:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      TargetType: instance
+      Targets: !Ref EC2Instance
+      Name: state-server
+      Protocol: TCP
+      Port: 4000
+      VpcId: !Ref VPC
+      HealthCheckProtocol: TCP
+
+  Listener4000:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      LoadBalancerArn: !Ref NLB
+      Protocol: TLS
+      Port: 4000
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref TargetGroup4000
+      SslPolicy: ELBSecurityPolicy-TLS13-1-2-2021-06
+      Certificates:
+        - CertificateArn: !Ref Certificate
+
+  TargetGroup8080:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      TargetType: instance
+      Targets: !Ref NLB
+      Name: examples
+      Protocol: TCP
+      Port: 8080
+      VpcId: !Ref VPC
+      HealthCheckProtocol: TCP
+
+  Listener443:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      LoadBalancerArn: !Ref NLB
+      Protocol: TLS
+      Port: 443
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref TargetGroup8080
+      SslPolicy: ELBSecurityPolicy-TLS13-1-2-2021-06
+      Certificates:
+        - CertificateArn: !Ref Certificate
+
+Outputs:
+  PublicIPv4DNS:
+    Value: !GetAtt EC2Instance.PublicDnsName
+    Description: Public IPv4 DNS of the EC2 instance
