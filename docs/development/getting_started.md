@@ -65,6 +65,8 @@ the JavaScript bundler and web server, but you can use any other tool you like.
 In that case, please adjust the following code examples as needed. Please also
 update the versions of the dependencies packages as needed.
 
+These example codes are publicly available [here](https://github.com/takahirox/tiny-web-metaverse-example).
+
 ```
 - index.html
 - package.json

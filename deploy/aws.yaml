@@ -17,7 +17,7 @@ Parameters:
   InstanceType:
     Type: String
     Default: t2.micro
-  Image:
+  OSImage:
     Type: AWS::EC2::Image::Id
     Default: ami-0dfa284c9d7b2adad
 
@@ -98,7 +98,7 @@ Resources:
     Type: AWS::EC2::Instance
     Properties:
       InstanceType: !Ref InstanceType
-      ImageId: !Ref Image
+      ImageId: !Ref OSImage
       KeyName: !Ref KeyPair
       SecurityGroupIds:
         - !Ref InternalSecurityGroup
