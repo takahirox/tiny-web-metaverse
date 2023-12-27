@@ -222,7 +222,7 @@ Prerequirements:
 * Install [Docker](https://www.docker.com/)
 
 ```sh
-$ ./deploy/Dockerfiles/up.sh
+$ ./deploy/up.sh
 ```
 
 And access http://localhost:8080 on your browser.

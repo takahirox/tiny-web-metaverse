@@ -16,7 +16,9 @@ case $(uname -a) in
 esac
 
 if [[ $PRIVATE_IP =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-  MEDIASOUP_ANNOUNCED_IP=${PRIVATE_IP} docker compose up -d
+  echo $PRIVATE_IP
+  exit 0
 else
-  echo Failed to detect private IP
+  echo Failed to detect private IP >&2
+  exit 1
 fi

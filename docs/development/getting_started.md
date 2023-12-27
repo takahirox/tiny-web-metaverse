@@ -21,6 +21,7 @@ It is also helpful to have the following knowledge:
 
 * Basic knowledge of [ECS architecture](https://en.wikipedia.org/wiki/Entity_component_system)
 * Basic knowledge of [bitECS](https://github.com/NateTheGreatt/bitECS)
+* Basic knowledge of [Docker](https://www.docker.com/)
 
 ## Run the Stream and State servers
 
@@ -66,16 +67,45 @@ update the versions of the dependencies packages as needed.
 
 ```
 - index.html
-- tsconfig.json
 - package.json
+- tsconfig.json
 - webpack.config.js
 - assets/
-- types/ (copy from https://github.com/takahirox/tiny-web-metaverse/tree/main/types)
+- types/ # copy from https://github.com/takahirox/tiny-web-metaverse/tree/main/types
 - src/
   - index.ts
+
+# If you want to deploy with Docker
+- Dockerfile
+- docker-compose.yaml
 ```
 
-TODO: Avoid to copy https://github.com/takahirox/tiny-web-metaverse/tree/main/types
+TODO: Avoid to copy `types`.
+
+```html
+<!-- index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Tiny Web Metaverse app</title>
+  <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      background-color: #000;
+      color: #fff;
+      overscroll-behavior: none;
+    }
+  </style>
+</head>
+<body>
+  <script type="module">
+    import "./dist/app.bundle.js";
+  </script>
+</body>
+</html>
+```
 
 ```json
 // package.json
@@ -169,31 +199,6 @@ module.exports = [
     }
   }
 ];
-```
-
-```html
-<!-- index.html -->
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>Tiny Web Metaverse app</title>
-  <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-  <style>
-    body {
-      margin: 0;
-      background-color: #000;
-      color: #fff;
-      overscroll-behavior: none;
-    }
-  </style>
-</head>
-<body>
-  <script type="module">
-    import "./dist/app.bundle.js";
-  </script>
-</body>
-</html>
 ```
 
 ## First App
@@ -714,6 +719,56 @@ For more practical code examples, please refer to [the examples package](../../p
 Also [the Client Core concept document](../client/core_concept.md)
 will help you create your custom features.
 
+## Use Docker
+
+Instead of dynamically booting the servers up you have an option to use Docker.
+
+First clone the Tiny Web Metaverse project and then run the `database`,
+`state_server`, and `stream_server` services.
+
+```sh
+$ git clone https://github.com/takahirox/tiny-web-metaverse.git
+$ cd tiny-web-metaverse
+$ MEDIASOUP_ANNOUNCED_IP=$(./deploy/get_ip.sh) docker compose up database state_server stream_server
+```
+
+After that write `Dockerfile` and `docker-compose.yaml` like the followings
+in your application directory,
+
+```
+# syntax=docker/dockerfile:1
+
+# Dockerfile
+
+FROM node:latest
+WORKDIR /app
+COPY . .
+RUN npm install
+CMD npm run build && \
+    npm run server
+```
+
+```
+# docker-compose.yaml
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+```
+
+And run the Web server service.
+
+```sh
+$ docker compose up
+```
+
 ## How to deploy to public cloud servers
 
-T.B.D.
+Please refer to the deploy Documents.
+
+- [Deploy to AWS](../deploy/aws/Readme.md)
+- [Deploy to Google Cloud](../deploy/google_cloud/Readme.md)

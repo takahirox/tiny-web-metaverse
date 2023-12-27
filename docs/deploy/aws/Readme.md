@@ -1,8 +1,10 @@
-# Deploy Demo to AWS ECS
+# Deploy to AWS ECS
+
+The goal of this document is to help readers understand how to deploy Tiny Web
+Metaverse application on AWS.
 
 ## Prerequirements
 
-* [Clone Tiny Web Metaverse](https://github.com/takahirox/tiny-web-metaverse)
 * Get your own domain name (eg: [Amazon Route 53](https://aws.amazon.com/getting-started/hands-on/get-a-domain/))
 * [Make an AWS account](https://aws.amazon.com/)
 * [Login to AWS Management console](https://aws.amazon.com/console/)
@@ -148,7 +150,7 @@ $ sudo vi /etc/fstab
 # Add /swapfile swap swap defaults 0 0
 ```
 
-## Run the project
+## Deploy the application
 
 Prerequirements:
 - Know the IP address of your domain name
@@ -156,14 +158,77 @@ Prerequirements:
 
 TODO: IP address can change, for example when rebooting the instance. Use Elastic IP?
 
+### Deploy the demo
+
+If you want to deploy the demo [`tiny-web-metaverse/packages/examples`](../../../packages/examples),
+login to the instance, clone the repository, and run `docker compose up`
+command in the instance.
+
 ```sh
+$ ssh -i ~/.ssh/foo.pem ec2-user@ec2-01-234-567-890.ap-northeast-1.compute.amazonaws.com
 $ git clone https://github.com/takahirox/tiny-web-metaverse.git
 $ cd tiny-web-metaverse
 $ MEDIASOUP_ANNOUNCED_IP=your_ip_address docker compose up
 ```
 
-Access https:// + your domain name (ex: https://yourdomain.com if your domain name
-is "yourdomain.com") on web browser when the servers are ready.
+### Deploy your application
+
+If you want to deploy your application, write `Dockerfile` and
+`docker-compose.yaml` like the followings in your application directory
+and push the files into your repository. Assuming that your application is
+managed at GitHub repository.
+
+```
+# syntax=docker/dockerfile:1
+
+# Dockerfile
+
+FROM node:latest
+WORKDIR /app
+COPY . .
+RUN npm install
+# Assuming "npm run build" for building your application and
+# "npm run server" for booting the web server at 8080 port.
+CMD npm run build && \
+    npm run server
+```
+
+```
+# docker-compose.yaml
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+```
+
+After that login to the instance, clone the Tiny Web Metaverse repository, and
+run the servers (`database`, `state_server`, and `stream_server`) services.
+
+```sh
+$ ssh -i ~/.ssh/foo.pem ec2-user@ec2-01-234-567-890.ap-northeast-1.compute.amazonaws.com
+$ git clone https://github.com/takahirox/tiny-web-metaverse.git
+$ cd tiny-web-metaverse
+$ MEDIASOUP_ANNOUNCED_IP=your_ip_address docker compose up database state_server stream_server
+```
+
+And then on another terminal window login to the instance, clone your
+application repository, and run the Web server service.
+
+```sh
+$ ssh -i ~/.ssh/foo.pem ec2-user@ec2-01-234-567-890.ap-northeast-1.compute.amazonaws.com
+$ git clone https://github.com/yourname/your-application.git
+$ cd your-application
+$ docker compose up
+```
+
+### Access the web server
+
+Once the services are ready, access https:// + your domain name (Eg.
+https://yourdomain.com if your domain name is "yourdomain.com") on web browser.
 
 ## Running cost estimation
 
