@@ -1,7 +1,7 @@
 # Tiny Web Metaverse Getting Started
 
 The goal of this document is to help readers understand how to develop Tiny
-Web Metaverse applications and run them locally.
+Web Metaverse applications, run them locally, and deploy to Cloud servers.
 
 ## Client Core concept
 

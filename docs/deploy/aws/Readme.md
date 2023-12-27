@@ -150,7 +150,7 @@ $ sudo vi /etc/fstab
 # Add /swapfile swap swap defaults 0 0
 ```
 
-## Deploy the application
+## Deploy
 
 Prerequirements:
 - Know the IP address of your domain name
@@ -224,6 +224,9 @@ $ git clone https://github.com/yourname/your-application.git
 $ cd your-application
 $ docker compose up
 ```
+
+Please refer to [the "Getting Started" document](../../development/getting_started.md)
+for how to create your application with Tiny Web Metaverse framework.
 
 ### Access the web server
 
