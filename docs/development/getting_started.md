@@ -714,7 +714,7 @@ so you can also use it.
 
 ## More practical examples
 
-For more practical code examples, please refer to [the examples package](../../packages/examples).
+For more practical code examples, please refer to [the demo package](../../packages/demo).
 
 Also [the Client Core concept document](../client/core_concept.md)
 will help you create your custom features.

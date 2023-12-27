@@ -151,7 +151,7 @@ This project consists of the sub projects. See `packages` directory.
 
 * [addons](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/addons): [![Latest addons NPM release](https://img.shields.io/npm/v/@tiny-web-metaverse/addons.svg)](https://www.npmjs.com/package/@tiny-web-metaverse/addons) Addons for Client
 * [client](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/client): [![Latest client NPM release](https://img.shields.io/npm/v/@tiny-web-metaverse/client.svg)](https://www.npmjs.com/package/@tiny-web-metaverse/client) Client
-* [examples](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/examples): [![Latest examples NPM release](https://img.shields.io/npm/v/@tiny-web-metaverse/examples.svg)](https://www.npmjs.com/package/@tiny-web-metaverse/examples) Demo
+* [demo](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/demo): [![Latest examples NPM release](https://img.shields.io/npm/v/@tiny-web-metaverse/examples.svg)](https://www.npmjs.com/package/@tiny-web-metaverse/examples) Demo
 * [state_client](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/state_client): [![Latest state_client NPM release](https://img.shields.io/npm/v/@tiny-web-metaverse/state_client.svg)](https://www.npmjs.com/package/@tiny-web-metaverse/state_client) Client of State server
 * [state_server](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/state_server): State server
 * [stream_client](https://github.com/takahirox/tiny-web-metaverse/tree/main/packages/stream_client): [![Latest stream_client NPM release](https://img.shields.io/npm/v/@tiny-web-metaverse/stream_client.svg)](https://www.npmjs.com/package/@tiny-web-metaverse/stream_client) Client of Stream server
@@ -209,7 +209,7 @@ $ mix ecto.migrate
 $ mix phx.server
 
 # Terminal 3
-$ cd packages/examples
+$ cd packages/demo
 $ npm run server
 ```
 

@@ -160,7 +160,7 @@ TODO: IP address can change, for example when rebooting the instance. Use Elasti
 
 ### Deploy the demo
 
-If you want to deploy the demo [`tiny-web-metaverse/packages/examples`](../../../packages/examples),
+If you want to deploy the demo [`tiny-web-metaverse/packages/demo`](../../../packages/demo),
 login to the instance, clone the repository, and run `docker compose up`
 command in the instance.
 

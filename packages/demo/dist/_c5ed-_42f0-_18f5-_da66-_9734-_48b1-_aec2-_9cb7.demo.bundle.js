@@ -1,4 +1,4 @@
-(self["webpackChunk_tiny_web_metaverse_examples"] = self["webpackChunk_tiny_web_metaverse_examples"] || []).push([["_c5ed-_42f0-_18f5-_da66-_9734-_48b1-_aec2-_9cb7"],{
+(self["webpackChunk_tiny_web_metaverse_demo"] = self["webpackChunk_tiny_web_metaverse_demo"] || []).push([["_c5ed-_42f0-_18f5-_da66-_9734-_48b1-_aec2-_9cb7"],{
 
 /***/ "?c5ed":
 /*!************************!*\
@@ -81,4 +81,4 @@
 /***/ })
 
 }]);
-//# sourceMappingURL=_c5ed-_42f0-_18f5-_da66-_9734-_48b1-_aec2-_9cb7.example.bundle.js.map
+//# sourceMappingURL=_c5ed-_42f0-_18f5-_da66-_9734-_48b1-_aec2-_9cb7.demo.bundle.js.map

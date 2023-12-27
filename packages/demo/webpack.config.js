@@ -29,9 +29,9 @@ module.exports = [
         }
       ]
     },
-    name: "examples",
+    name: "demo",
     output: {
-      filename: 'example.bundle.js',
+      filename: 'demo.bundle.js',
       path: path.resolve(__dirname, 'dist'),
       // I don't know why but this seems to be needed if import "@gradio/client"
       publicPath: '/'

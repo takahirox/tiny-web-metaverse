@@ -58,7 +58,7 @@ Resources:
           FromPort: 8080
           ToPort: 8080
           CidrIp: 0.0.0.0/0
-          Description: examples-private
+          Description: app-private
 
   # Security group for exposed load balancer
   ExposedLoadBalancerSecurityGroup:
@@ -71,7 +71,7 @@ Resources:
           FromPort: 443
           ToPort: 443
           CidrIp: 0.0.0.0/0
-          Description: examples-public
+          Description: app-public
         - IpProtocol: udp
           FromPort: 2000
           ToPort: 2100
@@ -270,7 +270,7 @@ Resources:
       TargetType: instance
       Targets:
         - Id: !Ref EC2Instance
-      Name: examples
+      Name: app
       Protocol: TCP
       Port: 8080
       VpcId: !Ref VPC

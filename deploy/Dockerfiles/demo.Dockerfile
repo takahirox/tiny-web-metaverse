@@ -1,10 +1,10 @@
 # syntax=docker/dockerfile:1
 
 FROM node:latest
-WORKDIR /examples
+WORKDIR /demo
 COPY . .
 RUN npm install
-RUN npm run install:examples
-WORKDIR /examples/packages/examples
+RUN npm run install:demo
+WORKDIR /demo/packages/demo
 CMD npm run build && \
     npm run server

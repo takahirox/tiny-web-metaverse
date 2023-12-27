@@ -108598,7 +108598,7 @@ var __webpack_exports__StateAdapter = __nested_webpack_exports__.StateAdapter;
 /******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = (chunkId) => {
 /******/ 			// return url for filenames based on template
-/******/ 			return "" + chunkId + ".example.bundle.js";
+/******/ 			return "" + chunkId + ".demo.bundle.js";
 /******/ 		};
 /******/ 	})();
 /******/ 	
@@ -108610,7 +108610,7 @@ var __webpack_exports__StateAdapter = __nested_webpack_exports__.StateAdapter;
 /******/ 	/* webpack/runtime/load script */
 /******/ 	(() => {
 /******/ 		var inProgress = {};
-/******/ 		var dataWebpackPrefix = "@tiny-web-metaverse/examples:";
+/******/ 		var dataWebpackPrefix = "@tiny-web-metaverse/demo:";
 /******/ 		// loadScript function to load a script via script tag
 /******/ 		__webpack_require__.l = (url, done, key, chunkId) => {
 /******/ 			if(inProgress[url]) { inProgress[url].push(done); return; }
@@ -108754,7 +108754,7 @@ var __webpack_exports__StateAdapter = __nested_webpack_exports__.StateAdapter;
 /******/ 		
 /******/ 		}
 /******/ 		
-/******/ 		var chunkLoadingGlobal = self["webpackChunk_tiny_web_metaverse_examples"] = self["webpackChunk_tiny_web_metaverse_examples"] || [];
+/******/ 		var chunkLoadingGlobal = self["webpackChunk_tiny_web_metaverse_demo"] = self["webpackChunk_tiny_web_metaverse_demo"] || [];
 /******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
@@ -109052,4 +109052,4 @@ run();
 
 /******/ })()
 ;
-//# sourceMappingURL=example.bundle.js.map
+//# sourceMappingURL=demo.bundle.js.map
