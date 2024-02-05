@@ -4,7 +4,7 @@
     "url": "https://github.com/takahirox/tiny-web-metaverse/issues"
   },
   "dependencies": {
-    "@gradio/client": "0.7.1",
+    "@gradio/client": "^0.10.1",
     "@tiny-web-metaverse/addons": "^0.0.1",
     "@tiny-web-metaverse/client": "^0.0.1"
   },
