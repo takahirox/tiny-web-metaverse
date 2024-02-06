@@ -11,10 +11,10 @@ services:
     user: postgres
     volumes:
       - pgdata:/var/lib/postgresql/data/
-  examples:
+  demo:
     build:
       context: .
-      dockerfile: deploy/Dockerfiles/examples.Dockerfile
+      dockerfile: deploy/Dockerfiles/demo.Dockerfile
     depends_on:
       - state_server
       - stream_server
