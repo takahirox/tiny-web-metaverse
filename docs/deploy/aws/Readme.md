@@ -152,12 +152,6 @@ $ sudo vi /etc/fstab
 
 ## Deploy
 
-Prerequirements:
-- Know the IP address of your domain name
-(eg: with `Linux dig command` or [DNS lookup web sites](https://www.nslookup.io/))
-
-TODO: IP address can change, for example when rebooting the instance. Use Elastic IP?
-
 ### Deploy the demo
 
 If you want to deploy the demo [`tiny-web-metaverse/packages/demo`](../../../packages/demo),
@@ -168,7 +162,7 @@ command in the instance.
 $ ssh -i ~/.ssh/foo.pem ec2-user@ec2-01-234-567-890.ap-northeast-1.compute.amazonaws.com
 $ git clone https://github.com/takahirox/tiny-web-metaverse.git
 $ cd tiny-web-metaverse
-$ MEDIASOUP_ANNOUNCED_IP=your_ip_address docker compose up
+$ MEDIASOUP_ANNOUNCED_IP=your_domain_name docker compose up
 ```
 
 ### Deploy your application
@@ -212,7 +206,7 @@ run the servers (`database`, `state_server`, and `stream_server`) services.
 $ ssh -i ~/.ssh/foo.pem ec2-user@ec2-01-234-567-890.ap-northeast-1.compute.amazonaws.com
 $ git clone https://github.com/takahirox/tiny-web-metaverse.git
 $ cd tiny-web-metaverse
-$ MEDIASOUP_ANNOUNCED_IP=your_ip_address docker compose up database state_server stream_server
+$ MEDIASOUP_ANNOUNCED_IP=your_domain_name docker compose up database state_server stream_server
 ```
 
 And then on another terminal window login to the instance, clone your
