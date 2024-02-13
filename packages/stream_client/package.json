@@ -4,8 +4,8 @@
     "url": "https://github.com/takahirox/tiny-web-metaverse/issues"
   },
   "dependencies": {
-    "mediasoup-client": "^3.6.91",
-    "socket.io-client": "^4.7.1"
+    "mediasoup-client": "^3.7.2",
+    "socket.io-client": "^4.7.4"
   },
   "description": "Tiny Web metaverse stream server",
   "exports": {
