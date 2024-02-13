@@ -39,6 +39,8 @@ const avatarQuery = defineQuery([Avatar, EntityObject3D, Local]);
 
 const yAxis = new Vector3(0.0, 1.0, 0.0);
 
+const spaceUrl = 'https://hysts-shap-e.hf.space/--replicas/u5ru9/';
+
 function* load(world: IWorld, eid: number): Generator<void, void> {
   addComponent(world, Loading, eid);
 
@@ -78,7 +80,7 @@ function* load(world: IWorld, eid: number): Generator<void, void> {
   // TODO: Remove magic numbers
   // TODO: Configurable
   const query = TextToModelLoaderProxy.get(eid).query;
-  const app = yield* toGenerator(client('hysts/Shap-E', { status_callback: console.log }));
+  const app = yield* toGenerator(client(spaceUrl, { status_callback: console.log }));
   // TODO: Avoid any if possible
   // TODO: Validation
   const result = (yield* toGenerator(app.predict("/text-to-3d", [query, 0, 15, 64]))) as any;
@@ -88,11 +90,11 @@ function* load(world: IWorld, eid: number): Generator<void, void> {
 
   if (Array.isArray(result.data) &&
     result.data.length > 0 &&
-    typeof result.data[0].url === 'string' &&
-    result.data[0].url.match(/\.glb$/) !== null) {
+    typeof result.data[0].path === 'string' &&
+    result.data[0].path.match(/\.glb$/) !== null) {
     // TODO: Where should we call createNetworkedEntity()?
     //       There may be better place to call.
-    const gltfEid = createNetworkedEntity(world, NetworkedType.Shared, 'gltf', { url: result.data[0].url });
+    const gltfEid = createNetworkedEntity(world, NetworkedType.Shared, 'gltf', { url: spaceUrl + 'file=' + result.data[0].path });
 
     // Move to the loader
     const loaderRoot = EntityObject3DProxy.get(eid).root;
